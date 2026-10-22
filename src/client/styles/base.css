@@ -1,0 +1,33 @@
+/* Type and the small utilities everything else leans on. One sans family for everything; mono only for code and logs. */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--canvas); color: var(--text);
+  font: 14px/1.55 var(--sans); font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+/* Type scale: 13 meta · 14 body · 16 section · 20 sub-page · 28 page title. Bold only for titles and key values. */
+h1, h2, h3, h4 { margin: 0; font-family: var(--sans); color: var(--text); letter-spacing: -0.011em; }
+h1 { font-size: 28px; font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; }
+h2 { font-size: 16px; font-weight: 600; line-height: 1.4; }
+h3, h4 { font-size: 14px; font-weight: 600; line-height: 1.4; }
+p { margin: .4rem 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+code, .mono { font-family: var(--mono); font-size: .84em; }
+code { background: var(--bg-muted); color: var(--text); padding: .1em .38em; border-radius: 5px; }
+pre { font-family: var(--mono); }
+hr { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: none; box-shadow: var(--ring); border-radius: 6px; }
+::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* Small gray label above a number or a field. */
+.kicker { display: block; font: 500 13px/1.3 var(--sans); color: var(--text-3); }
+
+.muted { color: var(--text-2); } .small { font-size: 13px; } .faint { color: var(--text-3); }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bad-text { color: var(--bad-text) !important; } .good-text { color: var(--ok-text); } .danger-text { color: var(--bad); }
+.in { color: var(--c-in); } .cache { color: var(--c-cache); } .out { color: var(--c-out); } .cost { color: var(--c-cost); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.inline-error { color: var(--bad-text); font-size: .88rem; }

@@ -1,0 +1,7 @@
+# TEST ONLY. A scripted `codex` stand-in so DockerRuntime plumbing can be exercised without a real model.
+# It proves container, mount, git and check handling; it says nothing about agent quality.
+FROM node:24-bookworm-slim
+COPY stub/codex.mjs /usr/local/bin/codex
+RUN chmod +x /usr/local/bin/codex
+USER 1000:1000
+WORKDIR /workspace

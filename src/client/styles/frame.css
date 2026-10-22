@@ -1,0 +1,75 @@
+/* The frame: a slim sidebar (224px, collapsible to icons) and the page column. Spacing on an 8px grid. */
+.app-shell { display: grid; grid-template-columns: 224px minmax(0, 1fr); min-height: 100vh; transition: grid-template-columns .18s ease; }
+.app-shell.collapsed { grid-template-columns: 64px minmax(0, 1fr); }
+.sidebar {
+  position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 2px; padding: 12px 8px;
+  background: var(--sidebar); border-right: 1px solid var(--border); overflow-y: auto; overflow-x: hidden;
+}
+.brand-row { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 0 0 16px 4px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; color: var(--text); text-decoration: none; white-space: nowrap; }
+.brand:hover { text-decoration: none; }
+.brand-mark { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--text); color: var(--canvas); font: 600 11px/1 var(--sans); letter-spacing: .02em; }
+.brand .name { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; }
+.icon-button.collapse { width: 28px; height: 28px; flex: none; }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav-link {
+  position: relative; display: flex; align-items: center; gap: 10px; width: 100%; height: 32px; padding: 0 8px; border: 0; border-radius: 6px; background: none;
+  color: var(--text-2); font-weight: 500; font-size: 14px; text-align: left; cursor: pointer; white-space: nowrap; transition: background .12s, color .12s;
+}
+.nav-link svg { flex: none; color: var(--text-3); }
+.nav-link:hover { background: var(--bg-hover); color: var(--text); }
+/* Active: filled row, dark text, blue icon, and a short bar on the left edge. */
+.nav-link.active { background: var(--bg-muted); color: var(--text); font-weight: 600; }
+.nav-link.active svg { color: var(--accent); }
+.nav-link.active::before { content: ""; position: absolute; left: -8px; top: 7px; bottom: 7px; width: 3px; border-radius: 0 3px 3px 0; background: var(--accent); }
+.nav-link .lbl { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.nav-link .count { min-width: 20px; padding: 0 6px; border-radius: 6px; background: var(--orange-bg); color: var(--orange-text); font-size: 12px; font-weight: 600; line-height: 20px; text-align: center; }
+.side-section { display: flex; flex-direction: column; gap: 2px; margin-top: 24px; }
+.side-label { padding: 0 8px 4px; color: var(--text-3); font-size: 12px; font-weight: 500; }
+.side-item { display: flex; align-items: center; gap: 10px; height: 30px; padding: 0 8px; border-radius: 6px; color: var(--text-2); font-size: 13px; text-decoration: none; }
+.side-item:hover { background: var(--bg-hover); color: var(--text); text-decoration: none; }
+.side-dot { width: 6px; height: 6px; border-radius: 50%; flex: none; margin: 0 5px; background: var(--ok); }
+.side-dot.warn { background: var(--warn); }
+.side-name { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 0 0 4px; border-top: 1px solid var(--border); }
+.health-pill { display: inline-flex; align-items: center; gap: 8px; min-width: 0; height: 28px; padding: 0 6px; border: 0; border-radius: 6px; background: none; color: var(--text-2); font-size: 13px; cursor: pointer; text-align: left; }
+.health-pill:hover { background: var(--bg-hover); color: var(--text); }
+.health-pill .label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.theme-switch { display: inline-flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--bg-muted); flex: none; }
+.theme-switch button { display: grid; place-items: center; width: 24px; height: 22px; border: 0; border-radius: 6px; background: none; color: var(--text-3); cursor: pointer; }
+.theme-switch button:hover { color: var(--text); }
+.theme-switch button[aria-pressed="true"] { background: var(--bg); color: var(--text); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
+
+/* Collapsed: icons only. */
+.collapsed .brand .name, .collapsed .nav-link .lbl, .collapsed .nav-link .count, .collapsed .side-section, .collapsed .health-pill .label, .collapsed .theme-switch { display: none; }
+.collapsed .brand-row { flex-direction: column; gap: 8px; padding-left: 0; }
+.collapsed .nav-link { justify-content: center; padding: 0; }
+.collapsed .sidebar-foot { justify-content: center; padding-left: 0; }
+
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 32px 40px 64px; min-width: 0; }
+.page-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin: 0 0 24px; }
+.page-title { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.page-header .kicker { display: none; }
+.page-header p { color: var(--text-2); margin: 4px 0 0; max-width: 72ch; font-size: 14px; }
+.header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.crumbs { display: flex; align-items: center; gap: 6px; color: var(--text-3); font-size: 13px; margin-bottom: 16px; }
+.crumbs button { background: none; border: 0; padding: 0; color: var(--text-2); cursor: pointer; font: inherit; }
+.crumbs button:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 1100px) { .container { padding: 24px 24px 56px; } }
+@media (max-width: 900px) {
+  /* Narrow screens: the sidebar becomes a compact bar on top, sections scroll sideways under it. */
+  .app-shell, .app-shell.collapsed { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { position: sticky; z-index: 30; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 8px 12px; border-right: 0; border-bottom: 1px solid var(--border); overflow: visible; }
+  .brand-row { padding: 0; } .icon-button.collapse { display: none; }
+  .nav { order: 4; width: 100%; flex-direction: row; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+  .nav-link { width: auto; padding: 0 10px; } .nav-link .lbl { flex: none; }
+  .nav-link.active::before { display: none; }
+  .collapsed .nav-link .lbl { display: inline; } .collapsed .brand .name { display: inline; }
+  .side-section { display: none; }
+  .sidebar-foot { order: 3; margin: 0 0 0 auto; padding: 0; border: 0; }
+  .health-pill .label { display: none; }
+  .container { padding: 20px 16px 48px; }
+  h1 { font-size: 24px; }
+}
+@media (max-width: 480px) { .theme-switch { display: none; } }

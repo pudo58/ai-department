@@ -1,0 +1,10 @@
+/* AI Department — "Sổ tay kỹ sư". Order matters: tokens, then type, shared pieces, the frame, then pages. */
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/components.css';
+@import './styles/frame.css';
+@import './styles/pages/work.css';
+@import './styles/pages/dossier.css';
+@import './styles/pages/projects.css';
+@import './styles/pages/monitor.css';
+@import './styles/pages/connect.css';

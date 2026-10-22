@@ -1,0 +1,35 @@
+/* Kết nối AI: one sheet per agent CLI with numbered setup steps, then the role split. */
+.connect-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 22px; }
+.connect-card { display: flex; flex-direction: column; gap: 14px; padding: 20px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); min-width: 0; }
+.connect-card.ready { border-color: var(--border); }
+.connect-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; align-items: start; }
+.connect-head h2 { font-size: 16px; }
+.connect-head .muted { display: block; margin-top: 2px; font-size: 13px; }
+.connect-head .badge { grid-column: 2; justify-self: start; margin-top: 4px; }
+/* Monogram tiles in each vendor's color. */
+.connect-logo { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; font: 600 .8rem/1 var(--mono); letter-spacing: .02em; color: #fff; }
+.logo-codex { background: #1f1d1a; }
+.logo-claude { background: #c96a4b; }
+.logo-antigravity { background: #3d73d6; }
+:root[data-theme="dark"] .logo-codex { background: #3a3732; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .logo-codex { background: #3a3732; } }
+.connect-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.connect-step { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; }
+.step-mark { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--border-strong); background: var(--bg); color: var(--text-2); font-size: .78rem; font-weight: 700; }
+.connect-step.ok .step-mark { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
+.step-body { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; padding-top: 2px; }
+.step-body > strong { font-size: .93rem; }
+.step-body p { margin: 0; }
+.step-body .detect-pre, .step-body .copy-line { align-self: stretch; }
+.connect-card > .notice-line { background: var(--accent-soft); }
+.connect-roles { display: flex; flex-direction: column; gap: 12px; }
+.connect-roles .card-head h3 { font-size: 16px; }
+.connect-roles p { margin: 0; }
+.connect-roles .row-actions { margin: 0; }
+.role-split { display: flex; flex-wrap: wrap; gap: 8px; }
+.role-pill { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-subtle); font-size: 13px; }
+.role-pill span { display: inline-flex; align-items: center; gap: 6px; color: var(--text-2); }
+.role-pill span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
+.role-pill.provider-codex span::before { background: var(--text); }
+.role-pill.provider-claude span::before { background: #c96a4b; }
+.role-pill.provider-antigravity span::before { background: #3d73d6; }
