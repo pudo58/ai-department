@@ -4,6 +4,11 @@ import path from 'node:path';
 import type { Role, Run, Slot } from '../shared/types.js';
 import { READ_ONLY_ROLES } from '../shared/providers.js';
 import { isSafeRelative } from '../core/scope.js';
+import { ENV_PROBLEM_PREFIX, parseNodeVersion, planNodeTest } from '../core/nodever.js';
+import { hostNodeVersion } from './nodever.js';
+import { javaVersionOf, planEnvironment, type EnvNeeds } from '../core/envplan.js';
+import { Toolchains, type ToolHomes, type ToolLog } from './toolchain.js';
+import { bootstrapPython } from './pythonenv.js';
 import { notAnalyzed, type AnalysisTool, type ToolReport } from '../core/tools.js';
 import { GitWorkspaces } from './gitworkspace.js';
 import { resolveCodexCommand, resolveHostCommand } from './hostcommand.js';
@@ -16,13 +21,13 @@ import {
   RuntimeBlockedError,
   type AgentExecution, type AgentResult, type ChangeSet, type CheckExecution, type PrepareResult, type Runtime, type RuntimeCheckResult, type RuntimeEvent,
 } from './types.js';
-import { readReportFile } from './report.js';
+import { clearReport, readReport } from './report.js';
 import { streamStderr, streamTo } from './streaming.js';
 
 const DEFAULT_AGENT_MS = 30 * 60_000;
 const DEFAULT_SETUP_MS = 20 * 60_000;
 
-export interface LocalRuntimeOptions { dataDir: string; codexCommand?: string[]; claudeCommand?: string[]; agyCommand?: string[];
+export interface LocalRuntimeOptions { dataDir: string; /** Installs JDK/Maven/Gradle on demand; tests pass one that points at a fake distributor. */ toolchains?: Toolchains; codexCommand?: string[]; claudeCommand?: string[]; agyCommand?: string[];
   /** Whose agy permission files the Antigravity tripwire watches; the signed-in person by default (tests point it elsewhere). */
   agyUserHome?: string }
 
@@ -71,15 +76,49 @@ async function restoreGitMeta(cwd: string, before: Map<string, Buffer>): Promise
 export class LocalRuntime implements Runtime {
   readonly name = 'local';
   private readonly ws: GitWorkspaces;
-  constructor(private readonly options: LocalRuntimeOptions) { this.ws = new GitWorkspaces(options.dataDir); }
+  private readonly toolchains: Toolchains;
+  /** Which tools each workspace uses, resolved once: installing is slow, looking them up again is not. */
+  private readonly toolHomes = new Map<string, Promise<{ needs: EnvNeeds; homes: ToolHomes }>>();
+  constructor(private readonly options: LocalRuntimeOptions) {
+    this.ws = new GitWorkspaces(options.dataDir);
+    this.toolchains = options.toolchains ?? new Toolchains({ dataDir: options.dataDir });
+  }
+
+  /** What the project's commands need and where those tools are, installing a missing JDK, Maven or Gradle first. */
+  private resolveTools(run: Run, cwd: string, log?: ToolLog): Promise<{ needs: EnvNeeds; homes: ToolHomes }> {
+    let p = this.toolHomes.get(cwd);
+    if (!p) {
+      p = (async () => {
+        const texts = await Promise.all(['pom.xml', 'build.gradle.kts', 'build.gradle'].map((f) => readFile(path.join(cwd, f), 'utf8').catch(() => '')));
+        const needs = planEnvironment([run.configSnapshot.setupCommand, ...run.configSnapshot.checks.map((c) => c.command)].filter((c) => c.length), javaVersionOf(texts.join(' ')));
+        try { return { needs, homes: await this.toolchains.provide(needs, log) }; }
+        catch (error) { throw new RuntimeBlockedError(`Không chuẩn bị được môi trường build: ${(error as Error).message}`); }
+      })();
+      // A failed install must be retried by the next task, not remembered.
+      p.catch(() => this.toolHomes.delete(cwd));
+      this.toolHomes.set(cwd, p);
+    }
+    return p;
+  }
+
+  /** Environment for a command in a workspace: installed build tools and the project's virtualenv first on PATH. */
+  private async envFor(run: Run, cwd: string): Promise<Record<string, string>> {
+    return this.toolchains.env(cwd, (await this.resolveTools(run, cwd)).homes);
+  }
 
   async prepare(run: Run, slot: Slot, onEvent?: (event: RuntimeEvent) => void): Promise<PrepareResult> {
     onEvent?.({ type: 'log', message: 'git clone (snapshot)…', data: { source: 'setup' } });
     const { ws, ...result } = await this.ws.clone(run, slot);
+    // Build tools and the Python virtualenv first, so the project's own setup command already runs with them.
+    const log: ToolLog = (message, level = 'info') => onEvent?.({ type: 'log', message, data: { source: 'setup', level } });
+    const { needs, homes } = await this.resolveTools(run, ws, log);
+    if (needs.python) {
+      await bootstrapPython(ws, (exe, args, timeoutMs) => executeFile(exe, args, { cwd: ws, timeoutMs, env: this.toolchains.env(ws, homes), ...streamTo(onEvent, 'setup') }), log);
+    }
     const setup = run.configSnapshot.setupCommand;
     if (setup.length) {
       const [cmd, ...args] = resolveHostCommand(setup);
-      const out = await executeFile(cmd!, args, { cwd: ws, timeoutMs: run.configSnapshot.limits?.setupMs ?? DEFAULT_SETUP_MS, ...streamTo(onEvent, 'setup') });
+      const out = await executeFile(cmd!, args, { cwd: ws, timeoutMs: run.configSnapshot.limits?.setupMs ?? DEFAULT_SETUP_MS, env: this.toolchains.env(ws, homes), ...streamTo(onEvent, 'setup') });
       assertProcessSucceeded(out, 'setup command');
       await this.ws.assertCleanAfterSetup(ws);
     }
@@ -101,7 +140,7 @@ export class LocalRuntime implements Runtime {
       extraConfig: process.platform === 'win32' ? ['windows.sandbox="elevated"'] : [] });
     const [exe, ...prefixArgs] = this.options.codexCommand ?? resolveCodexCommand();
     const result = await executeFile(exe!, [...prefixArgs, ...cmd.slice(1)], {
-      cwd, input: exec.prompt, signal: exec.signal, onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent),
+      cwd, input: exec.prompt, signal: exec.signal, env: await this.envFor(run, cwd), onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent),
       timeoutMs: run.configSnapshot.limits?.agentMs ?? DEFAULT_AGENT_MS, maxOutputBytes: 64 * 1024 * 1024,
     });
     collector.finish();
@@ -127,7 +166,7 @@ export class LocalRuntime implements Runtime {
     const cmd = buildCliCommand({ provider: 'claude', model: config.model, sessionId: exec.sessionId, singleAgent: run.mode === 'single', workdir: cwd, local: true });
     const [exe, ...prefixArgs] = this.options.claudeCommand ?? resolveClaudeCommand();
     const result = await executeFile(exe!, [...prefixArgs, ...cmd.slice(1)], {
-      cwd, input: exec.prompt, signal: exec.signal, onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent),
+      cwd, input: exec.prompt, signal: exec.signal, env: await this.envFor(run, cwd), onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent),
       timeoutMs: run.configSnapshot.limits?.agentMs ?? DEFAULT_AGENT_MS, maxOutputBytes: 64 * 1024 * 1024,
     });
     collector.finish();
@@ -236,13 +275,21 @@ export class LocalRuntime implements Runtime {
       // A report left by an earlier run must never be mistaken for this run's output.
       if (recipe.reportPath) {
         if (!isSafeRelative(recipe.reportPath)) throw new Error('reportPath không hợp lệ.');
-        await rm(path.join(cwd, recipe.reportPath), { force: true });
+        await clearReport(cwd, recipe.reportPath);
       }
-      const [cmd, ...args] = resolveHostCommand(recipe.command);
-      const result = await executeFile(cmd!, args, { cwd, timeoutMs: recipe.timeoutMs, signal: exec.signal, maxOutputBytes: 64 * 1024 * 1024, ...streamTo(exec.onEvent, `check:${recipe.id}`) });
+      const plan = planNodeTest(recipe.command, await hostNodeVersion(), parseNodeVersion(process.version), process.execPath);
+      const source = `check:${recipe.id}`;
+      if (plan.problem) {
+        // Never start a command that cannot work here: the person gets the reason instead of a bare "chưa hoàn tất".
+        exec.onEvent?.({ type: 'log', message: plan.problem, data: { source, level: 'error' } });
+        return { exitCode: null, durationMs: 0, checkpoint, incomplete: true, log: `${ENV_PROBLEM_PREFIX}${plan.problem}` };
+      }
+      if (plan.note) exec.onEvent?.({ type: 'log', message: plan.note, data: { source, level: 'warn' } });
+      const [cmd, ...args] = resolveHostCommand(plan.command);
+      const result = await executeFile(cmd!, args, { cwd, timeoutMs: recipe.timeoutMs, signal: exec.signal, maxOutputBytes: 64 * 1024 * 1024, env: await this.envFor(run, cwd), ...streamTo(exec.onEvent, source) });
       let report: unknown;
       if (recipe.reportPath) {
-        report = await readReportFile(path.join(cwd, recipe.reportPath));
+        report = await readReport(cwd, recipe.reportPath);
       }
       return {
         exitCode: result.exitCode, durationMs: result.durationMs, checkpoint, report,
