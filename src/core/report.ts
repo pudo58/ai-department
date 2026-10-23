@@ -19,6 +19,8 @@ export interface AcceptanceReport {
   verifier: { expected: boolean; ran: boolean; verdict: VerifierVerdict | null; findings: { title: string; severity: Finding['severity']; status: Finding['status']; confirmed: boolean; location: string }[] };
   effort: { costUsd: number; estimated: boolean; tokens: number; aiMs: number; humanMs: number; attempts: number; repairs: number };
   scopeApprovals: string[];
+  /** Library skills the agents were given, per role, read from the context record of each attempt. */
+  skills: { role: string; name: string; delivery: string; hasScripts: boolean }[];
   warnings: ReportWarning[];
   delivery: { branch: string; repository: string; delivered: boolean; commands: string[] };
 }
@@ -105,6 +107,18 @@ export function buildReport(input: ReportInput): AcceptanceReport {
   if (run.repairCount > 0) info(`Task đã qua ${run.repairCount} vòng sửa.`);
   if (budget.capUsd > 0 && budget.spentUsd / budget.capUsd >= 0.9) info(`Đã dùng ${Math.round((budget.spentUsd / budget.capUsd) * 100)}% ngân sách.`);
 
+  const roleOf = new Map(attempts.map((a) => [a.id, a.role]));
+  const skillsUsed = new Map<string, AcceptanceReport['skills'][number]>();
+  for (const a of artifacts.filter((x) => x.kind === 'context' && x.contractVersion === run.contract.version)) {
+    let used: { name: string; delivery: string; hasScripts: boolean }[] = [];
+    try { used = (JSON.parse(a.content) as { skills?: typeof used }).skills ?? []; } catch { /* older record without skills */ }
+    const role = (a.attemptId && roleOf.get(a.attemptId)) || '?';
+    for (const s of used) skillsUsed.set(`${role}:${s.name}`, { role, name: s.name, delivery: s.delivery, hasScripts: s.hasScripts });
+  }
+  const skills = [...skillsUsed.values()];
+  const scripted = [...new Set(skills.filter((s) => s.hasScripts).map((s) => s.name))];
+  if (scripted.length) info(`Agent được nạp skill có kèm script (${scripted.join(', ')}): agent có thể đã chạy các script đó trong bản sao làm việc.`);
+
   const branch = run.branch ?? `aidept/${run.id}-${run.selectedSlot}`;
   const repo = run.configSnapshot.repository;
   const readiness = !completion.ready ? 'not_ready' : warnings.some((w) => w.level === 'warn') ? 'ready_with_warnings' : 'ready';
@@ -122,6 +136,7 @@ export function buildReport(input: ReportInput): AcceptanceReport {
       humanMs: run.humanTime.reduce((n, t) => n + (t.durationMs ?? 0), 0), attempts: attempts.length, repairs: run.repairCount,
     },
     scopeApprovals: run.approvedPaths ?? [],
+    skills,
     warnings,
     delivery: {
       branch, repository: repo, delivered: input.delivered,
@@ -154,6 +169,7 @@ export function renderReportMarkdown(r: AcceptanceReport): string {
   else if (!r.verifier.verdict) out.push('_Chưa chạy._');
   else out.push(`Kết luận: **${r.verifier.verdict.decision}**`, '', r.verifier.verdict.summary || '_Không có tóm tắt._');
   if (r.verifier.findings.length) out.push('', ...r.verifier.findings.map((f) => `- [${f.severity}/${f.status}] ${f.title}${f.location ? ` (${f.location})` : ''}`));
+  if (r.skills.length) out.push('', '## Skill đã dùng', '', ...r.skills.map((s) => `- ${s.role}: ${s.name}${s.hasScripts ? ' (có script)' : ''}`));
   out.push('', '## Công sức', '', `- Chi phí: ~$${r.effort.costUsd.toFixed(2)}${r.effort.estimated ? ' (ước tính)' : ''} · ${r.effort.tokens.toLocaleString('en-US')} token · ${r.effort.attempts} lượt agent · ${mins(r.effort.aiMs)} thời gian AI · ${r.effort.repairs} vòng sửa`, `- Công của bạn: ${mins(r.effort.humanMs)}`);
   out.push('', '## Nhận kết quả', '', `Branch: \`${r.delivery.branch}\` trong \`${r.delivery.repository}\` ${r.delivery.delivered ? '(đã giao)' : '(sẽ được tạo khi nghiệm thu)'}`, '', '```bash', ...r.delivery.commands, '```', '');
   return out.join('\n');

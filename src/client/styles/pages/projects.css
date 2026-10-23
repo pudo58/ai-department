@@ -59,6 +59,18 @@
 .roles-table { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg); }
 .roles-row { display: grid; grid-template-columns: minmax(150px, 1.2fr) 150px minmax(120px, 1fr) 96px; gap: 8px; align-items: center; padding: 9px 12px; }
 .roles-row + .roles-row { border-top: 1px solid var(--border); }
+.roles-skills { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.roles-skills select { width: auto; min-width: 96px; }
+.skill-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 9px; border: 1px solid var(--border); border-radius: 99px; background: var(--bg-muted); font-size: .8rem; }
+.skill-chip.off { border-style: dashed; color: var(--text-3); }
+.skill-chip button { border: 0; background: none; color: var(--text-3); cursor: pointer; font-size: .95rem; line-height: 1; padding: 0 4px; }
+.skill-chip button:hover { color: var(--text); }
+.skill-desc { display: block; margin: 2px 0 6px; color: var(--text-2); }
+.skill-md { max-height: 360px; overflow: auto; white-space: pre-wrap; }
+.skill-candidates { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.skill-candidates label { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; }
+.skill-candidates label > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dropzone { display: flex; flex-direction: column; gap: 8px; padding: 22px; border: 1px dashed var(--border-strong, var(--border)); border-radius: var(--radius-sm); text-align: center; color: var(--text-2); cursor: pointer; }
 .model-pick { display: flex; gap: 6px; align-items: center; min-width: 0; }
 .model-pick input { flex: 1; min-width: 0; }
 .roles-name { min-width: 0; }

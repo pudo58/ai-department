@@ -188,7 +188,14 @@ export interface CliCommandOptions { provider: CliProvider; model: string; effor
   /** Claude on this machine: use the person's own login (subscription) instead of --bare's API-key-only mode. */
   local?: boolean;
   /** Extra `-c key=value` Codex overrides, e.g. the Windows sandbox mode that `--ignore-user-config` would otherwise drop. */
-  extraConfig?: string[] }
+  extraConfig?: string[];
+  /** Claude: plugin folders for this session only, holding the role's approved skills. */
+  pluginDirs?: string[];
+  /** Claude: at least one loaded skill ships scripts, so the interpreters they need are allowed too. */
+  skillScripts?: boolean }
+
+/** Interpreters an approved skill's scripts may need; allowed only when such a skill is loaded. */
+export const SKILL_SCRIPT_TOOLS = ['Bash(python *)', 'Bash(python3 *)', 'Bash(bash *)', 'Bash(sh *)'];
 export function buildCliCommand(options: CliCommandOptions): string[] {
   if (options.provider === 'antigravity') {
     // What agy may write is decided by the permission rules in its private per-turn home (agyhome.ts), not by these flags:
@@ -217,8 +224,10 @@ export function buildCliCommand(options: CliCommandOptions): string[] {
     // No --bare: it accepts only ANTHROPIC_API_KEY, so a Claude Pro/Max login would be ignored. Isolation comes from
     // loading project settings only (no personal hooks or plugins) and no MCP servers. Edits are allowed inside the
     // working copy; shell access is limited to the tools a coding task needs, anything else is refused (headless).
+    const skills = options.pluginDirs?.length ? ['Skill', ...(options.skillScripts ? SKILL_SCRIPT_TOOLS : [])] : [];
     const args = ['claude', '-p', '--output-format', 'stream-json', '--verbose', '--setting-sources', 'project,local', '--strict-mcp-config',
-      '--permission-mode', 'acceptEdits', '--allowedTools', ...LOCAL_CLAUDE_TOOLS];
+      '--permission-mode', 'acceptEdits', '--allowedTools', ...LOCAL_CLAUDE_TOOLS, ...skills];
+    for (const dir of options.pluginDirs ?? []) args.push('--plugin-dir', dir);
     if (options.model) args.push('--model', options.model);
     if (options.sessionId) args.push('--resume', options.sessionId);
     if (options.singleAgent) args.push('--disallowedTools', 'Agent,Task');

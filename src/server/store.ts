@@ -4,7 +4,7 @@ import path from 'node:path';
 import { redactSecrets } from '../runtime/process.js';
 import type { LogLevel } from '../runtime/describe.js';
 import { usageCost } from '../core/budget.js';
-import type { Artifact, Attempt, CheckResult, Finding, MemoryItem, ProjectProfile, ProviderName, Run, RunSummary, TraceEvent, UsageRecord } from '../shared/types.js';
+import type { Artifact, Attempt, CheckResult, Finding, MemoryItem, SkillRecord, ProjectProfile, ProviderName, Run, RunSummary, TraceEvent, UsageRecord } from '../shared/types.js';
 
 export type { LogLevel };
 const LEVEL_RANK: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
@@ -96,6 +96,7 @@ export class Store {
   readonly findings: Collection<Finding>;
   readonly checks: Collection<CheckResult>;
   readonly memories: Collection<MemoryItem>;
+  readonly skills: Collection<SkillRecord>;
   readonly logs: LogStore;
 
   constructor(file: string) {
@@ -109,6 +110,7 @@ export class Store {
     this.findings = new Collection(this.db, 'findings', (f) => f.runId);
     this.checks = new Collection(this.db, 'checks', (c) => c.runId);
     this.memories = new Collection(this.db, 'memories', (m) => m.projectId);
+    this.skills = new Collection(this.db, 'skills', () => null);
     this.logs = new LogStore(this.db);
     this.db.exec('CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, run_id TEXT NOT NULL, json TEXT NOT NULL); CREATE INDEX IF NOT EXISTS events_run ON events(run_id);');
   }

@@ -50,7 +50,7 @@ export class Planning {
     const run = this.s.run(runId);
     const roles: Role[] = ['investigator', 'author'];
     const independence: Independence = { independent: true, reason: 'Chỉ nhận yêu cầu gốc và snapshot; chưa thấy hợp đồng hay kết luận khác.' };
-    const results = await Promise.allSettled(roles.map((role) => this.s.attempt(runId, { role, stage: 'prepare', slot: 'A', prompt: PROMPTS.interpreter(run), independence, signal })));
+    const results = await Promise.allSettled(roles.map((role) => this.s.attempt(runId, { role, stage: 'prepare', slot: 'A', prompt: PROMPTS.interpreter(run), independence, signal, noSkills: true })));
     await this.s.runtimeFor(run).revert(run, 'A');
     const found: Interpretation[] = [];
     results.forEach((result, index) => {

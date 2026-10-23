@@ -119,6 +119,17 @@ Nếu agent sửa file ngoài `modules` của project, patch bị từ chối v�
 
 Giới hạn: phần tải và cài JDK/Maven/Gradle đã test với máy chủ giả (tải, checksum, giải nén, chia sẻ một lần tải) và phần Maven/Gradle chưa chạy với bản thật; venv và PATH đã chạy với Python thật, nhưng `pip install` từ PyPI chưa được chạy thử. Với pnpm/yarn, lệnh cài đặt gợi ý đi qua `npx` vì Windows không chạy trực tiếp `.cmd`; Bun chưa được hỗ trợ chạy trực tiếp.
 
+## Skill
+
+Trang **Skill** (`#/skills`) là thư viện skill theo chuẩn Agent Skills (thư mục có `SKILL.md` với frontmatter `name`, `description`, có thể kèm `scripts/`, `references/`, `assets/`), dùng chung cho Codex và Claude Code.
+
+- **Cài:** từ skill có sẵn trên máy (`~/.codex/skills`, `~/.claude/skills`, hoặc một thư mục bất kỳ), từ file `.zip` (kéo thả; zip có nhiều skill thì chọn từng cái; `.rar` không hỗ trợ) hoặc từ một thư mục trên GitHub (repo công khai, link `…/tree/<nhánh>/<thư mục>`). Hệ thống kiểm tra tên (chữ thường, số, gạch ngang), mô tả, tối đa 300 file, 10 MB, mỗi file 2 MB, không symlink, không đường dẫn thoát ra ngoài, và đánh dấu file script. Bản sao được lưu ở `<data>/skills/<tên>`.
+- **Duyệt:** skill mới cài ở trạng thái *Chờ duyệt*; agent chỉ nhận skill sau khi bạn đọc `SKILL.md`, danh sách file và bấm Duyệt. Cài lại với nội dung khác, hoặc file trên đĩa bị sửa sau khi duyệt, thì skill không được nạp cho tới khi duyệt lại.
+- **Gán theo vai:** Sửa dự án → Ai làm việc → Tuỳ chỉnh từng vai, mỗi vai chọn skill riêng. Đổi gán là đổi policy, cần duyệt lại. Agent diễn giải độc lập (Clarify) không bao giờ nhận skill.
+- **Nạp cho agent:** Claude Code qua `--plugin-dir` (thư mục plugin tạm ngoài bản sao làm việc, xoá sau lượt; nếu skill có script thì cho phép thêm `python`, `bash`, `sh`); Codex qua `.agents/skills/<tên>` trong bản sao làm việc (bị git bỏ qua, xoá sau lượt, không ghi đè skill trùng tên của repo); Antigravity và chế độ Docker nhận nội dung `SKILL.md` trong prompt (không kèm file phụ, tối đa ~6000 token). Đã thử thật: Claude Code 2.x và Codex 0.163 đều thấy và dùng skill nạp theo cách này.
+- **Ghi nhận:** mỗi lượt agent ghi skill đã nạp trong ngữ cảnh của lượt (tab Chi phí & công); báo cáo nghiệm thu có mục "Skill đã dùng" và lưu ý khi skill có script.
+- **Lưu ý:** Codex vẫn tự đọc skill và plugin cá nhân trong `~/.codex` dù chạy `--ignore-user-config` (cờ `skip_host_skill_discovery` chưa có tác dụng ở 0.163), nên agent Codex có thể thấy thêm skill cá nhân của bạn ngoài skill được gán.
+
 ## Ngữ cảnh project (bộ nhớ, bản đồ repo)
 
 Nút **Ngữ cảnh** trên thẻ project mở 3 tab:

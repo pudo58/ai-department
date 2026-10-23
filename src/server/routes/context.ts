@@ -4,6 +4,7 @@ import path from 'node:path';
 import type { FastifyInstance } from 'fastify';
 import type { Run } from '../../shared/types.js';
 import { GitWorkspaces } from '../../runtime/gitworkspace.js';
+import { SkillLibrary } from '../../runtime/skilllibrary.js';
 import { HttpError, type Orchestrator } from '../orchestrator.js';
 import { PreviewManager } from '../preview.js';
 import { StorageMonitor } from '../storage.js';
@@ -17,13 +18,14 @@ export interface RouteContext {
   dataDir: string;
   previews: PreviewManager;
   storage: StorageMonitor;
+  skills: SkillLibrary;
   idOf: (request: { params: unknown }) => string;
   projectOf: (request: { params: unknown }) => ReturnType<Store['projects']['get']> & object;
   assertProjectDir: (repository: string) => Promise<void>;
   disposeWorkspaces: (runs: Run[]) => void;
 }
 
-export function createRouteContext(app: FastifyInstance, store: Store, orchestrator: Orchestrator, dataDir: string): RouteContext {
+export function createRouteContext(app: FastifyInstance, store: Store, orchestrator: Orchestrator, dataDir: string, skills = new SkillLibrary(dataDir, store.skills)): RouteContext {
   const previews = new PreviewManager();
   const storage = new StorageMonitor(dataDir, () => store.runs.list());
   const idOf = (request: { params: unknown }) => (request.params as { id: string }).id;
@@ -47,5 +49,5 @@ export function createRouteContext(app: FastifyInstance, store: Store, orchestra
     for (const run of runs) previews.stop(run.id);
     void Promise.allSettled(runs.map((run) => workspaces.dispose(run))).then(() => storage.invalidate());
   };
-  return { app, store, orchestrator, dataDir, previews, storage, idOf, projectOf, assertProjectDir, disposeWorkspaces };
+  return { app, store, orchestrator, dataDir, previews, storage, skills, idOf, projectOf, assertProjectDir, disposeWorkspaces };
 }

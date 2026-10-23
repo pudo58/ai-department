@@ -6,7 +6,22 @@ export type RunStatus = 'draft' | 'awaiting_approval' | 'queued' | 'running' | '
 export type Slot = 'A' | 'B';
 export type TaskKind = 'bugfix' | 'feature' | 'refactor';
 export type CheckStatus = 'passed' | 'failed' | 'flaky' | 'incomplete';
+/** `skills` are names of skills in the AI Department library, loaded for this role when they are approved. */
 export interface RoleConfig { provider: ProviderName; model: string; effort: string; skills: string[] }
+export type SkillStatus = 'review' | 'active' | 'disabled';
+export interface SkillFile { path: string; size: number; script: boolean }
+/** A skill in the library: a copy of its folder under <data>/skills/<name>, usable only once a person approved it. */
+export interface SkillRecord {
+  id: string; name: string; description: string;
+  source: { type: 'local' | 'zip' | 'github'; path?: string; url?: string };
+  hash: string; files: SkillFile[]; sizeBytes: number; hasScripts: boolean;
+  status: SkillStatus; installedAt: string; updatedAt: string; reviewedAt?: string;
+}
+/** A skill found in a source (a folder on this machine, a .zip, a GitHub path) before it is installed. */
+export interface SkillCandidate {
+  name: string; description: string; origin: string; files: SkillFile[]; sizeBytes: number; hasScripts: boolean;
+  problems: string[]; installed?: SkillStatus; sameAsInstalled?: boolean;
+}
 export interface Recipe { id: string; command: string[]; required: boolean; timeoutMs: number; reportPath?: string }
 export interface ProjectProfile {
   id: string; name: string; repository: string; version: number; approved: boolean;

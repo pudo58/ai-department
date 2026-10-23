@@ -182,9 +182,11 @@ export function CostPanel({ detail, onAct }: { detail: RunDetail; onAct: (path: 
 /** What project context an attempt received, as recorded when its prompt was sent. */
 export function ContextCell({ artifact }: { artifact?: Artifact }) {
   if (!artifact) return <span className="faint">—</span>;
-  const c = JSON.parse(artifact.content) as { role: string | null; contextOn: boolean; usedTokens: number; memoryIds: string[]; sections: { name: string; text: string; included: boolean; tokens: number }[] };
+  const c = JSON.parse(artifact.content) as { role: string | null; contextOn: boolean; usedTokens: number; memoryIds: string[]; sections: { name: string; text: string; included: boolean; tokens: number }[]; skills?: { name: string; delivery: string; hasScripts: boolean }[] };
   const sent = c.sections.filter((s) => s.included);
-  if (!c.contextOn) return <span className="faint">Tắt</span>;
-  if (!sent.length) return <span className="faint">Không gửi</span>;
-  return <details><summary>~{c.usedTokens} token · {c.memoryIds.length} mục</summary>{sent.map((s, i) => <div key={i}><small className="muted">{s.name} (~{s.tokens})</small><pre className="detect-pre">{s.text}</pre></div>)}</details>;
+  // Skills are listed whether or not project context is on: they are a separate, per-role assignment.
+  const skills = c.skills?.length ? <small className="muted" title={c.skills.map((s) => `${s.name}: ${s.delivery === 'plugin' ? 'plugin Claude' : s.delivery === 'workspace' ? '.agents/skills' : 'trong prompt'}`).join('\n')}>Skill: {c.skills.map((s) => s.name + (s.hasScripts ? ' (script)' : '')).join(', ')}</small> : null;
+  if (!c.contextOn) return skills ?? <span className="faint">Tắt</span>;
+  if (!sent.length) return skills ?? <span className="faint">Không gửi</span>;
+  return <details><summary>~{c.usedTokens} token · {c.memoryIds.length} mục</summary>{skills}{sent.map((s, i) => <div key={i}><small className="muted">{s.name} (~{s.tokens})</small><pre className="detect-pre">{s.text}</pre></div>)}</details>;
 }

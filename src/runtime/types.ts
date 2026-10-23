@@ -13,7 +13,11 @@ export interface AgentExecution {
   /** Resume an earlier provider session; usage is then reported as a delta over `previousUsage`. */
   sessionId?: string; previousUsage?: UsageCheckpoint;
   onEvent?: (event: RuntimeEvent) => void; signal?: AbortSignal;
+  /** Approved skills for this role that the runtime loads natively (Claude plugin dir, Codex `.agents/skills`). */
+  skills?: ResolvedSkill[];
 }
+/** A library skill ready to hand to an agent: its folder on disk plus what a prompt fallback needs. */
+export interface ResolvedSkill { name: string; dir: string; hash: string; description: string; body: string; hasScripts: boolean }
 export interface AgentResult {
   output: string; sessionId?: string; usage: RuntimeUsage; cumulativeUsage?: UsageCheckpoint;
   /** The model that actually answered, when the provider tells us (e.g. read from the Codex session log). */

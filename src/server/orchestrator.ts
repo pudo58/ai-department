@@ -12,6 +12,7 @@ import { SerialQueue } from './scheduler.js';
 import type { Store } from './store.js';
 import { Blocked, CAPACITY, HttpError, QUOTA, Stopped, WAITING, FOLLOWUP_DAYS, type CandidateRecord } from './run/support.js';
 import { RunServices } from './run/services.js';
+import type { SkillLibrary } from '../runtime/skilllibrary.js';
 import { ScopePolicy } from './run/scope.js';
 import { RunOutcome } from './run/outcome.js';
 import { CheckRunner } from './run/checks.js';
@@ -27,7 +28,7 @@ export interface CreateRunInput {
   projectId: string; title: string; originalRequirement: string; mode: Mode; provider: Run['provider'];
   budgetUsd: number; signals: string[]; taskKind?: TaskKind;
 }
-export interface OrchestratorOptions { agentSlots?: number; now?: () => Date; /** How often a long step reports "still running" (default 30s). */ heartbeatMs?: number }
+export interface OrchestratorOptions { agentSlots?: number; now?: () => Date; /** How often a long step reports "still running" (default 30s). */ heartbeatMs?: number; /** Library the roles' skills come from; without it assigned skills are skipped with a warning. */ skills?: SkillLibrary }
 
 /**
  * The public face of a run: lifecycle (create, start, stop, resume, delete), the person's decisions (approve a
@@ -52,7 +53,7 @@ export class Orchestrator {
 
   constructor(private readonly store: Store, private readonly runtimeFor: (run: Run) => Runtime, options: OrchestratorOptions = {}) {
     this.now = options.now ?? (() => new Date());
-    this.s = new RunServices(store, runtimeFor, this.now, options.agentSlots ?? 3, options.heartbeatMs ?? 30_000);
+    this.s = new RunServices(store, runtimeFor, this.now, options.agentSlots ?? 3, options.heartbeatMs ?? 30_000, options.skills);
     this.scope = new ScopePolicy(this.s);
     this.outcome = new RunOutcome(this.s, this.scope);
     this.checks = new CheckRunner(this.s);

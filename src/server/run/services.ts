@@ -11,7 +11,16 @@ import type { Runtime, RuntimeEvent } from '../../runtime/types.js';
 import { Semaphore } from '../scheduler.js';
 import type { Store } from '../store.js';
 import { RESUMES_SESSIONS } from '../../shared/providers.js';
+import { skillPromptBlock } from '../../core/skills.js';
+import type { ResolvedSkill } from '../../runtime/types.js';
+import type { SkillLibrary } from '../../runtime/skilllibrary.js';
 import { HttpError, Blocked, Stopped } from './support.js';
+
+export type SkillDelivery = 'plugin' | 'workspace' | 'prompt';
+export interface SkillUse { name: string; hash: string; delivery: SkillDelivery; hasScripts: boolean }
+/** Only the local runtime (and the fake one standing in for it) can place skill folders where a CLI finds them. */
+export const skillDelivery = (provider: Attempt['provider'], runtimeName: string): SkillDelivery =>
+  runtimeName !== 'local' && runtimeName !== 'fake' ? 'prompt' : provider === 'claude' ? 'plugin' : provider === 'codex' ? 'workspace' : 'prompt';
 
 /**
  * What every stage of a run needs: the store, the runtime, the clock, and the small helpers that read and change a run,
@@ -24,7 +33,7 @@ export class RunServices {
   readonly sessions = new Map<string, { sessionId: string; cumulative?: import('../../runtime/providers.js').UsageCheckpoint }>();
   readonly baseFileCache = new Map<string, ReadonlySet<string>>();
 
-  constructor(readonly store: Store, readonly runtimeFor: (run: Run) => Runtime, readonly now: () => Date, agentSlots: number, private readonly heartbeatMs: number) {
+  constructor(readonly store: Store, readonly runtimeFor: (run: Run) => Runtime, readonly now: () => Date, agentSlots: number, private readonly heartbeatMs: number, readonly skills?: SkillLibrary) {
     this.agents = new Semaphore(agentSlots);
   }
 
@@ -94,6 +103,8 @@ export class RunServices {
   async attempt(runId: string, input: {
     role: Role; stage: Stage; slot: Slot; prompt: string; signal: AbortSignal; independence?: Independence;
     resumeSession?: { sessionId: string; cumulative?: import('../../runtime/providers.js').UsageCheckpoint };
+    /** The independent interpreter reads the requirement alone: no project skills, like no project context. */
+    noSkills?: boolean;
   }): Promise<{ output: string; attempt: Attempt }> {
     const run = this.run(runId);
     if (input.signal.aborted) throw new Stopped();
@@ -111,11 +122,13 @@ export class RunServices {
 
     const raw: string[] = [];
     const runtime = this.runtimeFor(run);
+    const loaded = await this.loadSkills(runId, input.noSkills ? [] : config.skills ?? [], input.role, attempt.provider, runtime.name);
+    const prompt = loaded.delivery === 'prompt' ? `${input.prompt}${skillPromptBlock(loaded.skills)}` : input.prompt;
     try {
       const source = `agent:${input.role}`;
       const relay = this.runtimeLog(runId, source, attempt.id);
       const result = await this.withHeartbeat(runId, source, `${input.role} (${input.slot})`, () => this.agents.use(() => runtime.runAgent({
-        run, attempt, role: input.role, prompt: input.prompt, signal: input.signal,
+        run, attempt, role: input.role, prompt, signal: input.signal, skills: loaded.delivery === 'prompt' ? undefined : loaded.skills,
         sessionId: input.resumeSession?.sessionId, previousUsage: input.resumeSession?.cumulative,
         onEvent: (event) => {
           if (event.type === 'provider.raw') {
@@ -125,7 +138,7 @@ export class RunServices {
           } else relay(event);
         },
       })), attempt.id);
-      this.recordContext(runId, input.prompt, attempt.id);
+      this.recordContext(runId, prompt, attempt.id, loaded.skills.map((s) => ({ name: s.name, hash: s.hash, delivery: loaded.delivery, hasScripts: s.hasScripts })));
       // Raw output is persisted before anything parses it.
       this.artifact(runId, { kind: 'raw', title: `Raw ${input.role} ${attempt.id}`, content: raw.join('\n') || redactSecrets(result.output), checkpoint: run.checkpoint, attemptId: attempt.id });
       // Only the Developer's session is ever resumed. Keeping another role's (a Claude Verifier, an Antigravity Planner)
@@ -147,13 +160,28 @@ export class RunServices {
     }
   }
 
-  /** What context an attempt actually received, recorded beside its raw output; counts each memory item's use. */
-  recordContext(runId: string, prompt: string, attemptId: string): void {
+  /**
+   * The approved library skills a role should get, and how its CLI takes them: Claude Code as a plugin directory,
+   * Codex from `.agents/skills` in the working copy, anything else (Antigravity, the Docker runtime) in the prompt.
+   * Skills that are missing, disabled or not approved are left out with a console warning.
+   */
+  private async loadSkills(runId: string, names: readonly string[], role: Role, provider: Attempt['provider'], runtimeName: string): Promise<{ skills: ResolvedSkill[]; delivery: SkillDelivery }> {
+    const delivery = skillDelivery(provider, runtimeName);
+    if (!names.length) return { skills: [], delivery };
+    if (!this.skills) { this.emit(runId, `agent:${role}`, 'warn', `Vai ${role} được gán skill (${names.join(', ')}) nhưng máy chủ không có thư viện skill; bỏ qua.`); return { skills: [], delivery }; }
+    const { skills, skipped } = await this.skills.resolve(names);
+    for (const s of skipped) this.emit(runId, `agent:${role}`, 'warn', `Không nạp skill "${s.name}" cho ${role}: ${s.reason}.`);
+    if (skills.length) this.emit(runId, `agent:${role}`, 'info', `Nạp skill cho ${role} (${delivery === 'plugin' ? 'plugin Claude' : delivery === 'workspace' ? '.agents/skills' : 'trong prompt'}): ${skills.map((s) => s.name).join(', ')}`);
+    return { skills, delivery };
+  }
+
+  /** What context and skills an attempt actually received, recorded beside its raw output; counts each memory item's use. */
+  recordContext(runId: string, prompt: string, attemptId: string, skills: SkillUse[] = []): void {
     const run = this.run(runId);
-    if (!run.context) return;
+    if (!run.context && !skills.length) return;
     const role = contextRoleOf(prompt);
-    const selection = role ? selectContext(run, role) : { role: null, enabled: run.context.enabled, sections: [], memoryIds: [] as string[], usedTokens: 0 };
-    this.artifact(runId, { kind: 'context', title: `Ngữ cảnh ${role ?? '(không có)'}`, content: JSON.stringify({ contextOn: run.context.enabled, ...selection }), checkpoint: run.checkpoint, attemptId });
+    const selection = run.context && role ? selectContext(run, role) : { role: null, enabled: run.context?.enabled ?? false, sections: [], memoryIds: [] as string[], usedTokens: 0 };
+    this.artifact(runId, { kind: 'context', title: `Ngữ cảnh ${role ?? '(không có)'}`, content: JSON.stringify({ contextOn: run.context?.enabled ?? false, ...selection, skills }), checkpoint: run.checkpoint, attemptId });
     for (const id of selection.memoryIds) {
       const item = this.store.memories.get(id);
       if (item) this.store.memories.put({ ...item, usedCount: item.usedCount + 1 });

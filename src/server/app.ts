@@ -13,14 +13,16 @@ import { registerProjectRoutes } from './routes/projects.js';
 import { registerProviderRoutes } from './routes/providers.js';
 import { registerRunRoutes } from './routes/runs.js';
 import { registerSystemRoutes } from './routes/system.js';
+import { registerSkillRoutes } from './routes/skills.js';
+import type { SkillLibrary } from '../runtime/skilllibrary.js';
 
-export interface AppOptions { store: Store; orchestrator: Orchestrator; dataDir: string; port: number; staticDir?: string }
+export interface AppOptions { store: Store; orchestrator: Orchestrator; dataDir: string; port: number; staticDir?: string; skills?: SkillLibrary }
 
 /**
  * Loopback-only API. Defence in depth for a local tool a browser can reach: Host must be a loopback name
  * (blocks DNS rebinding), Origin must match on writes, and writes need the per-process CSRF token.
  */
-export async function buildApp({ store, orchestrator, dataDir, port, staticDir }: AppOptions): Promise<FastifyInstance> {
+export async function buildApp({ store, orchestrator, dataDir, port, staticDir, skills }: AppOptions): Promise<FastifyInstance> {
   const app = Fastify({ logger: false, bodyLimit: 1_000_000 });
   const token = randomBytes(24).toString('hex');
   const hosts = new Set(['127.0.0.1', 'localhost', '[::1]'].flatMap((h) => [`${h}:${port}`, `${h}:5173`]));
@@ -48,7 +50,7 @@ export async function buildApp({ store, orchestrator, dataDir, port, staticDir }
 
   app.get('/api/session', async () => ({ token }));
 
-  const context = createRouteContext(app, store, orchestrator, dataDir);
+  const context = createRouteContext(app, store, orchestrator, dataDir, skills);
   registerSystemRoutes(context);
   registerProviderRoutes(context);
   registerProjectRoutes(context);
@@ -56,6 +58,7 @@ export async function buildApp({ store, orchestrator, dataDir, port, staticDir }
   registerRunRoutes(context);
   registerPreviewRoutes(context);
   registerMonitorRoutes(context);
+  registerSkillRoutes(context);
 
   if (staticDir && existsSync(staticDir)) {
     await app.register(fastifyStatic, { root: staticDir });

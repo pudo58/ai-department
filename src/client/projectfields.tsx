@@ -1,7 +1,7 @@
 import { useEffect, useId, useState } from 'react';
 import { GUIDANCE_MAX_CHARS } from '../shared/guidance';
 import { isExperimental } from '../shared/providers';
-import type { Role, RoleConfig, StackDetection } from '../shared/types';
+import type { Role, RoleConfig, SkillRecord, StackDetection } from '../shared/types';
 import { api } from './api';
 import { formatCommandLine } from './argv';
 import { CHECK_PRESETS, draftFromSuggestion, newDraft, sameCommand, type CheckDraft } from './checkdraft';
@@ -108,6 +108,33 @@ const SUGGESTED: Record<Role, 'codex' | 'claude'> = { planner: 'codex', develope
 export interface ModelOption { id: string; label: string; hint?: string }
 export interface CliReady { id: 'codex' | 'claude' | 'antigravity'; installed: boolean; loggedIn: boolean; models?: string[]; modelOptions?: ModelOption[] }
 
+/** The library, for the per-role skill picker; empty until loaded or when the request fails. */
+function useSkillLibrary(): SkillRecord[] {
+  const [skills, setSkills] = useState<SkillRecord[]>([]);
+  useEffect(() => { void api<SkillRecord[]>('/api/skills').then(setSkills).catch(() => setSkills([])); }, []);
+  return skills;
+}
+
+/**
+ * The library skills a role gets. Only approved skills can be added; one assigned earlier that is now waiting for review,
+ * disabled or removed stays visible with that state, since the run will skip it.
+ */
+function SkillPicker({ label, value, library, onChange }: { label: string; value: string[]; library: SkillRecord[]; onChange: (next: string[]) => void }) {
+  const byName = new Map(library.map((s) => [s.name, s]));
+  const addable = library.filter((s) => s.status === 'active' && !value.includes(s.name));
+  return <div className="roles-skills">
+    {value.map((name) => {
+      const s = byName.get(name);
+      const state = !s ? 'không còn trong thư viện' : s.status === 'review' ? 'chờ duyệt' : s.status === 'disabled' ? 'đã tắt' : '';
+      return <span key={name} className={`skill-chip${state ? ' off' : ''}`} title={state ? `Sẽ không được nạp: ${state}` : s?.description}>
+        {name}{state && <small> · {state}</small>}{s?.hasScripts && <small> · script</small>}
+        <button type="button" aria-label={`Bỏ skill ${name} khỏi ${label}`} onClick={() => onChange(value.filter((n) => n !== name))}>×</button></span>;
+    })}
+    {addable.length > 0 && <select aria-label={`${label}: thêm skill`} value="" onChange={(e) => e.target.value && onChange([...value, e.target.value])}>
+      <option value="">+ Skill</option>{addable.map((s) => <option key={s.name} value={s.name} title={s.description}>{s.name}</option>)}</select>}
+  </div>;
+}
+
 const OTHER = '__other__';
 /**
  * The models the chosen provider offers on this machine (Codex: the account's list Codex fetched; Claude: aliases and
@@ -165,6 +192,7 @@ const EFFORT_HINT: Record<RoleConfig['provider'], string> = {
  */
 export function RolesEditor({ value, onChange, presets = true }: { value: Record<Role, RoleConfig>; onChange: (next: Record<Role, RoleConfig>) => void; presets?: boolean }) {
   const ready = useCliReady();
+  const library = useSkillLibrary();
   const ok = (id: string) => cliOk(ready, id);
   const set = (role: Role, patch: Partial<RoleConfig>) => onChange({ ...value, [role]: { ...value[role], ...patch } });
   const notReady = ROLE_INFO.filter(([r]) => ready && !ok(value[r].provider)).map(([, l]) => l);
@@ -184,7 +212,9 @@ export function RolesEditor({ value, onChange, presets = true }: { value: Record
         <option value="antigravity">Antigravity{isExperimental('antigravity', role) ? ' (thử nghiệm)' : ''}{ready && !ok('antigravity') ? ' (chưa sẵn sàng)' : ''}</option></select>
       <ModelPicker key={value[role].provider} label={label} value={value[role].model} options={ready?.find((r) => r.id === value[role].provider)?.modelOptions ?? []} onChange={(model) => set(role, { model })}/>
       <select aria-label={`${label}: mức suy nghĩ`} value={value[role].effort} onChange={(e) => set(role, { effort: e.target.value })} title={EFFORT_HINT[value[role].provider]}><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select>
+      {(library.length > 0 || (value[role].skills ?? []).length > 0) && role !== 'investigator' && <SkillPicker label={label} value={value[role].skills ?? []} library={library} onChange={(skills) => set(role, { skills })}/>}
     </div>)}</div>
+    {library.length === 0 && <small className="muted">Muốn giao skill (SKILL.md) cho từng vai? Cài ở trang <a href="#/skills">Skill</a>.</small>}
     {experimental.length > 0 && <p className="notice-line">{experimental.join(', ')}: Antigravity thử nghiệm chỉ sửa được file trong bản sao làm việc và không chạy được lệnh nào; AI Department tự chạy các check sau lượt của nó.</p>}
     {notReady.length > 0 && <p className="notice-line">{notReady.join(', ')} đang dùng một CLI chưa cài hoặc chưa đăng nhập. <a href="#/connect">Mở Kết nối AI</a>.</p>}
     <small>Danh sách model lấy từ chính CLI trên máy: Codex theo tài khoản ChatGPT của bạn, Claude theo bí danh (luôn là bản mới nhất) hoặc tên cố định, Antigravity theo <code>agy models</code>. "Mặc định của CLI" để CLI tự chọn. Antigravity làm Developer hoặc Author là thử nghiệm. Đổi vai là thay đổi policy, cần duyệt lại.</small>

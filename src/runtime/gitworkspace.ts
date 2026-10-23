@@ -107,7 +107,7 @@ export class GitWorkspaces {
     // Build tools and the Python virtualenv write into the workspace too (.venv, Maven's target/, Gradle's build/ and .gradle/).
     const mavenOut = existsSync(path.join(ws, 'pom.xml')) ? 'target/\n' : '';
     const gradleOut = ['build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts'].some((f) => existsSync(path.join(ws, f))) ? 'build/\n.gradle/\n' : '';
-    await appendFile(path.join(ws, '.git', 'info', 'exclude'), `\nnode_modules/\n.aidept-report.*\ntest-results/\nplaywright-report/\ncoverage/\n.venv/\n__pycache__/\n*.pyc\n.pytest_cache/\n${mavenOut}${gradleOut}`);
+    await appendFile(path.join(ws, '.git', 'info', 'exclude'), `\nnode_modules/\n.aidept-report.*\ntest-results/\nplaywright-report/\ncoverage/\n.agents/skills/\n.venv/\n__pycache__/\n*.pyc\n.pytest_cache/\n${mavenOut}${gradleOut}`);
     // npm and npx treat the nearest folder with package.json OR node_modules as the project. Workspaces live under the
     // data dir, inside AI Department's own folder, so a project without package.json would otherwise install into, and
     // run tools from, AI Department itself. An (ignored) node_modules folder makes the workspace its own npm root.

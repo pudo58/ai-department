@@ -9,6 +9,7 @@ import { hostNodeVersion } from './nodever.js';
 import { javaVersionOf, planEnvironment, type EnvNeeds } from '../core/envplan.js';
 import { Toolchains, type ToolHomes, type ToolLog } from './toolchain.js';
 import { bootstrapPython } from './pythonenv.js';
+import { claudeSkillPlugin, codexWorkspaceSkills } from './skillmount.js';
 import { notAnalyzed, type AnalysisTool, type ToolReport } from '../core/tools.js';
 import { GitWorkspaces } from './gitworkspace.js';
 import { resolveCodexCommand, resolveHostCommand } from './hostcommand.js';
@@ -139,10 +140,11 @@ export class LocalRuntime implements Runtime {
       // could not write anything. The elevated sandbox is the one Codex's own Windows setup installs.
       extraConfig: process.platform === 'win32' ? ['windows.sandbox="elevated"'] : [] });
     const [exe, ...prefixArgs] = this.options.codexCommand ?? resolveCodexCommand();
+    const mounted = exec.skills?.length ? await codexWorkspaceSkills(cwd, exec.skills, exec.onEvent) : undefined;
     const result = await executeFile(exe!, [...prefixArgs, ...cmd.slice(1)], {
       cwd, input: exec.prompt, signal: exec.signal, env: await this.envFor(run, cwd), onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent),
       timeoutMs: run.configSnapshot.limits?.agentMs ?? DEFAULT_AGENT_MS, maxOutputBytes: 64 * 1024 * 1024,
-    });
+    }).finally(() => mounted?.dispose());
     collector.finish();
     if (result.timedOut) throw new Error('Agent hết thời gian cho phép.');
     if (collector.failure) throw new Error(redactSecrets(collector.failure));
@@ -163,12 +165,14 @@ export class LocalRuntime implements Runtime {
     if (!status.installed) throw new RuntimeBlockedError('Chưa cài Claude Code trên máy này. Xem trang Kết nối AI.');
     if (!status.loggedIn) throw new RuntimeBlockedError('Claude Code chưa đăng nhập. Xem trang Kết nối AI.');
     const collector = new JsonlCollector({ provider: 'claude', previousCumulativeUsage: exec.previousUsage, onEvent: exec.onEvent });
-    const cmd = buildCliCommand({ provider: 'claude', model: config.model, sessionId: exec.sessionId, singleAgent: run.mode === 'single', workdir: cwd, local: true });
+    const plugin = exec.skills?.length ? await claudeSkillPlugin(this.options.dataDir, exec.attempt.id, exec.skills) : undefined;
+    const cmd = buildCliCommand({ provider: 'claude', model: config.model, sessionId: exec.sessionId, singleAgent: run.mode === 'single', workdir: cwd, local: true,
+      pluginDirs: plugin ? [plugin.dir] : [], skillScripts: !!exec.skills?.some((s) => s.hasScripts) });
     const [exe, ...prefixArgs] = this.options.claudeCommand ?? resolveClaudeCommand();
     const result = await executeFile(exe!, [...prefixArgs, ...cmd.slice(1)], {
       cwd, input: exec.prompt, signal: exec.signal, env: await this.envFor(run, cwd), onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent),
       timeoutMs: run.configSnapshot.limits?.agentMs ?? DEFAULT_AGENT_MS, maxOutputBytes: 64 * 1024 * 1024,
-    });
+    }).finally(() => plugin?.dispose());
     collector.finish();
     if (result.timedOut) throw new Error('Agent hết thời gian cho phép.');
     if (collector.failure) throw new Error(redactSecrets(collector.failure));
