@@ -25,6 +25,8 @@
   --info: #2563eb; --info-soft: #eff6ff; --info-text: #1d4ed8;
   --highlight: #fffbeb; --highlight-text: #b45309;
   --c-in: #2563eb; --c-cache: #0891b2; --c-out: #16a34a; --c-cost: #d97706; --live: #2563eb;
+  /* One hue per agent role in charts: Developer and Author must never share a colour. */
+  --role-developer: #2563eb; --role-verifier: #d97706; --role-planner: #16a34a; --role-author: #7c3aed; --role-investigator: #0891b2;
   --flow: #2563eb; --flow-2: #0891b2; --hub: #d97706;
   --console-bg: #18181b; --console-text: #e4e4e7; --console-dim: #a1a1aa; --console-src: #86efac; --console-run: #93c5fd;
   --console-warn: #fcd34d; --console-error: #fca5a5;
@@ -58,7 +60,7 @@
     --bad: #f87171; --bad-soft: #3f0d0d; --bad-text: #fca5a5;
     --info: #60a5fa; --info-soft: #172554; --info-text: #93c5fd;
     --highlight: #3b2205; --highlight-text: #fcd34d;
-    --c-in: #60a5fa; --c-cache: #22d3ee; --c-out: #4ade80; --c-cost: #fbbf24; --live: #60a5fa;
+    --c-in: #60a5fa; --c-cache: #22d3ee; --c-out: #4ade80; --c-cost: #fbbf24; --live: #60a5fa; --role-developer: #60a5fa; --role-verifier: #fbbf24; --role-planner: #4ade80; --role-author: #a78bfa; --role-investigator: #22d3ee;
     --flow: #60a5fa; --flow-2: #22d3ee; --hub: #fbbf24;
     --console-bg: #0f0f11;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
@@ -86,7 +88,7 @@
   --bad: #f87171; --bad-soft: #3f0d0d; --bad-text: #fca5a5;
   --info: #60a5fa; --info-soft: #172554; --info-text: #93c5fd;
   --highlight: #3b2205; --highlight-text: #fcd34d;
-  --c-in: #60a5fa; --c-cache: #22d3ee; --c-out: #4ade80; --c-cost: #fbbf24; --live: #60a5fa;
+  --c-in: #60a5fa; --c-cache: #22d3ee; --c-out: #4ade80; --c-cost: #fbbf24; --live: #60a5fa; --role-developer: #60a5fa; --role-verifier: #fbbf24; --role-planner: #4ade80; --role-author: #a78bfa; --role-investigator: #22d3ee;
   --flow: #60a5fa; --flow-2: #22d3ee; --hub: #fbbf24;
   --console-bg: #0f0f11;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);

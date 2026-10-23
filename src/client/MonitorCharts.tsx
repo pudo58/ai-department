@@ -166,6 +166,15 @@ export function TokenChart({ series, unit }: { series: Bucket[]; unit: 'hour' | 
   </svg>;
 }
 
+/** Axis ticks from 0 to a round maximum (1, 2, 2.5 or 5 times a power of ten per step), so labels read $5, $10, not $9.256. */
+export function niceTicks(max: number, count = 4): number[] {
+  const raw = Math.max(max, Number.EPSILON) / count;
+  const power = 10 ** Math.floor(Math.log10(raw));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * power).find((s) => s >= raw)!;
+  const top = Math.ceil(max / step - 1e-9) * step;
+  return Array.from({ length: Math.round(top / step) + 1 }, (_, i) => +(i * step).toPrecision(12));
+}
+
 /** Stacked bars over time: tokens by kind, cost by agent role, or plain request counts. */
 export function MetricChart({ series, unit, metric }: { series: Bucket[]; unit: 'hour' | 'day'; metric: ChartMetric }) {
   const W = 900, H = 230, left = 56, bottom = 26, top = 12;
@@ -175,7 +184,10 @@ export function MetricChart({ series, unit, metric }: { series: Bucket[]; unit: 
     : metric === 'cost' ? roles.map((r) => ({ v: b.costByRole?.[r] ?? 0, color: ROLE_COLOR[r] ?? 'var(--text-3)', name: ROLE_NAME[r] ?? r }))
       : [{ v: b.requests, color: 'var(--accent)', name: 'lượt' }];
   const totalOf = (b: Bucket) => stacks(b).reduce((s, x) => s + x.v, 0);
-  const max = Math.max(metric === 'cost' ? 0.01 : 1, ...series.map(totalOf));
+  // An empty period gets a sentence, not a full-size grid of nothing.
+  if (!series.some((b) => totalOf(b) > 0)) return <p className="chart-empty">Chưa có {metric === 'tokens' ? 'token' : metric === 'cost' ? 'chi phí' : 'lượt gọi'} nào trong kỳ này.</p>;
+  const ticks = niceTicks(Math.max(...series.map(totalOf)));
+  const max = ticks.at(-1)!;
   const bw = (W - left - 8) / Math.max(1, series.length);
   const y = (v: number) => top + (H - top - bottom) * (1 - v / max);
   const label = (iso: string) => { const d = new Date(iso); return unit === 'hour' ? `${String(d.getHours()).padStart(2, '0')}:00` : `${d.getDate()}/${d.getMonth() + 1}`; };
@@ -184,7 +196,7 @@ export function MetricChart({ series, unit, metric }: { series: Bucket[]; unit: 
   return <>
     {metric === 'cost' && roles.length > 0 && <div className="legend chart-legend">{roles.map((r) => <span key={r}><i className="sw" style={{ background: ROLE_COLOR[r] ?? 'var(--text-3)' }}/>{ROLE_NAME[r] ?? r}</span>)}</div>}
     <svg viewBox={`0 0 ${W} ${H}`} className="chart" role="img" aria-label={`${metric === 'tokens' ? 'Token' : metric === 'cost' ? 'Chi phí' : 'Lượt gọi'} theo thời gian`}>
-      {[0, 0.5, 1].map((f) => <g key={f}><line x1={left} x2={W - 8} y1={y(max * f)} y2={y(max * f)} className="grid-line"/><text x={left - 8} y={y(max * f) + 4} textAnchor="end" className="axis">{fmt(max * f)}</text></g>)}
+      {ticks.map((v) => <g key={v}><line x1={left} x2={W - 8} y1={y(v)} y2={y(v)} className="grid-line"/><text x={left - 8} y={y(v) + 4} textAnchor="end" className="axis">{fmt(v)}</text></g>)}
       {series.map((b, i) => {
         const x = left + i * bw + bw * 0.14, w = Math.max(2, bw * 0.72);
         let top0 = y(0);
@@ -221,7 +233,7 @@ export const STATUS_DOT: Record<string, string> = { running: 'var(--live)', comp
 
 export const PERIOD_LABEL: Record<Period, string> = { today: 'Hôm nay', '24h': '24h', '7d': '7D', '30d': '30D', '60d': '60D' };
 
-export const ROLE_COLOR: Record<string, string> = { developer: 'var(--info)', verifier: 'var(--c-cost)', planner: 'var(--c-out)', author: 'var(--accent)', investigator: 'var(--c-in)' };
+export const ROLE_COLOR: Record<string, string> = { developer: 'var(--role-developer)', verifier: 'var(--role-verifier)', planner: 'var(--role-planner)', author: 'var(--role-author)', investigator: 'var(--role-investigator)' };
 
 export const time = (iso: string) => new Date(iso).toLocaleTimeString('vi-VN', { hour12: false });
 

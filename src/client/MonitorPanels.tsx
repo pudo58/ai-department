@@ -7,9 +7,11 @@ import { LogConsole } from './Monitor';
 import { MetricChart, RecentRequests, ROLE_COLOR, STATUS_TONE, Topology, num, type ChartMetric } from './MonitorCharts';
 import { Badge, Empty, Icon, Ledger, Modal, ago, count, dateTime, duration, money } from './ui';
 
-export function Delta({ now, before, period, invert = false }: { now: number; before: number; period: Period; invert?: boolean }) {
+export function Delta({ now, before, period, invert = false, format = num }: { now: number; before: number; period: Period; invert?: boolean; format?: (n: number) => string }) {
   if (!before && !now) return <small className="delta">không đổi so với {PREVIOUS_LABEL[period]}</small>;
   if (!before) return <small className="delta">mới so với {PREVIOUS_LABEL[period]}</small>;
+  // Nothing ran yet in this period: neutral, with the earlier figure, rather than a green "↓ 100%".
+  if (!now) return <small className="delta">chưa có hoạt động ({PREVIOUS_LABEL[period]}: {format(before)})</small>;
   const pct = Math.round(((now - before) / before) * 100);
   const tone = pct === 0 ? '' : (pct > 0) !== invert ? 'up' : 'down';
   return <small className={`delta ${tone}`}>{pct > 0 ? '↑' : pct < 0 ? '↓' : '→'} {Math.abs(pct)}% so với {PREVIOUS_LABEL[period]}</small>;
@@ -20,9 +22,9 @@ export function Kpis({ data }: { data: MonitorData }) {
   const wastePct = t.costUsd > 0 ? Math.round((data.waste.costUsd / t.costUsd) * 100) : 0;
   const cards: { label: string; value: string; dot: string; note?: React.ReactNode; tone?: string }[] = [
     { label: 'Lượt gọi agent', value: num(t.requests), dot: 'var(--text-3)', note: <><Delta now={t.requests} before={p.requests} period={data.period}/>{t.failed > 0 && <small className="bad-text">{t.failed} lỗi hoặc bị ngắt</small>}</> },
-    { label: 'Token', value: count(t.inputTokens + t.outputTokens), dot: 'var(--c-in)', note: <><small>vào {count(t.inputTokens)} · ra {count(t.outputTokens)}</small><Delta now={t.inputTokens + t.outputTokens} before={p.inputTokens + p.outputTokens} period={data.period}/></> },
-    { label: 'Tỉ lệ cache', value: `${Math.round(data.cacheRate * 100)}%`, dot: 'var(--c-cache)', note: <small>token vào đọc lại từ cache (rẻ hơn ~10 lần)</small> },
-    { label: 'Chi phí ước tính', value: `~${money(t.costUsd)}`, dot: 'var(--c-cost)', tone: 'cost', note: <><Delta now={t.costUsd} before={p.costUsd} period={data.period}/><small>{t.estimated ? 'Ước tính, không phải hóa đơn' : 'Theo báo cáo của provider'}</small></> },
+    { label: 'Token', value: count(t.inputTokens + t.outputTokens), dot: 'var(--c-in)', note: <><small>vào {count(t.inputTokens)} · ra {count(t.outputTokens)}</small><Delta now={t.inputTokens + t.outputTokens} before={p.inputTokens + p.outputTokens} period={data.period} format={count}/></> },
+    { label: 'Tỉ lệ cache', value: t.inputTokens ? `${Math.round(data.cacheRate * 100)}%` : '—', dot: 'var(--c-cache)', note: <small>{t.inputTokens ? 'token vào đọc lại từ cache (rẻ hơn ~10 lần)' : 'Chưa có token nào trong kỳ'}</small> },
+    { label: 'Chi phí ước tính', value: `~${money(t.costUsd)}`, dot: 'var(--c-cost)', tone: 'cost', note: <><Delta now={t.costUsd} before={p.costUsd} period={data.period} format={(n) => `~${money(n)}`}/><small>{t.estimated ? 'Ước tính, không phải hóa đơn' : 'Theo báo cáo của provider'}</small></> },
     { label: 'Chi phí / task nghiệm thu', value: data.costPerAccepted === null ? '—' : `~${money(data.costPerAccepted)}`, dot: 'var(--c-out)', note: <small>{data.acceptedInPeriod ? `${data.acceptedInPeriod} task nghiệm thu trong kỳ (tính cả đời task)` : 'Chưa có task nghiệm thu trong kỳ'}</small> },
     { label: 'Lãng phí ước tính', value: `~${money(data.waste.costUsd)}`, dot: 'var(--warn)', tone: data.waste.costUsd > 0 ? 'warn' : '', note: <small>{data.waste.costUsd > 0 ? `${wastePct}% chi phí kỳ này, xem chi tiết bên dưới` : 'Không thấy lãng phí trong kỳ'}</small> },
   ];
@@ -77,15 +79,18 @@ export function SpendPanel({ data }: { data: MonitorData }) {
   </section>;
 }
 
+const WASTE_SHOWN = 5;
 export function WastePanel({ data, now }: { data: MonitorData; now: number }) {
   const { items, costUsd } = data.waste;
+  const [all, setAll] = useState(false);
   return <section className="panel-card">
     <div className="card-head"><h3>Lãng phí</h3>{items.length > 0 && <span className="muted small">~{money(costUsd)} trong kỳ</span>}</div>
-    {!items.length ? <p className="muted small">Không thấy lượt nào chạy lại vô ích, lỗi hay task kẹt trong kỳ này.</p> : <ul className="waste-list">{items.slice(0, 12).map((w, i) => <li key={`${w.kind}-${w.runId}-${i}`}>
+    {!items.length ? <p className="muted small">Không thấy lượt nào chạy lại vô ích, lỗi hay task kẹt trong kỳ này.</p> : <ul className="waste-list">{(all ? items : items.slice(0, WASTE_SHOWN)).map((w, i) => <li key={`${w.kind}-${w.runId}-${i}`}>
       <div className="wait-main"><Badge tone={WASTE_LABEL[w.kind][1]}>{WASTE_LABEL[w.kind][0]}</Badge><a className="cell-title" href={`#/run/${w.runId}`} title={w.runTitle}>{w.runTitle}</a>{w.costUsd > 0 && <strong className="waste-cost">~{money(w.costUsd)}</strong>}</div>
       <p className="wait-detail">{w.detail}</p>
       <span className="faint small">{ago(w.at, now)}</span>
     </li>)}</ul>}
+    {items.length > WASTE_SHOWN && <button className="text-button" onClick={() => setAll((v) => !v)}>{all ? 'Thu gọn' : `Xem cả ${items.length}`}</button>}
     {items.some((i) => i.kind === 'repeat-review') && <p className="muted small waste-tip">Verifier lặp thường do bấm Chạy tiếp khi không có gì thay đổi. Hãy sửa hợp đồng hoặc check trước, rồi mới chạy lại.</p>}
   </section>;
 }

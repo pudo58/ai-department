@@ -1,12 +1,13 @@
 /* Theo dõi: who AI Department is calling, what runs, where money goes. Ink on dotted paper; no glow. */
 .ledger.ledger-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.ledger-3 .ledger-item:nth-child(3n + 1) { border-left: 0; }
-.ledger-3 .ledger-item:nth-child(n + 4) { border-top: 1px solid var(--border); }
 .ledger .sub small, .ledger .sub .delta { display: block; font-size: .8rem; }
 .delta { color: var(--text-3); } .delta.up { color: var(--warn-text); } .delta.down { color: var(--ok-text); }
 
 .overview-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 28px; align-items: start; }
 .overview-split { margin-bottom: 18px; align-items: start; }
+/* Spending table needs the room (task names, four numbers); the waste list is a column of short items. Equal heights. */
+.cost-split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: stretch; }
+.chart-empty { margin: 12px 0 4px; padding: 28px 0; text-align: center; color: var(--text-3); font-size: .9rem; border: 1px dashed var(--border); border-radius: var(--radius-sm); }
 .live-grid { grid-template-columns: minmax(0, 1fr) 380px; margin-bottom: 18px; }
 .live-grid .recent-scroll { max-height: 470px; }
 .health-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
@@ -132,11 +133,9 @@ a:hover .chip2 rect:first-child { stroke: var(--accent); fill: var(--bg); }
 
 @media (max-width: 1000px) {
   .overview-grid, .live-grid { grid-template-columns: 1fr; }
+  .cost-split { grid-template-columns: 1fr; }
   .recent-scroll { max-height: 320px; }
   .ledger.ledger-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ledger-3 .ledger-item:nth-child(3n + 1) { border-left: 1px solid var(--border); }
-  .ledger-3 .ledger-item:nth-child(2n + 1) { border-left: 0; }
-  .ledger-3 .ledger-item:nth-child(n + 3) { border-top: 1px solid var(--border); }
 }
 @media (max-width: 720px) {
   .map2 { min-height: 320px; } .map-legend { display: none; }
@@ -144,6 +143,4 @@ a:hover .chip2 rect:first-child { stroke: var(--accent); fill: var(--bg); }
 }
 @media (max-width: 520px) {
   .ledger.ledger-3 { grid-template-columns: minmax(0, 1fr); }
-  .ledger-3 .ledger-item, .ledger-3 .ledger-item:nth-child(n) { border-left: 0; }
-  .ledger-3 .ledger-item + .ledger-item { border-top: 1px solid var(--border); }
 }
