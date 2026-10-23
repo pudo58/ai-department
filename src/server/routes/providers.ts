@@ -9,6 +9,15 @@ export function registerProviderRoutes({ app, dataDir }: RouteContext): void {
     if (z.object({ refresh: z.string().max(5).optional() }).parse(request.query).refresh === '1') forgetCliStatus();
     return Promise.all((['codex', 'claude', 'antigravity'] as AgentCli[]).map((id) => cachedCliStatus(id)));
   });
+  /**
+   * One CLI's status. The page asks for the three separately so each card appears as soon as its own check finishes;
+   * Antigravity's `agy models` takes seconds and must not hold up Codex and Claude.
+   */
+  app.get('/api/providers/:id', async (request) => {
+    const { id } = Cli.parse(request.params);
+    if (z.object({ refresh: z.string().max(5).optional() }).parse(request.query).refresh === '1') forgetCliStatus(id);
+    return cachedCliStatus(id);
+  });
   app.post('/api/providers/:id/test', async (request) => testCli(Cli.parse(request.params).id, dataDir));
   app.post('/api/providers/:id/login', async (request) => startLogin(Cli.parse(request.params).id));
   app.post('/api/providers/codex/install', async () => installCodex());

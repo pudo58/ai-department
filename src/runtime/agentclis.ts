@@ -153,7 +153,8 @@ export function cachedCliStatus(id: AgentCli, maxAgeMs = 30_000): Promise<CliSta
   cache.set(id, { at: Date.now(), value });
   return value;
 }
-export const forgetCliStatus = () => cache.clear();
+/** Forgets one CLI's cached status (after it was installed, signed in or re-checked), or all of them. */
+export const forgetCliStatus = (id?: AgentCli) => (id ? cache.delete(id) : cache.clear());
 
 /**
  * Sends one tiny prompt through the CLI exactly as runs will (non-interactive, no tools needed) and reports

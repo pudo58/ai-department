@@ -33,3 +33,26 @@
 .role-pill.provider-codex span::before { background: var(--text); }
 .role-pill.provider-claude span::before { background: #c96a4b; }
 .role-pill.provider-antigravity span::before { background: #3d73d6; }
+
+/* A card that is still being checked: the shape of the real one, with soft bars instead of text. */
+.skel-lines { display: flex; flex-direction: column; gap: 10px; }
+.skel { display: block; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--bg-muted) 25%, var(--bg-hover) 50%, var(--bg-muted) 75%); background-size: 200% 100%; animation: skel-shimmer 1.4s ease-in-out infinite; }
+.skel.w70 { width: 70%; } .skel.w45 { width: 45%; } .skel.w60 { width: 60%; }
+@keyframes skel-shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skel { animation: none; } }
+
+/* A CLI that is set up: its facts as a compact list, the sign-in steps folded away. */
+.connect-facts { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 8px 12px; margin: 0; font-size: .9rem; align-items: start; }
+.connect-facts dt { color: var(--text-3); }
+.connect-facts dd { margin: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.model-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.model-chip { padding: 1px 8px; border: 1px solid var(--border); border-radius: 99px; background: var(--bg-muted); font-size: .78rem; color: var(--text-2); white-space: nowrap; }
+.model-chip.more { background: none; border-style: dashed; color: var(--text-3); cursor: help; }
+.usage-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.connect-details { border-top: 1px solid var(--border); padding-top: 10px; }
+.connect-details summary { cursor: pointer; color: var(--text-2); font-size: .88rem; }
+.connect-details[open] summary { margin-bottom: 12px; }
+.usage-list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; min-width: 0; }
+.connect-test { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; padding-top: 10px; border-top: 1px solid var(--border); }
+.connect-test > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.connect-test > p, .connect-test > pre { grid-column: 1 / -1; margin: 0; }
