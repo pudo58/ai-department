@@ -59,6 +59,8 @@
 .roles-table { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg); }
 .roles-row { display: grid; grid-template-columns: minmax(150px, 1.2fr) 150px minmax(120px, 1fr) 96px; gap: 8px; align-items: center; padding: 9px 12px; }
 .roles-row + .roles-row { border-top: 1px solid var(--border); }
+.model-pick { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.model-pick input { flex: 1; min-width: 0; }
 .roles-name { min-width: 0; }
 .roles-name strong { display: block; font-size: .9rem; }
 .roles-editor .roles-name small { margin-top: 1px; }

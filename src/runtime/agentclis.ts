@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
+import { homedir } from 'node:os';
 import path from 'node:path';
 import { createAgyHome } from './agyhome.js';
 import { resolveCodexCommand, resolveHostCommand } from './hostcommand.js';
@@ -8,6 +9,36 @@ import { executeFile, redactSecrets } from './process.js';
 import { agyInput, buildCliCommand, JsonlCollector } from './providers.js';
 
 export type AgentCli = 'codex' | 'claude' | 'antigravity';
+export interface ModelOption { id: string; label: string; hint?: string }
+
+/**
+ * Claude Code takes an alias, which always means the newest model of that line, or a full model name. Aliases come
+ * first because they keep working when a new version ships.
+ */
+export const CLAUDE_MODELS: ModelOption[] = [
+  { id: 'fable', label: 'Fable (mới nhất)', hint: 'Bí danh, luôn là bản Fable mới nhất' },
+  { id: 'opus', label: 'Opus (mới nhất)', hint: 'Bí danh, luôn là bản Opus mới nhất' },
+  { id: 'sonnet', label: 'Sonnet (mới nhất)', hint: 'Bí danh, luôn là bản Sonnet mới nhất' },
+  { id: 'haiku', label: 'Haiku (mới nhất)', hint: 'Bí danh, nhanh và rẻ' },
+  { id: 'claude-fable-5-1', label: 'Claude Fable 5.1', hint: 'Cố định phiên bản' },
+  { id: 'claude-opus-5-5', label: 'Claude Opus 5.5', hint: 'Cố định phiên bản' },
+  { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5', hint: 'Cố định phiên bản' },
+  { id: 'claude-haiku-5-5', label: 'Claude Haiku 5.5', hint: 'Cố định phiên bản' },
+];
+
+/**
+ * The models this Codex account may use, as Codex itself last fetched them (`models_cache.json` in the Codex home),
+ * in Codex's own order; hidden internal models are left out. Empty when Codex has not fetched the list yet.
+ */
+export async function codexModels(codexHome = process.env.CODEX_HOME ?? path.join(homedir(), '.codex')): Promise<ModelOption[]> {
+  try {
+    const cache = JSON.parse(await readFile(path.join(codexHome, 'models_cache.json'), 'utf8')) as { models?: { slug?: unknown; display_name?: unknown; description?: unknown; visibility?: unknown; priority?: unknown }[] };
+    return (cache.models ?? [])
+      .filter((m) => typeof m.slug === 'string' && m.visibility !== 'hide')
+      .sort((a, b) => Number(a.priority ?? 999) - Number(b.priority ?? 999))
+      .map((m) => ({ id: m.slug as string, label: typeof m.display_name === 'string' ? m.display_name : m.slug as string, ...(typeof m.description === 'string' ? { hint: m.description.slice(0, 120) } : {}) }));
+  } catch { return []; }
+}
 export interface CliStatus {
   id: AgentCli; name: string;
   installed: boolean; version?: string; command?: string;
@@ -18,6 +49,8 @@ export interface CliStatus {
   account?: string;
   /** Model ids the CLI offers (Antigravity lists them once signed in). */
   models?: string[];
+  /** The same models with a readable name and a one-line hint, for the model picker. */
+  modelOptions?: ModelOption[];
   detail?: string;
 }
 
@@ -60,8 +93,10 @@ export async function codexStatus(): Promise<CliStatus> {
   const text = login?.out ?? '';
   const loggedIn = login?.code === 0 && /logged in/i.test(text);
   const viaKey = /api key/i.test(text);
+  const modelOptions = await codexModels();
   return {
     ...base, installed: true, version: firstLine(version.out), command: cmd.join(' '), loggedIn,
+    ...(modelOptions.length ? { models: modelOptions.map((m) => m.id), modelOptions } : {}),
     ...(loggedIn ? { billing: viaKey ? 'api' as const : 'subscription' as const, account: viaKey ? 'API key' : 'ChatGPT' } : {}),
     detail: loggedIn ? undefined : 'Đã cài nhưng chưa đăng nhập.',
   };
@@ -81,6 +116,7 @@ export async function claudeStatus(): Promise<CliStatus> {
   const plan = typeof info.subscriptionType === 'string' ? info.subscriptionType : undefined;
   return {
     ...base, installed: true, version: firstLine(version.out), command: cmd.join(' '), loggedIn,
+    models: CLAUDE_MODELS.map((m) => m.id), modelOptions: CLAUDE_MODELS,
     ...(loggedIn ? { billing: subscription ? 'subscription' as const : 'api' as const, account: subscription ? `claude.ai${plan ? ` (${plan})` : ''}` : method || 'API' } : {}),
     detail: loggedIn ? undefined : 'Đã cài nhưng chưa đăng nhập.',
   };
@@ -101,7 +137,7 @@ export async function antigravityStatus(): Promise<CliStatus> {
   const viaKey = !!process.env.GEMINI_API_KEY;
   return {
     ...base, installed: true, version: firstLine(version.out), command: cmd.join(' '), loggedIn,
-    ...(loggedIn ? { billing: viaKey ? 'api' as const : 'subscription' as const, account: viaKey ? 'GEMINI_API_KEY' : 'Google', models } : {}),
+    ...(loggedIn ? { billing: viaKey ? 'api' as const : 'subscription' as const, account: viaKey ? 'GEMINI_API_KEY' : 'Google', models, modelOptions: models.map((id) => ({ id, label: id })) } : {}),
     detail: loggedIn ? undefined : 'Đã cài nhưng chưa đăng nhập.',
   };
 }

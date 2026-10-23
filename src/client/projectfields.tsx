@@ -105,7 +105,32 @@ const ROLE_INFO: [Role, string, string][] = [
   ['investigator', 'Investigator', 'Đọc yêu cầu độc lập (chế độ Clarify)'],
 ];
 const SUGGESTED: Record<Role, 'codex' | 'claude'> = { planner: 'codex', developer: 'codex', author: 'claude', verifier: 'claude', investigator: 'claude' };
-export interface CliReady { id: 'codex' | 'claude' | 'antigravity'; installed: boolean; loggedIn: boolean; models?: string[] }
+export interface ModelOption { id: string; label: string; hint?: string }
+export interface CliReady { id: 'codex' | 'claude' | 'antigravity'; installed: boolean; loggedIn: boolean; models?: string[]; modelOptions?: ModelOption[] }
+
+const OTHER = '__other__';
+/**
+ * The models the chosen provider offers on this machine (Codex: the account's list Codex fetched; Claude: aliases and
+ * full names; Antigravity: `agy models`), plus the CLI default and a free-text "other". Until a list is known, or for
+ * a name the list does not have, it is a plain text box, so nothing that worked before stops working.
+ */
+function ModelPicker({ label, value, options, onChange }: { label: string; value: string; options: ModelOption[]; onChange: (model: string) => void }) {
+  const known = !value || options.some((o) => o.id === value);
+  const [typing, setTyping] = useState(false);
+  if (!options.length || typing) {
+    return <div className="model-pick">
+      <input aria-label={`${label}: model`} placeholder="Model mặc định" value={value} onChange={(e) => onChange(e.target.value)} spellCheck={false} autoFocus={typing}/>
+      {options.length > 0 && <button type="button" className="text-button" title="Chọn từ danh sách" onClick={() => { setTyping(false); if (!options.some((o) => o.id === value)) onChange(''); }}>Danh sách</button>}
+    </div>;
+  }
+  const selected = options.find((o) => o.id === value);
+  return <select aria-label={`${label}: model`} value={value} title={selected?.hint ?? 'CLI tự chọn model mặc định của nó'} onChange={(e) => (e.target.value === OTHER ? setTyping(true) : onChange(e.target.value))}>
+    <option value="">Mặc định của CLI</option>
+    {options.map((o) => <option key={o.id} value={o.id} title={o.hint}>{o.label}</option>)}
+    {!known && <option value={value}>{value} (tự nhập)</option>}
+    <option value={OTHER}>Khác… (tự nhập)</option>
+  </select>;
+}
 
 /** Which agent CLIs are installed and signed in on this machine; null until known (or when the check fails). */
 export function useCliReady(): CliReady[] | null {
@@ -157,12 +182,11 @@ export function RolesEditor({ value, onChange, presets = true }: { value: Record
       <select aria-label={`${label}: provider`} value={value[role].provider} onChange={(e) => set(role, { provider: e.target.value as RoleConfig['provider'], model: '' })}>
         <option value="codex">Codex{ready && !ok('codex') ? ' (chưa sẵn sàng)' : ''}</option><option value="claude">Claude Code{ready && !ok('claude') ? ' (chưa sẵn sàng)' : ''}</option>
         <option value="antigravity">Antigravity{isExperimental('antigravity', role) ? ' (thử nghiệm)' : ''}{ready && !ok('antigravity') ? ' (chưa sẵn sàng)' : ''}</option></select>
-      <input aria-label={`${label}: model`} placeholder="Model mặc định" value={value[role].model} onChange={(e) => set(role, { model: e.target.value })} spellCheck={false} list={value[role].provider === 'antigravity' ? 'agy-models' : undefined}/>
+      <ModelPicker key={value[role].provider} label={label} value={value[role].model} options={ready?.find((r) => r.id === value[role].provider)?.modelOptions ?? []} onChange={(model) => set(role, { model })}/>
       <select aria-label={`${label}: mức suy nghĩ`} value={value[role].effort} onChange={(e) => set(role, { effort: e.target.value })} title={EFFORT_HINT[value[role].provider]}><option value="low">low</option><option value="medium">medium</option><option value="high">high</option></select>
     </div>)}</div>
-    <datalist id="agy-models">{(ready?.find((r) => r.id === 'antigravity')?.models ?? []).map((m) => <option key={m} value={m}/>)}</datalist>
     {experimental.length > 0 && <p className="notice-line">{experimental.join(', ')}: Antigravity thử nghiệm chỉ sửa được file trong bản sao làm việc và không chạy được lệnh nào; AI Department tự chạy các check sau lượt của nó.</p>}
     {notReady.length > 0 && <p className="notice-line">{notReady.join(', ')} đang dùng một CLI chưa cài hoặc chưa đăng nhập. <a href="#/connect">Mở Kết nối AI</a>.</p>}
-    <small>Model trống thì CLI dùng mặc định của nó (ví dụ gpt-6.1-sol, model của gói Claude, hoặc model Antigravity đang chọn). Antigravity làm Developer hoặc Author là thử nghiệm. Đổi vai là thay đổi policy, cần duyệt lại.</small>
+    <small>Danh sách model lấy từ chính CLI trên máy: Codex theo tài khoản ChatGPT của bạn, Claude theo bí danh (luôn là bản mới nhất) hoặc tên cố định, Antigravity theo <code>agy models</code>. "Mặc định của CLI" để CLI tự chọn. Antigravity làm Developer hoặc Author là thử nghiệm. Đổi vai là thay đổi policy, cần duyệt lại.</small>
   </div>;
 }
