@@ -3,7 +3,8 @@
 //   npm run package                  release/ai-department/ (the package folder), an npm tarball and a portable zip
 //   npm run package -- --with-data   the zip also carries a snapshot of this machine's database (never the npm tarball)
 //
-// Publishing is a separate, deliberate step:  npm publish release/ai-department
+// Publishing is a separate, deliberate step:  npm publish ./release/ai-department
+// Keep the ./ prefix: npm interprets release/ai-department as GitHub owner/repo shorthand.
 import { execFileSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';

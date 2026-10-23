@@ -9,6 +9,27 @@ npm test                       # vitest
 npm run eval -- <lệnh>         # bộ đo M0 (xem bên dưới)
 ```
 
+## Đóng gói và phát hành lên npm
+
+Chạy từ thư mục gốc của repository:
+
+```bash
+npm run package
+npm publish ./release/ai-department --dry-run
+npm login
+npm publish ./release/ai-department
+```
+
+Giữ tiền tố `./`: `npm publish release/ai-department` được npm hiểu là repository GitHub `release/ai-department`, có thể gây lỗi SSH `Permission denied (publickey)`. Thư mục gốc là package private dùng phát triển; package để phát hành nằm trong `release/ai-department`. `--dry-run` chỉ kiểm tra gói, chưa đăng lên registry.
+
+## Cấu trúc mã
+
+- `src/core/`: luật thuần (hợp đồng, ngân sách, check, phát hiện stack, báo cáo), không đụng đĩa hay mạng.
+- `src/runtime/`: chạy agent và check (Local, Docker, Fake), workspace git, cài công cụ build (`toolchain.ts`, `pythonenv.ts`).
+- `src/server/orchestrator.ts`: mặt công khai của một run (tạo, chạy, dừng, duyệt, nghiệm thu) và vòng điều khiển qua các giai đoạn. Việc của từng giai đoạn nằm ở `src/server/run/`: `services.ts` (store, runtime, đồng hồ, một lượt agent), `planning.ts`, `candidates.ts` (vòng Developer, test do Author viết), `checks.ts`, `verification.ts`, `scope.ts` (được sửa gì), `outcome.ts` (trạng thái và read model), `acceptance.ts`, `timers.ts`.
+- `src/server/app.ts`: bảo vệ loopback (Host, Origin, CSRF) và nối các nhóm route trong `src/server/routes/` (`providers`, `projects`, `memory`, `runs`, `previews`, `system`, `monitor`); `routes/schemas.ts` giữ các schema body.
+- `src/client/`: giao diện React; mỗi trang lớn tách phần thân (`RunPage`, `MonitorHub`, `Monitor`) khỏi các panel của nó (`RunPanels`, `MonitorPanels`, `MonitorCharts`).
+
 ## Trạng thái triển khai
 
 | Phần | Trạng thái |
@@ -24,7 +45,7 @@ npm run eval -- <lệnh>         # bộ đo M0 (xem bên dưới)
 | LocalRuntime (Codex chạy thẳng trên máy bạn, bản sao làm việc trong .data/workspaces) | **Đã chạy với Codex 0.163.0 thật**: task bugfix pass end-to-end, branch được giao về repo gốc. Không có cô lập container |
 | DockerRuntime (agent + check trong container) | Chạy được với agent giả; **Codex thật không chạy lệnh được trong container khóa** (bwrap bị chặn), xem mục Docker |
 | Hướng dẫn theo project (`guidance`) đưa vào prompt Planner/Developer/Repair/Author/Verifier | Xong, có test (cần Codex thật để thấy tác dụng lên chất lượng code) |
-| Phát hiện stack chỉ-đọc, gợi ý guidance và check khi tạo/sửa project | Xong, có test; chỉ nhận diện hệ Node/JS/TS |
+| Phát hiện stack chỉ-đọc, gợi ý guidance và check khi tạo/sửa project | Xong, có test; Node/JS/TS, Java/Kotlin (Maven, Gradle), Python (pytest), Go, Rust |
 | Nhiều check mỗi project (UI thêm/sửa/xóa), check không có report (typecheck, lint, build) | Xong, có test, đã chạy với tiến trình thật qua LocalRuntime |
 | Ngữ cảnh project: bản đồ repo, bộ nhớ đã duyệt, ngân sách token theo vai, xem trước | Xong, có test; **tắt mặc định**, chưa đo được lợi ích với Codex thật. Agent chưa tự đề xuất bộ nhớ (bước 3, chờ số đo) |
 | Công cụ phân tích knip/jscpd/dependency-cruiser | Chưa nối: báo "chưa phân tích" |
@@ -87,7 +108,16 @@ Nếu agent sửa file ngoài `modules` của project, patch bị từ chối v�
 - **Nhiều check**: form sửa/tạo cho thêm, sửa, xóa từng check (id, lệnh JSON argv, bắt buộc, report, timeout) và thêm từ mẫu (Vitest, Jest, node --test, tsc, ESLint, build). Check chạy theo thứ tự; id phải khác nhau.
 - **Check không có report** (typecheck, lint, build): mã thoát 0 là pass, khác 0 là fail (có một lần chạy lại để phân biệt flaky), output hiện trong Console và trong lời nhắc sửa lỗi. Chúng không có test id nên **không bao giờ tính là bằng chứng cho yêu cầu**; chỉ check có report mới xác minh yêu cầu. Check bắt buộc đang fail vẫn chặn nghiệm thu dù test xanh. Không có red/green cho check này.
 
-Giới hạn: detector chỉ hiểu hệ Node; repo Python/Go/Rust chỉ nhận ghi chú và phải tự nhập check. Với pnpm/yarn, lệnh cài đặt gợi ý đi qua `npx` vì Windows không chạy trực tiếp `.cmd`; Bun chưa được hỗ trợ chạy trực tiếp.
+**Java, Kotlin, Python, Go, Rust.** Gặp `pom.xml` hoặc `build.gradle(.kts)`, detector gợi ý hai check: `build` (biên dịch code và test, `-q`) rồi `test`. Build chạy trước và nếu fail thì check test bị bỏ qua, lỗi biên dịch được đưa cho Developer sửa như một lỗi bình thường thay vì "thiếu report". Báo cáo test của Maven (`target/surefire-reports`) và Gradle (`build/test-results/test`) là mỗi class một file XML; `reportPath` có thể là **một thư mục** (gộp mọi `.xml` trong đó) hoặc mẫu `**/target/surefire-reports` cho dự án nhiều module. Lệnh dùng `mvnw`/`gradlew` nếu repo có (Windows: `mvnw.cmd` qua `cmd.exe`, chỉ khi đối số không chứa ký tự đặc biệt của cmd), không thì `mvn`/`gradle` trên máy; Gradle chạy `--no-daemon` để không để tiến trình ngầm giữ file. Python dùng `python -m pytest --junitxml`; Go và Rust chỉ có build và test theo exit code (không có report, nên yêu cầu phải xác minh thủ công). Tên test gắn yêu cầu bằng `[R-1]` hoặc `R_1` (Java, Python, Go, Rust không có dấu `[` trong tên hàm). Repo có manifest ở thư mục con (ví dụ `backend/pom.xml`) thì detector chỉ ra thư mục đó để chọn làm thư mục project.
+
+**Môi trường tự chuẩn bị (chế độ Local).** Khi bắt đầu task, hệ thống đọc các lệnh của project (lệnh cài đặt và các check) để biết cần công cụ gì, rồi tự lo phần còn thiếu, không đổi gì trong hệ thống:
+- **JDK, Maven, Gradle:** nếu lệnh dùng `mvn`/`gradle`/wrapper mà máy chưa có JDK, hoặc JDK cũ hơn phiên bản project yêu cầu (đọc từ `pom.xml`/`build.gradle`), hệ thống tải Eclipse Temurin (LTS thấp nhất đủ dùng) vào `<data>/tools/jdk-<n>`; `mvn`/`gradle` trần mà không có trên PATH thì tải Maven 3.9.9 / Gradle 8.10.2. Có `mvnw`/`gradlew` thì dùng wrapper, không tải Maven/Gradle. Mỗi file tải chỉ qua HTTPS từ nhà phát hành (api.adoptium.net, archive.apache.org, services.gradle.org), được đối chiếu với checksum họ công bố (sai thì xóa và dừng), tối đa 700 MB, chỉ tải một lần và dùng chung cho mọi task. Đã cài sẵn công cụ đủ dùng trên máy thì không tải gì. Công cụ cài được đặt lên đầu `PATH` (và `JAVA_HOME`) của lệnh setup, check và agent.
+- **Python:** tạo `.venv` riêng trong bản sao làm việc, `pip install -r requirements.txt`, `pip install -e .` nếu là package (lỗi thì chỉ cảnh báo) và cài pytest nếu thiếu. `.venv` đặt lên đầu `PATH` nên `python -m pytest` trong check chạy trong venv. Python thì không tự cài được (trình cài trên Windows cần người bấm): thiếu thì task dừng ở trạng thái "Bị chặn" kèm hướng dẫn.
+- `.venv/`, `target/` (Maven), `build/` và `.gradle/` (Gradle), `__pycache__/` không bao giờ vào diff của agent.
+- Tiến trình tải và cài hiện trong Console (nguồn `setup`). Task chỉ bị chặn khi không cài được (mất mạng, checksum sai, thiếu Python).
+- Chưa làm: tự cài Go và Rust (nặng, cần toolchain đầy đủ), Node theo phiên bản của project, và chế độ Docker (image runner chưa có JDK).
+
+Giới hạn: phần tải và cài JDK/Maven/Gradle đã test với máy chủ giả (tải, checksum, giải nén, chia sẻ một lần tải) và phần Maven/Gradle chưa chạy với bản thật; venv và PATH đã chạy với Python thật, nhưng `pip install` từ PyPI chưa được chạy thử. Với pnpm/yarn, lệnh cài đặt gợi ý đi qua `npx` vì Windows không chạy trực tiếp `.cmd`; Bun chưa được hỗ trợ chạy trực tiếp.
 
 ## Ngữ cảnh project (bộ nhớ, bản đồ repo)
 
@@ -128,6 +158,8 @@ Guidance vẫn gửi như cũ và không tính vào ngân sách.
 - `PATCH|DELETE /api/projects/:id/memory/:mid`
 - `GET /api/projects/:id/repomap`
 - `GET /api/projects/:id/context?role=developer&budget=…`
+
+**Tiết kiệm context window.** Verifier đọc toàn bộ thay đổi từ bản gốc (test của Author và mọi vòng sửa), không chỉ vòng cuối; diff quá 60.000 ký tự được cắt theo từng file ở ranh giới dòng, code trước test, lockfile/file sinh tự động chỉ nêu tên, và phần bị bỏ được liệt kê. Vòng sửa nối tiếp phiên Developer (Codex, Claude) chỉ gửi danh sách lỗi; phiên mới (hoặc Antigravity, vốn không nối phiên) nhận prompt đầy đủ với phần cố định đặt trước và danh sách lỗi ở cuối để cache của provider dùng lại được phần đầu. Ước lượng token tính chữ có dấu tiếng Việt nặng hơn chữ ASCII (khoảng 3 ký tự/token cho văn xuôi tiếng Việt thay vì 3,5).
 
 ## Project mới: cho agent dựng stack
 
