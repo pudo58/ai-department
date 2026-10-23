@@ -77,13 +77,26 @@ ${QUALITY_RULES}
 ${extra}
 Kết thúc bằng khối \`\`\`json {"reuse":[{"path":"...","fit":"high|partial|low","decision":"use|extend|refactor|new","reason":"..."}]}.`;
   },
+  /**
+   * A repair in a fresh session: everything the Developer needs again. The parts that never change between rounds come
+   * first and the problems last, so a provider's prompt cache can reuse the shared beginning.
+   */
   repair(run: Run, problems: string[]): string {
-    return `Bạn là Developer. Các vấn đề sau đã được xác nhận trên checkpoint hiện tại, hãy sửa tối thiểu và không mở rộng phạm vi.
-${bullets(problems)}
-
+    return `Bạn là Developer. Sửa các vấn đề đã được xác nhận trên checkpoint hiện tại (liệt kê ở cuối), sửa tối thiểu và không mở rộng phạm vi.
 ${guidanceBlock(run)}${contractText(run.contract)}${projectContext(run, 'developer')}${scaffoldNote(run)}
 
 ${QUALITY_RULES}
+
+Vấn đề cần sửa:
+${bullets(problems)}
+
+Kết thúc bằng khối \`\`\`json {"reuse":[]}.`;
+  },
+  /** A repair inside the Developer's own resumed session: it already holds the contract, guidance and rules, so only the problems are sent. */
+  repairFollowUp(problems: string[]): string {
+    return `Tiếp tục phiên trước: hợp đồng, hướng dẫn của project và quy tắc chất lượng vẫn như lần trước. Các vấn đề sau đã được xác nhận trên checkpoint hiện tại; sửa tối thiểu và không mở rộng phạm vi.
+${bullets(problems)}
+
 Kết thúc bằng khối \`\`\`json {"reuse":[]}.`;
   },
   verifier(run: Run, diffSummary: string): string {
@@ -106,12 +119,12 @@ Chỉ tạo hoặc sửa FILE TEST (thư mục tests/, test/, __tests__/, e2e/ h
 ${extra}Mỗi test gắn mã yêu cầu trong tiêu đề, ví dụ "[R-1] ...". Kết thúc bằng khối \`\`\`json {"reuse":[]}.`;
   },
   alternative(run: Run, primarySummary: string): string {
-    return `Bạn là Developer của phương án B. Giải cùng hợp đồng bằng một hướng KHÁC phương án A dưới đây, không sao chép nó.
-Phương án A (tóm tắt): ${primarySummary}
-
+    return `Bạn là Developer của phương án B. Giải cùng hợp đồng bằng một hướng KHÁC phương án A (tóm tắt ở cuối), không sao chép nó.
 ${guidanceBlock(run)}${contractText(run.contract)}${projectContext(run, 'developer')}${scaffoldNote(run)}
 
 ${QUALITY_RULES}
+
+Phương án A (tóm tắt): ${primarySummary}
 Kết thúc bằng khối \`\`\`json {"reuse":[]}.`;
   },
 } as const;

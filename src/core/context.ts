@@ -22,8 +22,16 @@ const ROLE_MAP: Record<ContextRole, ('tree' | 'entries' | 'scripts' | 'tests' | 
 const MAP_TITLES = { tree: 'Thư mục', entries: 'Điểm vào', scripts: 'Script', tests: 'Test', docs: 'Tài liệu cho agent' } as const;
 const TEST_HINT = /test|spec|kiểm thử/i;
 
-/** A rough estimate (about 3.5 characters per token for mixed Vietnamese/code); always shown as an estimate. */
-export const estimateTokens = (text: string): number => Math.ceil(text.length / 3.5);
+/**
+ * A rough estimate, always shown as one. ASCII (code, English, Vietnamese without marks) runs at roughly 3.6 characters
+ * per token, but a letter with Vietnamese diacritics is often a token piece of its own, so counting every character
+ * alike under-estimated Vietnamese text by up to half and let a "3000 token" block run well past its budget.
+ */
+export const estimateTokens = (text: string): number => {
+  let ascii = 0;
+  for (let i = 0; i < text.length; i++) if (text.charCodeAt(i) < 128) ascii++;
+  return Math.ceil(ascii / 3.6 + (text.length - ascii) / 1.2);
+};
 
 /** Context text cannot close or open our own blocks, nor open a code fence that would pass for agent output. */
 const sanitize = (text: string) => text.replace(/<\/?project_(?:context|guidance)[^>]*>/gi, '').replace(/`{3,}/g, "'''");
