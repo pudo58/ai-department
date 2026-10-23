@@ -57,6 +57,8 @@ describe('loopback protections', () => {
     const res = await app!.inject({ method: 'GET', url: '/api/session', headers: host });
     expect(res.headers['x-frame-options']).toBe('DENY');
     expect(res.headers['content-security-policy']).toContain("frame-ancestors 'none'");
+    // The bundled fonts and the select arrow are data: URIs; without these directives the browser blocks them.
+    expect(res.headers['content-security-policy']).toMatch(/font-src 'self' data:.*img-src 'self' data:/);
   });
 });
 
