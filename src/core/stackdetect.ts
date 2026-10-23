@@ -2,6 +2,8 @@ import { lstat, readdir, readFile, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { GUIDANCE_MAX_CHARS } from '../shared/guidance.js';
 import type { StackDetection, SuggestedCheck } from '../shared/types.js';
+import { nodeTestProblem, type NodeVersion } from './nodever.js';
+import { detectOtherStacks, nestedProjects } from './stackother.js';
 
 /**
  * Read-only stack detection for a repository. It only reads a handful of well-known manifest and config files
@@ -85,7 +87,8 @@ const hasConfig = (files: Set<string>, stem: string): boolean => [...files].some
 
 const LOCKFILES: [string, NonNullable<StackDetection['packageManager']>][] = [['pnpm-lock.yaml', 'pnpm'], ['yarn.lock', 'yarn'], ['bun.lockb', 'bun'], ['bun.lock', 'bun'], ['package-lock.json', 'npm']];
 
-export async function detectStack(repoDir: string): Promise<StackDetection> {
+/** `nodeVersion` is the `node` on PATH, which runs "node --test" checks; leave it out when unknown. */
+export async function detectStack(repoDir: string, nodeVersion?: NodeVersion): Promise<StackDetection> {
   let root: string;
   try { root = await realpath(path.resolve(repoDir)); } catch { return { packageManager: null, languages: [], frameworks: [], testRunner: null, linters: [], guidance: '', checks: [], setupCommand: [], notes: ['Không đọc được thư mục repository.'] }; }
   const files = await listRoot(root);
@@ -108,9 +111,6 @@ export async function detectStack(repoDir: string): Promise<StackDetection> {
   const compilerOptions = asRecord(tsconfig?.compilerOptions);
   if (tsconfigText !== undefined || has('typescript')) languages.push(compilerOptions.strict === true ? 'TypeScript (strict)' : 'TypeScript');
   if (pkg) languages.push('JavaScript');
-  if (files.has('pyproject.toml') || files.has('requirements.txt')) languages.push('Python');
-  if (files.has('go.mod')) languages.push('Go');
-  if (files.has('Cargo.toml')) languages.push('Rust');
 
   const frameworks: string[] = [];
   const framework = (label: string, ...signals: string[]) => { if (signals.some((s) => has(s) || hasConfig(files, s))) frameworks.push(label); };
@@ -133,8 +133,19 @@ export async function detectStack(repoDir: string): Promise<StackDetection> {
   if (has('@biomejs/biome') || files.has('biome.json') || files.has('biome.jsonc')) linters.push('Biome');
   if (has('prettier') || [...files].some((f) => f.startsWith('.prettierrc') || f.startsWith('prettier.config'))) linters.push('Prettier');
 
-  if (!pkg && !languages.length) notes.push('Không thấy package.json hay manifest quen thuộc: nhập hướng dẫn và check thủ công.');
-  if (languages.some((l) => ['Python', 'Go', 'Rust'].includes(l)) && !pkg) notes.push('Dự án không phải Node: chưa gợi ý check tự động, hãy nhập lệnh check của repo.');
+  // Java/Kotlin, Python, Go and Rust: same output shape as the Node part, merged in below.
+  const others = await detectOtherStacks({ files, read: (rel) => readInside(root, rel), root });
+  languages.push(...others.flatMap((o) => o.languages));
+  frameworks.push(...others.flatMap((o) => o.frameworks));
+  const nodeRunner = testRunner;
+  testRunner ??= others.find((o) => o.testRunner)?.testRunner ?? null;
+  notes.push(...others.flatMap((o) => o.notes));
+  if (!pkg && !others.length) {
+    const nested = await nestedProjects(root);
+    notes.push(nested.length
+      ? `Không thấy package.json hay manifest ở thư mục gốc, nhưng có trong: ${nested.join(', ')}. Chọn thư mục đó làm thư mục project (hoặc nhập check thủ công).`
+      : 'Không thấy manifest quen thuộc (package.json, pom.xml, build.gradle, pyproject.toml, go.mod, Cargo.toml): nhập hướng dẫn và check thủ công.');
+  }
 
   const checks: SuggestedCheck[] = [];
   const testFiles = await listTestFiles(root);
@@ -143,9 +154,17 @@ export async function detectStack(repoDir: string): Promise<StackDetection> {
     if (testRunner === 'Vitest') checks.push({ id: 'test', label: 'Vitest', command: ['npm', 'test', '--', '--run', '--reporter=json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" chạy Vitest (${testScript}).` });
     else if (testRunner === 'Jest') checks.push({ id: 'test', label: 'Jest', command: ['npx', 'jest', '--json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" chạy Jest (${testScript}).` });
     else checks.push({ id: 'test', label: 'npm test', command: ['npm', 'test'], required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" là "${testScript.slice(0, 80)}" nhưng runner không có report đọc được: check chỉ dựa trên exit code, không tạo bằng chứng theo yêu cầu [R-x].` });
+  } else if (testFiles.length > 0 && testRunner === 'Vitest') {
+    checks.push({ id: 'test', label: 'Vitest', command: ['npx', 'vitest', 'run', '--reporter=json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Có ${testFiles.length} file test và Vitest nhưng chưa có script "test".` });
+  } else if (testFiles.length > 0 && testRunner === 'Jest') {
+    checks.push({ id: 'test', label: 'Jest', command: ['npx', 'jest', '--json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Có ${testFiles.length} file test và Jest nhưng chưa có script "test".` });
   } else if (testFiles.length > 0) {
-    checks.push({ id: 'test', label: 'node --test', command: ['node', '--test', '--test-reporter=spec', '--test-reporter-destination=stdout', '--test-reporter=junit', '--test-reporter-destination=.aidept-report.xml', ...testGlobs(testFiles)], reportPath: '.aidept-report.xml', required: true, timeoutMs: 600_000, recommended: true, reason: `Có ${testFiles.length} file test (${testGlobs(testFiles).join(', ')}) nhưng chưa có script "test"; node --test không cần cài thêm gì.` });
-  } else notes.push('Chưa thấy test nào. Không có check kiểm chứng hành vi thì yêu cầu không thể được xác minh.');
+    const command = ['node', '--test', '--test-reporter=spec', '--test-reporter-destination=stdout', '--test-reporter=junit', '--test-reporter-destination=.aidept-report.xml', ...testGlobs(testFiles)];
+    // node --test is only a suggestion when this machine's Node can run it; otherwise say why it is off instead of suggesting a check that cannot work.
+    const problem = nodeTestProblem(command, nodeVersion);
+    if (problem) notes.push(`Không gợi ý "node --test": ${problem}`);
+    checks.push({ id: 'test', label: 'node --test', command, reportPath: '.aidept-report.xml', required: true, timeoutMs: 600_000, recommended: !problem, reason: problem ?? `Có ${testFiles.length} file test (${testGlobs(testFiles).join(', ')}) nhưng chưa có script "test"; node --test không cần cài thêm gì.` });
+  } else if (pkg) notes.push('Chưa thấy test nào. Không có check kiểm chứng hành vi thì yêu cầu không thể được xác minh.');
 
   if (tsconfigText !== undefined) checks.push({ id: 'typecheck', label: 'TypeScript', command: ['npx', 'tsc', '--noEmit'], required: true, timeoutMs: 600_000, recommended: true, reason: 'Có tsconfig.json. Check không có report: chỉ exit code quyết định pass/fail và không là bằng chứng cho yêu cầu.' });
   const lintScript = script('lint');
@@ -160,14 +179,27 @@ export async function detectStack(repoDir: string): Promise<StackDetection> {
       : packageManager === 'bun' ? [] : files.has('package-lock.json') ? ['npm', 'ci'] : ['npm', 'install'];
   if (packageManager === 'bun') notes.push('Repo dùng Bun: hệ thống chưa chạy được bun trực tiếp, hãy nhập lệnh cài đặt và check thủ công.');
 
-  return { packageManager, languages, frameworks, testRunner, linters, guidance: composeGuidance({ packageManager, languages, frameworks, testRunner, e2e, linters, checks, type: pkg?.type === 'module' ? 'ESM' : pkg ? 'CommonJS' : null, jsx: typeof compilerOptions.jsx === 'string' ? compilerOptions.jsx : null }), checks, setupCommand, notes };
+  // Other stacks' checks follow the Node ones; an id already taken (two `test` checks in one repo) gets the tool's name as a prefix.
+  const taken = new Set(checks.map((c) => c.id));
+  for (const other of others) {
+    for (const c of other.checks) {
+      const id = taken.has(c.id) ? `${other.buildTool}-${c.id}` : c.id;
+      taken.add(id);
+      checks.push({ ...c, id });
+    }
+  }
+  // Build checks lead so that a compile error is reported before the tests that cannot run without it.
+  checks.sort((a, b) => Number(/(^|-)build$/.test(b.id) && !!b.recommended) - Number(/(^|-)build$/.test(a.id) && !!a.recommended));
+
+  return { packageManager: pkg ? packageManager : others[0]?.buildTool ?? null, languages, frameworks, testRunner, linters, guidance: composeGuidance({ packageManager: pkg ? packageManager : null, extra: others.flatMap((o) => o.guidance), languages, frameworks, testRunner: nodeRunner, e2e, linters, checks, type: pkg?.type === 'module' ? 'ESM' : pkg ? 'CommonJS' : null, jsx: typeof compilerOptions.jsx === 'string' ? compilerOptions.jsx : null }), checks, setupCommand, notes };
 }
 
-function composeGuidance(s: { packageManager: string | null; languages: string[]; frameworks: string[]; testRunner: string | null; e2e: string | null; linters: string[]; checks: SuggestedCheck[]; type: string | null; jsx: string | null }): string {
+function composeGuidance(s: { packageManager: string | null; extra: string[]; languages: string[]; frameworks: string[]; testRunner: string | null; e2e: string | null; linters: string[]; checks: SuggestedCheck[]; type: string | null; jsx: string | null }): string {
   const lines: string[] = [];
   if (s.languages.length) lines.push(`Ngôn ngữ: ${s.languages.join(', ')}${s.type ? ` (module ${s.type})` : ''}.`);
   if (s.frameworks.length) lines.push(`Framework/thư viện chính: ${s.frameworks.join(', ')}.`);
   if (s.packageManager) lines.push(`Package manager: ${s.packageManager}. Không đổi package manager, không thêm hay nâng cấp dependency.`);
+  lines.push(...s.extra);
   if (s.testRunner || s.e2e) lines.push(`Test: ${[s.testRunner, s.e2e && s.e2e !== s.testRunner ? `${s.e2e} (E2E)` : null].filter(Boolean).join(', ')}. Viết test theo cách các test hiện có đang làm (vị trí file, cách đặt tên, helper).`);
   if (s.linters.length) lines.push(`Công cụ format/lint: ${s.linters.join(', ')}. Tuân theo cấu hình có sẵn, không tắt rule.`);
   const commands = s.checks.filter((c) => c.recommended).map((c) => `${c.label}: ${c.command.join(' ')}`);

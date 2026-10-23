@@ -81,10 +81,13 @@ export function summarizeFailures(report: unknown, limit = 5): string[] {
 /**
  * Tests tie to contract requirements through bracketed tags in their title: `[R-1]`, `[R-1][R-2]` and the
  * grouped `[R-1, R-4]` that models like to write. Anything inside brackets that is not an id is ignored.
+ * The identifier-safe spelling `R_1` is accepted too.
  */
 export function extractRequirementIds(title: string): string[] {
   const ids = [...title.matchAll(/\[([^\]]+)\]/g)].flatMap((m) => m[1]!.split(/[\s,;]+/)).filter((t) => /^R-[A-Za-z0-9_-]+$/.test(t));
-  return [...new Set(ids)];
+  // Java, Python, Go and Rust test names cannot hold brackets, so `R_1` in a name (test_R_1_rejects_empty) means R-1.
+  const underscored = [...title.matchAll(/(?<![A-Za-z0-9[])R_(\d+)(?![A-Za-z0-9])/g)].map((m) => `R-${m[1]}`);
+  return [...new Set([...ids, ...underscored])];
 }
 
 /** The report was read and listed no test at all: the command or its file pattern does not match the repo's tests. */

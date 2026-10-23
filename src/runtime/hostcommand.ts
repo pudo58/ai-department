@@ -4,6 +4,9 @@ import path from 'node:path';
 export interface HostEnv { platform: NodeJS.Platform; nodeExec: string; exists: (p: string) => boolean }
 const defaultEnv = (): HostEnv => ({ platform: process.platform, nodeExec: process.execPath, exists: existsSync });
 
+const BUILD_TOOLS = new Set(['mvn', 'mvnw', 'gradle', 'gradlew']);
+const SAFE_CMD_ARG = /^[A-Za-z0-9_.,:=/\\@#+*\-]+$/;
+
 /**
  * Commands run without a shell, and on Windows `npm`/`npx` are .cmd shims that cannot be spawned that way.
  * They are mapped to node + the npm CLI scripts that ship beside node; other shims fail with a clear message
@@ -19,7 +22,14 @@ export function resolveHostCommand(argv: readonly string[], env: HostEnv = defau
     if (!env.exists(script)) throw new Error(`Không tìm thấy ${script}; hãy dùng "node" với script cụ thể thay cho ${base}.`);
     return [env.nodeExec, script, ...rest];
   }
-  if (/\.(cmd|bat)$/i.test(cmd) || ['pnpm', 'yarn', 'corepack', 'tsx', 'vitest'].includes(base)) {
+  if (BUILD_TOOLS.has(base)) {
+    // Maven and Gradle ship as .cmd/.bat on Windows, which need a shell. cmd.exe is used only for these, and only when
+    // no argument contains a character cmd treats specially, so a project's check line can never smuggle in a second command.
+    const unsafe = [cmd, ...rest].find((arg) => !SAFE_CMD_ARG.test(arg));
+    if (unsafe !== undefined) throw new Error(`Đối số "${unsafe}" có ký tự mà cmd.exe hiểu đặc biệt; không chạy "${cmd}" với nó trên Windows. Bỏ khoảng trắng, dấu nháy và & | < > ^ %.`);
+    return ['cmd.exe', '/d', '/s', '/c', cmd, ...rest];
+  }
+  if (/\.(cmd|bat)$/i.test(cmd) ||['pnpm', 'yarn', 'corepack', 'tsx', 'vitest'].includes(base)) {
     throw new Error(`Windows không chạy trực tiếp "${cmd}" (file .cmd). Dùng ["npx", "${base}", ...] hoặc ["node", "đường/dẫn/script.js", ...].`);
   }
   return [...argv];

@@ -1,6 +1,7 @@
 import type { Artifact, Attempt, BudgetState, CheckResult, CompletionState, Finding, MatrixRow, Run } from '../shared/types.js';
 import { usageCost } from './budget.js';
 import { extractRequirementIds } from './checks.js';
+import { isTestPath } from './testpath.js';
 
 export interface ChangedFile { path: string; added: number; removed: number; status: 'added' | 'modified' | 'deleted' | 'renamed' }
 export interface ReportWarning { level: 'warn' | 'info'; text: string }
@@ -29,7 +30,6 @@ export interface ReportInput {
   delivered: boolean; now?: Date;
 }
 
-const TEST_PATH = /(^|\/)(tests?|__tests__|e2e)\/|\.(test|spec)\.[cm]?[jt]sx?$/i;
 const MAX_PATCH_CHARS = 300_000;
 const short = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
 
@@ -113,7 +113,7 @@ export function buildReport(input: ReportInput): AcceptanceReport {
     readiness, notReadyReasons: completion.reasons, checkpoint: run.checkpoint, baseSha: run.baseSha,
     requirements: matrix.map((r) => ({ id: r.requirementId, text: r.text, required: r.required, manual: r.manual, status: r.status, tests: testsByReq.get(r.requirementId) ?? [] })),
     assumptions: run.contract.assumptions,
-    changes: { available: changes.available, files: changes.files, added: changes.files.reduce((n, f) => n + f.added, 0), removed: changes.files.reduce((n, f) => n + f.removed, 0), testFiles: changes.files.map((f) => f.path).filter((p) => TEST_PATH.test(p)), patch: changes.patch.length > MAX_PATCH_CHARS ? `${changes.patch.slice(0, MAX_PATCH_CHARS)}\n… (cắt bớt)` : changes.patch },
+    changes: { available: changes.available, files: changes.files, added: changes.files.reduce((n, f) => n + f.added, 0), removed: changes.files.reduce((n, f) => n + f.removed, 0), testFiles: changes.files.map((f) => f.path).filter((p) => isTestPath(p)), patch: changes.patch.length > MAX_PATCH_CHARS ? `${changes.patch.slice(0, MAX_PATCH_CHARS)}\n… (cắt bớt)` : changes.patch },
     checks: checkRows,
     verifier: { expected: verdictExpected, ran: !!verdict && verdict.decision !== 'skipped', verdict, findings: openFindings.map((f) => ({ title: f.title, severity: f.severity, status: f.status, confirmed: f.confirmed, location: f.location })) },
     effort: {

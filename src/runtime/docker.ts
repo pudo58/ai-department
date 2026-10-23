@@ -1,4 +1,3 @@
-import { rm } from 'node:fs/promises';
 import path from 'node:path';
 import type { Role, Run, Slot } from '../shared/types.js';
 import { isSafeRelative } from '../core/scope.js';
@@ -11,7 +10,7 @@ import {
   type AgentExecution, type AgentResult, type ChangeSet, type CheckExecution, type PrepareResult,
   type Runtime, type RuntimeAttestation, type RuntimeCheckResult, type RuntimeEvent,
 } from './types.js';
-import { readReportFile } from './report.js';
+import { clearReport, readReport } from './report.js';
 import { streamStderr, streamTo } from './streaming.js';
 
 const DEFAULT_AGENT_MS = 30 * 60_000;
@@ -119,12 +118,12 @@ export class DockerRuntime implements Runtime {
       // A report left by an earlier run must never be mistaken for this run's output.
       if (recipe.reportPath) {
         if (!isSafeRelative(recipe.reportPath)) throw new Error('reportPath không hợp lệ.');
-        await rm(path.join(wsDir, recipe.reportPath), { force: true });
+        await clearReport(wsDir, recipe.reportPath);
       }
       const result = await this.inContainer(run, `check-${run.id}-${slot}-${recipe.id}`, 'none', wsDir, recipe.command, undefined, recipe.timeoutMs, undefined, exec.signal, streamTo(exec.onEvent, `check:${recipe.id}`));
       let report: unknown;
       if (recipe.reportPath) {
-        report = await readReportFile(path.join(wsDir, recipe.reportPath));
+        report = await readReport(wsDir, recipe.reportPath);
       }
       return {
         exitCode: result.exitCode, durationMs: result.durationMs, checkpoint, report,

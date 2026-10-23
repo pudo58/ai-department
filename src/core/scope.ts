@@ -34,13 +34,17 @@ export const DEFAULT_PROTECTED = [
   'package-lock.json', 'pnpm-lock.yaml', 'yarn.lock', 'package.json',
   'vitest.config.*', 'jest.config.*', 'playwright.config.*', 'vite.config.*', 'tsconfig*.json',
   '.github/**', '.npmrc', 'Dockerfile', 'docker-compose*.yml',
+  // Java/Kotlin (Maven, Gradle), Python, Go and Rust: the same kind of file (dependency graph, build and test config).
+  'pom.xml', 'build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts', 'gradle.properties', 'gradle/wrapper/**', 'gradlew', 'gradlew.bat', 'mvnw', 'mvnw.cmd', '.mvn/**',
+  'pyproject.toml', 'pytest.ini', 'tox.ini', 'setup.cfg', 'requirements*.txt', 'go.mod', 'go.sum', 'Cargo.toml', 'Cargo.lock',
 ];
 
 /**
  * Project setup files an agent may CREATE in a project that opted in (a new project has none yet). A file of this kind
  * that already existed in the run's base snapshot stays protected, so existing check configuration cannot be weakened.
  */
-export const SCAFFOLDABLE = ['package.json', 'package-lock.json', 'pnpm-lock.yaml', 'yarn.lock', 'tsconfig*.json', 'vite.config.*', 'vitest.config.*', 'jest.config.*', 'playwright.config.*'];
+export const SCAFFOLDABLE = ['package.json', 'package-lock.json', 'pnpm-lock.yaml', 'yarn.lock', 'tsconfig*.json', 'vite.config.*', 'vitest.config.*', 'jest.config.*', 'playwright.config.*',
+  'pom.xml', 'build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts', 'pyproject.toml', 'requirements*.txt', 'go.mod', 'Cargo.toml'];
 
 export interface ScopeInput {
   modules: readonly string[]; protectedPaths: readonly string[]; lockedPaths?: readonly string[];

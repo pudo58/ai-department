@@ -79,7 +79,8 @@ export interface SuggestedCheck {
 }
 /** Result of the read-only stack detector: suggestions only, a person confirms before anything is saved. */
 export interface StackDetection {
-  packageManager: 'npm' | 'pnpm' | 'yarn' | 'bun' | null;
+  /** Node package manager, or the build tool of a Java/Python/Go/Rust project. */
+  packageManager: 'npm' | 'pnpm' | 'yarn' | 'bun' | 'maven' | 'gradle' | 'pip' | 'go' | 'cargo' | null;
   languages: string[]; frameworks: string[]; testRunner: string | null; linters: string[];
   guidance: string; checks: SuggestedCheck[]; setupCommand: string[]; notes: string[];
 }
