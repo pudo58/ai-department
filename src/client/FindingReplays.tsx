@@ -1,0 +1,9 @@
+import type {FindingReplay} from '../shared/reproduction';
+import {Badge,duration} from './ui';
+const labels:Record<FindingReplay['status'],string>={in_progress:'Đang chạy',reproduced:'Đã tái hiện sai khác',not_reproduced:'Kết quả của ca này đều khớp',unsupported:'Chưa hỗ trợ',error:'Lỗi chạy',timeout:'Hết thời gian',interrupted:'Bị gián đoạn'};
+export function FindingReplayResults({replays,checkpoint}:{replays?:FindingReplay[];checkpoint:string|null}){
+ if(!replays?.length)return null;
+ return <section className="panel" aria-label="Phản ví dụ của Verifier"><h2>Phản ví dụ của Verifier</h2><p className="small muted">Runner chạy kịch bản trên bản sao checkpoint. Sai khác vẫn cần đối chiếu căn cứ trước khi xác nhận finding; ca khớp không chứng minh toàn bộ code đúng.</p>
+ {replays.map((r,i)=><details key={`${r.findingId}:${r.checkpoint}:${i}`}><summary><Badge tone={r.status==='reproduced'?'bad':r.status==='not_reproduced'?'good':'warn'}>{labels[r.status]}</Badge> <code>{r.findingId} · {r.checkpoint.slice(0,8)}</code> · {r.checkpoint===checkpoint?'Bản hiện tại':'Lịch sử'} · {duration(r.durationMs)}</summary><p>{r.message}</p>{r.oracle&&<div><strong>Căn cứ phản ví dụ</strong>{r.oracle.references.map((ref,n)=><p key={n}><code>{ref.requirementId}</code>: {ref.quote}</p>)}<p>{r.oracle.explanation}</p></div>}{r.observations.length>0&&<div className="table-scroll"><table className="compact"><thead><tr><th>Bước</th><th>Mong đợi</th><th>Quan sát</th><th>Khớp</th></tr></thead><tbody>{r.observations.map((o,n)=><tr key={n}><td>{o.stepId}</td><td><code>{JSON.stringify(o.expected)??'—'}</code></td><td><code>{o.actualType==='undefined'?'undefined':JSON.stringify(o.actual)}</code>{o.error&&<p>{o.error}</p>}</td><td>{o.matched===undefined?'Chuẩn bị':o.matched?'Có':'Không'}</td></tr>)}</tbody></table></div>}</details>)}
+ </section>;
+}

@@ -1,14 +1,17 @@
+import { TestPlanView, QualityResults } from './Quality';
 import { useMemo, useState } from 'react';
-import type { Artifact, Attempt, CheckResult, Finding, HumanTime, Mode, Run, RunDetail } from '../shared/types';
+import type { Artifact, Attempt, CheckResult, ContractApprovalInput, Finding, HumanTime, Mode, Run, RunDetail } from '../shared/types';
 import { api } from './api';
 import { CHECK_LABEL, CHECK_TONE, MODE_LABEL, ROW_LABEL, ROW_TONE, STEPS, TIME_CATEGORIES, pipelineStep } from './labels';
+import { delivered } from '../core/delivery';
 import { LogConsole } from './Monitor';
 import { readVerdict } from '../core/report';
+import {FindingReplayResults} from './FindingReplays';
 import { Badge, DiffView, Empty, Field, Icon, Modal, dateTime, duration, money } from './ui';
 
 /** Where the task is: four numbered steps on one strip, done ones ticked, the current one ringed. */
 export function Stepper({ run }: { run: Run }) {
-  const { index, kind } = pipelineStep({ ...run, contractApproved: !!run.contract.approvedHash });
+  const { index, kind } = pipelineStep({ ...run, deliveryStatus: delivered(run) ? 'succeeded' : 'unconfirmed', contractApproved: !!run.contract.approvedHash });
   const mark = { running: String(index + 1), attention: '!', bad: '×', idle: String(index + 1) }[kind];
   return <ol className="progress-line" aria-label="Tiến độ">{STEPS.map((label, i) => {
     const state = i < index ? 'done' : i === index ? `current ${kind}` : 'todo';
@@ -79,15 +82,45 @@ export function ProgressPanel({ detail }: { detail: RunDetail }) {
   </>;
 }
 
-export function ContractPanel({ detail }: { detail: RunDetail }) {
+export function ContractPanel({ detail, busy = false, onApprove }: { detail: RunDetail; busy?: boolean; onApprove?: (input: ContractApprovalInput) => Promise<void> }) {
   const { run } = detail;
+  const review = detail.contractReview;
+  const [acknowledged, setAcknowledged] = useState('');
+  const reviewKey = `${run.id}:${review.contractHash}`;
+  const ack = acknowledged === reviewKey;
+  const problems = review.problems;
+  const receipt = run.contractReviewReceipt;
+  const currentReceipt = receipt?.contractHash === review.contractHash && receipt.contractVersion === review.contractVersion ? receipt : undefined;
   const list = (title: string, items: string[]) => items.length ? <><h3>{title}</h3><ul className="plain-list">{items.map((i) => <li key={i}>{i}</li>)}</ul></> : null;
-  return <div className="panel">
+  return <div className="stack">
+    <section className="panel"><h2>Yêu cầu gốc</h2><p style={{ whiteSpace: 'pre-wrap' }}>{run.originalRequirement}</p></section>
+    <div className="panel">
     <div className="card-head"><h2>Hợp đồng v{run.contract.version}</h2><Badge tone={run.contract.approvedHash ? 'good' : 'warn'}>{run.contract.approvedHash ? 'Đã duyệt' : 'Chưa duyệt'}</Badge></div>
-    <table className="compact" style={{ marginTop: 12 }}><thead><tr><th>Mã</th><th>Tiêu chí</th><th>Loại</th></tr></thead><tbody>{run.contract.requirements.map((r) => <tr key={r.id}><td><code>{r.id}</code></td><td>{r.text}</td><td>{r.required ? 'Bắt buộc' : 'Tùy chọn'}{r.manual ? ' · thủ công' : ''}</td></tr>)}</tbody></table>
+    <table className="compact" style={{ marginTop: 12 }}><thead><tr><th>Mã</th><th>Tiêu chí</th><th>Hành vi</th><th>Kiểm tra</th></tr></thead><tbody>{run.contract.requirements.map((r) => <tr key={r.id}><td><code>{r.id}</code></td><td>{r.text}</td><td>{r.kind === 'forbidden' ? 'Không được xảy ra' : 'Mong muốn'}</td><td>{r.required ? 'Bắt buộc' : 'Tùy chọn'}{r.manual ? ' · thủ công' : ''}</td></tr>)}</tbody></table>
     {list('Ví dụ nghiệm thu', run.contract.acceptanceExamples)}{list('Interface', run.contract.interfaces)}{list('Giả định cần xác nhận', run.contract.assumptions)}{list('Phạm vi', run.contract.scope)}
+    <h3>Kế hoạch ca kiểm thử</h3>
+    {detail.planReview && <div className={`banner ${detail.planReview.outcome === 'valid' ? 'info' : 'warn'}`} aria-label="Soát kế hoạch ca"><div>
+      <strong>{detail.planReview.firstPassValid ? 'Kế hoạch hợp lệ ngay lượt đầu' : detail.planReview.repairAccepted ? 'Author đã sửa kế hoạch hợp lệ' : 'Kế hoạch cần bạn xem và sửa'}</strong>
+      <p>{detail.planReview.attemptIds.length} lượt lập kế hoạch · {detail.planReview.repairAttempted ? 'Đã dùng một lượt sửa theo validator.' : 'Chưa dùng lượt sửa.'} {detail.planReview.reason === 'budget_exhausted' ? 'Ngân sách chuẩn bị không còn đủ để mở lượt sửa.' : detail.planReview.reason === 'questions_only' ? 'Cần làm rõ câu hỏi trước khi duyệt.' : ''}</p>
+      <p className="small">Hợp lệ theo validator chỉ xác nhận cấu trúc và liên kết; bạn vẫn cần duyệt nội dung nghiệp vụ.</p>
+      {detail.planReview.initialProblems.length > 0 && <details><summary>Lỗi bản nháp đầu ({detail.planReview.initialProblems.length})</summary><ul>{detail.planReview.initialProblems.map((p, i) => <li key={i}>{p}</li>)}</ul></details>}
+    </div></div>}
+    <TestPlanView plan={run.contract.testPlan}/>{detail.artifacts.filter(a => a.title === 'Test plan validation error' && (a.contractVersion === run.contract.version || !!a.attemptId && detail.planReview?.attemptIds.includes(a.attemptId))).map(a => <details key={a.id}><summary>Lỗi kế hoạch và output Author</summary><pre>{a.content}</pre></details>)}
+    {!detail.quality.enabled && <p className="muted small">Chưa áp dụng kiểm thử sâu cho run này.</p>}
     {run.interpretations.length > 0 && <><h3>Các cách hiểu độc lập</h3><p className="muted small">Mỗi bản được lưu trước khi thấy hợp đồng hoặc kết luận của agent khác. Chỉ cần đọc phần khác biệt có ảnh hưởng hành vi.</p>
       <div className="card-grid">{run.interpretations.map((i) => <article className="card" key={i.id}><div className="card-head"><h3 style={{ margin: 0 }}>{i.role}</h3><Badge tone={i.contractSeen ? 'warn' : 'good'}>{i.contractSeen ? 'Đã thấy hợp đồng' : 'Độc lập'}</Badge></div><p>{i.text}</p>{i.questions.length > 0 && <ul className="plain-list">{i.questions.map((q) => <li key={q}>{q}</li>)}</ul>}</article>)}</div></>}
+    </div>
+    <section className="panel" aria-label="Soát hợp đồng">
+      <h2>Soát hợp đồng trước khi chạy</h2>
+      <p className="muted small">Đối chiếu với yêu cầu gốc trước khi duyệt. Kiểm tra này chỉ chỉ ra cấu trúc còn thiếu; không chứng minh hợp đồng đúng hoặc đầy đủ về nghiệp vụ.</p>
+      {problems.length > 0 && <div className="banner error" role="alert"><ul>{problems.map((message) => <li key={message}>{message}</li>)}</ul></div>}
+      {review.warnings.length > 0 ? <ul className="warnlist">{review.warnings.map((warning) => <li className="warn" key={warning.code}><span>{warning.message}</span></li>)}</ul> : <p className="muted small">Không có cảnh báo cấu trúc.</p>}
+      {run.status === 'awaiting_approval' && onApprove ? <div className="stack" style={{ marginTop: 12 }}>
+        {review.warnings.length > 0 && <label className="ack"><input type="checkbox" checked={ack} disabled={busy} onChange={(e) => setAcknowledged(e.target.checked ? reviewKey : '')}/>Tôi đã đọc các cảnh báo và đồng ý dùng hợp đồng này</label>}
+        <div><button className="button primary" disabled={busy || problems.length > 0 || (review.warnings.length > 0 && !ack)} onClick={() => void onApprove({ contractHash: review.contractHash, acknowledgeWarnings: ack })}>Duyệt hợp đồng v{review.contractVersion}</button></div>
+      </div> : currentReceipt ? <p className="muted small">Đã soát và duyệt bản hợp đồng này lúc {dateTime(currentReceipt.reviewedAt)}; đã xác nhận {currentReceipt.acknowledgedWarnings.length} cảnh báo.</p>
+        : run.contract.approvedHash ? <p className="muted small">Giữ nguyên lịch sử phê duyệt cũ; chưa có bản ghi soát hợp đồng cho lần duyệt đó.</p> : null}
+    </section>
   </div>;
 }
 
@@ -99,16 +132,18 @@ export function VerifyPanel({ detail, busy, onQuarantine, onFinding }: { detail:
   const verdict = readVerdict(detail.artifacts, detail.run);
   const tone = { blocker: 'bad', major: 'warn', minor: 'neutral' } as const;
   return <div className="stack">
+    <FindingReplayResults replays={detail.findingReplays} checkpoint={detail.run.checkpoint}/>
     <div className="panel">
       <div className="card-head"><h2>Điều kiện nghiệm thu</h2><Badge tone={detail.completion.ready ? 'good' : 'warn'}>{detail.completion.ready ? 'Đủ điều kiện' : 'Chưa đủ'}</Badge></div>
       {detail.completion.reasons.length > 0 && <ul className="plain-list warn-list">{detail.completion.reasons.map((r) => <li key={r}>{r}</li>)}</ul>}
       <h3>Ma trận yêu cầu – bằng chứng</h3>
-      <table className="compact"><thead><tr><th>Yêu cầu</th><th>Trạng thái</th><th>Bằng chứng (đúng checkpoint và phiên bản hợp đồng)</th></tr></thead><tbody>{detail.matrix.map((r) => <tr key={r.requirementId}><td><code>{r.requirementId}</code> {r.text.slice(0, 110)}</td><td><Badge tone={ROW_TONE[r.status]}>{ROW_LABEL[r.status]}</Badge></td><td className="muted">{r.evidence.join(', ') || '—'}</td></tr>)}</tbody></table>
+      <table className="compact"><thead><tr><th>Yêu cầu</th><th>Trạng thái</th><th>Bằng chứng (đúng checkpoint và phiên bản hợp đồng)</th></tr></thead><tbody>{detail.matrix.map((r) => <tr key={r.requirementId}><td><code>{r.requirementId}</code> {r.text.slice(0, 110)}{r.kind === 'forbidden' && <Badge tone="warn" plain>Không được xảy ra</Badge>}</td><td><Badge tone={ROW_TONE[r.status]}>{ROW_LABEL[r.status]}</Badge></td><td className="muted">{r.evidence.join(', ') || '—'}</td></tr>)}</tbody></table>
+      <QualityResults quality={detail.quality}/>
       <h3>Check do hệ thống chạy</h3>
       {!checks.length ? <p className="muted small">Chưa có check nào.</p> : <table className="compact"><thead><tr><th>Check</th><th>Kết quả</th><th>Checkpoint</th><th>Lần chạy</th><th/></tr></thead><tbody>{checks.map((c) => <tr key={c.id} className={c.valid ? '' : 'stale'}>
         <td>{c.recipeId}{!c.valid && <small className="cell-note">hết hiệu lực (hợp đồng đã đổi)</small>}</td>
         <td><Badge tone={CHECK_TONE[c.status]}>{CHECK_LABEL[c.status]}</Badge>{c.quarantined && <Badge tone="neutral" plain>quarantine</Badge>}{c.quarantineReason && <small className="cell-note">{c.quarantineReason}</small>}</td>
-        <td className="mono">{c.checkpoint.slice(0, 10)}</td><td className="mono">{c.attempts.map((a) => a.exitCode ?? '—').join(' → ')}</td>
+        <td className="mono">{c.checkpoint.slice(0, 10)}{c.issues?.map((issue, i) => <small className="cell-note" key={i}>{issue.kind}: {issue.message}</small>)}</td><td className="mono">{c.attempts.map((a) => a.exitCode ?? '—').join(' → ')}</td>
         <td className="num">{c.status === 'flaky' && !c.quarantined && <button className="text-button" onClick={() => setTarget(c)}>Quarantine…</button>}</td></tr>)}</tbody></table>}
     </div>
     <div className="panel">

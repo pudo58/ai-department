@@ -63,7 +63,7 @@ describe('local runtime end to end (host process, scripted Codex)', () => {
     expect(orchestrator.detail(run.id).run.status).toBe('awaiting_approval');
     // Structured acceptance examples from a real model are kept as text rather than rejecting the contract.
     expect(orchestrator.detail(run.id).run.contract.acceptanceExamples[0]).toContain('"output":6');
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
 
     const detail = orchestrator.detail(run.id);
     expect(detail.run.status, `${detail.run.blocker}\n${detail.events.map((e) => e.message).join('\n')}`).toBe('awaiting_acceptance');
@@ -91,6 +91,7 @@ describe('local runtime end to end (host process, scripted Codex)', () => {
     const orchestrator = new Orchestrator(store, () => runtime);
     const run = orchestrator.createRun({ projectId: 'prj_test', title: 't', originalRequirement: 'r', mode: 'single', provider: 'codex', budgetUsd: 5, signals: [] });
     await runtime.prepare({ ...run, baseSha: null }, 'A');
+    run.checkpoint = await runtime.commit(run, 'A', 'new checkpoint');
     git(source, 'branch', `aidept/${run.id}-A`);
     await expect(runtime.deliver(run, 'A')).rejects.toThrow(/đã tồn tại/);
   }, 60_000);
@@ -118,7 +119,7 @@ describe('a repo with no test script: node --test, JUnit and re-checking without
     const run = orchestrator.createRun({ projectId: 'prj_test', title: 'Sửa sumTo', originalRequirement: 'sumTo bỏ sót n', mode: 'single', provider: 'codex', budgetUsd: 5, signals: [] });
 
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     const blocked = orchestrator.detail(run.id);
     expect(['blocked', 'failed']).toContain(blocked.run.status);
     expect(blocked.completion.ready).toBe(false);
@@ -155,7 +156,7 @@ describe('a repo with no test script: node --test, JUnit and re-checking without
     const orchestrator = new Orchestrator(store, () => runtime);
     const run = orchestrator.createRun({ projectId: 'prj_test', title: 'Sửa sumTo', originalRequirement: 'sumTo bỏ sót n', mode: 'single', provider: 'codex', budgetUsd: 5, signals: [] });
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
 
     const blocked = orchestrator.detail(run.id);
     expect(blocked.completion.ready).toBe(false);

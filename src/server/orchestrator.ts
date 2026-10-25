@@ -1,7 +1,9 @@
+import { deepQuality } from '../core/qualityevidence.js';
+import { validateTestPlan } from '../core/testplan.js';
 import { randomUUID } from 'node:crypto';
-import type { CheckResult, Finding, HumanTime, Mode, ProjectProfile, Run, RunDetail, RunStatus, Slot, TaskContract, TaskKind } from '../shared/types.js';
+import type { CheckResult, ContractApprovalInput, Finding, HumanTime, Mode, ProjectProfile, Run, RunDetail, RunStatus, Slot, TaskContract, TaskKind } from '../shared/types.js';
 import { budgetState, checkEscalation, remainingFor } from '../core/budget.js';
-import { approveContract, initialContract, isApproved, reviseContract, validateContract } from '../core/contract.js';
+import { approveContract, sha256, initialContract, isApproved, reviewContract, reviseContract, validateContract } from '../core/contract.js';
 import { type AcceptanceReport } from '../core/report.js';
 import { MODE_MULTIPLIER, recommendMode } from '../core/routing.js';
 import { classifyPath, isSafeRelative, normalizePath } from '../core/scope.js';
@@ -21,6 +23,11 @@ import { Verification } from './run/verification.js';
 import { Planning } from './run/planning.js';
 import { Acceptance } from './run/acceptance.js';
 import { HumanTimers } from './run/timers.js';
+import { TestRecovery } from './run/recovery.js';
+import { pendingTestRepair } from '../core/recovery.js';
+import { pendingAuthorDraft } from '../core/authordraft.js';
+import { EnvironmentChecks } from './run/environment.js';
+import {REPLAY_TITLE} from '../core/reproduction.js';
 
 export { HttpError };
 
@@ -50,6 +57,7 @@ export class Orchestrator {
   private readonly planning: Planning;
   private readonly timers: HumanTimers;
   private readonly acceptance: Acceptance;
+  private readonly recovery: TestRecovery;
 
   constructor(private readonly store: Store, private readonly runtimeFor: (run: Run) => Runtime, options: OrchestratorOptions = {}) {
     this.now = options.now ?? (() => new Date());
@@ -62,6 +70,7 @@ export class Orchestrator {
     this.planning = new Planning(this.s);
     this.timers = new HumanTimers(this.s);
     this.acceptance = new Acceptance(this.s, this.outcome, this.timers, this.verification);
+    this.recovery = new TestRecovery(this.s, this.scope);
     this.queue = new SerialQueue((id) => this.drive(id));
   }
 
@@ -86,6 +95,31 @@ export class Orchestrator {
 
   /** Interrupted attempts cannot be trusted; park their runs so a person decides when to resume. */
   async recover(): Promise<void> {
+    const interruptedRuns=new Set<string>();
+    for(const artifact of this.store.artifacts.list().filter(a=>a.title===REPLAY_TITLE)){
+      try{const replay=JSON.parse(artifact.content);if(replay.status!=='in_progress')continue;replay.status='interrupted';replay.endedAt=this.s.stamp();replay.message='Server dừng khi tái hiện; chưa có bằng chứng hoàn tất.';this.store.artifacts.put({...artifact,content:JSON.stringify(replay),hash:sha256(JSON.stringify(replay))});interruptedRuns.add(artifact.runId);}catch{/* Invalid artifacts cannot confirm a finding. */}
+    }
+    for(const id of interruptedRuns){const run=this.store.runs.get(id);if(run)try{await this.runtimeFor(run).recoverReplays?.(run);}catch(error){this.s.log(id,'replay.cleanup_failed',(error as Error).message);}}
+    for(const run of this.store.runs.list().filter(r=>r.executionSpans?.some(s=>s.status==='running' && s.kind!=='approval'))){
+      this.s.mutate(run.id,r=>{for(const span of r.executionSpans!.filter(s=>s.status==='running' && s.kind!=='approval')){span.status='interrupted';span.endedAt=this.s.stamp();}});
+    }
+    for (const run of this.store.runs.list().filter((r) => r.delivery?.status === 'in_progress')) {
+      this.s.mutate(run.id, (r) => {
+        r.delivery = { ...r.delivery!, status: 'unknown', endedAt: this.s.stamp(), error: 'Server dừng khi đang giao kết quả. Cần thử giao lại để xác nhận.' };
+        r.status = 'awaiting_acceptance';
+      });
+      this.s.log(run.id, 'deliver.interrupted', 'Chưa xác nhận giao kết quả sau khi server khởi động lại; giữ workspace để thử giao lại.');
+    }
+    for (const artifact of this.store.artifacts.list().filter(a => a.title === 'Mutation result')) {
+      try {
+        const result = JSON.parse(artifact.content);
+        if (result.status !== 'in_progress') continue;
+        const run = this.store.runs.get(artifact.runId);
+        if (run) { try { await this.runtimeFor(run).recoverMutation?.(run); } catch (error) { this.s.log(run.id, 'mutation.cleanup_failed', `Chưa dọn được mutation: ${(error as Error).message}`); } }
+        result.status = 'incomplete'; result.endedAt = this.s.stamp(); result.message = 'Server dừng khi mutation đang chạy; chưa hoàn tất.';
+        this.store.artifacts.put({ ...artifact, content: JSON.stringify(result), hash: sha256(JSON.stringify(result)) });
+      } catch (error) { this.s.log(artifact.runId, 'mutation.recovery_failed', `Không khôi phục được lượt mutation: ${(error as Error).message}`); }
+    }
     for (const attempt of this.store.attempts.list().filter((a) => a.status === 'running')) {
       const run = this.store.runs.get(attempt.runId);
       if (run) await this.runtimeFor(run).stop(attempt.id).catch(() => undefined);
@@ -106,9 +140,9 @@ export class Orchestrator {
     const now = this.s.stamp();
     const budget = input.mode === 'single' ? input.budgetUsd : input.budgetUsd * MODE_MULTIPLIER[input.mode];
     const run: Run = {
-      id: `run_${randomUUID().slice(0, 8)}`, projectId: project.id, title: input.title, originalRequirement: input.originalRequirement,
+      id: `run_${randomUUID().slice(0, 8)}`, executionSpans: [], projectId: project.id, title: input.title, originalRequirement: input.originalRequirement,
       mode: input.mode, initialMode: input.mode, taskKind: input.taskKind, selectedSlot: 'A', provider: input.provider,
-      status: 'draft', stage: 'prepare', contract: initialContract(input.originalRequirement), interpretations: [],
+      status: 'draft', stage: 'prepare', ...(input.mode === 'verify' ? { qualityPolicyVersion: 3 as const } : {}), contract: initialContract(input.originalRequirement), interpretations: [],
       baseSha: null, checkpoint: null, branch: null, budgetUsd: budget, baseBudgetUsd: input.budgetUsd,
       configSnapshot: structuredClone(project), signals: input.signals, recommendation, escalations: [], usage: [], humanTime: [],
       repairCount: 0, blocker: null, createdAt: now, updatedAt: now,
@@ -119,8 +153,12 @@ export class Orchestrator {
   }
 
   startRun(runId: string): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
+    if (!run.testRepairApproval && pendingTestRepair(run, this.store.artifacts.list(runId))) throw new HttpError(409, 'Có đề xuất sửa test đang chờ duyệt; hãy đọc diff và quyết định trước khi chạy tiếp.');
     if (!['draft', 'paused', 'blocked', 'failed'].includes(run.status)) throw new HttpError(409, `Không thể bắt đầu run ở trạng thái ${run.status}.`);
+    // An explicit retry of a terminal failure authorizes another bounded batch; crash-resume does not.
+    if (run.status === 'failed') this.authorizeDeveloperRetry(runId, 'Người dùng yêu cầu thử lại run thất bại.');
     // "Run again" must actually try again; failed candidates are only kept across an escalation.
     this.scope.discardFailedCandidates(runId);
     return this.enqueue(runId);
@@ -132,6 +170,7 @@ export class Orchestrator {
    * snapshot until someone re-runs the checks.
    */
   resumeRun(runId: string): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
     const project = this.store.projects.get(run.projectId);
     if (project && !run.checkpoint && ['paused', 'blocked', 'failed'].includes(run.status) && project.version !== run.configSnapshot.version && (project.approved || run.provider === 'fake')) {
@@ -143,6 +182,7 @@ export class Orchestrator {
   }
 
   stopRun(runId: string): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
     this.aborts.get(runId)?.abort();
     this.queue.dequeue(runId);
@@ -176,7 +216,9 @@ export class Orchestrator {
     return { project, runs };
   }
 
-  private busy(run: Run): boolean { return ['running', 'queued'].includes(run.status) || this.aborts.has(run.id) || this.queue.isQueued(run.id); }
+  assertNotDelivering(runId: string): void { this.s.assertNotDelivering(runId); }
+
+  private busy(run: Run): boolean { return this.s.isDelivering(run.id) || ['running', 'queued'].includes(run.status) || this.aborts.has(run.id) || this.queue.isQueued(run.id); }
 
   private forget(runId: string): void {
     this.queue.dequeue(runId);
@@ -184,17 +226,45 @@ export class Orchestrator {
     this.s.baseFileCache.delete(runId); this.repairRequests.delete(runId); this.recheckRequests.delete(runId);
   }
 
-  approveContract(runId: string): Run {
+  approveContract(runId: string, input: ContractApprovalInput): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
     if (run.status !== 'awaiting_approval') throw new HttpError(409, 'Hợp đồng chỉ được duyệt khi run đang chờ duyệt.');
+    const review = reviewContract(run.contract);
+    if (input.contractHash !== review.contractHash) throw new HttpError(409, 'Hợp đồng đã thay đổi. Hãy tải lại và đọc bản hiện tại trước khi duyệt.');
+    const planProblems = deepQuality(run) ? validateTestPlan(run.contract, true, run.qualityPolicyVersion===3) : [];
+    if (planProblems.length) throw new HttpError(400, planProblems.join(' '));
+    if ((run.qualityPolicyVersion??0) >= 2 && run.contract.testPlan?.schemaVersion !== 2) throw new HttpError(409, 'Chính sách v2+ cần kế hoạch ca có căn cứ v2.');
     const contract = this.s.guard(() => approveContract(run.contract, this.now()));
-    this.s.mutate(runId, (r) => { r.contract = contract; });
+    if (review.warnings.length && !input.acknowledgeWarnings) throw new HttpError(409, 'Hợp đồng có cảnh báo cần đọc; hãy xác nhận đã đọc và đồng ý dùng hợp đồng này.');
+    const receipt = { contractHash: review.contractHash, contractVersion: review.contractVersion, reviewedAt: contract.approvedAt!, acknowledgedWarnings: review.warnings.map((w) => w.code) };
+    this.s.mutate(runId, (r) => { r.contract = contract; r.contractReviewReceipt = receipt; });
+    this.s.artifact(runId, { kind: 'report', title: 'Soát hợp đồng trước khi duyệt', content: JSON.stringify({ review, receipt }), checkpoint: null });
     this.s.log(runId, 'contract.approved', `Đã duyệt hợp đồng v${contract.version}.`, { hash: contract.approvedHash });
     return this.enqueue(runId);
   }
 
+  approveTestRepair(runId: string, proposalId: string, proposalHash: string): Run {
+    this.s.assertNotDelivering(runId);
+    this.recovery.approve(runId, proposalId, proposalHash);
+    return this.enqueue(runId);
+  }
+
+  rejectTestRepair(runId: string, proposalId: string, proposalHash: string): Run {
+    this.s.assertNotDelivering(runId);
+    this.recovery.reject(runId, proposalId, proposalHash);
+    return this.s.run(runId);
+  }
+
+  private authorizeDeveloperRetry(runId: string, reason: string): void {
+    this.s.retry(runId,'user_request',reason);
+    const run = this.s.run(runId);
+    this.s.artifact(runId, { kind: 'report', title: 'Developer retry authorization', content: JSON.stringify({ reason, previousAttemptIds: this.store.attempts.list(runId).filter(a => a.role === 'developer' && a.contractVersion === run.contract.version).map(a => a.id) }), checkpoint: run.checkpoint });
+  }
+
   /** Any real change bumps the version and strands every earlier piece of evidence. */
   reviseContract(runId: string, next: Omit<TaskContract, 'version' | 'approvedHash' | 'approvedAt'>): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
     if (!WAITING.includes(run.status)) throw new HttpError(409, 'Không thể sửa hợp đồng khi run đang chạy.');
     const revised = reviseContract(run.contract, next);
@@ -202,12 +272,13 @@ export class Orchestrator {
     if (problems.length) throw new HttpError(400, problems.join(' '));
     if (revised === run.contract) return run;
     this.invalidateEvidence(runId, revised.version);
-    this.s.mutate(runId, (r) => { r.contract = revised; r.status = 'awaiting_approval'; r.blocker = null; });
+    this.s.mutate(runId, (r) => { r.contract = revised; delete r.contractReviewReceipt; delete r.testRepairApproval; r.status = 'awaiting_approval'; r.blocker = null; });
     this.s.log(runId, 'contract.revised', `Hợp đồng lên v${revised.version}; bằng chứng cũ mất hiệu lực.`);
     return this.s.run(runId);
   }
 
   escalate(runId: string, to: Mode, reason: string, approvedCapUsd?: number): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
     if (!['blocked', 'paused', 'failed', 'awaiting_acceptance'].includes(run.status)) throw new HttpError(409, 'Chỉ chuyển chế độ khi run đang chờ người dùng.');
     if (to === run.mode) throw new HttpError(400, 'Run đã ở chế độ này.');
@@ -241,6 +312,7 @@ export class Orchestrator {
   resolveFinding(runId: string, findingId: string): Finding { return this.patchFinding(runId, findingId, (f) => { f.status = 'resolved'; }); }
 
   private patchFinding(runId: string, id: string, change: (f: Finding) => void): Finding {
+    this.s.assertNotDelivering(runId);
     const finding = this.store.findings.get(id);
     if (!finding || finding.runId !== runId) throw new HttpError(404, 'Finding không tồn tại.');
     change(finding);
@@ -252,6 +324,7 @@ export class Orchestrator {
 
   /** Quarantine needs a reason and a condition to revisit; a quarantined check never counts as evidence. */
   quarantineCheck(runId: string, checkId: string, reason: string): CheckResult {
+    this.s.assertNotDelivering(runId);
     const check = this.store.checks.get(checkId);
     if (!check || check.runId !== runId) throw new HttpError(404, 'Check không tồn tại.');
     if (reason.trim().length < 3) throw new HttpError(400, 'Cần nêu lý do và điều kiện xem xét lại.');
@@ -264,6 +337,7 @@ export class Orchestrator {
 
   /** Confirmed findings get one repair round funded by the final-verification share. */
   repairFindings(runId: string): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
     if (!['blocked', 'awaiting_acceptance'].includes(run.status)) throw new HttpError(409, 'Chỉ sửa finding khi run đang chờ người dùng.');
     const targets = this.store.findings.list(runId).filter((f) => f.confirmed && f.status === 'open' && f.contractVersion === run.contract.version);
@@ -278,10 +352,12 @@ export class Orchestrator {
    * (check command, modules, setup). No agent runs, so it costs no tokens.
    */
   recheck(runId: string, refreshConfig = true): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
-    if (!['blocked', 'paused', 'failed'].includes(run.status)) throw new HttpError(409, 'Chỉ chạy lại check khi run đang chờ người dùng.');
+    if (!['blocked', 'paused', 'failed', 'awaiting_acceptance'].includes(run.status)) throw new HttpError(409, 'Chỉ chạy lại check khi run đang chờ người dùng.');
     if (run.mode === 'compare') throw new HttpError(409, 'Chế độ Compare chưa hỗ trợ chạy lại check riêng; dùng Chạy tiếp.');
     if (!run.checkpoint) throw new HttpError(409, 'Chưa có checkpoint nào để chạy lại check; hãy dùng Chạy tiếp.');
+    this.s.retry(runId,'user_request','Người dùng yêu cầu chạy lại checks trên checkpoint hiện tại.');
     if (refreshConfig) {
       const project = this.store.projects.get(run.projectId);
       if (!project) throw new HttpError(404, 'Project không tồn tại.');
@@ -291,6 +367,19 @@ export class Orchestrator {
     }
     this.recheckRequests.add(runId);
     return this.enqueue(runId);
+  }
+
+  preflight(runId:string):Run {
+    this.s.assertNotDelivering(runId);const run=this.s.run(runId);
+    if(!['blocked','paused','failed','awaiting_approval','awaiting_acceptance'].includes(run.status) || !run.baseSha)throw new HttpError(409,'Cần workspace đã chuẩn bị và run đang chờ để kiểm tra môi trường.');
+    const project=this.store.projects.get(run.projectId);
+    if(project && project.version!==run.configSnapshot.version){if(run.provider!=='fake' && !project.approved)throw new HttpError(409,'Cấu hình project chưa được duyệt.');this.s.mutate(runId,r=>{r.configSnapshot=structuredClone(project);});}
+    this.s.mutate(runId,r=>{r.preflightRequest=true;r.preflightReturnStatus=run.status;});return this.enqueue(runId);
+  }
+  revalidateAuthorDraft(runId:string,attemptId:string,draftHash:string):Run {
+    this.s.assertNotDelivering(runId);const run=this.s.run(runId),draft=pendingAuthorDraft(run,this.store.artifacts.list(runId));
+    if(!['blocked','paused','failed'].includes(run.status) || !draft || draft.attemptId!==attemptId || draft.draftHash!==draftHash)throw new HttpError(409,'Draft hoặc trạng thái đã đổi; tải lại dữ liệu.');
+    this.s.mutate(runId,r=>{r.authorDraftRequest={attemptId,draftHash};});return this.enqueue(runId);
   }
 
   idle(): Promise<void> { return this.queue.idle(); }
@@ -306,16 +395,38 @@ export class Orchestrator {
   private async drive(runId: string): Promise<void> {
     const controller = new AbortController();
     this.aborts.set(runId, controller);
+    const span=this.s.startSpan(runId,'run','Điều phối run');
     try {
       this.s.mutate(runId, (r) => { r.status = 'running'; });
       if (this.s.run(runId).baseSha) { await this.s.ensureContext(runId); await this.s.loadBaseFiles(runId); }
-      if (this.recheckRequests.delete(runId)) await this.recheckPhase(runId, controller.signal);
+      if(this.s.run(runId).preflightRequest){
+        try {
+          await new EnvironmentChecks(this.s).run(runId,controller.signal,true);
+          this.s.mutate(runId,r=>{
+            const previous=r.preflightReturnStatus;
+            r.status=previous==='awaiting_approval'||previous==='awaiting_acceptance'?previous:'paused';
+            r.blocker=r.status==='paused'?'Đã kiểm tra lại môi trường; bấm Chạy tiếp hoặc Chạy lại kiểm tra để tiếp tục.':null;
+          });
+          this.outcome.refreshAcceptanceState(runId);
+        } finally { this.s.mutate(runId,r=>{delete r.preflightRequest;delete r.preflightReturnStatus;}); }
+      }
+      else if(this.s.run(runId).authorDraftRequest){
+        try{await this.candidates.revalidateAuthorDraft(runId);}finally{this.s.mutate(runId,r=>{delete r.authorDraftRequest;});}
+      }
+      else if (this.s.run(runId).testRepairApproval) {
+        this.recheckRequests.delete(runId); this.repairRequests.delete(runId);
+        await this.recovery.applyApproved(runId);
+        await this.recheckPhase(runId, controller.signal, false);
+        this.s.mutate(runId, r => { delete r.testRepairApproval; });
+      }
+      else if (this.recheckRequests.delete(runId)) await this.recheckPhase(runId, controller.signal);
       else if (this.repairRequests.delete(runId)) await this.verification.repairPhase(runId, controller.signal);
       else if (!isApproved(this.s.run(runId).contract)) await this.planning.planPhase(runId, controller.signal);
       else await this.buildPhase(runId, controller.signal);
     } catch (error) {
       this.recordStop(runId, error, controller.signal);
     } finally {
+      this.s.endSpan(runId,span,controller.signal.aborted?'interrupted':['blocked','failed'].includes(this.s.run(runId).status)?'failed':'completed');
       this.aborts.delete(runId);
       const run = this.store.runs.get(runId);
       if (run && run.status === 'running') this.s.mutate(runId, (r) => { r.status = 'paused'; r.blocker = 'Giai đoạn kết thúc mà không có trạng thái rõ ràng.'; });
@@ -337,6 +448,7 @@ export class Orchestrator {
   private async buildPhase(runId: string, signal: AbortSignal): Promise<void> {
     let run = this.s.run(runId);
     const runtime = this.runtimeFor(run);
+    await new EnvironmentChecks(this.s).run(runId,signal);
     this.s.mutate(runId, (r) => { r.stage = 'implement'; });
     if (run.mode === 'verify' && !this.scope.hasAuthorTests(runId)) await this.candidates.authorAcceptanceTests(runId, signal);
 
@@ -358,7 +470,7 @@ export class Orchestrator {
   }
 
   /** Picks the winning candidate, then either parks the run or moves on to final verification. */
-  private async concludeBuild(runId: string, slots: Slot[], records: Map<Slot, CandidateRecord>, signal: AbortSignal): Promise<void> {
+  private async concludeBuild(runId: string, slots: Slot[], records: Map<Slot, CandidateRecord>, signal: AbortSignal, checksOnly = false): Promise<void> {
     const evals = slots.map((slot) => this.candidates.evaluateCandidate(records.get(slot)!));
     let chosen: Slot;
     if (slots.length === 2) {
@@ -376,14 +488,14 @@ export class Orchestrator {
     }
     this.s.mutate(runId, (r) => { r.checkpoint = winner.checkpoint; r.selectedSlot = chosen; r.branch = `aidept/${r.id}-${chosen}`; });
     this.scope.lockAcceptance(runId, winner.testFiles, winner.checkpoint!);
-    await this.verification.verifyPhase(runId, signal);
+    await this.verification.verifyPhase(runId, signal, checksOnly);
   }
 
   /**
    * Re-runs the checks on the checkpoint that already exists, with no agent involved. This is the right move when
    * the work is done but the check itself was wrong (e.g. a missing `test` script), so no tokens are spent.
    */
-  private async recheckPhase(runId: string, signal: AbortSignal): Promise<void> {
+  private async recheckPhase(runId: string, signal: AbortSignal, checksOnly = true): Promise<void> {
     const run = this.s.run(runId);
     const slot = run.selectedSlot;
     this.s.mutate(runId, (r) => { r.stage = 'implement'; });
@@ -394,6 +506,7 @@ export class Orchestrator {
     // A stopped attempt can leave half-finished edits in the workspace. Evidence is tied to the checkpoint commit, so
     // the tree must be exactly that commit before anything is measured.
     await this.runtimeFor(run).revert(run, slot);
+    await new EnvironmentChecks(this.s).run(runId,signal);
     this.s.log(runId, 'recheck', `Chạy lại check trên đúng checkpoint ${run.checkpoint!.slice(0, 8)} (đã hoàn nguyên mọi thay đổi dở dang; không gọi agent).`);
     const outcome = await this.checks.runChecks(runId, slot, run.checkpoint!, record.testFiles, signal);
     record.flakyChecks = outcome.flaky;
@@ -401,7 +514,7 @@ export class Orchestrator {
     record.problems = record.fatal ? outcome.fatal : outcome.problems;
     record.success = record.problems.length === 0;
     this.store.artifacts.put({ ...this.s.baseArtifact(runId, { kind: 'checkpoint', title: `Candidate ${slot}`, content: JSON.stringify(record), checkpoint: record.checkpoint }), id: `cand-${runId}-${slot}` });
-    await this.concludeBuild(runId, [slot], new Map([[slot, record]]), signal);
+    await this.concludeBuild(runId, [slot], new Map([[slot, record]]), signal, checksOnly);
   }
 
   /**
@@ -410,6 +523,7 @@ export class Orchestrator {
    * override them either, because classification checks the protected set first.
    */
   approvePaths(runId: string, paths: string[], resume = false): Run {
+    this.s.assertNotDelivering(runId);
     const run = this.s.run(runId);
     if (!['blocked', 'paused', 'failed', 'awaiting_approval'].includes(run.status)) throw new HttpError(409, 'Chỉ duyệt đường dẫn khi run đang chờ người dùng.');
     // Validate what the caller sent: normalising first would turn "/etc" into the innocent-looking "etc".
@@ -427,6 +541,7 @@ export class Orchestrator {
     this.s.mutate(runId, (r) => { r.approvedPaths = [...new Set([...(r.approvedPaths ?? []), ...cleaned])]; });
     this.s.log(runId, 'scope.approved', `Đã cho phép agent sửa: ${cleaned.join(', ')}`);
     if (!resume) return this.s.run(runId);
+    this.authorizeDeveloperRetry(runId, 'Người dùng đã duyệt phạm vi sửa file và yêu cầu chạy tiếp.');
     this.scope.discardFailedCandidates(runId);
     return this.enqueue(runId);
   }

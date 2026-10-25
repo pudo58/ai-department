@@ -1,3 +1,6 @@
+import { hashContract } from '../../core/contract.js';
+import { deepQuality, latestChecks, readManifest } from '../../core/qualityevidence.js';
+import type { TestManifest } from '../../shared/quality.js';
 import type { Artifact } from '../../shared/types.js';
 import { classifyPath, type ScopeInput } from '../../core/scope.js';
 import type { CandidateRecord } from './support.js';
@@ -17,13 +20,30 @@ export class ScopePolicy {
 
   private lockedArtifacts(runId: string): Artifact[] {
     const run = this.s.run(runId);
-    return this.s.store.artifacts.list(runId).filter((a) => a.kind === 'acceptance' && a.valid && a.contractVersion === run.contract.version);
+    return this.s.store.artifacts.list(runId).filter((a) => a.kind === 'acceptance' && a.title !== 'Test manifest' && a.valid && a.contractVersion === run.contract.version);
   }
 
   lockAcceptance(runId: string, files: string[], checkpoint: string, title = 'Acceptance suite', force = false): void {
-    if (!files.length && !force) return;
-    const content = JSON.stringify({ paths: [...new Set(files)].sort() });
-    this.s.artifact(runId, { kind: 'acceptance', title, content, checkpoint });
+    if (files.length || force) {
+      const content = JSON.stringify({ paths: [...new Set(files)].sort() });
+      this.s.artifact(runId, { kind: 'acceptance', title, content, checkpoint });
+    }
+    const run = this.s.run(runId);
+    const artifacts = this.s.store.artifacts.list(runId);
+    const previous = readManifest(run, artifacts);
+    if (!deepQuality(run) && (!previous || previous.manifest.source === 'observed')) {
+      const byRecipe = new Map((previous?.manifest.observed ?? []).map(r => [r.recipeId, r.testIds]));
+      for (const c of latestChecks(run, this.s.store.checks.list(runId)).filter(c => c.status === 'passed' && !c.quarantined)) byRecipe.set(c.recipeId, [...new Set([...(byRecipe.get(c.recipeId) ?? []), ...c.testIds])]);
+      const observed = [...byRecipe].map(([recipeId, testIds]) => ({ recipeId, testIds }));
+      if (observed.some(r => r.testIds.length)) {
+        const manifest: TestManifest = { schemaVersion: 1, source: 'observed', slot: run.selectedSlot, contractHash: hashContract(run.contract), contractVersion: run.contract.version, entries: [], observed };
+        const content = JSON.stringify(manifest);
+        if (!previous || JSON.stringify(previous.manifest) !== content) {
+          for (const a of artifacts.filter(a => a.title === 'Test manifest' && a.valid && a.contractVersion === run.contract.version)) this.s.store.artifacts.put({ ...a, valid: false });
+          this.s.artifact(runId, { kind: 'acceptance', title: 'Test manifest', content, checkpoint });
+        }
+      }
+    }
     this.s.log(runId, 'acceptance.locked', `Khóa ${files.length} file test nghiệm thu.`);
   }
 

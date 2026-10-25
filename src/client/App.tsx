@@ -3,7 +3,7 @@ import type { Health, ProjectProfile, RunSummary } from '../shared/types';
 import { api } from './api';
 import { ProjectEditForm, ProjectForm, RunForm } from './forms';
 import { ProjectContext } from './ProjectContext';
-import { ACTIVE, MODE_LABEL, NEEDS_YOU, STATUS, pipelineStep, STEPS } from './labels';
+import { ACTIVE, MODE_LABEL, NEEDS_YOU, runStatus, pipelineStep, STEPS } from './labels';
 import { MonitorHub, normalizeMonitorTab, type MonitorTab } from './MonitorHub';
 import { ConnectPage } from './ConnectPage';
 import { SkillsPage } from './SkillsPage';
@@ -61,7 +61,7 @@ export function App() {
     finally { setBusy(false); }
   }
 
-  const waiting = runs.filter((r) => NEEDS_YOU.includes(r.status)).length;
+  const waiting = runs.filter((r) => inFilter(r, 'attention')).length;
   const nav: [string, string, IconName, number | undefined][] = [['runs', 'Công việc', 'flow', waiting || undefined], ['projects', 'Dự án', 'folder', undefined], ['skills', 'Skill', 'layers', undefined], ['monitor', 'Theo dõi', 'activity', undefined], ['connect', 'Kết nối AI', 'shield', undefined]];
   const current = view.name === 'run' ? 'runs' : view.name;
   const ready = health?.liveReady;
@@ -87,7 +87,7 @@ export function App() {
     <main className="container">
       {error && <div className="banner error" role="alert"><Icon name="alert" size={16}/><span>{error}</span></div>}
       {view.name === 'runs' && <WorkView runs={runs} projects={projects} onOpen={(id) => go({ name: 'run', id })} onCreate={() => setModal('run')} onAddProject={() => go({ name: 'projects' })} onDelete={(run) => setDeleting({ run })}/>}
-      {view.name === 'run' && <RunPage id={view.id} onBack={() => go({ name: 'runs' })} onDeleted={async () => { go({ name: 'runs' }); await load(); }}/>}
+      {view.name === 'run' && <RunPage key={view.id} id={view.id} onBack={() => go({ name: 'runs' })} onDeleted={async () => { go({ name: 'runs' }); await load(); }}/>}
       {view.name === 'projects' && <ProjectsView projects={projects} runs={runs} onEdit={setEditing} onContext={(p) => setContextFor(p.id)} onCreate={() => setModal('project')} onDelete={(project) => setDeleting({ project })} onApprove={async (id) => { await api(`/api/projects/${id}/approve`, 'POST', {}); await load(); }}/>}
       {view.name === 'skills' && <SkillsPage/>}
       {view.name === 'connect' && <ConnectPage projects={projects} onProjectsChanged={load}/>}
@@ -99,7 +99,7 @@ export function App() {
     {modal === 'run' && <RunForm projects={projects} busy={busy} onClose={() => setModal(null)} onSave={(body) => save('/api/runs', body, (r) => go({ name: 'run', id: r.id }))}/>}
     {deleting && 'run' in deleting && <DeleteRunDialog run={deleting.run} onClose={() => setDeleting(null)} onDeleted={async () => { setDeleting(null); await load(); }}/>}
     {deleting && 'project' in deleting && <ConfirmDialog title={`Xoá dự án ${deleting.project.name}?`} confirmLabel="Xoá dự án"
-      disabled={runs.some((r) => r.projectId === deleting.project.id && ACTIVE.includes(r.status))}
+      disabled={runs.some((r) => r.projectId === deleting.project.id && (ACTIVE.includes(r.status) || r.deliveryStatus === 'in_progress'))}
       onClose={() => setDeleting(null)} onConfirm={async () => { await api(`/api/projects/${deleting.project.id}`, 'DELETE'); setDeleting(null); await load(); }}>
       <ProjectDeleteNote project={deleting.project} runs={runs.filter((r) => r.projectId === deleting.project.id)}/>
     </ConfirmDialog>}
@@ -108,7 +108,7 @@ export function App() {
 
 /** What deleting a project takes with it, and what it leaves alone. */
 function ProjectDeleteNote({ project, runs }: { project: ProjectProfile; runs: RunSummary[] }) {
-  const working = runs.filter((r) => ACTIVE.includes(r.status)).length;
+  const working = runs.filter((r) => ACTIVE.includes(r.status) || r.deliveryStatus === 'in_progress').length;
   return <>
     <p>{runs.length ? <>Xoá cả <strong>{runs.length} việc</strong> của dự án, cùng lịch sử, log, bản sao làm việc và bộ nhớ dự án.</> : 'Dự án chưa có việc nào.'} Không hoàn tác được.</p>
     <p className="muted">Thư mục code <span className="mono">{project.repository}</span> được giữ nguyên.</p>
@@ -118,7 +118,9 @@ function ProjectDeleteNote({ project, runs }: { project: ProjectProfile; runs: R
 
 type Filter = 'all' | 'running' | 'attention' | 'done';
 const FILTERS: [Filter, string][] = [['all', 'Tất cả'], ['attention', 'Cần bạn'], ['running', 'Đang chạy'], ['done', 'Hoàn thành']];
-const inFilter = (run: RunSummary, f: Filter) => f === 'all' || (f === 'running' ? ACTIVE.includes(run.status) : f === 'attention' ? NEEDS_YOU.includes(run.status) : run.status === 'completed');
+const inFilter = (run: RunSummary, f: Filter) => f === 'all' || (f === 'running' ? ACTIVE.includes(run.status) || run.deliveryStatus === 'in_progress'
+  : f === 'attention' ? run.deliveryStatus !== 'in_progress' && (NEEDS_YOU.includes(run.status) || (run.status === 'completed' && run.deliveryStatus !== 'succeeded'))
+  : run.status === 'completed' && run.deliveryStatus === 'succeeded');
 
 /**
  * What the person has to do, in order: the two decisions only they can make (accept a finished result, approve a
@@ -132,6 +134,13 @@ const DECISION: Partial<Record<RunSummary['status'], { label: string; action: st
   paused: { label: 'Tạm dừng', action: 'Chạy tiếp', icon: 'pause', hue: 'gray', rank: 5 },
   draft: { label: 'Nháp', action: 'Bắt đầu', icon: 'plus', hue: 'gray', rank: 6 },
 };
+function decisionOf(run: RunSummary) {
+  if (run.deliveryStatus === 'in_progress') return undefined;
+  if (run.deliveryStatus === 'failed' || run.deliveryStatus === 'unknown' || (run.status === 'completed' && run.deliveryStatus !== 'succeeded')) {
+    return { label: runStatus(run).label, action: 'Thử giao lại', icon: 'alert' as const, hue: 'orange' as const, rank: 0 };
+  }
+  return DECISION[run.status];
+}
 const PRIORITY_SHOWN = 6;
 /** First sentence of a blocker, short enough for one line in a list. */
 const brief = (text: string | null) => {
@@ -167,9 +176,9 @@ function WorkView({ runs, projects, onOpen, onCreate, onAddProject, onDelete }: 
   const shownPage = clampPage(page, rows.length, size);
   const pageRows = pageSlice(rows, shownPage, size);
   const now = Date.now();
-  const decisions = runs.filter((r) => DECISION[r.status]).sort((a, b) => DECISION[a.status]!.rank - DECISION[b.status]!.rank || b.updatedAt.localeCompare(a.updatedAt));
+  const decisions = runs.filter((r) => decisionOf(r)).sort((a, b) => decisionOf(a)!.rank - decisionOf(b)!.rank || b.updatedAt.localeCompare(a.updatedAt));
   const unapproved = projects.filter((p) => !p.approved);
-  const running = runs.filter((r) => ACTIVE.includes(r.status));
+  const running = runs.filter((r) => ACTIVE.includes(r.status) || r.deliveryStatus === 'in_progress');
   const monthCost = runs.reduce((sum, r) => sum + r.monthCostUsd, 0);
   const needYou = decisions.length + unapproved.length;
   const showTable = (f: Filter) => { setFilter(f); document.getElementById('task-table')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
@@ -179,12 +188,12 @@ function WorkView({ runs, projects, onOpen, onCreate, onAddProject, onDelete }: 
   ];
   type Item = { key: string; href: string; icon: IconName; hue: Hue; label: string; title: string; meta: string; reason: string; action: string };
   const items: Item[] = [
-    ...decisions.filter((r) => DECISION[r.status]!.rank <= 1).map((r) => itemOf(r)),
+    ...decisions.filter((r) => decisionOf(r)!.rank <= 1).map((r) => itemOf(r)),
     ...unapproved.map((p): Item => ({ key: p.id, href: '#/projects', icon: 'shield', hue: 'blue', label: 'Chưa duyệt policy', title: p.name, meta: `Dự án · policy v${p.version}`, reason: 'Việc chạy thật của dự án này bị chặn tới khi bạn duyệt.', action: 'Duyệt policy' })),
-    ...decisions.filter((r) => DECISION[r.status]!.rank > 1).map((r) => itemOf(r)),
+    ...decisions.filter((r) => decisionOf(r)!.rank > 1).map((r) => itemOf(r)),
   ];
   function itemOf(r: RunSummary): Item {
-    const d = DECISION[r.status]!;
+    const d = decisionOf(r)!;
     return { key: r.id, href: `#/run/${r.id}`, icon: d.icon, hue: d.hue, label: d.label, title: r.title, meta: `${names.get(r.projectId) ?? '—'} · ${agentOf(r).name} · ${ago(r.updatedAt, now)}`, reason: r.status === 'blocked' || r.status === 'failed' ? brief(r.blocker) : '', action: d.action };
   }
   return <>
@@ -230,10 +239,10 @@ function WorkView({ runs, projects, onOpen, onCreate, onAddProject, onDelete }: 
                     <td><span className="agent">{agent.name}</span><span className="cell-note one-line" title={agent.model}>{agent.model}</span></td>
                     <td><span className="progress" aria-label={`${done}/${STEPS.length} bước`}>{STEPS.map((s, i) => <i key={s} className={i < done ? 'on' : i === done && run.status !== 'completed' ? `now ${step.kind}` : ''}/>)}</span>
                       <span className="cell-note">{done >= STEPS.length ? 'Xong' : STEPS[done]}</span></td>
-                    <td><Badge tone={STATUS[run.status].tone} live={ACTIVE.includes(run.status)}>{STATUS[run.status].label}</Badge></td>
+                    <td><Badge tone={runStatus(run).tone} live={ACTIVE.includes(run.status) || run.deliveryStatus === 'in_progress'}>{runStatus(run).label}</Badge></td>
                     <td className={`num${spent > run.budgetUsd ? ' bad-text' : ''}`} title={`Ngân sách ${money(run.budgetUsd)}`}>{money(spent)}</td>
                     <td className="num muted">{ago(run.updatedAt, now)}</td>
-                    <td className="row-tools">{!ACTIVE.includes(run.status) && <button className="icon-button row-delete" aria-label={`Xoá việc ${run.title}`} title="Xoá việc"
+                    <td className="row-tools">{!ACTIVE.includes(run.status) && run.deliveryStatus !== 'in_progress' && <button className="icon-button row-delete" aria-label={`Xoá việc ${run.title}`} title="Xoá việc"
                       onClick={(e) => { e.stopPropagation(); onDelete(run); }}><Icon name="trash" size={15}/></button>}</td></tr>;
                 })}
               </tbody></table>

@@ -93,7 +93,7 @@ describe('a task where Claude writes the code, on this machine', () => {
     const orchestrator = new Orchestrator(store, () => runtime);
     const run = orchestrator.createRun({ projectId: 'prj_test', title: 'Sửa sumTo', originalRequirement: 'sumTo bỏ sót n', mode: 'single', provider: 'codex', budgetUsd: 5, signals: [] });
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     const detail = orchestrator.detail(run.id);
     expect(detail.run.status, `${detail.run.blocker}\n${detail.events.map((e) => e.message).join('\n')}`).toBe('awaiting_acceptance');
     expect(detail.attempts.map((a) => [a.role, a.provider, a.model])).toEqual([['planner', 'claude', 'claude-fable-5-1'], ['developer', 'claude', 'claude-fable-5-1']]);

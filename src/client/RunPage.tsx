@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
+import { TestRepairPanel } from './TestRepair.js';
+import { ExecutionPanel } from './ExecutionPanel.js';
 import type { Run, RunDetail } from '../shared/types';
+import { delivered } from '../core/delivery';
 import { api } from './api';
 import { ContractForm } from './forms';
 import { ACTIVE, MODE_LABEL, STATUS } from './labels';
@@ -12,13 +15,13 @@ import { Stepper, ScopeApproval, ReasonModal, EscalateModal, ProgressPanel, Cont
 type Tab = 'review' | 'progress' | 'contract' | 'verify' | 'code' | 'cost';
 
 /** Confirms deleting one task; used from the task table and from the task page. */
-export function DeleteRunDialog({ run, onClose, onDeleted }: { run: Pick<Run, 'id' | 'title' | 'status'>; onClose: () => void; onDeleted: () => Promise<void> }) {
-  const working = ACTIVE.includes(run.status);
+export function DeleteRunDialog({ run, onClose, onDeleted }: { run: Pick<Run, 'id' | 'title' | 'status' | 'delivery'> & { deliveryStatus?: string }; onClose: () => void; onDeleted: () => Promise<void> }) {
+  const working = ACTIVE.includes(run.status) || run.delivery?.status === 'in_progress' || run.deliveryStatus === 'in_progress';
   return <ConfirmDialog title="Xoá việc này?" confirmLabel="Xoá việc" disabled={working} onClose={onClose}
     onConfirm={async () => { await api(`/api/runs/${run.id}`, 'DELETE'); await onDeleted(); }}>
     <p className="confirm-subject">{run.title}</p>
     <p>Xoá lịch sử chạy, log, bằng chứng và bản sao làm việc của việc này. Không hoàn tác được.</p>
-    {run.status === 'completed' && <p className="muted">Code đã nghiệm thu vẫn nằm trong dự án.</p>}
+    {run.status === 'completed' && <p className="muted">Kiểm tra bằng chứng giao trong báo cáo trước khi xoá bản sao làm việc.</p>}
     {run.status === 'awaiting_acceptance' && <p className="notice-line warn">Kết quả đang chờ nghiệm thu sẽ mất.</p>}
     {working && <p className="notice-line warn">Việc đang chạy. Dừng nó trước rồi mới xoá được.</p>}
   </ConfirmDialog>;
@@ -28,25 +31,31 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
   const [detail, setDetail] = useState<RunDetail | null>(null);
   const [tab, setTab] = useState<Tab>('progress');
   const [error, setError] = useState('');
+  const [loadError, setLoadError] = useState('');
   const [busy, setBusy] = useState(false);
   const [modal, setModal] = useState<'contract' | 'escalate' | 'reject' | 'delete' | null>(null);
 
-  const refresh = useCallback(async () => { try { setDetail(await api<RunDetail>(`/api/runs/${id}`)); setError(''); } catch (e) { setError((e as Error).message); } }, [id]);
+  const refresh = useCallback(async () => { try { setDetail(await api<RunDetail>(`/api/runs/${id}`)); setLoadError(''); } catch (e) { setLoadError((e as Error).message); } }, [id]);
   const active = detail ? ACTIVE.includes(detail.run.status) : false;
   useEffect(() => { void refresh(); const t = setInterval(() => void refresh(), active ? 1500 : 4000); return () => clearInterval(t); }, [refresh, active]);
   // When a task reaches acceptance, open the report: that is what a person must read next.
   const runStatus = detail?.run.status;
-  useEffect(() => { if (runStatus === 'awaiting_acceptance') setTab('review'); }, [runStatus]);
+  useEffect(() => { if (runStatus === 'awaiting_acceptance') setTab('review'); else if (runStatus === 'awaiting_approval') setTab('contract'); }, [runStatus]);
 
   async function act(path: string, body: unknown = {}) {
     setBusy(true); setError('');
-    try { await api(path, 'POST', body); setModal(null); await refresh(); } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+    try { await api(path, 'POST', body); setModal(null); await refresh(); } catch (e) { await refresh(); setError((e as Error).message); } finally { setBusy(false); }
   }
   const crumbs = (title: string) => <nav className="crumbs" aria-label="Điều hướng"><button onClick={onBack}>Công việc</button><span>/</span><span>{title}</span></nav>;
-  if (!detail) return <>{crumbs('…')}{error ? <div className="banner error" role="alert">{error}</div> : <p className="muted">Đang tải…</p>}</>;
+  const pageError = error || loadError;
+  if (!detail) return <>{crumbs('…')}{pageError ? <div className="banner error" role="alert">{pageError}</div> : <p className="muted">Đang tải…</p>}</>;
 
   const { run } = detail;
-  const status = STATUS[run.status];
+  const delivering = run.delivery?.status === 'in_progress';
+  const locked = busy || delivering;
+  const status = delivering ? { label: 'Đang giao kết quả', tone: 'blue' }
+    : run.delivery?.status === 'failed' ? { label: 'Chưa giao được kết quả', tone: 'red' }
+    : run.delivery?.status === 'unknown' || (run.status === 'completed' && !delivered(run)) ? { label: 'Chưa xác nhận giao', tone: 'orange' } : STATUS[run.status];
   const confirmed = detail.findings.filter((f) => f.confirmed && f.status === 'open').length;
   const openSerious = detail.findings.filter((f) => f.status !== 'resolved' && (f.severity === 'blocker' || f.severity === 'major')).length;
   const aiTime = detail.attempts.reduce((n, a) => n + (a.endedAt ? Date.parse(a.endedAt) - Date.parse(a.startedAt) : 0), 0);
@@ -77,19 +86,20 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
         </dl>
       </div>
       <div className="action-bar" aria-label="Hành động">
-        {waiting && <button className="button primary" disabled={busy} onClick={() => void act(`/api/runs/${id}/${run.status === 'draft' ? 'start' : 'resume'}`)}>{run.status === 'draft' ? 'Bắt đầu' : 'Chạy tiếp'}</button>}
+        {waiting && !detail.testRepair && <button className="button primary" disabled={busy} onClick={() => void act(`/api/runs/${id}/${run.status === 'draft' ? 'start' : 'resume'}`)}>{run.status === 'draft' ? 'Bắt đầu' : 'Chạy tiếp'}</button>}
         {run.status === 'awaiting_approval' && <>
-          <button className="button primary" disabled={busy} onClick={() => void act(`/api/runs/${id}/approve-contract`)}>Duyệt hợp đồng v{run.contract.version}</button>
+          <button className="button primary" disabled={locked} onClick={() => setTab('contract')}>Xem và duyệt hợp đồng</button>
           <button className="button" onClick={() => setModal('contract')}>Sửa hợp đồng</button></>}
+        {waiting && run.status !== 'draft' && <button className="button" disabled={locked} onClick={() => setModal('contract')}>Sửa hợp đồng</button>}
         {active && <button className="button" disabled={busy} onClick={() => void act(`/api/runs/${id}/stop`)}>Dừng</button>}
         {run.status === 'awaiting_acceptance' && <>
-          <button className="button primary" disabled={busy || !detail.completion.ready} onClick={() => setTab('review')}>Xem báo cáo và nghiệm thu</button>
-          <button className="button" onClick={() => setModal('reject')}>Từ chối</button></>}
-        {confirmed > 0 && ['blocked', 'awaiting_acceptance'].includes(run.status) && <button className="button" disabled={busy} onClick={() => void act(`/api/runs/${id}/repair`)}>Sửa {confirmed} finding đã xác nhận</button>}
-        {waiting && run.status !== 'draft' && run.checkpoint && run.mode !== 'compare' && <button className="button" disabled={busy} title="Chạy lại test trên bản đã làm xong, dùng cấu hình project mới nhất. Không gọi agent nên không tốn token." onClick={() => void act(`/api/runs/${id}/recheck`, { refreshConfig: true })}>Chạy lại check</button>}
-        {(waiting || run.status === 'awaiting_acceptance') && run.status !== 'draft' && <button className="button ghost" onClick={() => setModal('escalate')}>Chuyển chế độ</button>}
-        {run.checkpoint && run.provider !== 'fake' && !active && run.status !== 'queued' && <PreviewButton runId={id}/>}
-        {!active && <button className="button ghost danger-ghost" onClick={() => setModal('delete')} title="Xoá việc này"><Icon name="trash" size={14}/>Xoá</button>}
+          <button className="button primary" disabled={locked || !detail.completion.ready} onClick={() => setTab('review')}>Xem báo cáo và nghiệm thu</button>
+          <button className="button" disabled={locked} onClick={() => setModal('reject')}>Từ chối</button></>}
+        {confirmed > 0 && ['blocked', 'awaiting_acceptance'].includes(run.status) && <button className="button" disabled={locked} onClick={() => void act(`/api/runs/${id}/repair`)}>Sửa {confirmed} finding đã xác nhận</button>}
+        {(waiting || run.status === 'awaiting_acceptance') && run.status !== 'draft' && run.checkpoint && run.mode !== 'compare' && <button className="button" disabled={busy} title="Chạy lại test trên bản đã làm xong, dùng cấu hình project mới nhất. Không gọi agent nên không tốn token." onClick={() => void act(`/api/runs/${id}/recheck`, { refreshConfig: true })}>Chạy lại check</button>}
+        {(waiting || run.status === 'awaiting_acceptance') && run.status !== 'draft' && <button className="button ghost" disabled={locked} onClick={() => setModal('escalate')}>Chuyển chế độ</button>}
+        {run.checkpoint && run.provider !== 'fake' && !active && !delivering && run.status !== 'queued' && <PreviewButton runId={id}/>}
+        {!active && <button className="button ghost danger-ghost" disabled={locked} onClick={() => setModal('delete')} title="Xoá việc này"><Icon name="trash" size={14}/>Xoá</button>}
       </div>
     </header>
 
@@ -101,20 +111,22 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
       { label: 'Công của bạn', value: duration(humanTime), sub: `${run.repairCount} vòng sửa` },
     ]}/>
 
-    {error && <div className="banner error" role="alert"><span>{error}</span></div>}
+    {pageError && <div className="banner error" role="alert"><span>{pageError}</span></div>}
     {run.blocker && <div className="banner warn"><span><strong>Cần chú ý:</strong> {run.blocker}</span></div>}
+    {detail.testRepair && <TestRepairPanel proposal={detail.testRepair} busy={locked || active || run.status === 'queued'} onApprove={() => act(`/api/runs/${id}/approve-test-repair`, { proposalId: detail.testRepair!.id, proposalHash: detail.testRepair!.hash })} onReject={() => act(`/api/runs/${id}/reject-test-repair`, { proposalId: detail.testRepair!.id, proposalHash: detail.testRepair!.hash })}/>}
     {detail.pendingPaths.length > 0 && <ScopeApproval paths={detail.pendingPaths} approved={run.approvedPaths ?? []} busy={busy} onApprove={(selected) => act(`/api/runs/${id}/approve-paths`, { paths: selected, resume: true })}/>}
     {run.mode === 'single' && run.recommendation.mode !== 'single' && <div className="notice"><span><strong>Gợi ý {MODE_LABEL[run.recommendation.mode]} (chi phí dự kiến ×{run.recommendation.multiplier}):</strong> {run.recommendation.reasons.join(' ')}</span></div>}
 
     {detail.runningCheck && <LiveTests detail={detail}/>}
+    <ExecutionPanel detail={detail} busy={locked || active || run.status==='queued' || run.status==='completed'} onAct={act}/>
 
     <div className="dossier">
       <nav className="tabs dossier-toc" role="tablist" aria-label="Mục lục hồ sơ">{tabs.map(([key, label, pill]) => <button key={key} role="tab" aria-selected={tab === key} onClick={() => setTab(key)}>{label}{pill && <span className={`pill${pill.alert ? ' alert' : ''}`}>{pill.text}</span>}</button>)}</nav>
       <div className="dossier-body">
-        {tab === 'review' && reviewable && <ReviewPanel detail={detail} busy={busy} onAccept={(ack) => act(`/api/runs/${id}/accept`, { acknowledgeWarnings: ack })} onReject={() => setModal('reject')}/>}
+        {tab === 'review' && reviewable && <ReviewPanel detail={detail} busy={locked} onAccept={(ack) => act(`/api/runs/${id}/accept`, { acknowledgeWarnings: ack })} onReject={() => setModal('reject')}/>}
         {tab === 'progress' && <ProgressPanel detail={detail}/>}
-        {tab === 'contract' && <ContractPanel detail={detail}/>}
-        {tab === 'verify' && <VerifyPanel detail={detail} busy={busy} onQuarantine={(checkId, reason) => act(`/api/runs/${id}/checks/${checkId}/quarantine`, { reason })} onFinding={(fid, action, body) => act(`/api/runs/${id}/findings/${fid}/${action}`, body)}/>}
+        {tab === 'contract' && <ContractPanel detail={detail} busy={locked} onApprove={(body) => act(`/api/runs/${id}/approve-contract`, body)}/>}
+        {tab === 'verify' && <VerifyPanel detail={detail} busy={locked} onQuarantine={(checkId, reason) => act(`/api/runs/${id}/checks/${checkId}/quarantine`, { reason })} onFinding={(fid, action, body) => act(`/api/runs/${id}/findings/${fid}/${action}`, body)}/>}
         {tab === 'code' && <CodePanel detail={detail}/>}
         {tab === 'cost' && <CostPanel detail={detail} onAct={act}/>}
         {run.mode === 'single' && tab !== 'cost' && <p className="faint small dossier-note">Single: lập kế hoạch, viết test và tự soát đều do một agent làm. Đó là tự review, không phải kiểm chứng độc lập.</p>}

@@ -1,5 +1,6 @@
+import { validateTestPlan } from './testplan.js';
 import { createHash } from 'node:crypto';
-import type { TaskContract } from '../shared/types.js';
+import type { ContractReview, TaskContract } from '../shared/types.js';
 
 export const sha256 = (value: string): string => createHash('sha256').update(value).digest('hex');
 
@@ -27,6 +28,16 @@ export function initialContract(requirementText: string): TaskContract {
   };
 }
 
+/** Structural omissions for a person to review, not a claim of semantic correctness. Never normalizes stored content. */
+export function reviewContract(contract: TaskContract): ContractReview {
+  const warnings: ContractReview['warnings'] = [];
+  if (!contract.requirements.some((r) => (r.kind ?? 'expected') === 'expected')) warnings.push({ code: 'missing_expected', message: 'Chưa có tiêu chí về hành vi mong muốn.' });
+  if (!contract.requirements.some((r) => r.kind === 'forbidden')) warnings.push({ code: 'missing_forbidden', message: 'Chưa có tiêu chí về hành vi không được xảy ra.' });
+  if (!contract.acceptanceExamples.some((text) => text.trim())) warnings.push({ code: 'missing_examples', message: 'Chưa có ví dụ nghiệm thu cụ thể.' });
+  if (contract.assumptions.some((text) => text.trim())) warnings.push({ code: 'assumptions_present', message: 'Hợp đồng có giả định cần bạn xác nhận.' });
+  return { contractHash: hashContract(contract), contractVersion: contract.version, warnings, problems: validateContract(contract) };
+}
+
 export function validateContract(contract: TaskContract): string[] {
   const problems: string[] = [];
   const ids = new Set<string>();
@@ -35,9 +46,10 @@ export function validateContract(contract: TaskContract): string[] {
     if (!r.text.trim()) problems.push(`Tiêu chí ${r.id} đang trống.`);
     if (!/^R-[A-Za-z0-9_-]+$/.test(r.id)) problems.push(`Mã tiêu chí ${r.id} không hợp lệ (dạng R-xxx).`);
     if (ids.has(r.id)) problems.push(`Mã tiêu chí ${r.id} bị trùng.`);
+    if (r.kind !== undefined && r.kind !== 'expected' && r.kind !== 'forbidden') problems.push(`Loại tiêu chí ${r.id} không hợp lệ.`);
     ids.add(r.id);
   }
-  return problems;
+  return [...problems, ...validateTestPlan(contract)];
 }
 
 export function approveContract(contract: TaskContract, now = new Date()): TaskContract {

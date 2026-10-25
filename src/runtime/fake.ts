@@ -1,4 +1,5 @@
-import type { Run, Slot } from '../shared/types.js';
+import { RISK_GROUPS } from '../shared/quality.js';
+import type { DeliveryResult, DeliveryTarget, Run, Slot } from '../shared/types.js';
 import { notAnalyzed, type AnalysisTool, type ToolReport } from '../core/tools.js';
 import type { AgentExecution, AgentResult, CheckExecution, ChangeSet, PrepareResult, Runtime, RuntimeCheckResult } from './types.js';
 
@@ -57,12 +58,13 @@ export class FakeRuntime implements Runtime {
     this.aborts.set(exec.attempt.id, controller);
     exec.signal?.addEventListener('abort', () => controller.abort(), { once: true });
     try { await this.wait(this.options.delayMs ?? 0, controller.signal); } finally { this.aborts.delete(exec.attempt.id); }
-    const output = this.options.reply?.(exec) ?? this.defaultReply(exec);
+    const writes = exec.role === 'developer' || (exec.role === 'author' && !exec.prompt.includes('Author lập kế hoạch ca kiểm thử CHỈ ĐỌC'));
+    const files = writes ? (typeof this.options.files === 'function' ? this.options.files(exec) : this.options.files) : undefined;
+    const output = this.options.reply?.(exec) ?? this.defaultReply(exec, files);
     exec.onEvent?.({ type: 'provider.raw', message: JSON.stringify({ type: 'fake', role: exec.role }) });
     // The final message in the same shape Codex emits, so code that reads raw provider output is exercised too.
     exec.onEvent?.({ type: 'provider.raw', message: JSON.stringify({ type: 'item.completed', item: { id: 'm', type: 'agent_message', text: output } }) });
-    if (exec.role === 'developer' || exec.role === 'author') {
-      const files = typeof this.options.files === 'function' ? this.options.files(exec) : this.options.files;
+    if (exec.role === 'developer' || (exec.role === 'author' && !exec.prompt.includes('Author lập kế hoạch ca kiểm thử CHỈ ĐỌC'))) {
       // Verify mode lets the Author add test files only, so the simulated one writes a test beside the Developer's file.
       this.dirty.set(this.key(exec.run, exec.attempt.slot), files ?? [exec.role === 'author' ? 'src/simulated.test.ts' : 'src/simulated.ts']);
     }
@@ -71,10 +73,17 @@ export class FakeRuntime implements Runtime {
     return { output, sessionId: `fake-session-${exec.attempt.id}`, usage: { inputTokens: 1000, cachedTokens: 0, outputTokens: 200, costUsd: 0.01 } };
   }
 
-  private defaultReply(exec: AgentExecution): string {
+  private defaultReply(exec: AgentExecution, files?: string[]): string {
     const { run, role, prompt } = exec;
     if (prompt.includes('diễn giải yêu cầu một cách độc lập')) {
       return `Diễn giải mô phỏng.\n${fence({ interpretation: `Cách hiểu mô phỏng của ${role}.`, questions: [] })}`;
+    }
+    if (prompt.includes('Author lập kế hoạch ca kiểm thử CHỈ ĐỌC')) {
+      const cases = run.contract.requirements.map((r, i) => ({ id: `C-${i + 1}`, requirementIds: [r.id], group: 'happy', risk: 'Mô phỏng rủi ro', priority: 'normal', preconditions: 'Fixture', actions: r.text, expected: 'Kết quả fixture', method: r.manual ? 'manual' : 'automated', required: r.required, ...((run.qualityPolicyVersion ?? 0) >= 2 ? { oracle: { references: [{ requirementId: r.id, quote: r.text }], explanation: 'Fixture mô phỏng, không xác nhận ngữ nghĩa.' } } : {}) }));
+      return fence({ schemaVersion: (run.qualityPolicyVersion ?? 0) >= 2 ? 2 : 1, ...(run.qualityPolicyVersion===3?{reasoningVersion:1}:{}), cases:cases.map(c=>({...c,...(run.qualityPolicyVersion===3?{steps:[{id:'S-1',before:'Fixture before',after:'Fixture after',requirementIds:c.requirementIds,action:c.actions,expected:c.expected}]}:{})})), notApplicable: RISK_GROUPS.filter(g => g !== 'happy').map(group => ({ group, reason: 'Fixture mô phỏng; không kiểm chứng nghiệp vụ.' })), questions: [] });
+    }
+    if (role === 'author' && run.qualityPolicyVersion) {
+      return fence({ entries: (run.contract.testPlan?.cases ?? []).filter(c => c.method === 'automated').map(c => ({ caseId: c.id, requirementIds: c.requirementIds, recipeId: run.configSnapshot.checks.find(r => r.reportPath)?.id ?? 'test', path: files?.[0] ?? 'src/simulated.test.ts', ...(run.qualityPolicyVersion===3?{assertions:(c.steps??[]).map(s=>({stepId:s.id!,expected:s.expected,expression:'expect(true).toBe(true)'}))}:{}), testId: `suite.test.ts::[${c.requirementIds[0]}][${c.id}] works`, ...((run.qualityPolicyVersion ?? 0) >= 2 ? { identity: { kind: 'json', file: files?.[0] ?? 'src/simulated.test.ts', titles: [`[${c.requirementIds[0]}][${c.id}] works`] } } : {}) })) });
     }
     if (role === 'planner') {
       return `Hợp đồng mô phỏng.\n${fence({ requirements: run.contract.requirements, acceptanceExamples: run.contract.acceptanceExamples, interfaces: [], assumptions: ['Mô phỏng: chưa có agent thật.'], scope: run.contract.scope })}`;
@@ -91,8 +100,11 @@ export class FakeRuntime implements Runtime {
     const files = this.dirty.get(this.key(run, slot)) ?? [];
     this.committed.set(this.key(run, slot), [...new Set([...(this.committed.get(this.key(run, slot)) ?? []), ...files])]);
     this.dirty.delete(this.key(run, slot));
-    return `fake-${++this.commits}`;
+    const checkpoint = `fake-${++this.commits}`;
+    this.heads.set(this.key(run, slot), checkpoint);
+    return checkpoint;
   }
+  private heads = new Map<string, string>();
   private committed = new Map<string, string[]>();
   /** Every file ever committed in this slot, as one "added" line each: enough to exercise the acceptance report. */
   async diffSinceBase(run: Run, slot: Slot) {
@@ -101,9 +113,22 @@ export class FakeRuntime implements Runtime {
   }
   async baseFiles(): Promise<string[]> { return this.options.baseFiles ?? []; }
 
+  deliveryTarget = (run: Run, slot: Slot): DeliveryTarget => ({ kind: 'branch', target: `aidept/${run.id}-${slot}` });
+  /** Scripted receipt only: a run whose provider is fake still cannot pass the acceptance gates. */
+  async deliver(run: Run, slot: Slot): Promise<DeliveryResult> {
+    this.calls.push(`deliver:${slot}`);
+    const target = this.deliveryTarget(run, slot);
+    return { ...target, summary: `Mô phỏng giao branch ${target.target}` };
+  }
+
   async revert(run: Run, slot: Slot): Promise<void> {
     this.calls.push(`revert:${slot}`);
     this.dirty.delete(this.key(run, slot));
+  }
+
+  async applyPatch(run: Run, slot: Slot, patch: string): Promise<void> {
+    this.calls.push(`applyPatch:${slot}`);
+    this.dirty.set(this.key(run, slot), [...patch.matchAll(/^\+\+\+ b\/(.+)$/gm)].map(m => m[1]!));
   }
 
   async runCheck(exec: CheckExecution): Promise<RuntimeCheckResult> {
@@ -114,7 +139,7 @@ export class FakeRuntime implements Runtime {
       await new Promise((resolve) => setTimeout(resolve, this.options.checkDelayMs));
     }
     const scripted = this.options.check?.(exec, call);
-    const base: RuntimeCheckResult = { exitCode: 0, log: 'Mô phỏng: không chạy test thật.', durationMs: 1, checkpoint: exec.run.checkpoint ?? 'fake-base', incomplete: true };
+    const base: RuntimeCheckResult = { exitCode: 0, log: 'Mô phỏng: không chạy test thật.', durationMs: 1, checkpoint: this.heads.get(this.key(exec.run, exec.slot)) ?? exec.run.checkpoint ?? 'fake-base', incomplete: true };
     return { ...base, ...scripted };
   }
 

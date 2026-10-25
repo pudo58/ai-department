@@ -113,7 +113,8 @@ describe('task list', () => {
     const list = res.json<RunSummary[]>();
     expect(list.map((r) => r.id)).toEqual([first!.id, second!.id]); // oldest first, as before
     const summary = list[1]!;
-    expect(Object.keys(summary).sort()).toEqual(['blocker', 'budgetUsd', 'contractApproved', 'costUsd', 'createdAt', 'developer', 'id', 'mode', 'monthCostUsd', 'projectId', 'provider', 'stage', 'status', 'title', 'updatedAt']);
+    expect(Object.keys(summary).sort()).toEqual(['blocker', 'budgetUsd', 'contractApproved', 'costUsd', 'createdAt', 'deliveryStatus', 'developer', 'id', 'mode', 'monthCostUsd', 'projectId', 'provider', 'stage', 'status', 'title', 'updatedAt']);
+    expect(summary.deliveryStatus).toBe('unconfirmed');
     expect(summary).toMatchObject({ projectId: project.id, title: 'Hai', status: 'blocked', mode: full.mode, provider: 'fake', stage: 'implement', contractApproved: true, budgetUsd: 5, blocker: 'Cần chú ý: thiếu quyền.', createdAt: full.createdAt, updatedAt: full.updatedAt, developer: { provider: 'codex', model: 'gpt-5-codex' } });
     const estimated = estimateCost({ inputTokens: 10_000, cachedTokens: 4_000, outputTokens: 2_000 });
     expect(summary.costUsd).toBeCloseTo(2.5 + estimated, 10);

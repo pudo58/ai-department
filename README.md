@@ -6,8 +6,11 @@ Harness làm nền, **Single là mặc định**, Team (Clarify / Verify / Compa
 npm run build && npm start     # http://127.0.0.1:4310
 npm run dev                    # server + Vite (127.0.0.1:5173)
 npm test                       # vitest
+pnpm test:reliability           # regression có fixture, không gọi model thật
 npm run eval -- <lệnh>         # bộ đo M0 (xem bên dưới)
 ```
+
+Verify mới dùng chính sách v3 cho căn cứ từng bước, liên kết assertion, chẩn đoán có cấu trúc và chạy phản ví dụ của Verifier. Xem [hướng dẫn và giới hạn](docs/quality-v3.md). Run cũ giữ nguyên phiên bản đã lưu.
 
 ## Đóng gói và phát hành lên npm
 
@@ -50,10 +53,16 @@ Giữ tiền tố `./`: `npm publish release/ai-department` được npm hiểu 
 | Ngữ cảnh project: bản đồ repo, bộ nhớ đã duyệt, ngân sách token theo vai, xem trước | Xong, có test; **tắt mặc định**, chưa đo được lợi ích với Codex thật. Agent chưa tự đề xuất bộ nhớ (bước 3, chờ số đo) |
 | Công cụ phân tích knip/jscpd/dependency-cruiser | Chưa nối: báo "chưa phân tích" |
 | Feature mới (phase base+stub) | Chưa tự động; chỉ bugfix/refactor có red/green |
-| Khóa theo test id (`missingTestIds`) | Hàm có sẵn, chưa nối; hiện khóa theo path |
+| Khóa theo test id (`missingTestIds`) | Đã nối manifest và report; thiếu/skip/đổi tên test đã khóa không đạt |
 | Chạy Reviewer thật cho M0a | `runM0a` nhận `Reviewer` bất kỳ; chưa có adapter CLI |
 
 Run **mô phỏng** (FakeProvider) chỉ kiểm tra workflow. Mọi check của nó là `incomplete` nên không bao giờ nghiệm thu được.
+
+## Theo dõi khi có nhiều task
+
+Tab **Trực tiếp** ưu tiên danh sách: có việc chạy thì mở **Đang chạy**, nhàn rỗi thì mở **Chờ bạn**. Việc chờ được chia thành nghiệm thu, duyệt hợp đồng/project và cần xử lý; mỗi nhóm hiện 5 việc, bấm **Xem thêm** để mở tiếp. Tìm kiếm và lọc project áp dụng cả số đếm lẫn danh sách. Bộ lọc và task đang chọn được giữ khi chuyển trang.
+
+Chọn một task để xem lượt gọi AI hoặc log riêng ở khung bên cạnh. Lịch sử **Gần đây** gom 80 lượt gọi toàn hệ thống theo task; khi chọn, hệ thống tải riêng 40 lượt gần nhất của task đó, kể cả task không còn trong 80 lượt chung. **Sơ đồ hoạt động** luôn hiện phía trên danh sách, chỉ vẽ task có trạng thái đang chạy; task xếp hàng, chờ bạn, lỗi và đã xong không xuất hiện trên sơ đồ. Khi nhàn rỗi vẫn hiện hub/dịch vụ, không có node task. Trên màn hình hẹp, chi tiết nằm dưới danh sách.
 
 ## Báo cáo nghiệm thu và test đang chạy
 
@@ -61,7 +70,84 @@ Khi task tới bước nghiệm thu, trang task mở tab **Nghiệm thu** với 
 
 Mọi điều hệ thống **không chứng minh được** hiện thành cảnh báo: test bị bỏ qua, Verifier từ chối kết luận hoặc chưa chạy, tiêu chí thủ công, check flaky/quarantine. Nếu có cảnh báo, nút Nghiệm thu chỉ mở sau khi bạn tick xác nhận đã đọc (server cũng chặn nếu thiếu \`acknowledgeWarnings\`). Báo cáo bạn đã xem được lưu cùng task (artifact "Báo cáo nghiệm thu"). Số test pass/fail/bỏ qua chỉ có với check chạy sau khi tính năng này có; check cũ hiện "—" cho tới khi **Chạy lại check**.
 
+Task chỉ chuyển sang **Hoàn thành** sau khi giao kết quả thành công. Run lưu bản ghi `delivery` gồm trạng thái, checkpoint, phiên bản hợp đồng, slot, thời gian, kết quả và lỗi đã che thông tin nhạy cảm. Nếu giao lỗi, task vẫn chờ nghiệm thu, hiện **Chưa giao được kết quả** và nút **Thử giao lại**. Nút này dùng lại `POST /api/runs/:id/accept`; khi bằng chứng còn hợp lệ, hệ thống chỉ thử giao lại, không gọi agent hoặc chạy lại check. Lỗi trả HTTP 409; giao diện tải lại trạng thái đã lưu. Thời điểm nghiệm thu và cửa sổ theo dõi bảy ngày bắt đầu sau lần giao thành công.
+
+Trong lúc giao, hệ thống chặn nghiệm thu đồng thời, sửa task, chạy lại và xóa. Khi server khởi động lại, lượt giao dở chuyển thành `unknown`; workspace được giữ để thử lại. Task cũ đã nghiệm thu nhưng thiếu bằng chứng giao vẫn giữ lịch sử và hiện **Chưa xác nhận giao**. Cleanup từ chối xóa workspace nếu giao thất bại, gián đoạn, chưa rõ hoặc bằng chứng giao không khớp bản hiện tại, kể cả đã quá bảy ngày.
+
+Kết luận Verifier chỉ áp dụng khi artifact còn hiệu lực và khớp cả checkpoint lẫn phiên bản hợp đồng. Khôi phục từ log thô cũng phải khớp attempt Verifier đã hoàn tất và cùng phiên bản. Nếu thiếu kết luận phù hợp, báo cáo hiện **Bản code này chưa có kết luận Verifier**; bạn vẫn có thể xác nhận cảnh báo để nghiệm thu khi các điều kiện tự động khác đạt.
+
 Trong lúc check chạy, đầu trang task hiện khung **Chương trình test đang chạy**: lệnh đang chạy, thời gian, bộ đếm pass/fail/bỏ qua cập nhật theo từng test và console của chính test đó. Bộ đếm đọc output dạng spec/TAP của \`node --test\` và dấu tick của Jest/Vitest; nó chỉ là chỉ báo trực tiếp, kết quả chính thức là report đọc khi test chạy xong.
+
+## Kiểm thử sâu cho Verify
+
+Run Verify mới bật `qualityPolicyVersion: 1`. Luồng chạy là Planner → Author lập kế hoạch ca chỉ đọc → người dùng duyệt → Author viết và khóa test → Developer → checks → mutation → Verifier → nghiệm thu. Lượt Author bổ sung tính vào ngân sách prepare hiện có; hệ thống không tự tăng trần.
+
+Trong tab **Hợp đồng**, đọc các ca `C-x` gắn với yêu cầu `R-x`: rủi ro, điều kiện ban đầu, thao tác, kết quả quan sát được, bắt buộc/bổ sung và tự động/thủ công. Với kế hoạch mới, ca bắt buộc về trạng thái, đồng thời hoặc nhất quán phải ghi ít nhất hai bước có thứ tự, kết quả sau từng bước và bất biến phải giữ sau mỗi bước. Điều này giúp lộ lỗi chỉ xuất hiện sau retry, reopen, thao tác đồng thời hoặc trạng thái trung gian; test phải kiểm tra từng bước, không chỉ kết quả cuối. Author phải xét ca thuận, dữ liệu sai/biên, quyền, lặp/đồng thời, lỗi phụ thuộc, chuyển trạng thái và nhất quán dữ liệu; nhóm không áp dụng phải có lý do. Câu hỏi chưa giải quyết chặn duyệt. Sửa ca làm đổi hash, tăng phiên bản và đặt lại xác nhận. Kế hoạch đã duyệt trước khi có cấu trúc chuỗi giữ nguyên hiệu lực. Nếu Author trả output sai hoặc không tạo được test bắt buộc, task dừng; dùng **Sửa hợp đồng** để chỉnh kế hoạch trước khi thử lượt mới. Resume không tự lặp gọi Author cho cùng lỗi manifest.
+
+Author trả manifest trước Developer, ví dụ:
+
+```json
+{"entries":[{"caseId":"C-1","requirementIds":["R-1"],"recipeId":"test","path":"tests/order.test.ts","identity":{"kind":"json","file":"tests/order.test.ts","titles":["Đơn hàng","[R-1][C-1] tạo một đơn"]}}]}
+```
+
+Verify mới dùng `qualityPolicyVersion: 2`, kế hoạch và manifest `schemaVersion: 2`. Mỗi ca có `oracle: { references: [{ requirementId, quote }], explanation }`: trích nguyên văn điều khoản thuộc ca, giải thích căn cứ của expected, các bước và bất biến. UI cho xem/sửa căn cứ; sửa làm đổi hash và mất hiệu lực duyệt. Trích dẫn tồn tại không chứng minh assertion đúng về ngữ nghĩa; thiếu quy định phải giải quyết câu hỏi trong hợp đồng trước khi duyệt.
+
+Server tính `testId` từ danh tính có cấu trúc. JSON giữ đường dẫn tương đối và từng phần `ancestorTitles`/`title` trong `titles`; JUnit dùng `identity: { kind: "junit", className: "Orders", name: "test_R_1_C_1" }`. Không tự ghép tên bằng dấu `>` hoặc dấu cách. Tên test gắn `R-x`, `C-x`; Java/Python/Go có thể dùng `R_1`, `C_1`. Test tham số hóa kê khai từng tên cụ thể, ổn định. Mỗi recipe có namespace riêng. Manifest cũ chỉ khớp qua tên suy ra từ report và ánh xạ duy nhất. Manifest và file test bị khóa; test khác cùng `R-x` không thay được ca thiếu.
+
+Ca tự động bắt buộc thiếu, skip, fail, flaky, quarantine, report lỗi hoặc bằng chứng sai checkpoint/slot/phiên bản/cấu hình đều chặn nghiệm thu. Ca bổ sung chưa đạt, ca thủ công và giới hạn mutation hiện thành cảnh báo. Tick cảnh báo không vượt qua blocker. Bằng chứng chỉ lấy kết quả mới nhất mỗi recipe. Báo cáo **Các ca đã khai báo đạt** không khẳng định đã kiểm tra mọi tình huống nghiệp vụ.
+
+Run cũ giữ nguyên hợp đồng, hash và chính sách; không tự thêm kế hoạch hay gọi thêm AI khi đọc/resume. Single/Clarify/Compare chưa có bước lập ca độc lập; hệ thống vẫn khóa định danh test đã quan sát tại checkpoint và phát hiện test mất khỏi lần chạy sau.
+
+### Phục hồi khi test hoặc bằng chứng chưa đạt
+
+Test chạy và fail được phân biệt với test bị skip hoặc không xuất hiện trong report. Lỗi assertion đi vào vòng sửa Developer có giới hạn; test thiếu/skip vẫn chặn nghiệm thu. Khi checks đã xanh nhưng thiếu bằng chứng cho yêu cầu bắt buộc, hệ thống cho một lượt bổ sung test có assertion và liên kết yêu cầu, sau đó chạy lại. Những test đã quan sát vẫn giữ định danh để phát hiện việc bỏ test.
+
+Với Verify có kế hoạch ca, Author được tối đa một lượt chẩn đoán cho mỗi cặp phiên bản hợp đồng và manifest. Chỉ assertion thực sự chạy và thất bại mới vào luồng này; `CheckResult.issues` phân biệt lỗi assertion, report, collection, môi trường, checkpoint và định danh thiếu/skip/trùng. Lỗi bằng chứng không tự gọi Developer sửa source.
+
+Nếu có căn cứ setup hoặc assertion trái hợp đồng, Author chỉ tạo đề xuất: mọi thay đổi được hoàn nguyên, diff và lý do hiện trên trang task để người dùng đọc và duyệt. Bản sửa assertion phải ghi kỳ vọng trước/sau và trích điều khoản hợp đồng. Hợp đồng mơ hồ thì dừng để làm rõ. Developer không có quyền mở khóa test. Bản duyệt gắn với checkpoint, hợp đồng, cấu hình và hash manifest; bản cũ bị từ chối. Sau duyệt, hệ thống áp dụng đúng diff, khóa lại manifest có lịch sử phiên bản và chạy lại checks, mutation khả dụng, Verifier trước khi cho nghiệm thu. Giữ tên ca không thay thế việc đọc assertion; không duyệt bản sửa làm yếu hành vi cần kiểm chứng.
+
+Chạy `pnpm build` và `pnpm test:reliability` để xác nhận, không gọi model thật. Regression giới hạn 4 worker để các fixture Vitest/Stryker con không tranh chấp tài nguyên; không tự retry test. Để xem luồng duyệt trong trình duyệt, chạy `pnpm exec tsx tests/fixtures/assertion-ui.ts` và mở URL được in ra; đây là fixture với agent/check giả, khác với fixture Vitest thật trong `tests/assertion-local.test.ts`.
+
+Số lượt tự động được lưu để gián đoạn/resume không tự tăng trần. Bấm thử lại một run đã `failed`, hoặc duyệt phạm vi sửa file rồi chạy tiếp, là một yêu cầu chạy mới có giới hạn và vẫn dùng ngân sách hiện có. Đề xuất sửa test đang chờ duyệt không tự lặp gọi Author. Không thay đổi điều kiện chỉ `completed` sau khi giao thành công.
+
+### Mutation tự nhận diện stack
+
+Bộ nhận diện chỉ đọc manifest, tên cấu hình và metadata package đã cài. Adapter đầu tiên hỗ trợ **JS/TS + Vitest >=2, Stryker core và vitest-runner 9.6.1**. Trạng thái là `available`, `unsupported`, `missing_tool` hoặc `ambiguous`. Không tự chạy script để nhận diện hoặc cài dependency trong project của người dùng.
+
+Nếu dùng pnpm và project chưa có công cụ:
+
+```bash
+pnpm add -D --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1
+```
+
+Dùng package manager/lockfile của project, commit manifest và lockfile rồi tạo run mới. Hướng dẫn trong giao diện chọn npm/pnpm/yarn/bun theo lockfile. Với monorepo, **Sửa project → Nâng cao → Thư mục mutation** chọn đường dẫn tương đối như `packages/api`; để trống tự nhận diện, `.` là gốc repo. Detector xét package ở gốc và tối đa hai tầng thư mục con. Dependency đã cài có thể nằm ở package, gốc repo hoặc thư mục cha trung gian như `packages/node_modules`; bản sao mutation giữ các vị trí này để runner tìm đúng công cụ. Nhiều cấu hình Vitest chính trong một package cần được hợp nhất trước khi adapter chạy.
+
+Mutation chạy sau khi checks và ca bắt buộc đạt, trên clone riêng của đúng checkpoint; chỉ chọn source JS/TS thay đổi, loại file test, cấu hình, lockfile, file sinh tự động và dependency. Baseline phải đạt. `related` tắt để tránh bỏ sót test tích hợp gọi qua API. Mặc định 5 phút tổng, concurrency 2, một lượt mỗi checkpoint/cấu hình; không tự retry hay gọi AI sửa mutation sống sót.
+
+JSON/Markdown và giao diện lưu riêng killed, survived, no coverage, timeout, lỗi biên dịch/công cụ và phần chưa chạy. Khi không xác định được số mutation chưa chạy, báo rõ chưa xác định. Timeout/lỗi công cụ không được tính là test bắt lỗi; không có ngưỡng mutation score chung. Mutation sống sót là cảnh báo cần xem xét; finding đã xác nhận vẫn theo chính sách hiện có.
+
+**Chạy lại check** chỉ chạy checks và mutation phù hợp trên checkpoint đang có, không gọi Developer/Author/Verifier. Thay recipe/cấu hình làm bằng chứng cũ mất hiệu lực. Hủy hoặc restart đánh dấu lượt mutation dở là chưa hoàn tất; watchdog dừng cây tiến trình local, Docker được dừng theo tên container lúc phục hồi. Patch mutation không được giao về project.
+
+### Regression bằng fixture
+
+```bash
+pnpm install --frozen-lockfile --ignore-scripts
+pnpm build
+pnpm test:reliability
+```
+
+Nhóm reliability dùng danh sách file tường minh trong `scripts/test-reliability.mjs`, gồm hợp đồng/API/orchestrator/delivery/verdict/runtime/project không Git/báo cáo/cleanup/preview và kiểm thử sâu. Fixture Stryker/Vitest chạy thật, so sánh test yếu với assertion ở giá trị biên và kiểm tra candidate/project không đổi; giới hạn test này 60 giây. Test giao diện component dùng DOM ảo và API Fastify thật, không thay thế kiểm tra hình ảnh trên trình duyệt. Live model và Docker E2E không nằm trong nhóm này.
+
+CI `.github/workflows/reliability.yml` chạy Windows/Ubuntu, Node 24.12.0 và pnpm 11.25.0; mỗi job 15 phút, không hủy job còn lại khi một OS lỗi. JSON/JUnit và bằng chứng mutation ở `test-results/reliability/`, upload cả khi test lỗi và giữ 14 ngày. CI GitHub chỉ được xác nhận sau lần push/PR thực tế.
+
+Để kiểm tra giao diện trực tiếp bằng fixture riêng:
+
+```bash
+pnpm build
+pnpm exec tsx tests/fixtures/quality-ui.ts
+```
+
+Mở URL fixture in ra. Lần duyệt đầu cố ý trả hash cũ để kiểm tra tải lại; sau khi duyệt bản mới, fixture thiếu ca lỗi `C-2` nên bị chặn. Bấm **Chạy lại check** sẽ cung cấp đủ ca; đọc và xác nhận cảnh báo mutation trước khi nghiệm thu. Toàn bộ agent/check của fixture UI là mô phỏng, không gọi model hoặc ghi vào project thật. Dùng fixture mutation riêng trong test để có bằng chứng công cụ thật.
 
 ## Giám sát (log trực tiếp)
 
@@ -88,7 +174,7 @@ Trong lúc check chạy, đầu trang task hiện khung **Chương trình test �
 
 - **Hệ thống** (`#/monitor/system`):
   - chỗ trống ổ đĩa và phiên bản Codex;
-  - dung lượng bản sao làm việc theo từng task (đo ở nền), kèm nút **Dọn** cho task đã nghiệm thu, bị chặn hoặc thất bại hơn 7 ngày, hoặc bản sao không còn task (`POST /api/system/cleanup`). Nút này chỉ xóa `.data/workspaces/<run>-*`, không đụng project gốc;
+  - dung lượng bản sao làm việc theo từng task (đo ở nền), kèm nút **Dọn** cho task hoàn thành đã giao thành công đúng bản hiện tại, task bị chặn hoặc thất bại hơn 7 ngày, hoặc bản sao không còn task (`POST /api/system/cleanup`). Mọi trường hợp vẫn phải qua quy tắc bảo vệ bằng chứng giao ở trên. Nút này chỉ xóa `.data/workspaces/<run>-*`, không đụng project gốc;
   - các phiên Chạy thử đang mở.
 
 Tên model thật (ví dụ `gpt-6.1-sol`) được đọc từ nhật ký phiên của Codex (`~/.codex/sessions`) khi vai để trống model. Lượt cũ được bổ sung tên khi server khởi động.
@@ -211,8 +297,8 @@ Report path là `.aidept-report.xml`. Repo không có `package.json` thì lệnh
 
 Project chỉ cần là một thư mục tồn tại (không nhận ổ đĩa gốc hay thư mục home). Có hai trường hợp:
 
-- **Git có ít nhất một commit**: như trước. Agent làm trên bản clone, kết quả giao bằng một branch `aidept/<run>-A` mới.
-- **Git chưa có commit, hoặc không phải git**: hệ thống chụp một bản sao thư mục (trừ `.git`, `node_modules`, `.data`, symlink; tối đa 20.000 file / 300 MB) thành repo git riêng của run trong `.data/workspaces/<run>-base`, tôn trọng `.gitignore` của project nên file bị ignore (như `.env`) không tới tay agent. Bản chụp chỉ tạo một lần mỗi run nên sửa thư mục project giữa chừng không làm lệch base. Khi **nghiệm thu**, các file task đã đổi được ghi thẳng vào thư mục project, không tạo branch và không đụng `.git`. Nếu một file đã bị bạn sửa (hoặc xóa) sau khi task bắt đầu thì không ghi gì cả (tất cả hoặc không), log ghi danh sách xung đột và kết quả vẫn nằm trong bản sao làm việc. Báo cáo nghiệm thu vẫn in lệnh git theo branch; với loại project này hãy bỏ qua phần đó.
+- **Git có ít nhất một commit**: agent làm trên bản clone, kết quả giao bằng branch `aidept/<run>-A` hoặc `-B` theo slot được chọn. Branch đã trỏ đúng checkpoint được coi là đã giao; branch trỏ nơi khác gây xung đột và được giữ nguyên.
+- **Git chưa có commit, hoặc không phải git**: hệ thống chụp một bản sao thư mục (trừ `.git`, `node_modules`, `.data`, symlink; tối đa 20.000 file / 300 MB) thành repo git riêng của run trong `.data/workspaces/<run>-base`, tôn trọng `.gitignore` của project nên file bị ignore (như `.env`) không tới tay agent. Bản chụp chỉ tạo một lần mỗi run nên sửa thư mục project giữa chừng không làm lệch base. Khi **nghiệm thu**, các file task đã đổi được ghi thẳng vào thư mục project. Hệ thống kiểm tra xung đột toàn bộ trước khi ghi; nếu thao tác ghi bị gián đoạn, lần thử lại nhận ra các file đã có đúng nội dung cuối và tiếp tục phần còn lại. File bạn sửa khác với bản gốc và các phiên bản task đã tạo sẽ gây xung đột. Nội dung được đọc từ đúng checkpoint, gồm cả file nhị phân, và kiểm tra lại trước khi xác nhận giao thành công. Báo cáo JSON/Markdown và giao diện ghi rõ **Ghi file trực tiếp**, không hiển thị lệnh merge branch cho trường hợp này.
 
 ## Kết nối AI (Codex / Claude / Antigravity)
 

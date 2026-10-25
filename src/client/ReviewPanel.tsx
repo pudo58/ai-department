@@ -1,6 +1,9 @@
+import { QualityResults } from './Quality';
+import {FindingReplayResults} from './FindingReplays';
 import { useCallback, useEffect, useState } from 'react';
 import type { AcceptanceReport } from '../core/report';
 import { needsAcknowledgement } from '../core/report';
+import { delivered } from '../core/delivery';
 import { countTestLines, type LiveTally } from '../core/testlines';
 import type { RunDetail } from '../shared/types';
 import { api } from './api';
@@ -64,19 +67,27 @@ export function ReviewPanel({ detail, busy, onAccept, onReject }: { detail: RunD
   const [ack, setAck] = useState(false);
   const [showDiff, setShowDiff] = useState(false);
   const load = useCallback(() => api<AcceptanceReport>(`/api/runs/${run.id}/report`).then((r) => { setReport(r); setError(''); }).catch((e: Error) => setError(e.message)), [run.id]);
-  useEffect(() => { void load(); }, [load, run.checkpoint, run.status]);
-  useEffect(() => { setAck(false); }, [run.checkpoint]);
+  useEffect(() => { void load(); }, [load, run.checkpoint, run.contract.version, run.status, run.updatedAt, run.delivery?.status, run.delivery?.endedAt]);
+  useEffect(() => { setAck(false); }, [run.checkpoint, run.contract.version]);
   if (error) return <div className="banner error" role="alert"><Icon name="alert" size={16}/><span>{error}</span></div>;
   if (!report) return <p className="muted">Đang lập báo cáo…</p>;
 
   const warns = report.warnings.filter((w) => w.level === 'warn');
   const infos = report.warnings.filter((w) => w.level === 'info');
   const needAck = needsAcknowledgement(report);
-  const done = run.status === 'completed';
+  const done = run.status === 'completed' && delivered(run);
+  const delivering = run.delivery?.status === 'in_progress';
+  const retry = run.delivery?.status === 'failed' || run.delivery?.status === 'unknown' || (run.status === 'completed' && !done);
   const verdictCls = report.readiness === 'ready' ? 'ok' : report.readiness === 'ready_with_warnings' ? 'warn' : 'bad';
   const title = { ready: 'Sẵn sàng nghiệm thu', ready_with_warnings: `Có ${warns.length} cảnh báo cần đọc trước khi nghiệm thu`, not_ready: 'Chưa đủ điều kiện nghiệm thu' }[report.readiness];
 
   return <div className="stack review">
+    <QualityResults quality={report.quality}/>
+    <FindingReplayResults replays={report.findingReplays} checkpoint={run.checkpoint}/>
+    {run.delivery?.status === 'failed' && <div className="banner error" role="alert"><span><strong>Chưa giao được kết quả</strong><br/>{run.delivery.error} Workspace được giữ để thử giao lại.</span></div>}
+    {run.delivery?.status === 'unknown' && <div className="banner warn" role="alert"><span><strong>Chưa xác nhận giao kết quả</strong><br/>{run.delivery.error} Workspace được giữ để thử giao lại.</span></div>}
+    {run.status === 'completed' && !done && <div className="banner warn" role="alert"><span><strong>Chưa xác nhận giao kết quả</strong><br/>Lịch sử nghiệm thu{run.acceptedAt ? ` lúc ${dateTime(run.acceptedAt)}` : ''} vẫn được giữ. Cần thử giao lại để xác nhận bản code này đã được giao.</span></div>}
+    {delivering && <div className="banner warn" role="status">Đang giao kết quả…</div>}
     <div className={`verdict ${verdictCls}`}>
       <div><span className="kicker">Kết luận của hệ thống</span><strong>{done ? 'Đã nghiệm thu' : title}</strong>
         <p>{report.readiness === 'not_ready' ? report.notReadyReasons.join(' ') : report.readiness === 'ready' ? 'Mọi điều kiện tự động đều đạt và không có điều gì cần xem lại.' : 'Mọi điều kiện tự động đều đạt, nhưng có điểm hệ thống không chứng minh được. Đọc phần cảnh báo bên dưới.'}</p></div>
@@ -95,7 +106,7 @@ export function ReviewPanel({ detail, busy, onAccept, onReject }: { detail: RunD
       <h2>Yêu cầu và bằng chứng</h2>
       <p className="muted small" style={{ marginTop: 2 }}>Mỗi yêu cầu chỉ được tính là đã xác minh khi có test đạt mang thẻ mã của nó.</p>
       <table className="compact" style={{ marginTop: 10 }}><thead><tr><th>Mã</th><th>Yêu cầu</th><th>Trạng thái</th><th>Test chứng minh</th></tr></thead><tbody>
-        {report.requirements.map((q) => <tr key={q.id}><td><code>{q.id}</code></td><td>{q.text}</td>
+        {report.requirements.map((q) => <tr key={q.id}><td><code>{q.id}</code></td><td>{q.text}{q.kind === 'forbidden' && <Badge tone="warn" plain>Không được xảy ra</Badge>}</td>
           <td><Badge tone={ROW_TONE[q.status]}>{ROW_LABEL[q.status]}</Badge>{q.manual && <Badge tone="neutral" plain>thủ công</Badge>}</td>
           <td>{q.tests.length ? <details><summary>{q.tests.length} test</summary><ul className="plain-list">{q.tests.map((t) => <li key={t} className="small">{t}</li>)}</ul></details> : <span className="faint">—</span>}</td></tr>)}
       </tbody></table>
@@ -127,7 +138,7 @@ export function ReviewPanel({ detail, busy, onAccept, onReject }: { detail: RunD
     <section className="panel">
       <h2>Verifier độc lập</h2>
       {!report.verifier.expected ? <p className="muted small">Chế độ {report.mode} không có Verifier độc lập; kết quả được tự review bởi chính agent đã làm.</p>
-        : !report.verifier.verdict ? <p className="muted small">Verifier chưa chạy trên bản này.</p> : <>
+        : !report.verifier.verdict ? <p className="muted small">Bản code này chưa có kết luận Verifier</p> : <>
           <div className="row-actions" style={{ marginTop: 6 }}><Badge tone={DECISION[report.verifier.verdict.decision]?.tone ?? 'neutral'}>{DECISION[report.verifier.verdict.decision]?.label ?? report.verifier.verdict.decision}</Badge><span className="muted small">{report.verifier.verdict.findingCount} finding</span></div>
           {report.verifier.verdict.summary && <blockquote className="quote">{report.verifier.verdict.summary}</blockquote>}</>}
       {report.verifier.findings.length > 0 && <ul className="plain-list">{report.verifier.findings.map((f, i) => <li key={i}><Badge tone={f.severity === 'blocker' ? 'bad' : f.severity === 'major' ? 'warn' : 'neutral'}>{f.severity}</Badge> {f.title} <span className="faint small">{f.location} · {f.status}</span></li>)}</ul>}
@@ -137,7 +148,9 @@ export function ReviewPanel({ detail, busy, onAccept, onReject }: { detail: RunD
       <section className="panel"><h2>Công sức</h2>
         <dl className="facts"><dt>Chi phí</dt><dd>~{money(report.effort.costUsd)}{report.effort.estimated ? ' (ước tính)' : ''}</dd><dt>Token</dt><dd>{count(report.effort.tokens)}</dd><dt>Lượt agent</dt><dd>{report.effort.attempts}, {report.effort.repairs} vòng sửa</dd><dt>Thời gian AI</dt><dd>{duration(report.effort.aiMs)}</dd><dt>Công của bạn</dt><dd>{duration(report.effort.humanMs)}</dd></dl></section>
       <section className="panel"><h2>Nhận kết quả</h2>
-        <p className="small muted" style={{ marginTop: 2 }}>Branch <code>{report.delivery.branch}</code> trong <code>{report.delivery.repository}</code> {report.delivery.delivered ? 'đã được giao.' : 'sẽ được tạo khi bạn nghiệm thu. Hệ thống không tự merge hay push.'}</p>
+        <p className="small muted" style={{ marginTop: 2 }}>{report.delivery.kind === 'files'
+          ? <>Ghi file trực tiếp vào <code>{report.delivery.target}</code>. {report.delivery.delivered ? 'Đã giao thành công.' : 'Chưa xác nhận giao thành công; hệ thống kiểm tra xung đột trước khi ghi.'}</>
+          : <>Branch <code>{report.delivery.target}</code> trong <code>{report.delivery.repository}</code> {report.delivery.delivered ? 'đã được giao.' : 'chưa được xác nhận giao thành công. Hệ thống không tự merge hay push.'}</>}</p>
         <ul className="cmdlist">{report.delivery.commands.map((c) => <li key={c}><code>{c}</code><Copy text={c}/></li>)}</ul></section>
     </div>
 
@@ -145,10 +158,10 @@ export function ReviewPanel({ detail, busy, onAccept, onReject }: { detail: RunD
       {done ? <span className="muted"><span className="kicker">Đã ký nghiệm thu</span>{run.acceptedAt ? `Lúc ${dateTime(run.acceptedAt)}. ` : ''}Báo cáo bạn đã xem được lưu cùng việc này.</span> : <>
         <div className="decision-text"><span className="kicker">Nghiệm thu</span>
           {needAck ? <label className="ack"><input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)}/> Tôi đã đọc {warns.length} cảnh báo ở trên và vẫn muốn nghiệm thu</label>
-            : <span className="muted small">{report.readiness === 'not_ready' ? 'Chưa ký được: còn điều kiện chưa đạt.' : 'Ký nhận kết quả. Hệ thống tạo branch, không tự merge hay push.'}</span>}</div>
+            : <span className="muted small">{report.readiness === 'not_ready' ? 'Chưa ký được: còn điều kiện chưa đạt.' : report.delivery.kind === 'files' ? 'Ký nhận và ghi file trực tiếp vào project sau khi kiểm tra xung đột.' : 'Ký nhận kết quả. Hệ thống tạo branch, không tự merge hay push.'}</span>}</div>
         <div className="row-actions" style={{ margin: 0 }}>
-          <button className="button primary" disabled={busy || report.readiness === 'not_ready' || (needAck && !ack)} onClick={() => void onAccept(ack)}>Nghiệm thu</button>
-          <button className="button" disabled={busy} onClick={onReject}>Từ chối</button>
+          <button className="button primary" disabled={busy || delivering || report.readiness === 'not_ready' || (needAck && !ack)} onClick={() => void onAccept(ack)}>{delivering ? 'Đang giao kết quả…' : retry ? 'Thử giao lại' : 'Nghiệm thu'}</button>
+          {run.status !== 'completed' && <button className="button" disabled={busy || delivering} onClick={onReject}>Từ chối</button>}
         </div></>}
     </div>
   </div>;

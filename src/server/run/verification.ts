@@ -1,3 +1,4 @@
+import { MutationChecks } from './mutation.js';
 import { randomUUID } from 'node:crypto';
 import type { Finding, Independence } from '../../shared/types.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
@@ -12,15 +13,20 @@ import type { RunServices } from './services.js';
 import type { ScopePolicy } from './scope.js';
 import type { RunOutcome } from './outcome.js';
 import type { CheckRunner } from './checks.js';
+import { latestChecks } from '../../core/qualityevidence.js';
+import { normalizeVerifierScope } from '../../core/verifierscope.js';
+import {ReproductionSchema,reproductionProblems,reproductionGuide,readFindingReplays,scenarioHash} from '../../core/reproduction.js';
+import {FindingReplays} from './reproduction.js';
 
 /** Final verification: the independent Verifier, its stored verdict, and the repair round for confirmed findings. */
 export class Verification {
   constructor(private readonly s: RunServices, private readonly scope: ScopePolicy, private readonly outcome: RunOutcome, private readonly checks: CheckRunner) {}
 
-  async verifyPhase(runId: string, signal: AbortSignal): Promise<void> {
+  async verifyPhase(runId: string, signal: AbortSignal, checksOnly = false): Promise<void> {
     const run = this.s.run(runId);
     this.s.mutate(runId, (r) => { r.stage = 'verify'; });
-    if (run.mode === 'verify' || run.mode === 'compare') await this.independentVerifier(runId, signal);
+    await new MutationChecks(this.s).run(runId, signal, checksOnly);
+    if (!checksOnly && (run.mode === 'verify' || run.mode === 'compare') && !readVerdict(this.s.store.artifacts.list(runId), run)) await this.independentVerifier(runId, signal);
     this.outcome.finish(runId);
   }
 
@@ -34,26 +40,36 @@ export class Verification {
     }
     const diff = reviewDiff(await this.changesSinceBase(runId));
     const independence: Independence = { independent: true, reason: 'Phiên mới; lập checklist từ hợp đồng trước khi đọc diff, không nhận giải thích của Developer.' };
-    const { output, attempt } = await this.s.attempt(runId, { role: 'verifier', stage: 'verify', slot: run.selectedSlot, prompt: PROMPTS.verifier(run, diff), independence, signal });
+    const checkEvidence=latestChecks(run,this.s.store.checks.list(runId)).map(c=>({id:c.id,recipeId:c.recipeId,checkpoint:c.checkpoint,contractVersion:c.contractVersion,status:c.status,counts:c.counts,issues:c.issues}));
+    const { output, attempt } = await this.s.attempt(runId, { role: 'verifier', stage: 'verify', slot: run.selectedSlot, prompt: `${PROMPTS.verifier(run, diff)}\nBằng chứng runner hiện hành: ${JSON.stringify(checkEvidence)}\n${reproductionGuide}\nBổ sung scope={reviewed:["file/điều khoản đã thực sự review"],checkIds:["ID check hiện hành đã dùng"],limitations:["phần chưa xác nhận"],additionalChecks:[{command:"lệnh chính xác",status:"passed|failed|incomplete",detail:"kết quả"}] vào JSON cuối. Không coi pass là đã tự chạy test. Lệnh lỗi môi trường phải ghi incomplete/failed và giới hạn.`, independence, signal });
     await this.s.discardStrayEdits(runId, run.selectedSlot, 'Verifier');
+    const created:Finding[]=[];
     try {
       const parsed = parseOutput(FindingsSchema, output);
+      const raw=this.s.store.artifacts.list(runId).find(a=>a.kind==='raw' && a.attemptId===attempt.id)?.content??'';
+      const scope=normalizeVerifierScope(run,this.s.store.checks.list(runId),parsed.scope,raw);
       for (const raw of parsed.findings) {
         const gated = gateFinding(raw);
+        const scenario=raw.reproduction===undefined?undefined:ReproductionSchema.safeParse(raw.reproduction);
+        const reproProblems=scenario?.success?reproductionProblems(run,scenario.data):scenario?['Kịch bản phản ví dụ sai schema.']:[];
         const finding: Finding = {
           id: `fnd_${randomUUID().slice(0, 8)}`, runId, category: gated.category, severity: gated.severity, code: gated.code, title: gated.title,
           location: gated.location, rule: gated.rule, precedent: gated.precedent, evidence: gated.evidence, suggestion: gated.suggestion,
           status: 'open', confirmed: false, checkpoint: run.checkpoint, contractVersion: run.contract.version, createdAt: this.s.stamp(),
           dispute: gated.downgradedBecause,
+          ...(scenario?.success&&!reproProblems.length?{reproduction:scenario.data}:{}),
+          ...(raw.reproductionLimitation||reproProblems.length||(!scenario&&raw.category==='behavior')?{reproductionLimitation:raw.reproductionLimitation||reproProblems.join(' ')||'Verifier chưa cung cấp phản ví dụ có thể chạy.'}:{}),
         };
         this.s.store.findings.put(finding);
+        created.push(finding);
       }
       this.s.log(runId, 'verify', `Verifier (${parsed.decision}): ${parsed.findings.length} finding, chờ runner hoặc người xác nhận trước khi chặn.`, { attempt: attempt.id });
-      this.recordVerdict(runId, { decision: parsed.decision, summary: verifierNarrative(output), findingCount: parsed.findings.length });
+      this.recordVerdict(runId, { decision: parsed.decision, summary: verifierNarrative(output), findingCount: parsed.findings.length,scope });
     } catch (error) {
       this.s.log(runId, 'verify.parse_failed', `Output Verifier không hợp lệ; coi như chưa kiểm tra: ${(error as Error).message}`);
       this.recordVerdict(runId, { decision: 'unparsed', summary: verifierNarrative(output), findingCount: 0 });
     }
+    await new FindingReplays(this.s).runBatch(runId,created,signal);
   }
 
   /**
@@ -81,8 +97,11 @@ export class Verification {
     if (run.mode !== 'verify' && run.mode !== 'compare') return;
     const artifacts = this.s.store.artifacts.list(runId);
     if (readVerdict(artifacts, run)) return;
-    const attempt = this.s.store.attempts.list(runId).filter((a) => a.role === 'verifier' && a.status === 'completed').at(-1);
-    const raw = attempt && artifacts.filter((a) => a.kind === 'raw' && a.attemptId === attempt.id).at(-1)?.content;
+    if (!run.checkpoint) return;
+    const attempt = this.s.store.attempts.list(runId).filter((a) => a.role === 'verifier' && a.status === 'completed'
+      && a.checkpoint === run.checkpoint && a.contractVersion === run.contract.version && a.slot === run.selectedSlot).at(-1);
+    const raw = attempt && artifacts.filter((a) => a.kind === 'raw' && a.attemptId === attempt.id && a.valid
+      && a.checkpoint === run.checkpoint && a.contractVersion === run.contract.version).at(-1)?.content;
     if (!raw) return;
     let text = '';
     for (const line of raw.split('\n')) {
@@ -95,7 +114,7 @@ export class Verification {
     if (!text) return;
     try {
       const parsed = parseOutput(FindingsSchema, text);
-      this.recordVerdict(runId, { decision: parsed.decision, summary: verifierNarrative(text), findingCount: parsed.findings.length });
+      this.recordVerdict(runId, { decision: parsed.decision, summary: verifierNarrative(text), findingCount: parsed.findings.length,scope:normalizeVerifierScope(run,this.s.store.checks.list(runId),parsed.scope,raw) });
     } catch { this.recordVerdict(runId, { decision: 'unparsed', summary: verifierNarrative(text), findingCount: 0 }); }
   }
 
@@ -130,8 +149,18 @@ export class Verification {
     this.s.artifact(runId, { kind: 'diff', title: `Diff sửa finding @ ${checkpoint.slice(0, 8)}`, content: changes.patch, checkpoint });
     const outcome = await this.checks.runChecks(runId, slot, checkpoint, [], signal);
     if (outcome.problems.length) { this.outcome.park(runId, 'blocked', outcome.problems.join(' ')); return; }
-    for (const f of targets) { f.status = 'resolved'; this.s.store.findings.put(f); }
-    this.s.log(runId, 'repair.done', `Đã sửa ${targets.length} finding đã xác nhận; check pass trên checkpoint mới.`);
+    const priorReplays=readFindingReplays(run,this.s.store.artifacts.list(runId));
+    const afterReplays=await new FindingReplays(this.s).runBatch(runId,targets,signal);
+    for (const f of targets) {
+      if(f.reproduction){
+        const hash=scenarioHash(f.reproduction),before=priorReplays.some(r=>r.findingId===f.id&&r.checkpoint===f.checkpoint&&r.scenarioHash===hash&&r.status==='reproduced');
+        const after=afterReplays.find(r=>r.findingId===f.id&&r.checkpoint===checkpoint&&r.scenarioHash===hash);
+        if(!before||after?.status!=='not_reproduced')continue;
+      }
+      f.status = 'resolved'; this.s.store.findings.put(f);
+    }
+    this.s.log(runId, 'repair.done', `Checks đạt trên checkpoint mới; ${targets.filter(f=>f.status==='resolved').length}/${targets.length} finding đã xác nhận có đủ căn cứ đánh dấu xử lý.`);
+    await new MutationChecks(this.s).run(runId, signal);
     if (run.mode === 'verify' || run.mode === 'compare') await this.independentVerifier(runId, signal);
     this.outcome.finish(runId);
   }

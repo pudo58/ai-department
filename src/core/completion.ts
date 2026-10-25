@@ -1,3 +1,4 @@
+import { latestChecks } from './qualityevidence.js';
 import type { BudgetState, CheckResult, CompletionState, Finding, MatrixRow, Run } from '../shared/types.js';
 import { ranNoTests } from './checks.js';
 import { isApproved } from './contract.js';
@@ -5,7 +6,7 @@ import { blocksCompletion } from './findings.js';
 
 /** Evidence must belong to the live checkpoint and contract version, and come from an unquarantined passed check. */
 export function currentChecks(run: Run, checks: readonly CheckResult[]): CheckResult[] {
-  return checks.filter((c) => c.valid && c.contractVersion === run.contract.version && c.checkpoint === run.checkpoint);
+  return latestChecks(run, checks);
 }
 
 export function buildMatrix(run: Run, checks: readonly CheckResult[]): MatrixRow[] {
@@ -19,7 +20,7 @@ export function buildMatrix(run: Run, checks: readonly CheckResult[]): MatrixRow
     else if (good.length) status = 'verified';
     else if (covering.some((c) => c.status === 'failed')) status = 'failed';
     else status = 'unverified';
-    return { requirementId: req.id, text: req.text, required: req.required, manual: req.manual, status, evidence };
+    return { requirementId: req.id, text: req.text, required: req.required, manual: req.manual, kind: req.kind ?? 'expected', status, evidence };
   });
 }
 

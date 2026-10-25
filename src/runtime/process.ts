@@ -4,7 +4,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 function killTree(child: ChildProcess): void {
   if (process.platform === 'win32' && child.pid) {
     spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }).on('error', () => child.kill());
-  } else child.kill();
+  } else { try { if (child.pid) process.kill(-child.pid, 'SIGTERM'); else child.kill(); } catch { child.kill(); } }
 }
 
 export interface ProcessResult { exitCode: number | null; stdout: string; stderr: string; durationMs: number; timedOut: boolean }
@@ -18,6 +18,8 @@ export interface ProcessOptions {
   maxOutputBytes?: number;
   /** Variables set on top of this process environment (Antigravity gets its own private home this way). */
   env?: Record<string, string>;
+  /** Use only env rather than inheriting provider credentials or NODE_OPTIONS. */
+  replaceEnv?: boolean;
 }
 
 /** Host callers pass a fixed executable and argv. Repository commands belong in Docker. */
@@ -27,9 +29,9 @@ export async function executeFile(executable: string, args: string[], options: P
   const started = Date.now();
   return new Promise((resolve, reject) => {
     const child = spawn(executable, args, {
-      shell: false, windowsHide: true, cwd: options.cwd,
+      shell: false, windowsHide: true, detached: process.platform !== 'win32', cwd: options.cwd,
       stdio: ['pipe', 'pipe', 'pipe'],
-      env: { ...process.env, ...options.env, GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'never' },
+      env: { ...(options.replaceEnv?{}:process.env), ...options.env, GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'never' },
     });
     let stdout = '', stderr = '', bytes = 0, timedOut = false, overflow = false;
     const limit = options.maxOutputBytes ?? 16 * 1024 * 1024;
@@ -68,7 +70,7 @@ export function redactSecrets(value: string): string {
   return value
     .replace(/\b(sk-(?:ant-)?[A-Za-z0-9_-]{16,})\b/g, '[REDACTED]')
     .replace(/(Bearer\s+)[A-Za-z0-9_.~+/-]{16,}/gi, '$1[REDACTED]')
-    .replace(/((?:api[_-]?key|access[_-]?token|refresh[_-]?token|authorization|password)\s*[=:]\s*)[^\s,;]+/gi, '$1[REDACTED]');
+    .replace(/((?:api[_-]?key|(?:access[_-]?|refresh[_-]?)?token|authorization|password|secret)\s*[=:]\s*)[^\s,;]+/gi, '$1[REDACTED]');
 }
 
 /** Buffers stream chunks and hands out complete lines; call `flush()` when the stream ends. */

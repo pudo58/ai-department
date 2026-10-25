@@ -7,6 +7,8 @@ import type { RouteContext } from './context.js';
 
 /** Runs: list, create, detail and every action a person takes on one (start, accept, escalate, findings, human time...). */
 export function registerRunRoutes({ app, store, orchestrator, idOf, disposeWorkspaces }: RouteContext): void {
+  app.post('/api/runs/:id/preflight',async request=>{z.object({}).strict().parse(request.body??{});return orchestrator.preflight(idOf(request));});
+  app.post('/api/runs/:id/revalidate-author-output',async request=>{const body=z.object({attemptId:z.string().min(1),draftHash:z.string().regex(/^[a-f0-9]{64}$/)}).strict().parse(request.body);return orchestrator.revalidateAuthorDraft(idOf(request),body.attemptId,body.draftHash);});
   app.post('/api/runs/:id/recheck', async (request) => {
     const body = z.object({ refreshConfig: z.boolean().default(true) }).parse(request.body ?? {});
     return orchestrator.recheck(idOf(request), body.refreshConfig);
@@ -33,7 +35,18 @@ export function registerRunRoutes({ app, store, orchestrator, idOf, disposeWorks
     return orchestrator.acceptRun(idOf(request), { acknowledgeWarnings: body.acknowledgeWarnings });
   });
   app.post('/api/runs/:id/contract', async (request) => orchestrator.reviseContract(idOf(request), ContractBody.parse(request.body)));
-  app.post('/api/runs/:id/approve-contract', async (request) => orchestrator.approveContract(idOf(request)));
+  app.post('/api/runs/:id/approve-test-repair', async (request) => {
+    const body = z.object({ proposalId: z.string().min(1), proposalHash: z.string().regex(/^[0-9a-f]{64}$/) }).parse(request.body);
+    return orchestrator.approveTestRepair(idOf(request), body.proposalId, body.proposalHash);
+  });
+  app.post('/api/runs/:id/reject-test-repair', async (request) => {
+    const body = z.object({ proposalId: z.string().min(1), proposalHash: z.string().regex(/^[0-9a-f]{64}$/) }).parse(request.body);
+    return orchestrator.rejectTestRepair(idOf(request), body.proposalId, body.proposalHash);
+  });
+  app.post('/api/runs/:id/approve-contract', async (request) => {
+    const body = z.object({ contractHash: z.string().regex(/^[0-9a-f]{64}$/), acknowledgeWarnings: z.boolean().default(false) }).parse(request.body);
+    return orchestrator.approveContract(idOf(request), body);
+  });
   app.post('/api/runs/:id/reject', async (request) => orchestrator.rejectAcceptance(idOf(request), z.object({ reason: z.string().min(3).max(2000) }).parse(request.body).reason));
   app.post('/api/runs/:id/repair', async (request) => orchestrator.repairFindings(idOf(request)));
   app.post('/api/runs/:id/approve-paths', async (request) => {

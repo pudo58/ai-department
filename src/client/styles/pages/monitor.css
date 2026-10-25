@@ -5,6 +5,61 @@
 
 .overview-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 28px; align-items: start; }
 .overview-split { margin-bottom: 18px; align-items: start; }
+/* Live work queue: bounded groups on the left, details of one task on the right. */
+.monitor-live { display: grid; gap: 16px; min-width: 0; }
+.monitor-live-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.monitor-live-toolbar input { flex: 1 1 260px; min-width: 0; }
+.monitor-live-toolbar select { flex: 0 1 240px; min-width: 0; }
+.monitor-queue-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.monitor-queue-tabs button { display: inline-flex; align-items: center; gap: 14px; padding: 9px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text-2); cursor: pointer; }
+.monitor-queue-tabs button.active { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+.monitor-queue-tabs strong { font-variant-numeric: tabular-nums; }
+.monitor-idle { margin: 0; }
+.monitor-live-workspace { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.monitor-queue, .monitor-focus, .monitor-live-map { min-width: 0; }
+.monitor-queue, .monitor-focus { min-height: 220px; max-height: 600px; overflow: auto; }
+.monitor-queue.is-empty { display: grid; align-items: center; }
+.monitor-queue > .empty { border: 0; padding: 28px 16px; }
+.monitor-focus-empty { display: flex; flex-direction: column; justify-content: center; text-align: center; }
+.monitor-focus-empty h2 { font-size: 1.05rem; }
+.monitor-focus-empty p { max-width: 44ch; margin: 6px auto 0; }
+.monitor-focus-title { margin: 9px 0; overflow-wrap: anywhere; }
+.monitor-detail-tabs { margin: 16px 0 12px; }
+.monitor-task-group + .monitor-task-group { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
+.monitor-task-list { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; }
+.monitor-task-list > li { min-width: 0; }
+.monitor-task { display: flex; flex-direction: column; gap: 5px; width: 100%; min-width: 0; padding: 12px; border: 1px solid transparent; border-radius: var(--radius-sm); background: none; text-align: left; cursor: pointer; }
+.monitor-task:hover { background: var(--bg-hover); }
+.monitor-task.selected { border-color: var(--border-strong); background: var(--bg-subtle); box-shadow: inset 3px 0 0 var(--accent); }
+.monitor-task-top { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; min-width: 0; width: 100%; }
+.monitor-task-top .badge { flex: none; }
+.monitor-task-title { min-width: 0; font-weight: 600; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.monitor-task-meta, .monitor-task-description { font-size: 12px; color: var(--text-2); overflow-wrap: anywhere; }
+.monitor-task-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.monitor-task-foot { display: flex; justify-content: space-between; gap: 10px; width: 100%; font-size: 12px; color: var(--text-3); }
+.monitor-focus .recent { padding: 0; border: 0; }
+.monitor-focus .call-model { white-space: normal; overflow-wrap: anywhere; }
+.monitor-focus .call-row { gap: 8px; padding-left: 0; }
+.monitor-focus .recent-scroll { max-height: 360px; }
+.monitor-focus .console-bar { flex-wrap: wrap; }
+.monitor-focus .console-bar input { min-width: 100px; flex: 1 1 120px; }
+.monitor-live-map .map2 { width: 100%; max-width: none; margin: 0; min-height: 0; }
+.monitor-live-map .map2 > svg { flex: none; height: clamp(300px, 32vw, 420px); }
+.monitor-live-map .map2.is-idle > svg { height: clamp(210px, 22vw, 280px); }
+.monitor-live-map .topology-empty { position: static; margin: 0; padding: 0 54px 16px; font-size: 12px; }
+@media (max-width: 1000px) {
+  .monitor-live-workspace { grid-template-columns: minmax(0, 1fr); }
+  .monitor-queue, .monitor-focus { max-height: none; }
+  .monitor-focus-empty { min-height: 160px; }
+}
+@media (max-width: 520px) {
+  .monitor-live-toolbar input, .monitor-live-toolbar select { flex-basis: 100%; }
+  .monitor-queue-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .monitor-queue-tabs button { justify-content: space-between; min-width: 0; gap: 8px; padding: 9px; }
+  .monitor-task-top { flex-wrap: wrap; }
+  .monitor-focus .call-row { grid-template-columns: 8px minmax(0, 1fr) auto; }
+  .monitor-focus .call-time { grid-column: 2 / -1; text-align: left; }
+}
 /* Spending table needs the room (task names, four numbers); the waste list is a column of short items. Equal heights. */
 .cost-split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: stretch; }
 .chart-empty { margin: 12px 0 4px; padding: 28px 0; text-align: center; color: var(--text-3); font-size: .9rem; border: 1px dashed var(--border); border-radius: var(--radius-sm); }

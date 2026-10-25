@@ -24,7 +24,8 @@ export function AttemptDetail({ attempt, onClose }: { attempt: RequestRow; onClo
  */
 export function Topology({ data }: { data: MonitorData }) {
   const [zoom, setZoom] = useState(1);
-  const W = 880, H = 480, cx = W / 2, cy = H / 2 + 10, rx = 330, ry = 178;
+  const idle = data.tasks.length === 0;
+  const W = 880, H = idle ? 300 : 480, cx = W / 2, cy = H / 2 + 10, rx = 330, ry = idle ? 92 : 178;
   const now = Date.parse(data.now);
   const orbit = (n: number, from: number, to: number) => Array.from({ length: n }, (_, i) => {
     const deg = n === 1 ? (from + to) / 2 : from + ((to - from) * i) / (n - 1);
@@ -79,7 +80,7 @@ export function Topology({ data }: { data: MonitorData }) {
     edges.push({ id: `se-${s.id}`, d: pathOf(hubOut, b), kind: s.live ? 'live' : 'recent', at: mid(hubOut, b) });
   });
 
-  return <div className={`topology map2 ${anyLive ? 'is-live' : ''}`} role="img" aria-label={`Sơ đồ gọi: ${liveTasks.length} task đang chạy, ${liveSvcs.length} dịch vụ đang được gọi`}>
+  return <div className={`topology map2 ${anyLive ? 'is-live' : ''}${idle ? ' is-idle' : ''}`} role="img" aria-label={`Sơ đồ gọi: ${liveTasks.length} task đang chạy, ${liveSvcs.length} dịch vụ đang được gọi`}>
     <div className="map-head">
       <span className={`map-state ${anyLive ? 'on' : ''}`}><span className="map-dot"/>{anyLive
         ? `Đang gọi ${liveSvcs.map((s) => (s.model ? `${s.label} · ${s.model}` : s.label)).join(', ') || 'chuẩn bị'} cho ${liveTasks.length} task`
@@ -137,7 +138,7 @@ export function Topology({ data }: { data: MonitorData }) {
       <button aria-label="Thu nhỏ" onClick={() => setZoom((z) => Math.max(0.6, +(z - 0.15).toFixed(2)))}>−</button>
       <button aria-label="Về mặc định" onClick={() => setZoom(1)}>⛶</button>
     </div>
-    {!tasks.length && <p className="topology-empty">Chưa có task nào. Tạo task để thấy luồng hoạt động.</p>}
+    {!tasks.length && <p className="topology-empty">Không có task đang chạy trong bộ lọc. Luồng hoạt động sẽ hiện khi task bắt đầu.</p>}
   </div>;
 }
 
@@ -211,10 +212,10 @@ export function MetricChart({ series, unit, metric }: { series: Bucket[]; unit: 
   </>;
 }
 
-export function RecentRequests({ rows, now, onOpen }: { rows: RequestRow[]; now: number; onOpen: (r: RequestRow) => void }) {
+export function RecentRequests({ rows, now, onOpen, title = 'Lượt gọi gần đây' }: { rows: RequestRow[]; now: number; onOpen: (r: RequestRow) => void; title?: string }) {
   const shown = rows.slice(0, 40);
   return <div className="recent">
-    <div className="recent-head"><h3>Lượt gọi gần đây</h3>{shown.length > 0 && <span className="faint small">token vào → ra</span>}</div>
+    <div className="recent-head"><h3>{title}</h3>{shown.length > 0 && <span className="faint small">token vào → ra</span>}</div>
     <div className="recent-scroll">
       {!shown.length ? <p className="muted small">Chưa có lượt gọi nào.</p> : <ol className="call-list">{shown.map((r) => <li key={r.id}>
         <button type="button" className="call-row" onClick={() => onOpen(r)} title={`${r.runTitle} · ${r.role}/${r.slot} · ${r.model} · vào ${num(r.inputTokens)} · ra ${num(r.outputTokens)}`}>

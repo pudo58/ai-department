@@ -177,7 +177,7 @@ describe('loading skills for an agent', () => {
     store.projects.put(profile({ roles: Object.fromEntries(Object.entries(base.roles).map(([r, c]) => [r, { ...c, ...roles[r as Role] }])) as ProjectProfile['roles'] }));
     const run = orchestrator.createRun({ projectId: 'prj_test', title: 't', originalRequirement: 'r', mode: opts.mode ?? 'single', provider: 'codex', budgetUsd: 5, signals: [] });
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     return { seen, store, run, orchestrator };
   }
 

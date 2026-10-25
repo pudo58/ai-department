@@ -78,6 +78,7 @@ export function DetectPanel({ detect, canDetect, guidance, onGuidance, drafts, o
     {error && <p className="inline-error" role="alert">{error}</p>}
     {result && <div className="detect-result">
       <div className="chip-row">{[...result.languages, ...result.frameworks, ...(result.testRunner ? [`test: ${result.testRunner}`] : []), ...result.linters, ...(result.packageManager ? [result.packageManager] : [])].map((c) => <span className="chip" key={c}>{c}</span>)}</div>
+      {result.mutation && <p className="notice-line">Mutation: {result.mutation.status} · {result.mutation.reason}{result.mutation.candidates?.length ? ` · Package: ${result.mutation.candidates.join(', ')}` : ''}</p>}
       {result.notes.map((n) => <p className="notice-line" key={n}>{n}</p>)}
       <div className="detect-block"><div className="detect-block-head"><strong>Hướng dẫn gợi ý</strong>
         <button type="button" className="button secondary small" disabled={guidance === result.guidance || !result.guidance} onClick={() => onGuidance(result.guidance)}>{guidance === result.guidance ? 'Đã dùng' : guidance.trim() ? 'Thay hướng dẫn hiện tại' : 'Dùng'}</button></div>

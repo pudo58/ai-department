@@ -132,7 +132,7 @@ describe('Antigravity in a run, on this machine', () => {
   }
   const throughContract = async (orchestrator: Orchestrator, runId: string) => {
     orchestrator.startRun(runId); await orchestrator.idle();
-    orchestrator.approveContract(runId); await orchestrator.idle();
+    orchestrator.approveContract(runId, { contractHash: orchestrator.detail(runId).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     return orchestrator.detail(runId);
   };
 
@@ -140,7 +140,7 @@ describe('Antigravity in a run, on this machine', () => {
     const { orchestrator, run, dataDir } = start(rolesOf({ planner: 'antigravity' }));
     orchestrator.startRun(run.id); await orchestrator.idle();
     expect(orchestrator.detail(run.id).run.status, orchestrator.detail(run.id).run.blocker ?? '').toBe('awaiting_approval');
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     const detail = orchestrator.detail(run.id);
     expect(detail.run.status, `${detail.run.blocker}\n${detail.events.map((e) => e.message).join('\n')}`).toBe('awaiting_acceptance');
     expect(detail.attempts.map((a) => [a.role, a.provider, a.model])).toEqual([['planner', 'antigravity', 'gemini-3.8-flash-medium'], ['developer', 'claude', 'claude-fable-5-1']]);

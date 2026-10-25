@@ -15,6 +15,7 @@ import { skillPromptBlock } from '../../core/skills.js';
 import type { ResolvedSkill } from '../../runtime/types.js';
 import type { SkillLibrary } from '../../runtime/skilllibrary.js';
 import { HttpError, Blocked, Stopped } from './support.js';
+import type { ExecutionSpan, RetryReason } from '../../shared/execution.js';
 
 export type SkillDelivery = 'plugin' | 'workspace' | 'prompt';
 export interface SkillUse { name: string; hash: string; delivery: SkillDelivery; hasScripts: boolean }
@@ -32,6 +33,12 @@ export class RunServices {
   readonly runningChecks = new Map<string, RunningCheck>();
   readonly sessions = new Map<string, { sessionId: string; cumulative?: import('../../runtime/providers.js').UsageCheckpoint }>();
   readonly baseFileCache = new Map<string, ReadonlySet<string>>();
+  readonly deliveryLocks = new Set<string>();
+
+  isDelivering(id: string): boolean { return this.deliveryLocks.has(id) || this.run(id).delivery?.status === 'in_progress'; }
+  assertNotDelivering(id: string): void {
+    if (this.isDelivering(id)) throw new HttpError(409, 'Đang giao kết quả; chờ giao xong rồi thử lại thao tác này.');
+  }
 
   constructor(readonly store: Store, readonly runtimeFor: (run: Run) => Runtime, readonly now: () => Date, agentSlots: number, private readonly heartbeatMs: number, readonly skills?: SkillLibrary) {
     this.agents = new Semaphore(agentSlots);
@@ -45,9 +52,28 @@ export class RunServices {
 
   mutate(id: string, change: (r: Run) => void): Run {
     const run = this.run(id);
+    const previous = run.status;
     change(run);
+    if (run.executionSpans && previous !== run.status) {
+      for (const s of run.executionSpans.filter(s=>s.status==='running' && ['queue','approval'].includes(s.kind))) { s.status='completed'; s.endedAt=this.stamp(); }
+      const kind = run.status === 'queued' ? 'queue' : ['awaiting_approval','awaiting_acceptance','blocked','failed','paused'].includes(run.status) ? 'approval' : undefined;
+      if(kind) run.executionSpans.push({ id:randomUUID(),kind,label:run.status,startedAt:this.stamp(),status:'running' });
+    }
     run.updatedAt = this.stamp();
     return this.store.runs.put(run);
+  }
+
+  startSpan(runId: string, kind: ExecutionSpan['kind'], label: string, extra: Partial<ExecutionSpan> = {}): string | undefined {
+    const run=this.run(runId); if(!run.executionSpans) return;
+    const id=randomUUID(); run.executionSpans.push({...extra,id,kind,label,startedAt:this.stamp(),status:'running'});this.store.runs.put(run);return id;
+  }
+  endSpan(runId: string, id: string | undefined, status: ExecutionSpan['status']='completed'): void {
+    if(!id)return; const run=this.run(runId), span=run.executionSpans?.find(s=>s.id===id);
+    if(span && span.status==='running'){span.status=status;span.endedAt=this.stamp();this.store.runs.put(run);}
+  }
+  retry(runId: string, reason: RetryReason, label: string): void {
+    const id=this.startSpan(runId,'tool',label,{retryReason:reason});this.endSpan(runId,id);
+    this.log(runId,'execution.retry',label,{reason});
   }
 
   guard<T>(fn: () => T): T {
@@ -75,15 +101,19 @@ export class RunServices {
    * with the elapsed time, and record how long it took when it ends.
    */
   async withHeartbeat<T>(runId: string, source: string, label: string, work: () => Promise<T>, attemptId?: string): Promise<T> {
+    const kind: ExecutionSpan['kind'] = source.startsWith('agent:') ? 'agent' : source.startsWith('check:') ? 'check' : source === 'setup' ? 'setup' : source === 'preflight' ? 'preflight' : source === 'mutation' ? 'mutation' : 'tool';
+    const span=this.startSpan(runId,kind,label,{attemptId,role:source.startsWith('agent:') ? source.slice(6) : undefined});
     const started = Date.now();
     const elapsed = () => `${Math.round((Date.now() - started) / 1000)}s`;
     this.emit(runId, source, 'info', `${label}: bắt đầu`, attemptId);
     const timer = setInterval(() => this.emit(runId, source, 'info', `${label}: vẫn đang chạy (${elapsed()})`, attemptId), this.heartbeatMs);
     try {
       const result = await work();
+      this.endSpan(runId,span);
       this.emit(runId, source, 'info', `${label}: xong sau ${elapsed()}`, attemptId);
       return result;
     } catch (error) {
+      this.endSpan(runId,span,error instanceof Stopped ? 'interrupted' : 'failed');
       this.emit(runId, source, 'error', `${label}: dừng sau ${elapsed()} — ${(error as Error).message.slice(0, 300)}`, attemptId);
       throw error;
     } finally { clearInterval(timer); }
@@ -104,7 +134,7 @@ export class RunServices {
     role: Role; stage: Stage; slot: Slot; prompt: string; signal: AbortSignal; independence?: Independence;
     resumeSession?: { sessionId: string; cumulative?: import('../../runtime/providers.js').UsageCheckpoint };
     /** The independent interpreter reads the requirement alone: no project skills, like no project context. */
-    noSkills?: boolean;
+    noSkills?: boolean; readOnly?: boolean;
   }): Promise<{ output: string; attempt: Attempt }> {
     const run = this.run(runId);
     if (input.signal.aborted) throw new Stopped();
@@ -124,11 +154,16 @@ export class RunServices {
     const runtime = this.runtimeFor(run);
     const loaded = await this.loadSkills(runId, input.noSkills ? [] : config.skills ?? [], input.role, attempt.provider, runtime.name);
     const prompt = loaded.delivery === 'prompt' ? `${input.prompt}${skillPromptBlock(loaded.skills)}` : input.prompt;
+    this.artifact(runId,{kind:'context',title:'Agent input receipt',content:JSON.stringify({schemaVersion:1,role:input.role,promptChars:prompt.length,promptHash:sha256(prompt),contractVersion:run.contract.version,checkpoint:run.checkpoint,sources:this.store.artifacts.list(runId).filter(a=>a.valid && a.contractVersion===run.contract.version && ['Test plan','Test manifest'].includes(a.title)).map(a=>({id:a.id,hash:a.hash}))}),checkpoint:run.checkpoint,attemptId:attempt.id});
     try {
       const source = `agent:${input.role}`;
       const relay = this.runtimeLog(runId, source, attempt.id);
-      const result = await this.withHeartbeat(runId, source, `${input.role} (${input.slot})`, () => this.agents.use(() => runtime.runAgent({
-        run, attempt, role: input.role, prompt, signal: input.signal, skills: loaded.delivery === 'prompt' ? undefined : loaded.skills,
+      const queued=this.startSpan(runId,'agent_queue',`${input.role} chờ slot`,{attemptId:attempt.id,role:input.role});
+      const result = await this.agents.use(() => {
+        this.endSpan(runId,queued);
+        if(input.signal.aborted)throw new Stopped();
+        return this.withHeartbeat(runId, source, `${input.role} (${input.slot})`, () => runtime.runAgent({
+        run, attempt, role: input.role, prompt, readOnly: input.readOnly, signal: input.signal, skills: loaded.delivery === 'prompt' ? undefined : loaded.skills,
         sessionId: input.resumeSession?.sessionId, previousUsage: input.resumeSession?.cumulative,
         onEvent: (event) => {
           if (event.type === 'provider.raw') {
@@ -137,7 +172,8 @@ export class RunServices {
             if (line) this.emit(runId, source, line.level, line.text, attempt.id);
           } else relay(event);
         },
-      })), attempt.id);
+      }), attempt.id);
+      }).finally(()=>this.endSpan(runId,queued,input.signal.aborted?'interrupted':'completed'));
       this.recordContext(runId, prompt, attempt.id, loaded.skills.map((s) => ({ name: s.name, hash: s.hash, delivery: loaded.delivery, hasScripts: s.hasScripts })));
       // Raw output is persisted before anything parses it.
       this.artifact(runId, { kind: 'raw', title: `Raw ${input.role} ${attempt.id}`, content: raw.join('\n') || redactSecrets(result.output), checkpoint: run.checkpoint, attemptId: attempt.id });

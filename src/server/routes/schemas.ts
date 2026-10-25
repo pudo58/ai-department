@@ -1,3 +1,4 @@
+import { TestPlanSchema } from '../../core/testplan.js';
 import { z } from 'zod';
 import { isSafeRelative } from '../../core/scope.js';
 import { MEMORY_KINDS, MEMORY_MAX_TEXT } from '../../core/memory.js';
@@ -23,6 +24,7 @@ export const ProjectBody = z.object({
   runnerImage: z.string().trim().min(1).max(300), setupCommand: z.array(z.string().max(1000)).max(50).default([]),
   agentNetwork: z.string().max(100).default('aidept-agent'),
   executionMode: z.enum(['docker', 'local']).default('local'),
+  mutationRoot: z.string().max(300).refine((p) => p === '' || p === '.' || isSafeRelative(p), 'Thư mục mutation phải nằm trong repo.').optional(),
   contextEnabled: z.boolean().default(false),
   allowScaffold: z.boolean().default(false),
   previewCommand: z.array(z.string().min(1).max(1000)).max(50).default([]),
@@ -35,7 +37,8 @@ export const RunBody = z.object({
   taskKind: z.enum(['bugfix', 'feature', 'refactor']).optional(),
 });
 export const ContractBody = z.object({
-  requirements: z.array(z.object({ id: z.string(), text: z.string().max(8000), required: z.boolean(), manual: z.boolean() })).min(1).max(50),
+  testPlan: TestPlanSchema.optional(),
+  requirements: z.array(z.object({ id: z.string(), text: z.string().max(8000), required: z.boolean(), manual: z.boolean(), kind: z.enum(['expected', 'forbidden']).optional() })).min(1).max(50),
   acceptanceExamples: z.array(z.string().max(4000)).max(100), interfaces: z.array(z.string().max(4000)).max(100),
   assumptions: z.array(z.string().max(4000)).max(100), scope: z.array(z.string().max(500)).max(100),
 });

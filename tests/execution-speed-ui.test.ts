@@ -1,0 +1,41 @@
+// @vitest-environment jsdom
+import { afterEach, expect, it, vi } from 'vitest';
+import { act, createElement } from 'react';
+import { createRoot, type Root } from 'react-dom/client';
+import { ExecutionPanel } from '../src/client/ExecutionPanel.js';
+import { setupV2 as setup } from './helpers.js';
+import { qualityGreen, qualityReply } from './quality-fixtures.js';
+import { environmentHash } from '../src/runtime/preflight.js';
+import { sha256 } from '../src/core/contract.js';
+import { writeFileSync, mkdirSync } from 'node:fs';
+import path from 'node:path';
+
+let root:Root|undefined;
+afterEach(async()=>{if(root)await act(async()=>root!.unmount());root=undefined;document.body.innerHTML='';vi.unstubAllGlobals();});
+it('shows missing legacy metrics, environment failures, draft diff, Verifier limitations and invokes exact actions',async()=>{
+  vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT',true);
+  const e=setup({check:()=>qualityGreen,reply:qualityReply,files:x=>x.role==='author'?['tests/order.test.ts']:['src/order.ts']});
+  const run=await e.drive(e.create({mode:'verify'}));const d=e.orchestrator.detail(run.id);
+  d.environment={schemaVersion:1,status:'blocked',runtime:'local',workspace:'fixture',checkpoint:run.checkpoint,configHash:environmentHash(run),startedAt:new Date().toISOString(),endedAt:new Date().toISOString(),checks:[{recipeId:'test',runner:'vitest',status:'blocked',message:'Dependency rỗng'}],limitation:'Không xác nhận sandbox agent.'};
+  d.authorDraft={schemaVersion:1,attemptId:'att-fixture',artifactId:'draft',draftHash:'a'.repeat(64),checkpoint:run.checkpoint!,contractVersion:run.contract.version,contractHash:'b'.repeat(64),configHash:'c'.repeat(64),slot:'A',output:'{"entries":[]}',patch:'--- tests/fixture.test.js\n+++ tests/fixture.test.js',paths:['tests/fixture.test.js'],problems:['Tên test thiếu R-8.']};
+  const verdict={decision:'pass',summary:'Review',findingCount:0,scope:{reviewed:['src/order.ts'],checkIds:[],limitations:['Chưa chạy test độc lập'],additionalChecks:[{command:'vitest run',status:'failed',detail:'Access is denied'}]}};
+  const content=JSON.stringify(verdict);d.artifacts.push({id:'verifier-ui',runId:run.id,title:'Verifier verdict',kind:'report',content,hash:sha256(content),valid:true,checkpoint:run.checkpoint,contractVersion:run.contract.version,createdAt:new Date().toISOString()});
+  const host=document.createElement('div');document.body.append(host);root=createRoot(host);const onAct=vi.fn();
+  await act(async()=>root!.render(createElement(ExecutionPanel,{detail:d,busy:false,onAct})));
+  expect(document.body.textContent).toContain('Dependency rỗng');expect(document.body.textContent).toContain('Tên test thiếu R-8');expect(document.body.textContent).toContain('Chưa chạy test độc lập');expect(document.body.textContent).toContain('Access is denied');
+  const button=(text:string)=>[...document.querySelectorAll('button')].find(b=>b.textContent===text)!;
+  await act(async()=>button('Kiểm tra lại môi trường').click());expect(onAct).toHaveBeenCalledWith(`/api/runs/${run.id}/preflight`,{});
+  await act(async()=>button('Kiểm tra lại output đã lưu').click());expect(onAct).toHaveBeenCalledWith(`/api/runs/${run.id}/revalidate-author-output`,{attemptId:'att-fixture',draftHash:'a'.repeat(64)});
+  d.authorDraft.repairAvailable=true;
+  await act(async()=>root!.render(createElement(ExecutionPanel,{detail:d,busy:false,onAct})));
+  await act(async()=>button('Sửa draft và chạy tiếp').click());expect(onAct).toHaveBeenCalledWith(`/api/runs/${run.id}/resume`,{});
+  await act(async()=>root!.render(createElement(ExecutionPanel,{detail:d,busy:true,onAct})));
+  expect(button('Sửa draft và chạy tiếp').disabled).toBe(true);
+  d.authorDraft.repairAvailable=false;
+  await act(async()=>root!.render(createElement(ExecutionPanel,{detail:d,busy:false,onAct})));
+  expect(document.body.textContent).toContain('Đã dùng lượt sửa manifest');
+  expect([...document.querySelectorAll('button')].some(b=>b.textContent==='Sửa draft và chạy tiếp')).toBe(false);
+  const out=path.resolve('test-results/execution-speed');mkdirSync(out,{recursive:true});writeFileSync(path.join(out,'environment-draft-verifier.html'),document.documentElement.outerHTML);
+  await act(async()=>root!.render(createElement(ExecutionPanel,{detail:{...d,execution:undefined},busy:true,onAct})));
+  expect(document.body.textContent).toContain('Chưa có số đo');expect(button('Kiểm tra lại môi trường').disabled).toBe(true);expect(button('Kiểm tra lại output đã lưu').disabled).toBe(true);
+});

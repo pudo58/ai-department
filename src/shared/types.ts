@@ -1,3 +1,4 @@
+import type { TestPlan, TestPlanReview, QualityDetail, MutationCapability } from './quality.js';
 export type Mode = 'single' | 'clarify' | 'verify' | 'compare';
 export type ProviderName = 'codex' | 'claude' | 'antigravity' | 'fake';
 export type Role = 'planner' | 'author' | 'developer' | 'verifier' | 'investigator';
@@ -29,6 +30,8 @@ export interface ProjectProfile {
   roles: Record<Role, RoleConfig>; runnerImage: string; setupCommand: string[];
   agentNetwork: string; authVolume?: string; policyRules: string[];
   limits?: { agentMs?: number; setupMs?: number };
+  /** Selected relative package directory when automatic mutation detection is ambiguous. */
+  mutationRoot?: string;
   /** 'local' runs the agent and checks directly on this machine (no isolation); missing means docker. */
   executionMode?: 'docker' | 'local';
   /** Project owner's notes on stack, conventions, commands and things to avoid. Text for the agents to read, never executed. */
@@ -43,12 +46,33 @@ export interface ProjectProfile {
   contextBudget?: Partial<Record<ContextRole, number>>;
   singleBudgetUsd: number; currency: 'USD'; createdAt: string;
 }
-export interface Requirement { id: string; text: string; required: boolean; manual: boolean }
-export interface TaskContract { version: number; requirements: Requirement[]; acceptanceExamples: string[]; interfaces: string[]; assumptions: string[]; scope: string[]; approvedHash?: string; approvedAt?: string }
+export interface Requirement { id: string; text: string; required: boolean; manual: boolean; kind?: 'expected' | 'forbidden' }
+export interface TaskContract { version: number; requirements: Requirement[]; acceptanceExamples: string[]; interfaces: string[]; assumptions: string[]; scope: string[]; testPlan?: TestPlan; approvedHash?: string; approvedAt?: string }
+export type ContractWarningCode = 'missing_expected' | 'missing_forbidden' | 'missing_examples' | 'assumptions_present';
+export interface ContractReview {
+  contractHash: string; contractVersion: number; problems: string[];
+  warnings: { code: ContractWarningCode; message: string }[];
+}
+export interface ContractReviewReceipt {
+  contractHash: string; contractVersion: number; reviewedAt: string; acknowledgedWarnings: ContractWarningCode[];
+}
+export interface ContractApprovalInput { contractHash: string; acknowledgeWarnings?: boolean }
 export interface Interpretation { id: string; role: Role; text: string; questions: string[]; sourceHash: string; contractSeen: boolean; createdAt: string }
 export interface UsageRecord { id: string; attemptId: string; sessionId?: string; inputTokens: number; cachedTokens: number; outputTokens: number; costUsd: number | null; source: 'reported' | 'estimated' | 'unknown'; billing?: 'subscription' | 'api'; notionalUsd?: number; createdAt: string }
 export interface HumanTime { id: string; category: 'clarification' | 'approval' | 'review' | 'quota' | 'acceptance' | 'rework' | 'onboarding' | 'research'; startedAt: string; endedAt?: string; durationMs?: number; note: string }
+export interface DeliveryTarget { kind: 'branch' | 'files'; target: string }
+export interface DeliveryResult extends DeliveryTarget { summary: string }
+/** A receipt for one exact version. An interrupted operation is never evidence of success. */
+export interface Delivery extends DeliveryTarget {
+  status: 'in_progress' | 'failed' | 'succeeded' | 'unknown';
+  checkpoint: string; contractVersion: number; slot: Slot;
+  startedAt: string; endedAt?: string; result?: string; error?: string;
+}
 export interface Run {
+  executionSpans?: import('./execution.js').ExecutionSpan[];
+  preflightRequest?: boolean;
+  preflightReturnStatus?: RunStatus;
+  authorDraftRequest?: { attemptId: string; draftHash: string };
   id: string; projectId: string; title: string; originalRequirement: string; mode: Mode;
   initialMode: Mode; taskKind?: TaskKind; selectedSlot: Slot;
   /** Paths outside the project's modules that a person approved for this task only. */
@@ -59,6 +83,11 @@ export interface Run {
   escalations: { from: Mode; to: Mode; reason: string; at: string }[];
   usage: UsageRecord[]; humanTime: HumanTime[]; repairCount: number; blocker: string | null;
   createdAt: string; updatedAt: string; acceptedAt?: string; followupUntil?: string;
+  delivery?: Delivery;
+  contractReviewReceipt?: ContractReviewReceipt;
+  qualityPolicyVersion?: 1 | 2 | 3;
+  /** A human-approved test-only proposal; persisted before enqueue so restart cannot lose its intent. */
+  testRepairApproval?: { artifactId: string; artifactHash: string; appliedCheckpoint?: string };
   /** Project context frozen for this run on first use, so later memory edits cannot change a run in flight. */
   context?: RunContext;
 }
@@ -72,20 +101,28 @@ export interface RunSummary {
   developer: { provider: ProviderName; model: string };
   /** Spent over the run's whole life, and in the last 30 days. */
   costUsd: number; monthCostUsd: number;
+  deliveryStatus?: Delivery['status'] | 'unconfirmed';
 }
 export interface Independence { independent: boolean; reason: string }
+export interface RunDetail {
+  findingReplays?: import('./reproduction.js').FindingReplay[];
+  execution?: import('./execution.js').ExecutionMetrics;
+  environment?: import('./execution.js').EnvironmentProbe;
+  authorDraft?: import('./execution.js').PendingAuthorDraft;
+}
 export interface Attempt { id: string; slot: Slot; independence?: Independence; runId: string; role: Role; stage: Stage; provider: ProviderName; model: string; sessionId?: string; status: 'running' | 'completed' | 'failed' | 'interrupted'; startedAt: string; endedAt?: string; containerId?: string; checkpoint: string | null; contractVersion: number; error?: string }
 export interface Artifact { id: string; runId: string; attemptId?: string; kind: 'raw' | 'context' | 'reuse' | 'diff' | 'report' | 'acceptance' | 'interpretation' | 'tool' | 'checkpoint'; title: string; content: string; hash: string; checkpoint: string | null; contractVersion: number; valid: boolean; createdAt: string }
-export interface Finding { id: string; runId: string; category: 'behavior' | 'design'; severity: 'blocker' | 'major' | 'minor'; code?: string; title: string; location: string; rule?: string; precedent?: string; evidence: string; suggestion: string; status: 'open' | 'disputed' | 'resolved'; confirmed: boolean; checkpoint: string | null; contractVersion: number; dispute?: string; createdAt: string }
-export interface CheckResult { id: string; runId: string; recipeId: string; checkpoint: string; contractVersion: number; status: CheckStatus; attempts: { exitCode: number | null; log: string; durationMs: number }[]; testIds: string[]; missingTestIds: string[]; required: boolean; requirementIds: string[]; quarantined: boolean; quarantineReason?: string; valid: boolean; createdAt: string; /** Test tallies read from the report, when the runner produced one. */ counts?: { passed: number; failed: number; skipped: number }; skippedTestIds?: string[] }
+export interface Finding { id: string; runId: string; category: 'behavior' | 'design'; severity: 'blocker' | 'major' | 'minor'; code?: string; title: string; location: string; rule?: string; precedent?: string; evidence: string; suggestion: string; status: 'open' | 'disputed' | 'resolved'; confirmed: boolean; checkpoint: string | null; contractVersion: number; dispute?: string; createdAt: string; reproduction?: import('./reproduction.js').FindingReproduction; reproductionLimitation?: string }
+export interface CheckResult { issues?: CheckIssue[]; aliases?: Record<string, string[]>; slot?: Slot; configHash?: string; manifestHash?: string; outcomes?: { id: string; status: 'passed' | 'failed' | 'skipped' }[]; id: string; runId: string; recipeId: string; checkpoint: string; contractVersion: number; status: CheckStatus; attempts: { exitCode: number | null; log: string; durationMs: number }[]; testIds: string[]; missingTestIds: string[]; required: boolean; requirementIds: string[]; quarantined: boolean; quarantineReason?: string; valid: boolean; createdAt: string; /** Test tallies read from the report, when the runner produced one. */ counts?: { passed: number; failed: number; skipped: number }; skippedTestIds?: string[] }
+export interface CheckIssue { kind: 'assertion_failed' | 'test_missing' | 'test_skipped' | 'report_error' | 'identity_ambiguous' | 'collection_error' | 'environment' | 'checkpoint_mismatch'; message: string; testId?: string }
 export interface TraceEvent { id: number; runId: string; type: string; message: string; data?: unknown; createdAt: string }
-export interface MatrixRow { requirementId: string; text: string; required: boolean; manual: boolean; status: 'verified' | 'unverified' | 'manual_pending' | 'failed'; evidence: string[] }
+export interface MatrixRow { requirementId: string; text: string; required: boolean; manual: boolean; kind?: Requirement['kind']; status: 'verified' | 'unverified' | 'manual_pending' | 'failed'; evidence: string[] }
 export interface CompletionState { ready: boolean; reasons: string[] }
 export interface PhaseBudget { allocatedUsd: number; spentUsd: number }
 export interface BudgetState { capUsd: number; spentUsd: number; estimated: boolean; phases: Record<Stage, PhaseBudget> }
 /** A check the system is running right now, so the UI can show the test program live. */
 export interface RunningCheck { recipeId: string; command: string; ref: 'base' | 'candidate'; startedAt: string }
-export interface RunDetail { runningCheck?: RunningCheck; /** Files the agent tried to change outside the allowed modules, awaiting a person's decision. */ pendingPaths: string[]; matrix: MatrixRow[]; completion: CompletionState; budget: BudgetState; run: Run; attempts: Attempt[]; artifacts: Artifact[]; findings: Finding[]; checks: CheckResult[]; events: TraceEvent[] }
+export interface RunDetail { planReview?: TestPlanReview; quality: QualityDetail; contractReview: ContractReview; testRepair?: import('../core/recovery.js').PendingTestRepair; runningCheck?: RunningCheck; /** Files the agent tried to change outside the allowed modules, awaiting a person's decision. */ pendingPaths: string[]; matrix: MatrixRow[]; completion: CompletionState; budget: BudgetState; run: Run; attempts: Attempt[]; artifacts: Artifact[]; findings: Finding[]; checks: CheckResult[]; events: TraceEvent[] }
 export interface Health { node: string; docker: boolean; dockerMessage: string; codex: boolean; claude: boolean; localCodex: boolean; fake: boolean; liveReady: boolean; limitations: string[]; codexVersion?: string; /** Claude Code installed and signed in on this machine. */ localClaude?: boolean; disk?: { path: string; freeBytes: number; totalBytes: number; level: 'ok' | 'warn' | 'critical' } }
 export interface SuggestedCheck {
   id: string; label: string; command: string[]; required: boolean; timeoutMs: number; reportPath?: string;
@@ -94,6 +131,7 @@ export interface SuggestedCheck {
 }
 /** Result of the read-only stack detector: suggestions only, a person confirms before anything is saved. */
 export interface StackDetection {
+  mutation?: MutationCapability;
   /** Node package manager, or the build tool of a Java/Python/Go/Rust project. */
   packageManager: 'npm' | 'pnpm' | 'yarn' | 'bun' | 'maven' | 'gradle' | 'pip' | 'go' | 'cargo' | null;
   languages: string[]; frameworks: string[]; testRunner: string | null; linters: string[];

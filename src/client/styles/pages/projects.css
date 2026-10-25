@@ -35,7 +35,11 @@
 .mode-option.selected { border-color: var(--accent); background: var(--accent-soft); box-shadow: var(--ring); }
 .mode-option.selected::before { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 2.5px var(--bg); }
 .check-options { display: grid; gap: 8px; margin: 6px 0 12px; } .check-options label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
-.requirement-edit { display: grid; grid-template-columns: 64px 1fr auto auto auto; gap: 8px; align-items: center; margin: 6px 0; }
+.requirement-edit { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto auto; gap: 8px; align-items: center; margin: 12px 0; }
+.requirement-edit > code { grid-row: 1; }
+.requirement-edit > input { grid-column: 2 / 4; grid-row: 1; min-width: 0; }
+.requirement-edit > select { grid-column: 1 / 3; min-width: 0; }
+.requirement-edit > button { grid-column: 4; grid-row: 1; }
 .requirement-edit label { display: flex; align-items: center; gap: 5px; font-size: .85rem; color: var(--text-2); }
 .role-config { display: grid; grid-template-columns: 96px 124px 1fr 90px; gap: 8px; align-items: start; margin: 8px 0; } .role-skills { grid-column: 2 / -1; }
 
@@ -189,6 +193,8 @@ dialog.modal.modal-md { width: min(640px, calc(100vw - 32px)); }
   .project-entry { grid-template-columns: 32px minmax(0, 1fr); } .project-actions { grid-column: 2; justify-content: flex-start; } .role-chips { margin-left: 0; }
   .role-config { grid-template-columns: 1fr; } .role-skills { grid-column: auto; }
   .requirement-edit { grid-template-columns: 1fr 1fr; }
+  .requirement-edit > input, .requirement-edit > select { grid-column: 1 / -1; grid-row: auto; }
+  .requirement-edit > button { grid-column: 2; }
   .check-main { grid-template-columns: 1fr auto; } .check-id { grid-column: 1 / -1; }
   .detect-head { flex-direction: column; align-items: stretch; }
 }
@@ -206,3 +212,8 @@ dialog.modal.modal-md { width: min(640px, calc(100vw - 32px)); }
   .fp-places { flex-direction: row; overflow-x: auto; }
   .folder-picker .modal-footer { flex-wrap: wrap; } .fp-current { flex-basis: 100%; }
 }
+
+.quality-case { border: 1px solid var(--border); border-radius: 8px; padding: 12px; min-width: 0; }
+.quality-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.table-scroll { overflow-x: auto; }
+@media (max-width: 640px) { .quality-grid { grid-template-columns: 1fr; } }

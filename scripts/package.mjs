@@ -50,6 +50,8 @@ await esbuild.build({
   legalComments: 'none', logLevel: 'warning',
 });
 cpSync(path.join(root, 'scripts', 'cli.mjs'), path.join(out, 'app', 'cli.mjs'));
+cpSync(path.join(root, 'src', 'runtime', 'mutation-worker.cjs'), path.join(out, 'app', 'mutation-worker.cjs'));
+cpSync(path.join(root, 'src', 'runtime', 'reproduction-worker.cjs'), path.join(out, 'app', 'reproduction-worker.cjs'));
 
 step('Chép công cụ, mẫu Docker, script khởi động và hướng dẫn');
 cpSync(path.join(root, 'tools'), path.join(out, 'tools'), { recursive: true });

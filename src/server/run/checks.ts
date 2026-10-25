@@ -1,3 +1,4 @@
+import { lockedIds, readManifest, recipeHash } from '../../core/qualityevidence.js';
 import { randomUUID } from 'node:crypto';
 import type { Slot } from '../../shared/types.js';
 import { ENV_PROBLEM_PREFIX } from '../../core/nodever.js';
@@ -29,16 +30,28 @@ export class CheckRunner {
       if (buildBroken && recipe.reportPath) { this.s.emit(runId, `check:${recipe.id}`, 'warn', `Bỏ qua check "${recipe.id}": bước build đã fail, test chưa thể chạy.`); continue; }
       const attempts: RuntimeCheckResult[] = [await runOnce('candidate')];
       if (shouldRetry(attempts[0]!)) {
+        this.s.retry(runId,attempts[0]!.incomplete?'environment':recipe.reportPath && !attempts[0]!.report?'missing_evidence':'check_failure',`Chạy lại check ${recipe.id} một lần để kiểm tra flaky; chưa quy lỗi cho source hay test.`);
         this.s.emit(runId, `check:${recipe.id}`, 'warn', 'Check fail; chạy lại một lần để phân biệt lỗi thật với flaky.');
         attempts.push(await runOnce('candidate'));
       }
-      const pinned = attempts.map((a) => ({ ...a, checkpoint }));
+      const pinned = attempts;
       const previous = this.s.store.checks.list(runId).filter((c) => c.recipeId === recipe.id && c.quarantined).pop();
+      const artifacts = this.s.store.artifacts.list(runId);
+      const manifest = readManifest(run, artifacts);
+      const expected = lockedIds(run, artifacts, recipe.id);
+      const workspace = runtime.workspacePath?.(run, slot);
+      // Normalize the reporter namespace before comparing it with the locked manifest.
       const result = summarizeCheck({
         runId, id: `chk_${randomUUID().slice(0, 8)}`, recipe, checkpoint, contractVersion: run.contract.version,
-        lockedTestIds: [], quarantined: previous ? { reason: previous.quarantineReason ?? 'Kế thừa quarantine trước đó.' } : undefined,
+        lockedTestIds: expected, reportRoot: workspace, structuredIds: manifest?.manifest.schemaVersion === 2,
+        quarantined: previous ? { reason: previous.quarantineReason ?? 'Kế thừa quarantine trước đó.' } : undefined,
       }, pinned, this.s.now());
+      result.slot = slot; result.configHash = recipeHash(run); result.manifestHash = manifest?.hash;
       this.s.store.checks.put(result);
+      if(result.status==='failed')this.s.artifact(runId,{kind:'report',title:`Check failure digest ${result.id}`,content:JSON.stringify(summarizeFailures(attempts.at(-1)?.report)),checkpoint});
+      const integrity = result.issues?.filter(i => i.kind !== 'assertion_failed' && i.kind !== 'test_skipped') ?? [];
+      if (integrity.length) { repairable = false; problems.push(...integrity.map(i => i.message)); }
+      if (result.missingTestIds.length) { problems.push(`Check "${recipe.id}" thiếu hoặc bỏ qua test đã khóa: ${result.missingTestIds.join(', ')}`); repairable = false; }
       this.s.log(runId, 'check', `${recipe.id}@${checkpoint.slice(0, 8)}: ${result.status}${attempts.length > 1 ? ' (có retry)' : ''}`);
       if (result.status === 'flaky') flaky++;
       if (!recipe.required) continue;

@@ -1,6 +1,7 @@
 import { lstat, readdir, statfs } from 'node:fs/promises';
 import path from 'node:path';
 import type { Run } from '../shared/types.js';
+import { delivered } from '../core/delivery.js';
 
 export interface DiskSpace { path: string; freeBytes: number; totalBytes: number; level: 'ok' | 'warn' | 'critical' }
 export interface WorkspaceUsage {
@@ -44,7 +45,10 @@ async function folderSize(dir: string, budget: { files: number }): Promise<{ byt
 /** Why a workspace may (or may not) be deleted. Running or reviewable work is always kept. */
 export function removability(run: Run | undefined, now: number): { removable: boolean; reason: string } {
   if (!run) return { removable: true, reason: 'Không còn task nào dùng bản sao này.' };
-  if (run.status === 'completed') return { removable: true, reason: 'Task đã nghiệm thu; kết quả đã giao về project.' };
+  if (run.delivery && !delivered(run)) return { removable: false, reason: 'Chưa xác nhận giao thành công đúng checkpoint và hợp đồng; cần giữ workspace để thử giao lại.' };
+  if (run.status === 'completed') return delivered(run)
+    ? { removable: true, reason: 'Task đã nghiệm thu; kết quả đã giao về project.' }
+    : { removable: false, reason: 'Task cũ chưa có bằng chứng giao kết quả; cần giữ workspace.' };
   if (['running', 'queued'].includes(run.status)) return { removable: false, reason: 'Task đang chạy.' };
   const idle = now - Date.parse(run.updatedAt);
   if (['failed', 'blocked', 'paused'].includes(run.status) && idle > STALE_MS) return { removable: true, reason: `Task "${run.status}" không động tới hơn 7 ngày.` };
@@ -78,7 +82,7 @@ export class StorageMonitor {
     try { names = await readdir(root); } catch { /* none yet */ }
     const byRun = new Map<string, string[]>();
     for (const n of names) {
-      const m = /^(.+)-(A|B|base)$/.exec(n);
+      const m = /^(.+)-(A|B|base)(?:-mutation)?$/.exec(n);
       if (m) byRun.set(m[1]!, [...(byRun.get(m[1]!) ?? []), n]);
     }
     const runs = new Map(this.runs().map((r) => [r.id, r]));

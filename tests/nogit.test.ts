@@ -9,6 +9,7 @@ import { Orchestrator } from '../src/server/orchestrator.js';
 import { Store } from '../src/server/store.js';
 import { profile } from './helpers.js';
 import type { Run } from '../src/shared/types.js';
+import { renderReportMarkdown } from '../src/core/report.js';
 
 const git = (cwd: string, ...args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
 const NODE_TEST = ['node', '--test', '--test-reporter=spec', '--test-reporter-destination=stdout', '--test-reporter=junit', '--test-reporter-destination=.aidept-report.xml', 'tests/*.test.mjs'];
@@ -44,7 +45,7 @@ describe.each([['init', 'a git repository with no commits'], ['none', 'a folder 
     const { orchestrator, create, store, dataDir } = harness(source);
     const run = create();
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     const done = orchestrator.detail(run.id);
     expect(done.run.status, `${done.run.blocker}\n${done.events.map((e) => e.message).join('\n')}`).toBe('awaiting_acceptance');
     expect(done.run.baseSha).toMatch(/^[0-9a-f]{40}$/);
@@ -58,6 +59,10 @@ describe.each([['init', 'a git repository with no commits'], ['none', 'a folder 
 
     await orchestrator.acceptRun(run.id, { acknowledgeWarnings: true });
     expect(store.runs.get(run.id)!.status).toBe('completed');
+    const deliveryReport = await orchestrator.report(run.id);
+    expect(deliveryReport.delivery).toMatchObject({ kind: 'files', target: source, delivered: true, status: 'succeeded', commands: [] });
+    expect(renderReportMarkdown(deliveryReport)).toContain('Ghi file trực tiếp');
+    expect(renderReportMarkdown(deliveryReport)).not.toContain('git -C');
     expect(orchestrator.detail(run.id).events.some((e) => e.type === 'deliver' && /đã ghi \d+ file/.test(e.message))).toBe(true);
     expect(readFileSync(path.join(source, 'src', 'sum.mjs'), 'utf8')).not.toBe(BUGGY);
     expect(readdirTests(source).length).toBeGreaterThan(0);
@@ -72,7 +77,7 @@ describe.each([['init', 'a git repository with no commits'], ['none', 'a folder 
     const { orchestrator, create, store, dataDir } = harness(source);
     const run = create();
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     expect(orchestrator.detail(run.id).run.status).toBe('awaiting_acceptance');
     const ws = path.join(dataDir, 'workspaces', `${run.id}-A`);
     writeFileSync(path.join(source, 'src', 'sum.mjs'), readFileSync(path.join(ws, 'src', 'sum.mjs')));
@@ -86,10 +91,11 @@ describe.each([['init', 'a git repository with no commits'], ['none', 'a folder 
     const { orchestrator, create, store } = harness(source);
     const run = create();
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     expect(orchestrator.detail(run.id).run.status).toBe('awaiting_acceptance');
     writeFileSync(path.join(source, 'src', 'sum.mjs'), `${BUGGY}// my own edit\n`);
-    await orchestrator.acceptRun(run.id, { acknowledgeWarnings: true });
+    await expect(orchestrator.acceptRun(run.id, { acknowledgeWarnings: true })).rejects.toThrow(/Chưa giao được kết quả/);
+    expect(store.runs.get(run.id)).toMatchObject({ status: 'awaiting_acceptance', delivery: { status: 'failed', kind: 'files' } });
     expect(readFileSync(path.join(source, 'src', 'sum.mjs'), 'utf8')).toBe(`${BUGGY}// my own edit\n`);
     expect(readdirTests(source)).toEqual([]); // all-or-nothing: no partial write
     const failure = store.logs.list({ runId: run.id, limit: 500 }).find((l) => /Không giao được kết quả/.test(l.message))

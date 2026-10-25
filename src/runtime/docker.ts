@@ -1,3 +1,7 @@
+import { rm } from 'node:fs/promises';
+import { detectMutation } from './mutationdetect.js';
+import { probeEnvironment } from './preflight.js';
+import { mutationDependencies, runMutation, type MutationExecution } from './mutation.js';
 import path from 'node:path';
 import type { Role, Run, Slot } from '../shared/types.js';
 import { isSafeRelative } from '../core/scope.js';
@@ -62,8 +66,14 @@ export class DockerRuntime implements Runtime {
     return result;
   }
 
-  private inContainer(run: Run, name: string, network: string, ws: string, cmd: string[], auth: { volume: string } | undefined, timeoutMs: number, input?: string, signal?: AbortSignal, stream: { onStdout?: (c: string) => void; onStderr?: (c: string) => void } = {}): Promise<ProcessResult> {
-    const args = [...this.hardening(name, network), '-v', `${ws}:/workspace`, ...(auth ? ['-v', `${auth.volume}:/auth`, '-e', 'HOME=/auth'] : ['-e', 'HOME=/tmp']), run.configSnapshot.runnerImage, ...cmd];
+  async preflight(run: Run, slot: Slot, signal?: AbortSignal) {
+    await this.assertAttested(run,false);
+    const ws=this.ws.dir(run,slot);
+    return probeEnvironment(run,ws,this.name,(command,timeoutMs)=>this.inContainer(run,`preflight-${run.id}-${slot}`,'none',ws,command,undefined,timeoutMs,undefined,signal),signal);
+  }
+
+  private inContainer(run: Run, name: string, network: string, ws: string, cmd: string[], auth: { volume: string } | undefined, timeoutMs: number, input?: string, signal?: AbortSignal, stream: { onStdout?: (c: string) => void; onStderr?: (c: string) => void } = {}, readOnly = false): Promise<ProcessResult> {
+    const args = [...this.hardening(name, network), '-v', `${ws}:/workspace${readOnly ? ':ro' : ''}`, ...(auth ? ['-v', `${auth.volume}:/auth`, '-e', 'HOME=/auth'] : ['-e', 'HOME=/tmp']), run.configSnapshot.runnerImage, ...cmd];
     return this.supervised(name, () => executeFile('docker', args, { timeoutMs, input, signal, ...stream, maxOutputBytes: 64 * 1024 * 1024 }));
   }
 
@@ -92,9 +102,9 @@ export class DockerRuntime implements Runtime {
     const registered = this.options.attestation.providers[provider];
     if (!registered) throw new RuntimeBlockedError(`Provider ${provider} chưa được attest.`);
     const collector = new JsonlCollector({ provider, previousCumulativeUsage: exec.previousUsage, onEvent: exec.onEvent });
-    const cmd = buildCliCommand({ provider, model: config.model, effort: config.effort, sessionId: exec.sessionId, singleAgent: run.mode === 'single' });
+    const cmd = buildCliCommand({ provider, model: config.model, effort: config.effort, sessionId: exec.sessionId, singleAgent: run.mode === 'single', readOnly: exec.readOnly });
     const result = await this.inContainer(run, this.container(attempt.id), run.configSnapshot.agentNetwork, this.ws.dir(run, attempt.slot), cmd,
-      { volume: registered.authVolume }, run.configSnapshot.limits?.agentMs ?? DEFAULT_AGENT_MS, exec.prompt, exec.signal, { onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent) });
+      { volume: registered.authVolume }, run.configSnapshot.limits?.agentMs ?? DEFAULT_AGENT_MS, exec.prompt, exec.signal, { onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent) }, exec.readOnly);
     collector.finish();
     if (result.timedOut) throw new Error('Agent hết thời gian cho phép.');
     if (collector.failure) throw new Error(redactSecrets(collector.failure));
@@ -105,8 +115,10 @@ export class DockerRuntime implements Runtime {
   changes = (run: Run, slot: Slot): Promise<ChangeSet> => this.ws.changes(run, slot);
   commit = (run: Run, slot: Slot, message: string): Promise<string> => this.ws.commit(run, slot, message);
   revert = (run: Run, slot: Slot): Promise<void> => this.ws.revert(run, slot);
-  deliver = (run: Run, slot: Slot): Promise<string> => this.ws.deliver(run, slot);
+  deliveryTarget = (run: Run, slot: Slot) => this.ws.deliveryTarget(run, slot);
+  deliver = (run: Run, slot: Slot) => this.ws.deliver(run, slot);
   workspacePath = (run: Run, slot: Slot): string => this.ws.dir(run, slot);
+  applyPatch = (run: Run, slot: Slot, patch: string): Promise<void> => this.ws.applyPatch(run, slot, patch);
   baseFiles = (run: Run, slot: Slot): Promise<string[]> => this.ws.baseFiles(run, slot);
   diffSinceBase = (run: Run, slot: Slot) => this.ws.diffSinceBase(run, slot);
 
@@ -126,12 +138,31 @@ export class DockerRuntime implements Runtime {
         report = await readReport(wsDir, recipe.reportPath);
       }
       return {
-        exitCode: result.exitCode, durationMs: result.durationMs, checkpoint, report,
+        exitCode: result.exitCode, durationMs: result.durationMs, checkpoint, report, reportRoot: '/workspace',
         incomplete: result.timedOut || (!!recipe.reportPath && report === undefined),
         log: redactSecrets(`${result.stdout}\n${result.stderr}`.slice(-200_000)),
       };
     };
     return exec.ref === 'base' ? this.ws.withBaseOverlay(run, slot, exec.keepPaths ?? [], execute) : execute();
+  }
+
+  detectMutation = (run: Run, slot: Slot) => detectMutation(this.ws.dir(run, slot), run.configSnapshot.mutationRoot);
+  async runMutation(execution: MutationExecution) {
+    await this.assertAttested(execution.run, false);
+    const { run, slot } = execution;
+    const name = `mutation-${run.id}-${slot}`;
+    return runMutation(this.ws, execution, async (directory, argv, timeoutMs, signal, events) => {
+      const temp = `${this.ws.dir(run, slot)}-mutation`, rel = path.relative(temp, directory).replace(/\\/g, '/');
+      const deps = (await mutationDependencies(this.ws.dir(run, slot), execution.capability.root)).flatMap(({ relative, directory }) => ['-v', `${directory}:/workspace/${relative === '.' ? '' : `${relative}/`}node_modules:ro`]);
+      const args = [...this.hardening(name, 'none'), '-v', `${temp}:/workspace`, ...deps, '-w', rel ? `/workspace/${rel}` : '/workspace', '-e', 'HOME=/tmp', run.configSnapshot.runnerImage, ...argv];
+      return this.supervised(name, () => executeFile('docker', args, { timeoutMs, signal, onStdout: c => events?.({ type: 'log', message: redactSecrets(c), data: { source: 'mutation' } }), onStderr: c => events?.({ type: 'log', message: redactSecrets(c), data: { source: 'mutation' } }) }));
+    });
+  }
+  async recoverMutation(run: Run) {
+    for (const slot of ['A', 'B'] as Slot[]) {
+      await executeFile('docker', ['rm', '-f', `mutation-${run.id}-${slot}`], { timeoutMs: 30_000 }).catch(() => undefined);
+      await rm(`${this.ws.dir(run, slot)}-mutation`, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+    }
   }
 
   async runTool(_run: Run, _slot: Slot, tool: AnalysisTool): Promise<ToolReport> {

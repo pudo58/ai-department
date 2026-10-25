@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { green, red, report, setup } from './helpers.js';
+import { green, red, report, setupLegacy as setup } from './helpers.js';
 
 describe('Single workflow', () => {
   it('plans, waits for contract approval, builds, and reaches acceptance with real evidence', async () => {
@@ -8,7 +8,7 @@ describe('Single workflow', () => {
     orchestrator.startRun(run.id); await orchestrator.idle();
     expect(store.runs.get(run.id)!.status).toBe('awaiting_approval');
     expect(store.runs.get(run.id)!.baseSha).toBe('fake-base');
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
 
     const detail = orchestrator.detail(run.id);
     expect(detail.run.status).toBe('awaiting_acceptance');
@@ -112,7 +112,7 @@ describe('contract versions', () => {
     expect(stale.checks.every((x) => !x.valid)).toBe(true);
     expect(stale.completion.ready).toBe(false);
 
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     const rebuilt = orchestrator.detail(run.id);
     expect(rebuilt.run.status).toBe('awaiting_acceptance');
     expect(rebuilt.checks.filter((x) => x.valid && x.contractVersion === next)).toHaveLength(1);
@@ -325,7 +325,7 @@ describe('paths outside the allowed modules', () => {
     const fresh = create();
     orchestrator.startRun(fresh.id);
     await orchestrator.idle();
-    orchestrator.approveContract(fresh.id);
+    orchestrator.approveContract(fresh.id, { contractHash: orchestrator.detail(fresh.id).contractReview.contractHash, acknowledgeWarnings: true });
     expect(() => orchestrator.approvePaths(fresh.id, ['worker'])).toThrow(/đang chờ người dùng/);
     await orchestrator.idle();
   });

@@ -132,6 +132,9 @@ export class Store {
       json->>'$.mode' AS mode, json->>'$.provider' AS provider, json->>'$.stage' AS stage, json->>'$.contract.approvedHash' IS NOT NULL AS contractApproved,
       json->>'$.budgetUsd' AS budgetUsd, json->>'$.blocker' AS blocker, json->>'$.createdAt' AS createdAt, json->>'$.updatedAt' AS updatedAt,
       json->>'$.configSnapshot.roles.developer.provider' AS devProvider, json->>'$.configSnapshot.roles.developer.model' AS devModel,
+      CASE WHEN json->>'$.checkpoint' IS NOT NULL AND json->>'$.delivery.checkpoint' = json->>'$.checkpoint'
+        AND json->>'$.delivery.contractVersion' = json->>'$.contract.version' AND json->>'$.delivery.slot' = json->>'$.selectedSlot'
+        THEN json->>'$.delivery.status' ELSE 'unconfirmed' END AS deliveryStatus,
       json->'$.usage' AS usage FROM runs ORDER BY rowid`).all() as SummaryRow[];
     const cost = (usage: UsageRecord[]) => usage.reduce((sum, u) => sum + usageCost(u), 0);
     return rows.map(({ contractApproved, devProvider, devModel, usage, ...run }) => {

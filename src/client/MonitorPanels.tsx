@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { CostRow, LiveRun, MonitorData, Period, RequestRow, Totals, WaitingItem } from '../core/monitor';
+import type { CostRow, MonitorData, Period, RequestRow, Totals } from '../core/monitor';
 import type { WasteItem } from '../core/waste';
 import type { Health, Mode } from '../shared/types';
 import { api } from './api';
-import { LogConsole } from './Monitor';
-import { MetricChart, RecentRequests, ROLE_COLOR, STATUS_TONE, Topology, num, type ChartMetric } from './MonitorCharts';
+export { LiveTab } from './MonitorLive';
+import { MetricChart, ROLE_COLOR, STATUS_TONE, num, type ChartMetric } from './MonitorCharts';
 import { Badge, Empty, Icon, Ledger, Modal, ago, count, dateTime, duration, money } from './ui';
 
 export function Delta({ now, before, period, invert = false, format = num }: { now: number; before: number; period: Period; invert?: boolean; format?: (n: number) => string }) {
@@ -29,34 +29,6 @@ export function Kpis({ data }: { data: MonitorData }) {
     { label: 'Lãng phí ước tính', value: `~${money(data.waste.costUsd)}`, dot: 'var(--warn)', tone: data.waste.costUsd > 0 ? 'warn' : '', note: <small>{data.waste.costUsd > 0 ? `${wastePct}% chi phí kỳ này, xem chi tiết bên dưới` : 'Không thấy lãng phí trong kỳ'}</small> },
   ];
   return <Ledger className="ledger-3" items={cards.map((c) => ({ label: c.label, value: c.value, sub: c.note, tone: c.tone === 'warn' ? 'warn' as const : undefined }))}/>;
-}
-
-export function LivePanel({ live, now }: { live: LiveRun[]; now: number }) {
-  return <section className="panel-card">
-    <div className="card-head"><h3>Đang chạy</h3><span className="muted small">{live.length ? `${live.length} task` : ''}</span></div>
-    {!live.length ? <p className="muted small">Không có task nào đang chạy.</p> : <ul className="live-list">{live.map((r) => <li key={r.id}>
-      <div className="live-top"><span className="dot dot-live"/><a className="cell-title" href={`#/run/${r.id}`} title={r.title}>{r.title}</a></div>
-      <div className="live-meta"><span className="muted small">{STAGE_LABEL[r.stage] ?? r.stage} · {MODE_LABEL[r.mode as Mode] ?? r.mode}</span>
-        {r.role ? <><Badge tone="info" live>{ROLE_LABEL[r.role] ?? r.role}</Badge>{r.attemptStartedAt && <span className="mono small">{duration(now - Date.parse(r.attemptStartedAt))}</span>}</> : <span className="muted small">đang chuẩn bị hoặc chạy check</span>}</div>
-      <div className="budget-line" title={`Đã dùng ~${money(r.spentUsd)} / ${money(r.capUsd)}`}><span className="bar"><span style={{ width: `${Math.min(100, r.budgetPct * 100)}%` }} className={r.budgetPct > 0.85 ? 'hot' : ''}/></span><small>{Math.round(r.budgetPct * 100)}% ngân sách</small></div>
-      {r.lastLog && <code className="live-log" title={r.lastLog}>{r.lastLog}</code>}
-    </li>)}</ul>}
-  </section>;
-}
-
-export function WaitingPanel({ items, now }: { items: WaitingItem[]; now: number }) {
-  return <section className="panel-card">
-    <div className="card-head"><h3>Chờ bạn</h3>{items.length > 0 && <span className="muted small">{items.length} việc</span>}</div>
-    {!items.length ? <p className="muted small">Không có việc nào chờ bạn.</p> : <ul className="wait-list">{items.map((w) => {
-      const meta = WAIT[w.kind];
-      const href = w.runId ? `#/run/${w.runId}` : '#/projects';
-      return <li key={`${w.kind}-${w.runId ?? w.projectId}`}>
-        <div className="wait-main"><Badge tone={meta.tone}>{meta.label}</Badge><a className="cell-title" href={href} title={w.title}>{w.title}</a></div>
-        {w.detail && <p className="wait-detail" title={w.detail}>{w.detail}</p>}
-        <div className="wait-foot"><span className="faint small">{ago(w.updatedAt, now)}</span><a className="button small" href={href}>{meta.action}</a></div>
-      </li>;
-    })}</ul>}
-  </section>;
 }
 
 export function SpendPanel({ data }: { data: MonitorData }) {
@@ -93,20 +65,6 @@ export function WastePanel({ data, now }: { data: MonitorData; now: number }) {
     {items.length > WASTE_SHOWN && <button className="text-button" onClick={() => setAll((v) => !v)}>{all ? 'Thu gọn' : `Xem cả ${items.length}`}</button>}
     {items.some((i) => i.kind === 'repeat-review') && <p className="muted small waste-tip">Verifier lặp thường do bấm Chạy tiếp khi không có gì thay đổi. Hãy sửa hợp đồng hoặc check trước, rồi mới chạy lại.</p>}
   </section>;
-}
-
-export function LiveTab({ data, now, onOpen }: { data: MonitorData; now: number; onOpen: (r: RequestRow) => void }) {
-  const [consoleOpen, setConsoleOpen] = useState(() => { try { return localStorage.getItem('monitor.console') !== 'closed'; } catch { return true; } });
-  const rememberConsole = (open: boolean) => { setConsoleOpen(open); try { localStorage.setItem('monitor.console', open ? 'open' : 'closed'); } catch { /* private mode */ } };
-  return <>
-    {data.alerts.map((a) => <div key={a.text} className={`banner ${a.level === 'error' ? 'error' : 'warn'}`} role="alert"><Icon name="alert" size={16}/><span>{a.text}</span></div>)}
-    <div className="overview-grid live-grid"><Topology data={data}/><RecentRequests rows={data.recent} now={now} onOpen={onOpen}/></div>
-    <div className="section-split overview-split"><LivePanel live={data.live} now={now}/><WaitingPanel items={data.waiting} now={now}/></div>
-    <details className="topology-details console-details" open={consoleOpen} onToggle={(e) => rememberConsole((e.currentTarget as HTMLDetailsElement).open)}>
-      <summary>Console trực tiếp{data.errorsLastHour ? <span className="pill alert">{data.errorsLastHour} lỗi / 1 giờ</span> : null}</summary>
-      {consoleOpen && <LogConsole height={380}/>}
-    </details>
-  </>;
 }
 
 export function CostTab({ data, now, onOpen }: { data: MonitorData; now: number; onOpen: (r: RequestRow) => void }) {
@@ -269,15 +227,6 @@ export const ROLE_LABEL: Record<string, string> = { planner: 'Planner', author: 
 export const STATUS_LABEL: Record<string, string> = { completed: 'Đã nghiệm thu', awaiting_acceptance: 'Chờ nghiệm thu', awaiting_approval: 'Chờ duyệt hợp đồng', blocked: 'Bị chặn', failed: 'Thất bại', paused: 'Tạm dừng', running: 'Đang chạy', queued: 'Đang chờ', draft: 'Nháp' };
 
 export const STATUS_TONE_RUN: Record<string, string> = { completed: 'good', awaiting_acceptance: 'info', awaiting_approval: 'info', blocked: 'warn', failed: 'bad', paused: 'warn', running: 'info', queued: 'info', draft: 'neutral' };
-
-export const WAIT: Record<WaitingItem['kind'], { label: string; action: string; tone: string }> = {
-  accept: { label: 'Chờ nghiệm thu', action: 'Xem & nghiệm thu', tone: 'good' },
-  'approve-contract': { label: 'Chờ duyệt hợp đồng', action: 'Duyệt hợp đồng', tone: 'info' },
-  'approve-policy': { label: 'Policy chưa duyệt', action: 'Duyệt policy', tone: 'info' },
-  blocked: { label: 'Bị chặn', action: 'Xem lý do', tone: 'warn' },
-  failed: { label: 'Thất bại', action: 'Xem lỗi', tone: 'bad' },
-  paused: { label: 'Tạm dừng', action: 'Mở task', tone: 'neutral' },
-};
 
 export const WASTE_LABEL: Record<WasteItem['kind'], [string, string]> = { 'repeat-review': ['Verifier lặp', 'warn'], 'provider-error': ['Lỗi provider', 'warn'], failed: ['Lượt lỗi', 'bad'], stuck: ['Kẹt chờ bạn', 'neutral'] };
 

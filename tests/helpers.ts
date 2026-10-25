@@ -33,8 +33,27 @@ export function setup(fake: FakeOptions = {}, project: Partial<ProjectProfile> =
   /** Drives a run from creation through contract approval until it next waits for a person. */
   const drive = async (run: Run): Promise<Run> => {
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
     return store.runs.get(run.id)!;
   };
   return { store, runtime, orchestrator, create, drive };
+}
+
+/** Existing regression scenarios also exercise persisted runs created before quality policy v1.
+ * New quality-policy tests use setup(), which keeps the production default enabled.
+ */
+export function setupLegacy(...args: Parameters<typeof setup>) {
+  const env = setup(...args);
+  return { ...env, create: (input: Partial<CreateRunInput> = {}) => {
+    const run = env.create(input);
+    delete run.qualityPolicyVersion;
+    env.store.runs.put(run);
+    return run;
+  } };
+}
+
+/** Pin pre-v3 fixtures to their original protocol, preserving legacy recovery/hash regression coverage. */
+export function setupV2(...args:Parameters<typeof setup>){
+  const env=setup(...args);
+  return {...env,create:(input:Partial<CreateRunInput>={})=>{const run=env.create(input);if(run.mode==='verify'){run.qualityPolicyVersion=2;env.store.runs.put(run);}return run;}};
 }

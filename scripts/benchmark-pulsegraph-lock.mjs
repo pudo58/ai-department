@@ -1,0 +1,11 @@
+import {readFile,writeFile} from 'node:fs/promises';import {execFileSync} from 'node:child_process';import {createHash} from 'node:crypto';import path from 'node:path';
+const root=path.resolve('.'),out=path.join(root,'test-results/2026-10-25-pulsegraph'),hash=x=>createHash('sha256').update(x).digest('hex');
+const p=JSON.parse(await readFile(path.join(out,'protocol.json'),'utf8'));
+for(const file of ['SPEC.md','grade.mjs','reference.mjs'])p[file==='SPEC.md'?'specHash':file==='grade.mjs'?'graderHash':'referenceHash']=hash(await readFile(path.join(out,file)));
+p.auditHash=hash(await readFile(path.join(out,'grader-audit.json')));
+const files=execFileSync('git',['ls-files','--cached','--others','--exclude-standard','-z'],{encoding:'utf8',windowsHide:true}).split('\0').filter(Boolean).filter(x=>!x.split(/[\\/]/).some(s=>s.startsWith('.env'))).sort();
+const manifest=[];for(const file of files)manifest.push({path:file,sha256:hash(await readFile(path.join(root,file)))});
+await writeFile(path.join(out,'source-manifest.json'),JSON.stringify(manifest,null,2));
+p.sourceManifestHash=hash(await readFile(path.join(out,'source-manifest.json')));
+p.setupHash=hash(await readFile(path.join(out,'setup.mjs')));
+await writeFile(path.join(out,'protocol.json'),JSON.stringify(p,null,2));console.log(JSON.stringify({lockedAt:p.lockedAt,baseSha:p.baseSha,specHash:p.specHash,graderHash:p.graderHash,referenceHash:p.referenceHash,auditHash:p.auditHash,sourceManifestHash:p.sourceManifestHash,model:p.model,effort:p.effort}));

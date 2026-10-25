@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { buildMonitor, PERIODS } from '../../core/monitor.js';
+import { buildMonitor, monitorRequests, PERIODS } from '../../core/monitor.js';
 import { diskSpace } from '../storage.js';
 import { type LogEntry, type LogQuery, matchesLog } from '../store.js';
 import type { RouteContext } from './context.js';
@@ -61,5 +61,12 @@ export function registerMonitorRoutes({ app, store, dataDir }: RouteContext): vo
         stages: { setup: recentLogs.some((e) => e.source === 'setup'), check: recentLogs.some((e) => e.source.startsWith('check:')) },
       },
     });
+  });
+
+  app.get('/api/monitor/requests', async (request, reply) => {
+    const { run: runId } = z.object({ run: z.string().min(1).max(60) }).parse(request.query);
+    const run = store.runs.get(runId);
+    if (!run) return reply.code(404).send({ error: 'Không tìm thấy task.' });
+    return monitorRequests(run, store.attempts.list(runId));
   });
 }

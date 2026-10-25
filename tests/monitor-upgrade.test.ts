@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
-import { buildMonitor } from '../src/core/monitor.js';
+import { buildMonitor, monitorRequests } from '../src/core/monitor.js';
 import { findWaste } from '../src/core/waste.js';
 import { resolveCodexModel } from '../src/runtime/codexmodel.js';
 import { buildApp } from '../src/server/app.js';
@@ -58,6 +58,34 @@ describe('waste: spending that bought nothing new', () => {
 });
 
 describe('monitor: where the money went, what changed, what waits for you', () => {
+  it('returns the full waiting queue with project metadata instead of hiding work beyond thirty items', () => {
+    const runs = Array.from({ length: 65 }, (_, i) => makeRun({ id: `wait-${i}`, projectId: 'a', status: 'awaiting_acceptance' }));
+    const result = buildMonitor({ runs, attempts: [], now: NOW, period: 'today', errorsLastHour: 0, activity, projects: [profile({ id: 'a', name: 'Alpha' })] });
+    expect(result.waiting).toHaveLength(65); expect(result.projects).toEqual([{ id: 'a', name: 'Alpha' }]);
+    expect(result.waiting[64]!.projectId).toBe('a');
+  });
+  it('loads a selected task history independently of the eighty-request global feed', () => {
+    const old = makeRun({ id: 'older', projectId: 'a' }), newer = makeRun({ id: 'newer', projectId: 'b' });
+    const older = att(old, 'developer', -100 * H), parts = Array.from({ length: 90 }, (_, i) => att(newer, 'developer', -i * 1000));
+    old.usage = [older.u]; newer.usage = parts.map(p => p.u);
+    const attempts = [older.a, ...parts.map(p => p.a)];
+    const result = buildMonitor({ runs: [old, newer], attempts, now: NOW, period: 'today', errorsLastHour: 0, activity });
+    expect(result.recent.some(a => a.runId === old.id)).toBe(false);
+    expect(monitorRequests(old, attempts)).toEqual([expect.objectContaining({ id: older.a.id, runId: old.id, projectId: 'a', inputTokens: older.u.inputTokens })]);
+    expect(monitorRequests(newer, attempts)).toHaveLength(40);
+  });
+  it('serves selected-task request history through the API and rejects missing/unknown task ids', async () => {
+    const e = setup(), run = e.create(), part = att(run, 'developer', -100 * H);
+    e.store.runs.put({ ...run, usage: [part.u] }); e.store.attempts.put(part.a);
+    const app = await buildApp({ ...e, dataDir: mkdtempSync(path.join(tmpdir(), 'aidept-monitor-queue-')), port: 14339 });
+    try {
+      const headers = { host: '127.0.0.1:14339' };
+      const response = await app.inject({ url: `/api/monitor/requests?run=${run.id}`, headers });
+      expect(response.statusCode).toBe(200); expect(response.json()).toEqual([expect.objectContaining({ runId: run.id, projectId: run.projectId, model: 'gpt-6.1-sol', inputTokens: part.u.inputTokens })]);
+      expect((await app.inject({ url: '/api/monitor/requests', headers })).statusCode).toBe(400);
+      expect((await app.inject({ url: '/api/monitor/requests?run=unknown', headers })).statusCode).toBe(404);
+    } finally { await app.close(); e.store.close(); }
+  });
   it('splits cost by task, role and project, compares with the same span a period earlier, and lists waiting work', () => {
     const big = makeRun({ title: 'Sổ chi tiêu', projectId: 'prj_a', status: 'completed', acceptedAt: iso(-H) });
     const small = makeRun({ title: 'Nhỏ', projectId: 'prj_b', status: 'awaiting_approval' });
@@ -118,7 +146,8 @@ describe('storage and cleanup', () => {
   it('decides what may be removed: accepted, idle a week, or orphaned; never running or awaiting acceptance', () => {
     const now = NOW;
     expect(removability(undefined, now).removable).toBe(true);
-    expect(removability(makeRun({ status: 'completed' }), now).removable).toBe(true);
+    expect(removability(makeRun({ status: 'completed' }), now).removable).toBe(false);
+    expect(removability(makeRun({ status: 'completed', checkpoint: 'cp1', delivery: { status: 'succeeded', checkpoint: 'cp1', contractVersion: 1, slot: 'A', kind: 'branch', target: 'aidept/test-A', startedAt: iso(-H), endedAt: iso(-H) } }), now).removable).toBe(true);
     expect(removability(makeRun({ status: 'running' }), now).removable).toBe(false);
     expect(removability(makeRun({ status: 'awaiting_acceptance', updatedAt: iso(-30 * 24 * H) }), now).removable).toBe(false);
     expect(removability(makeRun({ status: 'blocked', updatedAt: iso(-8 * 24 * H) }), now).removable).toBe(true);
@@ -128,7 +157,7 @@ describe('storage and cleanup', () => {
   it('measures working copies per run and removes only eligible ones through the API, with CSRF', async () => {
     const env = setup();
     const dataDir = mkdtempSync(path.join(tmpdir(), 'aidept-storage-'));
-    const done = env.create(); env.store.runs.put({ ...done, status: 'completed' });
+    const done = env.create(); env.store.runs.put({ ...done, status: 'completed', checkpoint: 'cp1', delivery: { status: 'succeeded', checkpoint: 'cp1', contractVersion: done.contract.version, slot: 'A', kind: 'branch', target: `aidept/${done.id}-A`, startedAt: iso(-H), endedAt: iso(-H) } });
     const busy = env.create(); env.store.runs.put({ ...busy, status: 'awaiting_acceptance' });
     for (const [id, size] of [[done.id, 2000], [busy.id, 500], ['run_orphan', 100]] as const) {
       mkdirSync(path.join(dataDir, 'workspaces', `${id}-A`, 'src'), { recursive: true });

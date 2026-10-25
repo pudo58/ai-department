@@ -8,7 +8,7 @@ import { summarizeCheck } from '../src/core/checks.js';
 import { LocalRuntime } from '../src/runtime/local.js';
 import { Orchestrator } from '../src/server/orchestrator.js';
 import { Store } from '../src/server/store.js';
-import { green, profile, report as jsonReport, setup } from './helpers.js';
+import { green, profile, report as jsonReport, setupLegacy as setup } from './helpers.js';
 
 const report = jsonReport;
 /** A passing check whose runner also skipped one test, the exact situation that was nearly accepted unnoticed. */
@@ -145,7 +145,7 @@ describe('the test program while it runs', () => {
     const { orchestrator, create, store } = setup({ check: () => green, checkDelayMs: 300 });
     const run = create();
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id);
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true });
     let seen: { recipeId: string; command: string; ref: string } | undefined;
     for (let i = 0; i < 40 && !seen; i++) { seen = orchestrator.detail(run.id).runningCheck; if (!seen) await new Promise((r) => setTimeout(r, 25)); }
     expect(seen).toMatchObject({ recipeId: 'test', command: 'npm test', ref: 'candidate' });
@@ -169,7 +169,7 @@ describe('what changed, measured against the base snapshot with real git', () =>
     const orchestrator = new Orchestrator(store, () => runtime);
     const run = orchestrator.createRun({ projectId: 'prj_test', title: 'Sửa sumTo', originalRequirement: 'sumTo bỏ sót n', mode: 'single', provider: 'codex', budgetUsd: 5, signals: [] });
     orchestrator.startRun(run.id); await orchestrator.idle();
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
 
     const r = await orchestrator.report(run.id);
     expect(r.changes.available).toBe(true);

@@ -60,7 +60,7 @@ describe.skipIf(!enabled)('DockerRuntime end to end (real Docker)', () => {
     orchestrator.startRun(run.id); await orchestrator.idle();
     const planned = orchestrator.detail(run.id);
     expect(planned.run.status, planned.run.blocker ?? '').toBe('awaiting_approval');
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
 
     const detail = orchestrator.detail(run.id);
     const trace = detail.events.map((e) => `${e.type}: ${e.message}`).join('\n');

@@ -12,11 +12,11 @@ export interface CostRow { key: string; label: string; runId?: string; projectId
 export type WaitingKind = 'approve-contract' | 'accept' | 'blocked' | 'failed' | 'paused' | 'approve-policy';
 /** Something only a person can move forward. */
 export interface WaitingItem { kind: WaitingKind; runId?: string; projectId?: string; title: string; detail: string; updatedAt: string }
-export interface LiveRun { id: string; title: string; stage: string; mode: string; role?: string; attemptStartedAt?: string; spentUsd: number; capUsd: number; budgetPct: number; lastLog?: string }
+export interface LiveRun { id: string; projectId?: string; title: string; stage: string; mode: string; role?: string; attemptStartedAt?: string; spentUsd: number; capUsd: number; budgetPct: number; lastLog?: string }
 export interface Alert { level: 'warn' | 'error'; text: string }
 export interface ModelRow { provider: string; model: string; requests: number; failed: number; inputTokens: number; cachedTokens: number; outputTokens: number; costUsd: number }
 export interface RequestRow {
-  id: string; runId: string; runTitle: string; role: string; slot: string; stage: string; provider: string; model: string; status: string;
+  id: string; runId: string; projectId?: string; runTitle: string; role: string; slot: string; stage: string; provider: string; model: string; status: string;
   startedAt: string; endedAt?: string; error?: string; inputTokens: number; cachedTokens: number; outputTokens: number; costUsd: number;
 }
 export interface Activity {
@@ -26,6 +26,7 @@ export interface Activity {
   stages: { setup: boolean; check: boolean };
 }
 export interface MonitorData {
+  projects?: { id: string; name: string }[];
   now: string; period: Period; unit: 'hour' | 'day';
   totals: Totals; series: Bucket[]; byModel: ModelRow[];
   activeRuns: { id: string; title: string; status: string; stage: string; mode: string; updatedAt: string }[];
@@ -73,10 +74,26 @@ const PERIOD_MS: Record<Period, number> = { today: 24 * HOUR, '24h': 24 * HOUR, 
 const ROLE_LABEL: Record<string, string> = { planner: 'Planner', author: 'Author', developer: 'Developer', verifier: 'Verifier', investigator: 'Investigator' };
 const WAIT_KIND: Record<string, WaitingKind> = { awaiting_approval: 'approve-contract', awaiting_acceptance: 'accept', blocked: 'blocked', failed: 'failed', paused: 'paused' };
 
+/** Per-task requests are independent of the capped global activity feed and of the cost period. */
+export function monitorRequests(run: Run, attempts: readonly Attempt[], limit = 40): RequestRow[] {
+  const usage = new Map<string, { inputTokens: number; cachedTokens: number; outputTokens: number; costUsd: number }>();
+  for (const u of run.usage) {
+    const row = usage.get(u.attemptId) ?? { inputTokens: 0, cachedTokens: 0, outputTokens: 0, costUsd: 0 };
+    row.inputTokens += u.inputTokens; row.cachedTokens += u.cachedTokens; row.outputTokens += u.outputTokens; row.costUsd += usageCost(u);
+    usage.set(u.attemptId, row);
+  }
+  return attempts.filter(a => a.runId === run.id).sort((a, b) => b.startedAt.localeCompare(a.startedAt)).slice(0, limit).map(a => ({
+    id: a.id, runId: run.id, projectId: run.projectId, runTitle: run.title, role: a.role, slot: a.slot, stage: a.stage, provider: a.provider, model: a.model,
+    status: a.status, startedAt: a.startedAt, endedAt: a.endedAt, error: a.error,
+    ...(usage.get(a.id) ?? { inputTokens: 0, cachedTokens: 0, outputTokens: 0, costUsd: 0 }),
+  }));
+}
+
 export function buildMonitor({ runs, attempts, now, period, errorsLastHour, activity, projects = [], lastLogByRun = {}, alerts = [] }: MonitorInput): MonitorData {
   const start = periodStart(period, now);
   const unit: 'hour' | 'day' = period === 'today' || period === '24h' ? 'hour' : 'day';
   const title = new Map(runs.map((r) => [r.id, r.title]));
+  const projectOfRun = new Map(runs.map(r => [r.id, r.projectId]));
 
   const empty = () => ({ inputTokens: 0, cachedTokens: 0, outputTokens: 0, costUsd: 0 });
   const perAttempt = new Map<string, ReturnType<typeof empty>>();
@@ -105,7 +122,7 @@ export function buildMonitor({ runs, attempts, now, period, errorsLastHour, acti
 
   const models = new Map<string, ModelRow>();
   const toRow = (a: Attempt): RequestRow => ({
-    id: a.id, runId: a.runId, runTitle: title.get(a.runId) ?? a.runId, role: a.role, slot: a.slot, stage: a.stage, provider: a.provider, model: a.model,
+    id: a.id, runId: a.runId, projectId: projectOfRun.get(a.runId), runTitle: title.get(a.runId) ?? a.runId, role: a.role, slot: a.slot, stage: a.stage, provider: a.provider, model: a.model,
     status: a.status, startedAt: a.startedAt, endedAt: a.endedAt, error: a.error, ...(perAttempt.get(a.id) ?? empty()),
   });
   for (const a of attempts) {
@@ -184,7 +201,7 @@ export function buildMonitor({ runs, attempts, now, period, errorsLastHour, acti
     const mine = attempts.filter((a) => a.runId === r.id);
     const running = mine.find((a) => a.status === 'running');
     const budget = budgetState(r, mine);
-    return { id: r.id, title: r.title, stage: r.stage, mode: r.mode, role: running?.role, attemptStartedAt: running?.startedAt, spentUsd: budget.spentUsd, capUsd: budget.capUsd, budgetPct: budget.capUsd > 0 ? budget.spentUsd / budget.capUsd : 0, lastLog: lastLogByRun[r.id] };
+    return { id: r.id, projectId: r.projectId, title: r.title, stage: r.stage, mode: r.mode, role: running?.role, attemptStartedAt: running?.startedAt, spentUsd: budget.spentUsd, capUsd: budget.capUsd, budgetPct: budget.capUsd > 0 ? budget.spentUsd / budget.capUsd : 0, lastLog: lastLogByRun[r.id] };
   });
 
   return {
@@ -192,7 +209,7 @@ export function buildMonitor({ runs, attempts, now, period, errorsLastHour, acti
     previous, cacheRate: totals.inputTokens > 0 ? totals.cachedTokens / totals.inputTokens : 0,
     acceptedInPeriod: accepted.length, costPerAccepted: accepted.length ? accepted.reduce((sum, r) => sum + lifeCost(r), 0) / accepted.length : null,
     byTask: byCost(tasks).slice(0, 50), byRole: byCost(roles), byProject: byCost(projectRows),
-    waste: findWaste(runs, attempts, start, now), waiting: waiting.slice(0, 30), live, alerts: [...alerts],
+    waste: findWaste(runs, attempts, start, now), waiting, live, alerts: [...alerts], projects: projects.map(p => ({ id: p.id, name: p.name })),
     series: [...buckets.values()],
     byModel: [...models.values()].sort((a, b) => b.requests - a.requests),
     activeRuns: runs.filter((r) => r.status === 'queued' || r.status === 'running').map((r) => ({ id: r.id, title: r.title, status: r.status, stage: r.stage, mode: r.mode, updatedAt: r.updatedAt })),

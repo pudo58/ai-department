@@ -110,12 +110,17 @@ details > summary:hover { color: var(--text); }
   background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: none;
 }
 .card { padding: 16px 20px; } .panel { padding: 20px 24px; } .panel-card { padding: 16px 20px; min-width: 0; }
+.execution-panel { min-width: 0; margin-bottom: 16px; }
+.execution-panel p { overflow-wrap: anywhere; }
+.execution-panel pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; }
+.execution-panel details { margin-top: 10px; }
 .panel-card h3, .chart-card h3, .recent h3 { margin: 0; font-size: .95rem; font-weight: 600; color: var(--text); }
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
 .card-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; } .card-head h3, .card-head h2 { margin: 0; }
 .section-title { margin: 28px 0 12px; }
 .panel h3 { margin: 20px 0 8px; } .panel > .card-head + * { margin-top: 12px; }
 .section-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; } .stack { display: grid; gap: 16px; }
+.section-split > .panel { min-width: 0; overflow-wrap: anywhere; }
 .facts { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin: 12px 0; font-size: .9rem; }
 .facts dt { color: var(--text-3); } .facts dd { margin: 0; overflow-wrap: anywhere; }
 .plain-list { margin: 6px 0; padding-left: 20px; color: var(--text-2); } .plain-list li { margin: 4px 0; } .warn-list li { color: var(--warn-text); }
@@ -166,9 +171,12 @@ tr.sum-row td { font-size: .8rem; color: var(--text-3); font-weight: 600; backgr
 .filelist code { background: none; color: var(--text); padding: 0; flex: 1; overflow-wrap: anywhere; } .filelist .num { min-width: 38px; }
 .kind { min-width: 54px; text-align: center; padding: 1px 8px; border-radius: 99px; font-size: .74rem; font-weight: 600; background: var(--gray-bg); color: var(--gray-text); }
 .kind-added { background: var(--green-bg); color: var(--green-text); } .kind-deleted { background: var(--red-bg); color: var(--red-text); } .kind-modified { background: var(--blue-bg); color: var(--blue-text); }
-.cmdlist { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.cmdlist { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; gap: 6px; }
 .cmdlist li, .copy-line { display: flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 4px 4px 11px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-subtle); }
 .cmdlist code, .copy-line code { min-width: 0; flex: 1; overflow-x: auto; white-space: nowrap; font-size: .8rem; color: var(--text); background: none; padding: 0; }
+.cmdlist li { min-width: 0; align-items: flex-start; }
+.cmdlist code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.cmdlist .icon-button { flex: 0 0 30px; }
 .copy-line .button { flex: none; }
 .detect-pre { margin: 0; padding: 9px 11px; max-height: 150px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: .82rem/1.5 var(--mono); color: var(--text-2); background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); }
 .tally { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: .84rem; font-weight: 600; background: var(--gray-bg); color: var(--gray-text); font-variant-numeric: tabular-nums; }

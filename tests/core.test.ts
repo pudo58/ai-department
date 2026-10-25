@@ -186,7 +186,9 @@ describe('selection and tools', () => {
 describe('agent output parsing', () => {
   it('takes the last json block and rejects prose-only replies', () => {
     expect(extractJsonBlock('a\n```json\n{"x":1}\n```\nb\n```json\n{"x":2}\n```')).toEqual({ x: 2 });
+    expect(extractJsonBlock(' {"x":1} \n')).toEqual({ x: 1 });
     expect(() => extractJsonBlock('no block here')).toThrow();
+    expect(() => extractJsonBlock('Here is the result: {"x":1}')).toThrow();
     expect(() => extractJsonBlock('```json\n{broken\n```')).toThrow();
   });
   it('rejects schema violations rather than guessing', () => {

@@ -182,7 +182,7 @@ export const agyWritePreamble = (workdir: string): string => `Chế độ sửa 
 /** One `--input-format stream-json` message: the prompt goes through stdin, so its length is not capped by the command line. */
 export const agyInput = (prompt: string, preamble = AGY_READ_ONLY_PREAMBLE): string => `${JSON.stringify({ event: 'user', message: { role: 'user', content: `${preamble}\n\n${prompt}` } })}\n`;
 
-export interface CliCommandOptions { provider: CliProvider; model: string; effort?: string; sessionId?: string; singleAgent: boolean; workdir?: string;
+export interface CliCommandOptions { provider: CliProvider; model: string; effort?: string; sessionId?: string; singleAgent: boolean; readOnly?: boolean; workdir?: string;
   /** Antigravity as Developer or Author: accept-edits instead of plan mode (its permission rules still keep writes in the copy). */
   write?: boolean;
   /** Claude on this machine: use the person's own login (subscription) instead of --bare's API-key-only mode. */
@@ -211,7 +211,7 @@ export function buildCliCommand(options: CliCommandOptions): string[] {
     return args;
   }
   if (options.provider === 'codex') {
-    const common = ['--json', '-c', 'approval_policy="never"', '-c', 'sandbox_mode="workspace-write"'];
+    const common = ['--json', '-c', 'approval_policy="never"', '-c', options.readOnly ? 'sandbox_mode="read-only"' : 'sandbox_mode="workspace-write"'];
     if (options.singleAgent) common.push('-c', 'features.multi_agent=false');
     for (const override of options.extraConfig ?? []) common.push('-c', override);
     if (options.effort && /^[a-z]+$/.test(options.effort)) common.push('-c', `model_reasoning_effort="${options.effort}"`);
@@ -226,16 +226,18 @@ export function buildCliCommand(options: CliCommandOptions): string[] {
     // working copy; shell access is limited to the tools a coding task needs, anything else is refused (headless).
     const skills = options.pluginDirs?.length ? ['Skill', ...(options.skillScripts ? SKILL_SCRIPT_TOOLS : [])] : [];
     const args = ['claude', '-p', '--output-format', 'stream-json', '--verbose', '--setting-sources', 'project,local', '--strict-mcp-config',
-      '--permission-mode', 'acceptEdits', '--allowedTools', ...LOCAL_CLAUDE_TOOLS, ...skills];
+      '--permission-mode', options.readOnly ? 'dontAsk' : 'acceptEdits', '--allowedTools', ...(options.readOnly ? ['Read', 'Glob', 'Grep'] : [...LOCAL_CLAUDE_TOOLS, ...skills])];
     for (const dir of options.pluginDirs ?? []) args.push('--plugin-dir', dir);
     if (options.model) args.push('--model', options.model);
     if (options.sessionId) args.push('--resume', options.sessionId);
-    if (options.singleAgent) args.push('--disallowedTools', 'Agent,Task');
+    if (options.readOnly) args.push('--disallowedTools', 'Write,Edit,NotebookEdit,Bash,Agent,Task');
+    else if (options.singleAgent) args.push('--disallowedTools', 'Agent,Task');
     return args;
   }
   const args = ['claude', '-p', '--output-format', 'stream-json', '--verbose', '--permission-mode', 'dontAsk', '--bare'];
   if (options.model) args.push('--model', options.model);
   if (options.sessionId) args.push('--resume', options.sessionId);
-  if (options.singleAgent) args.push('--disallowedTools', 'Agent,Task');
+  if (options.readOnly) args.push('--disallowedTools', 'Write,Edit,NotebookEdit,Bash,Agent,Task');
+  else if (options.singleAgent) args.push('--disallowedTools', 'Agent,Task');
   return args;
 }

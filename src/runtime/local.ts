@@ -1,3 +1,7 @@
+import { detectMutation } from './mutationdetect.js';
+import { probeEnvironment } from './preflight.js';
+import { runMutation, type MutationExecution } from './mutation.js';
+import { replayFinding, recoverReplays, type ReproductionExecution } from './reproduction.js';
 import { createHash } from 'node:crypto';
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -126,6 +130,17 @@ export class LocalRuntime implements Runtime {
     return result;
   }
 
+  async preflight(run: Run, slot: Slot, signal?: AbortSignal) {
+    const cwd=this.ws.dir(run,slot);
+    // A probe may reuse prepared tools, but must never install tools when a server was restarted.
+    const prepared=await this.toolHomes.get(cwd);
+    const env=this.toolchains.env(cwd,prepared?.homes);
+    return probeEnvironment(run,cwd,this.name,async(command,timeoutMs)=>{
+      const [exe,...args]=resolveHostCommand(command);
+      return executeFile(exe!,args,{cwd,env,signal,timeoutMs});
+    },signal);
+  }
+
   async runAgent(exec: AgentExecution): Promise<AgentResult> {
     const { run, attempt, role } = exec;
     const config = run.configSnapshot.roles[role as Role];
@@ -135,7 +150,7 @@ export class LocalRuntime implements Runtime {
     if (config.provider !== 'codex') throw new RuntimeBlockedError(`Provider ${config.provider} chưa hỗ trợ chạy local.`);
     const collector = new JsonlCollector({ provider: 'codex', previousCumulativeUsage: exec.previousUsage, onEvent: exec.onEvent });
     // buildCliCommand starts with the bare "codex"; the resolved prefix replaces it.
-    const cmd = buildCliCommand({ provider: 'codex', model: config.model, effort: config.effort, sessionId: exec.sessionId, singleAgent: run.mode === 'single', workdir: cwd,
+    const cmd = buildCliCommand({ provider: 'codex', model: config.model, effort: config.effort, sessionId: exec.sessionId, singleAgent: run.mode === 'single', readOnly: exec.readOnly, workdir: cwd,
       // --ignore-user-config drops the user's [windows] sandbox setting and Codex falls back to read-only, so the first turn
       // could not write anything. The elevated sandbox is the one Codex's own Windows setup installs.
       extraConfig: process.platform === 'win32' ? ['windows.sandbox="elevated"'] : [] });
@@ -166,7 +181,7 @@ export class LocalRuntime implements Runtime {
     if (!status.loggedIn) throw new RuntimeBlockedError('Claude Code chưa đăng nhập. Xem trang Kết nối AI.');
     const collector = new JsonlCollector({ provider: 'claude', previousCumulativeUsage: exec.previousUsage, onEvent: exec.onEvent });
     const plugin = exec.skills?.length ? await claudeSkillPlugin(this.options.dataDir, exec.attempt.id, exec.skills) : undefined;
-    const cmd = buildCliCommand({ provider: 'claude', model: config.model, sessionId: exec.sessionId, singleAgent: run.mode === 'single', workdir: cwd, local: true,
+    const cmd = buildCliCommand({ provider: 'claude', model: config.model, sessionId: exec.sessionId, singleAgent: run.mode === 'single', readOnly: exec.readOnly, workdir: cwd, local: true,
       pluginDirs: plugin ? [plugin.dir] : [], skillScripts: !!exec.skills?.some((s) => s.hasScripts) });
     const [exe, ...prefixArgs] = this.options.claudeCommand ?? resolveClaudeCommand();
     const result = await executeFile(exe!, [...prefixArgs, ...cmd.slice(1)], {
@@ -195,7 +210,7 @@ export class LocalRuntime implements Runtime {
   private async runAntigravity(exec: AgentExecution, cwd: string): Promise<AgentResult> {
     const { run, role, attempt } = exec;
     const config = run.configSnapshot.roles[role as Role];
-    const write = !READ_ONLY_ROLES.includes(role as Role);
+    const write = !exec.readOnly && !READ_ONLY_ROLES.includes(role as Role);
     // The rules name drive roots; they were only measured on Windows.
     if (write && process.platform !== 'win32') throw new RuntimeBlockedError(`Antigravity làm ${role} (thử nghiệm) mới được kiểm chứng trên Windows. Trên máy này hãy giao vai đó cho Codex hoặc Claude.`);
     const status = await cachedCliStatus('antigravity');
@@ -207,7 +222,7 @@ export class LocalRuntime implements Runtime {
     const userBefore = await hashFiles(userFiles);
     const home = await createAgyHome(path.join(this.options.dataDir, 'agy'), cwd, write);
     const collector = new JsonlCollector({ provider: 'antigravity', onEvent: exec.onEvent });
-    const cmd = buildCliCommand({ provider: 'antigravity', model: config.model, effort: config.effort, singleAgent: run.mode === 'single', workdir: cwd, write });
+    const cmd = buildCliCommand({ provider: 'antigravity', model: config.model, effort: config.effort, singleAgent: run.mode === 'single', readOnly: exec.readOnly, workdir: cwd, write });
     const [exe, ...prefixArgs] = this.options.agyCommand ?? resolveAgyCommand();
     const result = await executeFile(exe!, [...prefixArgs, ...cmd.slice(1)], {
       cwd, env: home.env, input: agyInput(exec.prompt, write ? agyWritePreamble(cwd) : undefined), signal: exec.signal,
@@ -266,8 +281,10 @@ export class LocalRuntime implements Runtime {
   changes = (run: Run, slot: Slot): Promise<ChangeSet> => this.ws.changes(run, slot);
   commit = (run: Run, slot: Slot, message: string): Promise<string> => this.ws.commit(run, slot, message);
   revert = (run: Run, slot: Slot): Promise<void> => this.ws.revert(run, slot);
-  deliver = (run: Run, slot: Slot): Promise<string> => this.ws.deliver(run, slot);
+  deliveryTarget = (run: Run, slot: Slot) => this.ws.deliveryTarget(run, slot);
+  deliver = (run: Run, slot: Slot) => this.ws.deliver(run, slot);
   workspacePath = (run: Run, slot: Slot): string => this.ws.dir(run, slot);
+  applyPatch = (run: Run, slot: Slot, patch: string): Promise<void> => this.ws.applyPatch(run, slot, patch);
   baseFiles = (run: Run, slot: Slot): Promise<string[]> => this.ws.baseFiles(run, slot);
   diffSinceBase = (run: Run, slot: Slot) => this.ws.diffSinceBase(run, slot);
 
@@ -296,13 +313,19 @@ export class LocalRuntime implements Runtime {
         report = await readReport(cwd, recipe.reportPath);
       }
       return {
-        exitCode: result.exitCode, durationMs: result.durationMs, checkpoint, report,
+          exitCode: result.exitCode, durationMs: result.durationMs, checkpoint, report, reportRoot: cwd,
         incomplete: result.timedOut || (!!recipe.reportPath && report === undefined),
         log: redactSecrets(`${result.stdout}\n${result.stderr}`.slice(-200_000)),
       };
     };
     return exec.ref === 'base' ? this.ws.withBaseOverlay(run, slot, exec.keepPaths ?? [], execute) : execute();
   }
+
+  detectMutation = (run: Run, slot: Slot) => detectMutation(this.ws.dir(run, slot), run.configSnapshot.mutationRoot);
+  runMutation = (execution: MutationExecution) => runMutation(this.ws, execution);
+  replayFinding = (execution: ReproductionExecution) => replayFinding(this.ws, execution);
+  recoverReplays = (run:Run) => recoverReplays(this.ws,run);
+  recoverMutation = async (run: Run) => { for (const slot of ['A', 'B'] as Slot[]) await rm(`${this.ws.dir(run, slot)}-mutation`, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 }); };
 
   async runTool(_run: Run, _slot: Slot, tool: AnalysisTool): Promise<ToolReport> {
     return notAnalyzed(tool, 'Tool runner với phiên bản pin và config ngoài checkout chưa được cấu hình.');

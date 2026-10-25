@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { estimateTokens } from '../src/core/context.js';
 import { PROMPTS } from '../src/core/prompts.js';
 import { reviewDiff } from '../src/core/reviewdiff.js';
-import { green, profile, red, setup } from './helpers.js';
+import { green, profile, red, setupLegacy as setup } from './helpers.js';
 
 const file = (path: string, lines: number, mark = '+x') => `diff --git a/${path} b/${path}\n--- a/${path}\n+++ b/${path}\n@@ -0,0 +1,${lines} @@\n${Array.from({ length: lines }, (_, i) => `${mark}${i}`).join('\n')}\n`;
 

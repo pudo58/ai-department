@@ -1,7 +1,10 @@
-import { appendFile, copyFile, lstat, mkdir, readdir, readFile, realpath, rm } from 'node:fs/promises';
+import { appendFile, copyFile, lstat, mkdir, readdir, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import path from 'node:path';
-import type { Run, Slot } from '../shared/types.js';
+import type { DeliveryResult, DeliveryTarget, Run, Slot } from '../shared/types.js';
 import { isSafeRelative } from '../core/scope.js';
 import { assertProcessSucceeded, executeFile } from './process.js';
 import type { ChangeSet, PrepareResult } from './types.js';
@@ -132,6 +135,19 @@ export class GitWorkspaces {
     return { files: names.stdout.split('\0').filter(Boolean), patch: patch.stdout };
   }
 
+  async applyPatch(run: Run, slot: Slot, patch: string): Promise<void> {
+    const ws = this.dir(run, slot);
+    const head = await this.git(ws, ['rev-parse', 'HEAD']);
+    assertProcessSucceeded(head, 'git rev-parse (test repair)');
+    if (head.stdout.trim() !== run.checkpoint) throw new Error('Checkpoint workspace đã đổi; không áp dụng bản sửa test cũ.');
+    const status = await this.git(ws, ['status', '--porcelain']);
+    assertProcessSucceeded(status, 'git status (test repair)');
+    if (status.stdout.trim()) throw new Error('Workspace còn thay đổi dở dang; không áp dụng bản sửa test.');
+    const apply = (check: boolean) => executeFile('git', [...SAFE_GIT, '-C', ws, 'apply', ...(check ? ['--check'] : []), '--whitespace=nowarn', '-'], { input: patch, timeoutMs: 30_000 });
+    assertProcessSucceeded(await apply(true), 'git apply --check (test repair)');
+    assertProcessSucceeded(await apply(false), 'git apply (test repair)');
+  }
+
   async commit(run: Run, slot: Slot, message: string): Promise<string> {
     const ws = this.dir(run, slot);
     assertProcessSucceeded(await this.git(ws, ['add', '-A']), 'git add');
@@ -188,7 +204,7 @@ export class GitWorkspaces {
   async diffSinceBase(run: Run, slot: Slot): Promise<{ files: { path: string; added: number; removed: number; status: 'added' | 'modified' | 'deleted' | 'renamed' }[]; patch: string }> {
     const ws = this.dir(run, slot);
     if (!run.baseSha) return { files: [], patch: '' };
-    const head = await this.head(run, slot);
+    const head = run.checkpoint ?? await this.head(run, slot);
     const names = await this.git(ws, ['diff', '--name-status', '-z', '-M', run.baseSha, head]);
     assertProcessSucceeded(names, 'git diff --name-status');
     const stats = await this.git(ws, ['diff', '--numstat', '-z', '-M', run.baseSha, head]);
@@ -216,16 +232,33 @@ export class GitWorkspaces {
     return { files, patch: patch.stdout };
   }
 
-  /** Adds the result as a new local branch in the original repository. Existing branches are never overwritten. */
-  async deliver(run: Run, slot: Slot): Promise<string> {
+  deliveryTarget(run: Run, slot: Slot): DeliveryTarget {
+    return existsSync(path.join(this.snapshotDir(run), '.git'))
+      ? { kind: 'files', target: run.configSnapshot.repository }
+      : { kind: 'branch', target: this.branchName(run, slot) };
+  }
+
+  /** Creates a ref only if absent. Even an existing ancestor must never be moved by delivery. */
+  async deliver(run: Run, slot: Slot): Promise<DeliveryResult> {
+    if (!run.checkpoint) throw new Error('Chưa có checkpoint để giao kết quả.');
     const source = run.configSnapshot.repository;
     if (existsSync(path.join(this.snapshotDir(run), '.git'))) return this.deliverFiles(run, slot, source);
     const branch = this.branchName(run, slot);
-    const exists = await this.git(source, ['rev-parse', '--verify', '--quiet', `refs/heads/${branch}`]);
-    if (exists.exitCode === 0) throw new Error(`Branch ${branch} đã tồn tại trong repository gốc.`);
-    // No leading `+`: a fetch that is not a pure creation must fail rather than move a ref.
-    assertProcessSucceeded(await this.git(source, ['fetch', '--no-tags', this.dir(run, slot), `refs/heads/${branch}:refs/heads/${branch}`]), 'git fetch (giao branch)');
-    return branch;
+    const ref = `refs/heads/${branch}`;
+    const result: DeliveryResult = { kind: 'branch', target: branch, summary: `Đã tạo branch ${branch} trong repository gốc` };
+    const exists = await this.git(source, ['rev-parse', '--verify', '--quiet', ref]);
+    if (exists.exitCode === 0) {
+      if (exists.stdout.trim() === run.checkpoint) return result;
+      throw new Error(`Branch ${branch} đã tồn tại và trỏ tới checkpoint khác; không ghi đè.`);
+    }
+    // Fetch the immutable object, then atomically create a previously absent ref (empty old value).
+    assertProcessSucceeded(await this.git(source, ['fetch', '--no-tags', this.dir(run, slot), run.checkpoint]), 'git fetch (giao checkpoint)');
+    const created = await this.git(source, ['update-ref', ref, run.checkpoint, '']);
+    if (created.exitCode !== 0) {
+      const raced = await this.git(source, ['rev-parse', '--verify', '--quiet', ref]);
+      if (raced.exitCode !== 0 || raced.stdout.trim() !== run.checkpoint) throw new Error(`Branch ${branch} xung đột khi giao; không ghi đè.`);
+    }
+    return result;
   }
 
   /**
@@ -233,39 +266,69 @@ export class GitWorkspaces {
    * written unless every file still matches the snapshot the task started from, so a person's own edits are never
    * overwritten; any conflict aborts with the list.
    */
-  private async deliverFiles(run: Run, slot: Slot, source: string): Promise<string> {
+  private async deliverFiles(run: Run, slot: Slot, source: string): Promise<DeliveryResult> {
     const ws = this.dir(run, slot), snap = this.snapshotDir(run);
     const root = await realpath(source);
     const base = run.baseSha ?? (await this.git(snap, ['rev-parse', 'HEAD'])).stdout.trim();
-    const head = await this.head(run, slot);
+    const head = run.checkpoint!;
     const listed = await this.git(ws, ['diff', '--name-status', '-z', '--no-renames', base, head]);
     assertProcessSucceeded(listed, 'git diff --name-status');
     const parts = listed.stdout.split('\0').filter(Boolean);
-    const plan: { status: string; file: string; target: string }[] = [];
+    const plan: { status: string; file: string; target: string; current?: Buffer; final?: Buffer }[] = [];
+    const expected: { file: string; target: string; final?: Buffer }[] = [];
     const conflicts: string[] = [];
-    const read = async (p: string) => readFile(p).catch(() => undefined);
+    const read = async (p: string) => {
+      try { const info = await lstat(p); if (!info.isFile() || info.isSymbolicLink()) throw new Error(`Không ghi đè đường dẫn không phải file thường: ${p}`); return await readFile(p); }
+      catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined; throw error; }
+    };
     for (let i = 0; i + 1 < parts.length; i += 2) {
       const status = parts[i]![0]!, file = parts[i + 1]!;
       const target = path.resolve(root, file);
       if (!isSafeRelative(file) || !target.startsWith(root + path.sep) || !(await insideRoot(root, target))) { conflicts.push(`${file} (đường dẫn không an toàn)`); continue; }
       const current = await read(target);
       const original = await read(path.join(snap, file));
+      const mode = status === 'D' ? '' : (await this.git(ws, ['ls-tree', head, '--', file])).stdout;
+      if (status !== 'D' && !/^100(644|755) blob /.test(mode)) { conflicts.push(`${file} (không phải file thường)`); continue; }
+      const final = status === 'D' ? undefined : await this.readBlob(ws, head, file);
+      expected.push({ file, target, final });
+      // A previous delivery may have stopped after any one of these files, including a binary modification.
+      if ((final !== undefined && current?.equals(final)) || (!current && status === 'D')) continue;
       // A copy of one of this task's own intermediate versions (e.g. copied out of the workspace to try it) is not a
       // person's edit, so it may be overwritten with the final version.
       const ownVersion = async () => !!current && (await this.versionsInRun(ws, base, head, file)).some((v) => v.equals(current));
       if (status === 'A') {
-        const added = await read(path.join(ws, file));
-        if (current && !(added && current.equals(added)) && !(await ownVersion())) conflicts.push(`${file} (đã có file này trong project)`);
+        if (current && !(await ownVersion())) conflicts.push(`${file} (đã có file này trong project)`);
       } else if (current && (!original || !current.equals(original)) && !(await ownVersion())) conflicts.push(`${file} (đã bị sửa sau khi task bắt đầu)`);
       else if (!current && status === 'M') conflicts.push(`${file} (đã bị xóa khỏi project)`);
-      plan.push({ status, file, target });
+      plan.push({ status, file, target, current, final });
     }
     if (conflicts.length) throw new Error(`Không ghi vào thư mục project vì ${conflicts.length} file xung đột: ${conflicts.slice(0, 10).join('; ')}. Kết quả vẫn nằm trong bản sao làm việc.`);
-    for (const { status, file, target } of plan) {
+    for (const { status, file, target, current, final } of plan) {
+      if (!(await insideRoot(root, target))) throw new Error(`Đường dẫn thay đổi khi giao: ${file}`);
+      const latest = await read(target);
+      if (latest ? !current || !latest.equals(current) : !!current) throw new Error(`File thay đổi khi giao: ${file}. Hãy thử giao lại sau khi xử lý xung đột.`);
       if (status === 'D') await rm(target, { force: true });
-      else { await mkdir(path.dirname(target), { recursive: true }); await copyFile(path.join(ws, file), target); }
+      else {
+        await mkdir(path.dirname(target), { recursive: true });
+        const temp = path.join(path.dirname(target), `.aidept-delivery-${randomUUID()}.tmp`);
+        try { await writeFile(temp, final!, { flag: 'wx' }); await rename(temp, target); }
+        finally { await rm(temp, { force: true }); }
+      }
     }
-    return `đã ghi ${plan.length} file vào ${source}`;
+    // Include files skipped as already delivered: they can also be edited while other files are being copied.
+    for (const { file, target, final } of expected) {
+      if (!(await insideRoot(root, target))) throw new Error(`Đường dẫn thay đổi khi giao: ${file}`);
+      const actual = await read(target);
+      if (final ? !actual?.equals(final) : actual !== undefined) throw new Error(`Nội dung cuối không khớp checkpoint: ${file}. Kết quả chưa được xác nhận giao thành công.`);
+    }
+    return { kind: 'files', target: source, summary: `đã ghi ${parts.length / 2} file vào ${source}` };
+  }
+
+  /** Read committed bytes, never the possibly edited working tree or a lossy UTF-8 conversion. */
+  private async readBlob(ws: string, sha: string, file: string): Promise<Buffer> {
+    const { stdout } = await promisify(execFile)('git', [...SAFE_GIT, '-C', ws, 'show', `${sha}:${file}`],
+      { encoding: 'buffer', maxBuffer: SNAPSHOT_MAX_BYTES, timeout: 120_000, windowsHide: true });
+    return stdout;
   }
 
   /** Every committed version of a file between the base and the checkpoint (newest first, at most 20). */

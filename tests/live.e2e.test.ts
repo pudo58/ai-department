@@ -59,7 +59,7 @@ describe.skipIf(!enabled)('live Codex agent, local runtime', () => {
 
     orchestrator.startRun(run.id); await orchestrator.idle();
     expect(orchestrator.detail(run.id).run.status, dump()).toBe('awaiting_approval');
-    orchestrator.approveContract(run.id); await orchestrator.idle();
+    orchestrator.approveContract(run.id, { contractHash: orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true }); await orchestrator.idle();
 
     const detail = orchestrator.detail(run.id);
     console.log(dump());
