@@ -1,0 +1,47 @@
+{
+  "task": "slugify",
+  "arm": "department",
+  "tag": "c1",
+  "runId": "run_de776654",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "taskHash": "f071874f7407426a4e6123f00fbeeabaac19c49f0001240bb6f24f7013369161",
+  "startedAt": "2026-10-26T07:00:14.097Z",
+  "interventions": [
+    {
+      "type": "contract_approved_unchanged",
+      "hash": "4d516f7964f2b02be52af4115e08e406ccdaeb61e1fbc1d77aaf6e176b88eb5a",
+      "warnings": 2,
+      "at": "2026-10-26T07:01:33.724Z"
+    }
+  ],
+  "endedAt": "2026-10-26T07:04:21.956Z",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "automaticMs": 237291,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 17,
+    "total": 17,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 0.5591292,
+  "estimatedCost": true,
+  "attempts": 5,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": []
+}
