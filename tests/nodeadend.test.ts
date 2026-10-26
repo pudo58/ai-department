@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { initialContract } from '../src/core/contract.js';
 import { DiagnosisSchema, diagnosisProblems, normalizeDiagnosis } from '../src/core/diagnosis.js';
+import { authorRepairSourceProblems } from '../src/core/authoring.js';
+import { manifestFindings, StoredManifestSchema } from '../src/core/testplan.js';
 import { blocksCompletion, needsAutoRepair } from '../src/core/findings.js';
 import type { Finding } from '../src/shared/types.js';
 import { reasoningPlan } from './reasoning-fixtures.js';
@@ -75,5 +77,31 @@ describe('findings without a runnable counterexample', () => {
     expect(needsAutoRepair(finding({ status: 'resolved' }), 1)).toBe(false);
     expect(needsAutoRepair(finding(), 2)).toBe(false);
     expect(blocksCompletion(finding({ severity: 'minor' }))).toBe(false);
+  });
+});
+
+describe('manifest repair may add a whole test', () => {
+  const before = "describe('s',()=>{test('old',()=>{const q=make();expect(q.a()).toBe(1);});});";
+  const added = "describe('s',()=>{test('old',()=>{const q=make();expect(q.a()).toBe(1);});test('new',()=>{const q=make();expect(q.a()).toBe(2);});});";
+  it('accepts an added test (for example a missing required case)', () => {
+    expect(authorRepairSourceProblems('tests/a.test.js', before, added)).toEqual([]);
+  });
+  it('still rejects a rewritten or weakened old test, even next to an added one', () => {
+    expect(authorRepairSourceProblems('tests/a.test.js', before, added.replace('make()', 'make(5)')).length).toBeGreaterThan(0);
+    expect(authorRepairSourceProblems('tests/a.test.js', before, added.replace('expect(q.a()).toBe(1);', '')).length).toBeGreaterThan(0);
+    expect(authorRepairSourceProblems('tests/a.test.js', before, added.replace("test('old'", "test('renamed'")).length).toBeGreaterThan(0);
+  });
+});
+
+describe('derived manifests', () => {
+  it('are not blocked for lacking assertion links, and the stored schema keeps the flag', () => {
+    const base = initialContract('Claim each ready job once.');
+    const contract = { ...base, testPlan: reasoningPlan(base) };
+    const entries = [{ caseId: 'C-1', requirementIds: ['R-1'], recipeId: 'test', path: 'tests/q.test.js', identity: { kind: 'json' as const, file: 'tests/q.test.js', titles: ['[R-1][C-1] all jobs'] }, testId: '@json:' + JSON.stringify(['tests/q.test.js', ['[R-1][C-1] all jobs']]) }];
+    const recipes = [{ id: 'test', reportPath: 'r.json' }];
+    expect(manifestFindings(contract, entries, recipes, ['tests/q.test.js']).blocking.join(' ')).toContain('thiếu liên kết assertion');
+    expect(manifestFindings(contract, entries, recipes, ['tests/q.test.js'], { derived: true }).blocking).toEqual([]);
+    const stored = StoredManifestSchema.parse({ schemaVersion: 2, source: 'author', contractHash: 'a'.repeat(64), contractVersion: 1, slot: 'A', entries, derived: true });
+    expect(stored.derived).toBe(true);
   });
 });

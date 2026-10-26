@@ -340,7 +340,7 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
       const changes=await runtime.changes(run,'A');
       if(found.blocking.length||changes.files.length!==draft.paths.length||changes.files.some(f=>!draft.paths.includes(f))){await runtime.revert(run,'A');this.s.log(runId,'author.derive_failed',`Không suy ra được manifest từ tên test: ${found.blocking.slice(0,3).join(' ')}`);return false;}
       const checkpoint=await runtime.commit(run,'A',`${run.title}: acceptance tests (manifest derived from test titles)`);
-      const manifest:TestManifest={schemaVersion:2,source:'author',contractHash:hashContract(run.contract),contractVersion:run.contract.version,slot:'A',entries,advisories:[...new Set(found.advisories)]};
+      const manifest:TestManifest={schemaVersion:2,source:'author',contractHash:hashContract(run.contract),contractVersion:run.contract.version,slot:'A',entries,advisories:[...new Set(found.advisories)],derived:true};
       this.s.artifact(runId,{kind:'acceptance',title:'Test manifest',content:JSON.stringify(manifest),checkpoint});
       this.s.artifact(runId,{kind:'diff',title:'Diff Author',content:changes.patch,checkpoint});
       this.s.mutate(runId,r=>{r.checkpoint=checkpoint;});

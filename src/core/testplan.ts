@@ -113,6 +113,7 @@ export const StoredManifestSchema = ManifestSchema.extend({
   revision: z.object({ previousHash: z.string().regex(/^[a-f0-9]{64}$/), proposalId: text }).optional(),
   assertionAudit: z.array(z.object({ path: text, status: z.enum(['checked', 'unsupported']), assertions: z.number().int().nonnegative(), message: text })).optional(),
   advisories: z.array(z.string()).optional(),
+  derived: z.boolean().optional(),
 });
 
 export interface OracleOptions {

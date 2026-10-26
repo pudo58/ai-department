@@ -37,6 +37,8 @@ export interface TestManifest {
   assertionAudit?: AssertionAudit[];
   /** Binding gaps that weaken the evidence without making the manifest unusable; acknowledged at acceptance. */
   advisories?: string[];
+  /** Built from test titles because the Author's bindings could not be made valid; assertion links are not required of it. */
+  derived?: boolean;
 }
 export interface CaseEvidence {
   caseId: string; requirementIds: string[]; required: boolean; method: TestCase['method'];

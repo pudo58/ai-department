@@ -48,23 +48,43 @@ export const assertionTokens = (expression: string): string => assertionTokenLis
 /** Same members, in any order: the order a manifest lists requirement ids in carries no meaning. */
 export const sameMembers = (a: readonly string[], b: readonly string[]): boolean => new Set(a).size === new Set(b).size && [...new Set(a)].every(x => b.includes(x));
 
-/** A formatting correction may add observations, but cannot rewrite setup or remove old assertions. */
+/** A formatting correction may add observations and whole new tests, but cannot rewrite setup or remove old assertions. */
 export function authorRepairSourceProblems(file: string, before: string, after: string): string[] {
   if (!/\.[cm]?[jt]sx?$/.test(file)) return before === after ? [] : [`${file}: chỉ hỗ trợ sửa binding, không đổi source test ngoài JS/TS.`];
-  const inspect = (source: string) => {
-    const tree = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, /tsx$/.test(file) ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
-    const spans: { start: number; end: number; tokens: string }[] = [];
-    const root = (n: ts.Node): string | undefined => ts.isIdentifier(n) ? n.text : ts.isCallExpression(n) ? root(n.expression) : ts.isPropertyAccessExpression(n) ? root(n.expression) : ts.isAwaitExpression(n) ? root(n.expression) : undefined;
-    const visit = (n: ts.Node): void => {
-      if (ts.isExpressionStatement(n) && ['expect', 'assert'].includes(root(n.expression) ?? '')) spans.push({ start: n.getStart(tree), end: n.end, tokens: assertionTokens(n.expression.getText(tree)) });
-      ts.forEachChild(n, visit);
+  const parse = (source: string) => ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, /tsx$/.test(file) ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+  const isCall = (n: ts.Node, names: string[]): n is ts.CallExpression => ts.isCallExpression(n) && ts.isIdentifier(n.expression) && names.includes(n.expression.text);
+  const staticTitle = (n: ts.CallExpression): string | undefined => { const first = n.arguments[0]; return first && ts.isStringLiteralLike(first) ? first.text : undefined; };
+  /** Every test call with a static title, keyed by its describe chain, so a test added by the correction can be told from one that was there. */
+  const testTitles = (source: string): Set<string> => {
+    const found = new Set<string>(), tree = parse(source);
+    const visit = (n: ts.Node, chain: string[]): void => {
+      if (isCall(n, ['describe', 'test', 'it']) && staticTitle(n) !== undefined) {
+        const title = staticTitle(n)!;
+        if (isCall(n, ['describe'])) { n.arguments.forEach(a => visit(a, [...chain, title])); return; }
+        found.add([...chain, title].join(' > '));
+      }
+      ts.forEachChild(n, c => visit(c, chain));
     };
-    visit(tree);
+    visit(tree, []);
+    return found;
+  };
+  const inspect = (source: string, known?: Set<string>) => {
+    const tree = parse(source);
+    const spans: { start: number; end: number; tokens?: string }[] = [];
+    const root = (n: ts.Node): string | undefined => ts.isIdentifier(n) ? n.text : ts.isCallExpression(n) ? root(n.expression) : ts.isPropertyAccessExpression(n) ? root(n.expression) : ts.isAwaitExpression(n) ? root(n.expression) : undefined;
+    const visit = (n: ts.Node, chain: string[]): void => {
+      // A whole test that the file did not have before is an addition (for example a missing required case), not a rewrite.
+      if (known && ts.isExpressionStatement(n) && isCall(n.expression, ['test', 'it']) && staticTitle(n.expression) !== undefined && !known.has([...chain, staticTitle(n.expression)!].join(' > '))) { spans.push({ start: n.getStart(tree), end: n.end }); return; }
+      if (ts.isExpressionStatement(n) && ['expect', 'assert'].includes(root(n.expression) ?? '')) spans.push({ start: n.getStart(tree), end: n.end, tokens: assertionTokens(n.expression.getText(tree)) });
+      if (isCall(n, ['describe']) && staticTitle(n) !== undefined) { n.arguments.forEach(a => visit(a, [...chain, staticTitle(n)!])); return; }
+      ts.forEachChild(n, c => visit(c, chain));
+    };
+    visit(tree, []);
     let stripped = source;
     for (const s of [...spans].reverse()) stripped = stripped.slice(0, s.start) + stripped.slice(s.end);
-    return { body: assertionTokenList(stripped), assertions: spans.map(s => s.tokens) };
+    return { body: assertionTokenList(stripped), assertions: spans.filter(s => s.tokens !== undefined).map(s => s.tokens!) };
   };
-  const a = inspect(before), b = inspect(after), problems: string[] = [];
+  const a = inspect(before), b = inspect(after, testTitles(before)), problems: string[] = [];
   const diverge = a.body.findIndex((token, i) => token !== b.body[i]);
   if (a.body.length !== b.body.length || diverge >= 0) {
     const at = diverge >= 0 ? diverge : Math.min(a.body.length, b.body.length), show = (t: string[]) => t.slice(Math.max(0, at - 2), at + 4).join(' ') || '(hết file)';

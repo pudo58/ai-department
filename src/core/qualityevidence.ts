@@ -42,7 +42,7 @@ export function qualityDetail(run: Run, checks: readonly CheckResult[], artifact
   const enabled = deepQuality(run), found = readManifest(run, artifacts), live = latestChecks(run, checks);
   const m = found?.manifest;
   const plan = enabled ? testPlanFindings(run.contract, true, run.qualityPolicyVersion === 3) : { blocking: [], advisories: [] };
-  const mf = m && m.source === 'author' ? manifestFindings(run.contract, m.entries, run.configSnapshot.checks, m.entries.map((e) => e.path)) : { blocking: [], advisories: [] };
+  const mf = m && m.source === 'author' ? manifestFindings(run.contract, m.entries, run.configSnapshot.checks, m.entries.map((e) => e.path), { derived: m.derived }) : { blocking: [], advisories: [] };
   const problems = enabled ? [...plan.blocking, ...((run.qualityPolicyVersion??0) >= 2 && run.contract.testPlan?.schemaVersion !== 2 ? ['Chính sách v2+ cần kế hoạch có căn cứ v2.'] : []), ...(!m || m.source !== 'author' ? ['Thiếu manifest test do Author khóa trước Developer.'] : mf.blocking)] : [];
   const manifestAdvisories = [...new Set([...(m?.advisories ?? []), ...mf.advisories])];
   const mutation = readMutation(run, artifacts);
