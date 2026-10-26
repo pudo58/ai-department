@@ -187,7 +187,7 @@ describe('loading skills for an agent', () => {
     expect(dev.skills?.map((s) => s.name)).toEqual(['test-api']);
     expect(dev.prompt).not.toContain('<project_skills>');
     expect(seen.find((e) => e.role === 'planner')!.skills ?? []).toEqual([]);
-    const ctx = store.artifacts.list(run.id).filter((a) => a.kind === 'context' && a.attemptId === store.attempts.list(run.id).find((x) => x.role === 'developer')!.id);
+    const ctx = store.artifacts.list(run.id).filter((a) => a.kind === 'context' && a.title.startsWith('Ngữ cảnh') && a.attemptId === store.attempts.list(run.id).find((x) => x.role === 'developer')!.id);
     expect(JSON.parse(ctx[0]!.content).skills).toEqual([{ name: 'test-api', hash: expect.any(String), delivery: 'workspace', hasScripts: true }]);
   });
 

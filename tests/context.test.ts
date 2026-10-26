@@ -175,7 +175,7 @@ describe('context in real runs', () => {
     expect(seen.developer).toContain('Code nằm ở src/orders');
     expect(seen.developer).not.toContain('ĐỀ XUẤT CHƯA DUYỆT');
     expect(detail.run.context).toMatchObject({ enabled: true });
-    const records = detail.artifacts.filter((a) => a.kind === 'context');
+    const records = detail.artifacts.filter((a) => a.kind === 'context' && a.title.startsWith('Ngữ cảnh'));
     const dev = records.map((a) => JSON.parse(a.content) as { role: string; memoryIds: string[]; contextOn: boolean }).find((c) => c.role === 'developer');
     expect(dev).toMatchObject({ contextOn: true });
     expect(dev!.memoryIds).toHaveLength(1);
