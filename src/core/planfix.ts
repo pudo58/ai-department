@@ -25,7 +25,7 @@ const GROUP_ALIASES: Record<string, string> = {
   edge: 'boundary', edgecase: 'boundary', edgecases: 'boundary', boundaries: 'boundary', validation: 'boundary', invalidinput: 'boundary', input: 'boundary',
   auth: 'authorization', authz: 'authorization', permission: 'authorization', permissions: 'authorization', access: 'authorization', security: 'authorization',
   race: 'concurrency', racecondition: 'concurrency', concurrent: 'concurrency', idempotency: 'concurrency', idempotent: 'concurrency', retry: 'concurrency', replay: 'concurrency', repeat: 'concurrency',
-  failure: 'dependency', failures: 'dependency', error: 'dependency', errors: 'dependency', errorhandling: 'dependency', external: 'dependency', dependencyfailure: 'dependency',
+  external: 'dependency', dependencyfailure: 'dependency', upstream: 'dependency',
   statetransition: 'state', transition: 'state', transitions: 'state', lifecycle: 'state',
   dataconsistency: 'consistency', integrity: 'consistency', atomicity: 'consistency', invariant: 'consistency', invariants: 'consistency',
 };

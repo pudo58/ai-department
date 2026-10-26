@@ -3,7 +3,6 @@ import { planRepairProblems, planRepairNotes, casesNamedBy, UNRESOLVED_PLAN_QUES
 import { parseTestPlanOutput, completeTestPlan } from '../../core/planfix.js';
 import { canonicalJson, hashContract } from '../../core/contract.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
-import { Blocked } from './support.js';
 import { randomUUID } from 'node:crypto';
 import type { Independence, Interpretation, Role } from '../../shared/types.js';
 import type { TestPlan, TestPlanReview } from '../../shared/quality.js';
