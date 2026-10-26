@@ -9,7 +9,8 @@ import { gradeSource, loadTask, repoRoot } from './lib/evaltask.mjs';
 const file = path.resolve(process.argv[2] ?? '');
 const manifest = JSON.parse(await readFile(file, 'utf8'));
 const dir = path.join(repoRoot, 'benchmarks', 'eval', 'amendments', manifest.id);
-const rowsDir = path.join(repoRoot, 'test-results', 'eval-pilot', manifest.id);
+const variantIndex = process.argv.indexOf('--variant'), variant = variantIndex >= 0 ? process.argv[variantIndex + 1] : undefined;
+const rowsDir = path.join(repoRoot, 'test-results', 'eval-pilot', variant ? `${manifest.id}__${variant}` : manifest.id);
 const safe = (id) => id.replace(/[^A-Za-z0-9_-]+/g, '__');
 const amendments = (await readdir(dir).catch(() => [])).filter((f) => f.endsWith('.grade.test.js')).map((f) => f.replace('.grade.test.js', ''));
 
@@ -38,12 +39,12 @@ for (const id of amendments) {
 const out = [];
 for (const a of manifest.assignments) {
   const files = (await readdir(rowsDir)).filter((f) => f.startsWith(`${safe(a.id)}.a`) && f.endsWith('.json')).sort();
-  const rows = (await Promise.all(files.map(async (f) => JSON.parse(await readFile(path.join(rowsDir, f), 'utf8'))))).filter((r) => !r.error);
+  const rows = (await Promise.all(files.map(async (f) => JSON.parse(await readFile(path.join(rowsDir, f), 'utf8'))))).filter((r) => !r.error && !/quá tải|at capacity|quota/i.test(String(r.blocker ?? '')));
   const row = rows.at(-1);
   if (!row) continue;
   const base = { assignmentId: a.id, task: a.taskId, arm: a.arm, asRun: row.grader };
   if (!amendments.includes(a.taskId) || !verified[a.taskId].ok) { out.push({ ...base, amended: row.grader, changed: false }); continue; }
-  const name = `pilot-${safe(a.id)}-a${row.attempt ?? files.length}`;
+  const name = `pilot${variant ? `-${variant}` : ''}-${safe(a.id)}-a${row.attempt ?? files.length}`;
   const data = path.join(repoRoot, '.data', `eval-${name}`);
   const workspace = row.arm === 'native-full' ? path.join(data, 'work') : path.join(data, 'workspaces', `${row.runId}-A`);
   const task = { ...(await loadTask(a.taskId)), graderPath: path.join(dir, `${a.taskId}.grade.test.js`) };

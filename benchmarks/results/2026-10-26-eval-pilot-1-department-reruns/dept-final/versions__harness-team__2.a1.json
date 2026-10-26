@@ -1,0 +1,63 @@
+{
+  "assignmentId": "versions:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "3fd25ce23fd9b871dcd3d6ce4350f0fdf2395059faf97b8309299f609b160ae3",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T12:27:03.435Z",
+  "runId": "run_d37cf720",
+  "mode": "verify",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "automaticMs": 282557,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 21,
+    "total": 21,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.597218,
+  "estimatedCost": true,
+  "attempts": 10,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "verifier:verify:completed",
+    "developer:verify:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 1
+    },
+    {
+      "reason": "invalid_output",
+      "count": 1
+    },
+    {
+      "reason": "implementation",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T12:31:50.175Z"
+}

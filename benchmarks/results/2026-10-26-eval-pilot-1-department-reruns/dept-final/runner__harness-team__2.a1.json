@@ -1,0 +1,69 @@
+{
+  "assignmentId": "runner:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "fa3034e634b3f1c2b916ed6e41e08b1851bc8bc31189103923c94f2cdd06810a",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T12:38:54.380Z",
+  "runId": "run_3b928322",
+  "mode": "verify",
+  "status": "blocked",
+  "blocker": "test: chưa có assertion thất bại đã nhận diện đúng.",
+  "limitReached": false,
+  "automaticMs": 266610,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Sửa test của Author"
+    ],
+    "items": 1
+  },
+  "grader": {
+    "passed": 27,
+    "total": 28,
+    "failed": [
+      "fair scheduling lets the next task of a key that just finished go before a younger task of another key"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": false,
+  "costUsd": 0.9004386,
+  "estimatedCost": true,
+  "attempts": 7,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "author:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 3
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    },
+    {
+      "reason": "user_request",
+      "count": 1
+    },
+    {
+      "reason": "implementation",
+      "count": 2
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged",
+    "test_repair_auto_applied"
+  ],
+  "endedAt": "2026-10-26T12:43:25.289Z"
+}

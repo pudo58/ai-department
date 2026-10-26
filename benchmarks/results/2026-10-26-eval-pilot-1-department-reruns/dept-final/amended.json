@@ -1,0 +1,316 @@
+{
+  "verified": {
+    "pulsegraph": {
+      "ok": true,
+      "problems": []
+    }
+  },
+  "results": [
+    {
+      "assignmentId": "slugify:harness-team:2",
+      "task": "slugify",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "pulsegraph:harness-team:2",
+      "task": "pulsegraph",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 38,
+        "total": 44,
+        "failed": [
+          "input validation rejects a repeated id forever with JOB_EXISTS, even after the job is finished",
+          "input validation rejects unknown ids for cancel and terminal jobs with JOB_TERMINAL",
+          "dependencies and blocking waits for unfinished dependencies and becomes ready when all are done",
+          "dependencies and blocking is ready immediately when its dependencies are already done",
+          "dependencies and blocking does not unblock anything when a job is cancelled after it completed (JOB_TERMINAL)",
+          "snapshot and restore keeps the original and the restored scheduler independent"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 38,
+        "total": 44,
+        "failed": [
+          "input validation rejects a repeated id forever with JOB_EXISTS, even after the job is finished",
+          "input validation rejects unknown ids for cancel and terminal jobs with JOB_TERMINAL",
+          "dependencies and blocking waits for unfinished dependencies and becomes ready when all are done",
+          "dependencies and blocking is ready immediately when its dependencies are already done",
+          "dependencies and blocking does not unblock anything when a job is cancelled after it completed (JOB_TERMINAL)",
+          "snapshot and restore keeps the original and the restored scheduler independent"
+        ]
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "slugify:harness-team:1",
+      "task": "slugify",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "lru:harness-team:2",
+      "task": "lru",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "pulsegraph:harness-team:1",
+      "task": "pulsegraph",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 43,
+        "total": 44,
+        "failed": [
+          "input validation rejects self, duplicate and unknown dependencies with the specified codes"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 44,
+        "total": 44,
+        "failed": []
+      },
+      "changed": true
+    },
+    {
+      "assignmentId": "bookings:harness-team:1",
+      "task": "bookings",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "lru:harness-team:1",
+      "task": "lru",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "charges:harness-team:1",
+      "task": "charges",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "ranges:harness-team:2",
+      "task": "ranges",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "runner:harness-team:1",
+      "task": "runner",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "versions:harness-team:2",
+      "task": "versions",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "versions:harness-team:1",
+      "task": "versions",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "ranges:harness-team:1",
+      "task": "ranges",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "runner:harness-team:2",
+      "task": "runner",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 27,
+        "total": 28,
+        "failed": [
+          "fair scheduling lets the next task of a key that just finished go before a younger task of another key"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 28,
+        "failed": [
+          "fair scheduling lets the next task of a key that just finished go before a younger task of another key"
+        ],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "charges:harness-team:2",
+      "task": "charges",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "bookings:harness-team:2",
+      "task": "bookings",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    }
+  ]
+}

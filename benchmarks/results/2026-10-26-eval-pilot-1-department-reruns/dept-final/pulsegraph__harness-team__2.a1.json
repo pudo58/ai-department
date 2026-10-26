@@ -1,0 +1,71 @@
+{
+  "assignmentId": "pulsegraph:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "e8d9f7cfb2d247f98421d52fd51fdeb80328c8b4dc0bb1be3adef4565f71637f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T11:39:19.318Z",
+  "runId": "run_60cdae36",
+  "mode": "verify",
+  "status": "blocked",
+  "blocker": "1 finding blocker/major chưa xử lý.",
+  "limitReached": false,
+  "automaticMs": 532404,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 1
+  },
+  "grader": {
+    "passed": 38,
+    "total": 44,
+    "failed": [
+      "input validation rejects a repeated id forever with JOB_EXISTS, even after the job is finished",
+      "input validation rejects unknown ids for cancel and terminal jobs with JOB_TERMINAL",
+      "dependencies and blocking waits for unfinished dependencies and becomes ready when all are done",
+      "dependencies and blocking is ready immediately when its dependencies are already done",
+      "dependencies and blocking does not unblock anything when a job is cancelled after it completed (JOB_TERMINAL)",
+      "snapshot and restore keeps the original and the restored scheduler independent"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": false,
+  "costUsd": 2.4478176,
+  "estimatedCost": true,
+  "attempts": 9,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "developer:repair:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 1
+    },
+    {
+      "reason": "check_failure",
+      "count": 2
+    },
+    {
+      "reason": "implementation",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T11:48:15.894Z"
+}

@@ -1,0 +1,59 @@
+{
+  "assignmentId": "bookings:harness-team:1",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T11:08:28.435Z",
+  "runId": "run_6d0d8931",
+  "mode": "verify",
+  "status": "blocked",
+  "blocker": "C-1: thiếu liên kết assertion tới bước đã duyệt. C-2: thiếu liên kết assertion tới bước đã duyệt. C-3: thiếu liên kết assertion tới bước đã duyệt. C-4: thiếu liên kết assertion tới bước đã duyệt. C-5: thiếu liên kết assertion tới bước đã duyệt. C-6: thiếu liên kết assertion tới bước đã duyệt. C-7: thiếu liên kết assertion tới bước đã duyệt. C-8: thiếu liên kết assertion tới bước đã duyệt. C-9: thiếu liên kết assertion tới bước đã duyệt. C-10: thiếu liên kết assertion tới bước đã duyệt. C-1: ca bắt buộc chưa có bằng chứng đạt. C-2: ca bắt buộc chưa có bằng chứng đạt. C-3: ca bắt buộc chưa có bằng chứng đạt. C-4: ca bắt buộc chưa có bằng chứng đạt. C-5: ca bắt buộc chưa có bằng chứng đạt. C-6: ca bắt buộc chưa có bằng chứng đạt. C-7: ca bắt buộc chưa có bằng chứng đạt. C-8: ca bắt buộc chưa có bằng chứng đạt. C-9: ca bắt buộc chưa có bằng chứng đạt. C-10: ca bắt buộc chưa có bằng chứng đạt.",
+  "limitReached": false,
+  "automaticMs": 269165,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Sửa test của Author",
+      "Liên kết assertion sau khi sửa test"
+    ],
+    "items": 2
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 0.8732016,
+  "estimatedCost": true,
+  "attempts": 6,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 1
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged",
+    "test_repair_auto_applied"
+  ],
+  "endedAt": "2026-10-26T11:13:01.801Z"
+}

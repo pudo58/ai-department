@@ -1,0 +1,47 @@
+{
+  "assignmentId": "pulsegraph:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "e8d9f7cfb2d247f98421d52fd51fdeb80328c8b4dc0bb1be3adef4565f71637f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T10:17:34.812Z",
+  "runId": "run_b6c127cb",
+  "mode": "verify",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "automaticMs": 265122,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 43,
+    "total": 44,
+    "failed": [
+      "leases, renewal and expiry requires the matching worker and token for renew, complete and fail"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": true,
+  "costUsd": 0.7659701999999999,
+  "estimatedCost": true,
+  "attempts": 5,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T10:22:05.031Z"
+}

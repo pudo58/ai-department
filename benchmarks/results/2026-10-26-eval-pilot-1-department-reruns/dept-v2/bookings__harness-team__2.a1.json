@@ -1,0 +1,57 @@
+{
+  "assignmentId": "bookings:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T10:46:32.500Z",
+  "runId": "run_1e997b62",
+  "mode": "verify",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\nTest \"[R-9][R-10][C-8] list ordering, room filtering, windows, and invalid queries\" fail: AssertionError: expected [ { id: 'a', room: 'A', …(4) } ] to deeply equal [ { id: 'a', room: 'A', …(4) }, …(1) ]\n    at C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v2-bookings__harness-team__2-a1\\workspaces\\run_1e997b62-A\\tests\\bookings.acceptance.test.js:174:42\n    at processTicksAnd\nJSON report written to C:/Users/tholv/Desktop/ai_department/.data/eval-pilot-dept-v2-bookings__harness-team__2-a1/workspaces/run_1e997b62-A/.aidept-report.json\n\n",
+  "limitReached": false,
+  "automaticMs": 328324,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Sửa test của Author"
+    ],
+    "items": 1
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 0.8437397999999999,
+  "estimatedCost": true,
+  "attempts": 5,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 2
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged",
+    "test_repair_auto_applied"
+  ],
+  "endedAt": "2026-10-26T10:52:05.913Z"
+}

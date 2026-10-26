@@ -56,7 +56,9 @@ async function rowsFor(assignmentId) {
   return Promise.all(files.map((f) => read(path.join(rowsDir, f))));
 }
 /** The latest attempt that was not an infrastructure error is the result; errors stay on disk and are listed by the report. */
-const finalRow = async (id) => (await rowsFor(id)).filter((r) => !r.error).at(-1);
+// A run the model provider turned away (capacity, quota) says nothing about the arm: it counts as infrastructure and is run again.
+const infrastructure = (r) => !!r.error || /quá tải|at capacity|quota/i.test(String(r.blocker ?? ''));
+const finalRow = async (id) => (await rowsFor(id)).filter((r) => !infrastructure(r)).at(-1);
 
 if (command === 'run') {
   const only = flag('only'), armOnly = flag('arm'), limit = Number(flag('limit', '1000')), ids = flag('ids')?.split(',');
@@ -87,7 +89,7 @@ if (command === 'run') {
       const pass = regrade.total > 0 && regrade.passed === regrade.total;
       final = { ...final, grader: { ...final.grader, passed: regrade.passed, total: regrade.total, failed: regrade.failed ?? [] }, graderPass: pass, ...(final.falseReady === null || final.falseReady === undefined ? {} : { falseReady: final.status === 'awaiting_acceptance' && !pass }) };
     }
-    infra.push(...(await rowsFor(a.id)).filter((r) => r.error).map((r) => a.id));
+    infra.push(...(await rowsFor(a.id)).filter(infrastructure).map((r) => a.id));
     if (final) rows.push(final); else missing.push(a.id);
   }
   const records = rows.map((r) => taskRecordFrom(r, manifest.assignments.find((a) => a.id === r.assignmentId), hash));

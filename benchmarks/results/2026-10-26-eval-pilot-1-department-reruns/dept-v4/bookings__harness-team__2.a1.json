@@ -1,0 +1,59 @@
+{
+  "assignmentId": "bookings:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T11:13:01.814Z",
+  "runId": "run_8ee615a9",
+  "mode": "verify",
+  "status": "blocked",
+  "blocker": "Manifest Author vẫn chưa hợp lệ sau một lượt sửa: tests/bookings.acceptance.test.js: lượt sửa manifest không được đổi setup, thao tác, danh tính test hoặc assertion lồng trong biểu thức (khác nhau ở: \"} )\" → \"} ) it ( s:[R-2][C-11] accepts a valid clock value at the requested start ,\"). Định dạng, dấu chấm phẩy, kiểu nháy và comment được phép đổi.",
+  "limitReached": false,
+  "automaticMs": 210492,
+  "reachedDeveloper": false,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 0,
+    "total": 23,
+    "failed": [
+      "validation rejects invalid options with INVALID_INPUT",
+      "validation rejects bad ids, rooms and intervals with the specified codes",
+      "validation allows exactly maxDuration and refuses one minute more",
+      "validation allows a start equal to now but not before it",
+      "validation keeps an id taken forever, but not when the hold was refused",
+      "views has the specified fields for held, confirmed, cancelled and expired bookings",
+      "overlap rules (half-open intervals) lets intervals that only touch coexist, in both orders",
+      "overlap rules (half-open intervals) refuses any real overlap: by one minute, containing, contained and identical"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": false,
+  "costUsd": 0.6786137999999999,
+  "estimatedCost": true,
+  "attempts": 5,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "author:implement:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 2
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T11:16:36.665Z"
+}

@@ -1,0 +1,58 @@
+{
+  "assignmentId": "bookings:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T12:47:58.680Z",
+  "runId": "run_cd721c9c",
+  "mode": "verify",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\nTest \"[R-3][R-5][C-3] used identifiers remain taken after cancellation and expiry\" fail: AssertionError: expected { id: 'a', room: 'A', start: +0, …(2) } to match object { id: 'a', room: 'A', start: +0, …(3) }\n    at Proxy.<anonymous> (file:///C:/Users/tholv/Desktop/ai_department/node_modules/.pnpm/@vitest+expect@3.2.4/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<ano\nTest \"[R-5][C-5] hold expires at the exact TTL boundary\" fail: Error: IN_THE_PAST\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-final-bookings__harness-team__2-a1\\workspaces\\run_cd721c9c-A\\src\\bookings.js:5:17)\n    at Object.hold (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-final-bookings__harness-team__2-a1\\workspaces\\r\nTest \"[R-6][C-6] confirm transitions and failure states\" fail: AssertionError: expected { id: 'c', room: 'A', start: 7, …(2) } to deeply equal { id: 'c', room: 'A', start: 7, …(3) }\n    at C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-final-bookings__harness-team__2-a1\\workspaces\\run_cd721c9c-A\\tests\\bookings.acceptance.test.js:147:22\n    at proces\nTest \"[R-8][R-5][C-8] get views expose expiry only while held\" fail: AssertionError: expected { id: 'c', room: 'A', start: 2, …(2) } to deeply equal { id: 'c', room: 'A', start: 2, …(3) }\n    at C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-final-bookings__harness-team__2-a1\\workspaces\\run_cd721c9c-A\\tests\\bookings.acceptance.test.js:210:17\n    at proces\nTest \"[R-9][C-9] list sorting, room isolation, and half-open window filters\" fail: Error: CONFLICT\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-final-bookings__harness-team__2-a1\\workspaces\\run_cd721c9c-A\\src\\bookings.js:5:17)\n    at Object.hold (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-final-bookings__harness-team__2-a1\\workspaces\\run_\nJSON report written to C:/Users/tholv/Desktop/ai_department/.data/eval-pilot-dept-final-bookings__harness-team__2-a1/workspaces/run_cd721c9c-A/.aidept-report.json\n\n",
+  "limitReached": false,
+  "automaticMs": 400143,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 2
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.7051022000000002,
+  "estimatedCost": true,
+  "attempts": 7,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 2
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T12:54:44.381Z"
+}

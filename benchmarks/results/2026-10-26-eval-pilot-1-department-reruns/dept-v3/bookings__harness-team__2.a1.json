@@ -1,0 +1,58 @@
+{
+  "assignmentId": "bookings:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T11:02:28.182Z",
+  "runId": "run_2c321688",
+  "mode": "verify",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\nTest \"[R-7][R-11][R-12][R-13][R-14][C-5] orders and filters list views and reflects expiry\" fail: Error: CONFLICT\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v3-bookings__harness-team__2-a1\\workspaces\\run_2c321688-A\\src\\bookings.js:3:19)\n    at Object.hold (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v3-bookings__harness-team__2-a1\\workspaces\\run_2c3216\nJSON report written to C:/Users/tholv/Desktop/ai_department/.data/eval-pilot-dept-v3-bookings__harness-team__2-a1/workspaces/run_2c321688-A/.aidept-report.json\n\n",
+  "limitReached": false,
+  "automaticMs": 253116,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 2
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.4118162,
+  "estimatedCost": true,
+  "attempts": 7,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 2
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T11:06:45.494Z"
+}

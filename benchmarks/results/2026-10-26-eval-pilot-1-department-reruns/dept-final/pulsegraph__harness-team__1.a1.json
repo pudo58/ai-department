@@ -1,0 +1,66 @@
+{
+  "assignmentId": "pulsegraph:harness-team:1",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "e8d9f7cfb2d247f98421d52fd51fdeb80328c8b4dc0bb1be3adef4565f71637f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T11:55:11.726Z",
+  "runId": "run_fcdc8475",
+  "mode": "verify",
+  "status": "failed",
+  "blocker": "Developer không thay đổi file nào. Hãy thực sự sửa mã và thêm test gắn thẻ [R-x]; nếu không thể thực thi lệnh hoặc ghi file, hãy nói rõ lý do.",
+  "limitReached": false,
+  "automaticMs": 376015,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 1
+  },
+  "grader": {
+    "passed": 43,
+    "total": 44,
+    "failed": [
+      "input validation rejects self, duplicate and unknown dependencies with the specified codes"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": false,
+  "costUsd": 2.0228508,
+  "estimatedCost": true,
+  "attempts": 9,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 2
+    },
+    {
+      "reason": "check_failure",
+      "count": 1
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T12:01:32.122Z"
+}

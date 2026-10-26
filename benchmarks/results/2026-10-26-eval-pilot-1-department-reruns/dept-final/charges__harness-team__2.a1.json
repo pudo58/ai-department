@@ -1,0 +1,59 @@
+{
+  "assignmentId": "charges:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "f81b2ffc26fb50b69e8d77506f8b1146fb7e68770a4b6b10fd6ab5187549aed3",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T12:43:25.300Z",
+  "runId": "run_6893eade",
+  "mode": "verify",
+  "status": "blocked",
+  "blocker": "Máy chủ của model đang quá tải (Selected model is at capacity. Please try a different model.). Đây không phải lỗi của task; đợi vài phút rồi bấm Chạy tiếp. Công việc đã làm vẫn được giữ.",
+  "limitReached": false,
+  "automaticMs": 269094,
+  "reachedDeveloper": false,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 0,
+    "total": 27,
+    "failed": [
+      "validation and basics rejects invalid options with INVALID_INPUT",
+      "validation and basics validates charge input before authorize is reached",
+      "validation and basics reports balances and deposits, with the specified errors",
+      "charging returns the specified result and a unique chargeId per charge",
+      "charging allows spending the whole balance and refuses to go below zero, changing nothing",
+      "idempotency by key replays the original result with the original balance, without charging again",
+      "idempotency by key replays even when the account could no longer afford the charge",
+      "idempotency by key rejects the same key with another account or amount while live, changing nothing"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": false,
+  "costUsd": 0.6432252,
+  "estimatedCost": true,
+  "attempts": 5,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "author:implement:failed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 2
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T12:47:58.667Z"
+}

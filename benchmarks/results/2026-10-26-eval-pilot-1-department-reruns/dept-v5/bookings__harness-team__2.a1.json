@@ -1,0 +1,61 @@
+{
+  "assignmentId": "bookings:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T11:26:50.187Z",
+  "runId": "run_198d078e",
+  "mode": "verify",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\nTest \"[R-4][R-7][R-8][C-5] expires a hold at the exact boundary\" fail: Error: IN_THE_PAST\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v5-bookings__harness-team__2-a1\\workspaces\\run_198d078e-A\\src\\bookings.js:2:17)\n    at Object.hold (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v5-bookings__harness-team__2-a1\\workspaces\\run_198\nTest \"[R-5][R-6][R-7][R-9][C-6] confirms idempotently and handles inactive holds\" fail: Error: IN_THE_PAST\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v5-bookings__harness-team__2-a1\\workspaces\\run_198d078e-A\\src\\bookings.js:2:17)\n    at Object.hold (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v5-bookings__harness-team__2-a1\\workspaces\\run_198\nJSON report written to C:/Users/tholv/Desktop/ai_department/.data/eval-pilot-dept-v5-bookings__harness-team__2-a1/workspaces/run_198d078e-A/.aidept-report.json\n\n",
+  "limitReached": false,
+  "automaticMs": 409725,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 2
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 2.0690982,
+  "estimatedCost": true,
+  "attempts": 10,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 3
+    },
+    {
+      "reason": "check_failure",
+      "count": 2
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T11:33:44.133Z"
+}

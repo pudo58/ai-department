@@ -1,0 +1,59 @@
+{
+  "assignmentId": "bookings:harness-team:1",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T11:20:29.070Z",
+  "runId": "run_afe69831",
+  "mode": "verify",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\nTest \"RoomBookings public API [R-4][R-5][R-6][R-8][C-4] expires holds at the boundary and keeps confirmed bookings\" fail: Error: IN_THE_PAST\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v5-bookings__harness-team__1-a1\\workspaces\\run_afe69831-A\\src\\bookings.js:2:17)\n    at Object.hold (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v5-bookings__harness-team__1-a1\\workspaces\\run_afe\nTest \"RoomBookings public API [R-5][R-9][C-8] filters and sorts list results by half-open windows\" fail: Error: CONFLICT\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v5-bookings__harness-team__1-a1\\workspaces\\run_afe69831-A\\src\\bookings.js:2:17)\n    at Object.hold (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-dept-v5-bookings__harness-team__1-a1\\workspaces\\run_afe698\nJSON report written to C:/Users/tholv/Desktop/ai_department/.data/eval-pilot-dept-v5-bookings__harness-team__1-a1/workspaces/run_afe69831-A/.aidept-report.json\n\n",
+  "limitReached": false,
+  "automaticMs": 376121,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 2
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.8368658,
+  "estimatedCost": true,
+  "attempts": 8,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 2
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T11:26:50.174Z"
+}
