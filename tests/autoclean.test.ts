@@ -55,3 +55,9 @@ describe('disk preflight helpers', () => {
     expect(minFreeBytes()).toBe(0);
   });
 });
+
+describe('test temp folder', () => {
+  it('is private to this run, so suites cannot leave folders behind in the OS temp folder', () => {
+    expect(tmpdir()).toMatch(/aidept-vitest-/);
+  });
+});
