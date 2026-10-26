@@ -1,0 +1,7 @@
+{
+ "id": "last-error-kept",
+ "description": "lastError survives a later success",
+ "file": "src/scheduler.js",
+ "find": "delete job.lastError;\n      clearLease(job);\n      job.status = 'done';",
+ "replace": "clearLease(job);\n      job.status = 'done';"
+}

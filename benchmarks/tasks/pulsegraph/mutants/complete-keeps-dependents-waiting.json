@@ -1,0 +1,7 @@
+{
+ "id": "complete-keeps-dependents-waiting",
+ "description": "Completing a job does not ready its dependents",
+ "file": "src/scheduler.js",
+ "find": "job.status = 'done';\n      settle();",
+ "replace": "job.status = 'done';"
+}

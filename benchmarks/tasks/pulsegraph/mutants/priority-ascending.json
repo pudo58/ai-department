@@ -1,0 +1,7 @@
+{
+ "id": "priority-ascending",
+ "description": "Smaller priority runs first",
+ "file": "src/scheduler.js",
+ "find": "b.priority - a.priority ||",
+ "replace": "a.priority - b.priority ||"
+}

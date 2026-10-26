@@ -1,0 +1,7 @@
+{
+ "id": "retry-time-ignored",
+ "description": "Retries can be claimed before their availableAt",
+ "file": "src/scheduler.js",
+ "find": "j.status === 'ready' && j.availableAt <= now",
+ "replace": "j.status === 'ready'"
+}

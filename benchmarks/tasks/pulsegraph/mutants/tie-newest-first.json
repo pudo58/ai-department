@@ -1,0 +1,7 @@
+{
+ "id": "tie-newest-first",
+ "description": "Equal priorities run newest first",
+ "file": "src/scheduler.js",
+ "find": "b.priority - a.priority || a.sequence - b.sequence",
+ "replace": "b.priority - a.priority || b.sequence - a.sequence"
+}

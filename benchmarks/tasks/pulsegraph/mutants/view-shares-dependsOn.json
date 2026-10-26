@@ -1,0 +1,7 @@
+{
+ "id": "view-shares-dependsOn",
+ "description": "Views expose the live dependency array",
+ "file": "src/scheduler.js",
+ "find": "dependsOn: [...j.dependsOn], priority: j.priority",
+ "replace": "dependsOn: j.dependsOn, priority: j.priority"
+}

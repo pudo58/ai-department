@@ -1,0 +1,7 @@
+{
+ "id": "backoff-linear",
+ "description": "Backoff adds instead of doubling",
+ "file": "src/scheduler.js",
+ "find": "retryBase * 2 ** (j.attempt - 1)",
+ "replace": "retryBase + j.attempt - 1"
+}

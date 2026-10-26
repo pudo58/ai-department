@@ -1,0 +1,7 @@
+{
+ "id": "block-not-transitive",
+ "description": "Blocking does not propagate through blocked jobs",
+ "file": "src/scheduler.js",
+ "find": "const FAILED = new Set(['dead', 'cancelled', 'blocked']);",
+ "replace": "const FAILED = new Set(['dead', 'cancelled']);"
+}

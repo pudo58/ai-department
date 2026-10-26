@@ -1,0 +1,7 @@
+{
+ "id": "token-reset-on-restore",
+ "description": "Fencing tokens restart after restore",
+ "file": "src/scheduler.js",
+ "find": "nextToken: s.nextToken",
+ "replace": "nextToken: 1"
+}

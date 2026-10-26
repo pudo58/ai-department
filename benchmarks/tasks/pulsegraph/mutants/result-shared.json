@@ -1,0 +1,7 @@
+{
+ "id": "result-shared",
+ "description": "Stored result is not detached from the caller",
+ "file": "src/scheduler.js",
+ "find": "job.result = clone(result)",
+ "replace": "job.result = result"
+}

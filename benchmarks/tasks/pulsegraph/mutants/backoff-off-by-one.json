@@ -1,0 +1,7 @@
+{
+ "id": "backoff-off-by-one",
+ "description": "Backoff exponent is attempt instead of attempt-1",
+ "file": "src/scheduler.js",
+ "find": "retryBase * 2 ** (j.attempt - 1)",
+ "replace": "retryBase * 2 ** j.attempt"
+}

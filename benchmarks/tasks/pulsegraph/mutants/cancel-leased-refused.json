@@ -1,0 +1,7 @@
+{
+ "id": "cancel-leased-refused",
+ "description": "Cancelling a leased job is refused",
+ "file": "src/scheduler.js",
+ "find": "if (TERMINAL.has(job.status)) throw fail('JOB_TERMINAL', id);",
+ "replace": "if (TERMINAL.has(job.status) || job.status === 'leased') throw fail('JOB_TERMINAL', id);"
+}

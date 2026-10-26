@@ -1,0 +1,7 @@
+{
+ "id": "lease-boundary",
+ "description": "Lease expires one tick late (< instead of <=)",
+ "file": "src/scheduler.js",
+ "find": "j.leaseUntil <= now",
+ "replace": "j.leaseUntil < now"
+}

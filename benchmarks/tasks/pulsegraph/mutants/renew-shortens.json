@@ -1,0 +1,7 @@
+{
+ "id": "renew-shortens",
+ "description": "Renew can shorten a lease",
+ "file": "src/scheduler.js",
+ "find": "Math.max(job.leaseUntil, now + leaseFor)",
+ "replace": "now + leaseFor"
+}

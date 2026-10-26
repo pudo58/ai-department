@@ -1,0 +1,7 @@
+{
+ "id": "attempt-limit-off-by-one",
+ "description": "One extra attempt before a job dies",
+ "file": "src/scheduler.js",
+ "find": "if (j.attempt < maxAttempts)",
+ "replace": "if (j.attempt <= maxAttempts)"
+}

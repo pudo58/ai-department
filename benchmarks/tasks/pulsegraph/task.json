@@ -1,0 +1,26 @@
+{
+ "id": "pulsegraph",
+ "title": "PulseGraph — deterministic dependency scheduler",
+ "stratum": "hard",
+ "signals": [
+  "dependency-graph",
+  "lease-fencing",
+  "retry",
+  "time-boundary",
+  "snapshot"
+ ],
+ "codeFile": "src/scheduler.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "verify",
+ "minMutants": 10,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

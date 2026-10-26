@@ -1,0 +1,7 @@
+{
+ "id": "expiry-order-by-sequence",
+ "description": "Expired leases are reported in submission order only",
+ "file": "src/scheduler.js",
+ "find": "a.leaseUntil - b.leaseUntil || a.sequence - b.sequence",
+ "replace": "a.sequence - b.sequence"
+}
