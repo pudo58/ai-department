@@ -1,0 +1,11 @@
+{
+ "id": "failed-join-succeeds",
+ "description": "A joiner of a failed attempt retries instead of sharing the failure",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "return flight.promise.then((result) => ({ ...result, replayed: true }));",
+   "replace": "return flight.promise.then((result) => ({ ...result, replayed: true }), () => this.charge(input));"
+  }
+ ]
+}

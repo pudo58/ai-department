@@ -1,0 +1,11 @@
+{
+ "id": "hold-expiry-late",
+ "description": "A hold lives one tick too long",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "now() >= b.heldAt + holdTtl",
+   "replace": "now() > b.heldAt + holdTtl"
+  }
+ ]
+}

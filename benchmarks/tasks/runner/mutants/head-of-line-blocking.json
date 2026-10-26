@@ -1,0 +1,11 @@
+{
+ "id": "head-of-line-blocking",
+ "description": "Only the head of the queue may start",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "const index = queue.findIndex((task) => !runningKeys.has(task.key));",
+   "replace": "const index = queue.length && !runningKeys.has(queue[0].key) ? 0 : -1;"
+  }
+ ]
+}

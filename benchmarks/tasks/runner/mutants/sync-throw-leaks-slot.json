@@ -1,0 +1,11 @@
+{
+ "id": "sync-throw-leaks-slot",
+ "description": "A synchronous throw never frees its slot",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "catch (error) { finish(task.reject, error); return; }",
+   "replace": "catch (error) { task.reject(error); return; }"
+  }
+ ]
+}

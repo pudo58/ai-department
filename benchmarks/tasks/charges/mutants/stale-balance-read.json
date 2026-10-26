@@ -1,0 +1,11 @@
+{
+ "id": "stale-balance-read",
+ "description": "Balance is read before authorization and used after it",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "          if (authorize) {\n            const approved = await authorize({ key, account, amount });\n            if (approved !== true) throw fail('DECLINED');\n          }\n          const current = balances.get(account);",
+   "replace": "          const current = balances.get(account);\n          if (authorize) {\n            const approved = await authorize({ key, account, amount });\n            if (approved !== true) throw fail('DECLINED');\n          }"
+  }
+ ]
+}

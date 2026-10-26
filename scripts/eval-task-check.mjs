@@ -23,9 +23,12 @@ for (const file of files) {
   try {
     await cp(path.join(task.dir, 'reference', 'src'), path.join(scratch, 'src'), { recursive: true });
     const target = path.join(scratch, mutant.file);
-    const source = await readFile(target, 'utf8');
-    if (!source.includes(mutant.find)) { problems.push(`${mutant.id}: đoạn cần thay không có trong reference.`); continue; }
-    await writeFile(target, source.replace(mutant.find, mutant.replace));
+    let source = await readFile(target, 'utf8');
+    const edits = mutant.edits ?? [{ find: mutant.find, replace: mutant.replace }];
+    const missing = edits.find((e) => !source.includes(e.find));
+    if (missing) { problems.push(`${mutant.id}: đoạn cần thay không có trong reference.`); continue; }
+    for (const e of edits) source = source.replace(e.find, e.replace);
+    await writeFile(target, source);
     const result = await gradeSource(task, scratch);
     const killed = result.loadError || result.passed < result.total;
     mutants.push({ id: mutant.id, description: mutant.description, killed, failedTests: result.failed.length });

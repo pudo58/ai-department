@@ -1,0 +1,11 @@
+{
+ "id": "already-aborted-runs",
+ "description": "An already aborted signal still runs the task",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "if (signal?.aborted) { reject(fail('CANCELLED')); return; }",
+   "replace": ""
+  }
+ ]
+}

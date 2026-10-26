@@ -1,0 +1,11 @@
+{
+ "id": "drain-misses-late-tasks",
+ "description": "Drain resolves at the first idle moment of the tasks it saw",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "        else idleWaiters.push(resolve);",
+   "replace": "        else { const seen = queue.length + running; let n = 0; idleWaiters.push(resolve); void seen; void n; resolve(); }"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "drain-ignores-running",
+ "description": "Drain resolves while tasks are still running",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "if (running === 0 && queue.length === 0) resolve();\n        else idleWaiters.push(resolve);",
+   "replace": "if (queue.length === 0) resolve();\n        else idleWaiters.push(resolve);"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "failed-key-stays-busy",
+ "description": "A rejected task never frees its key",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "(error) => finish(task.reject, error)",
+   "replace": "(error) => { running -= 1; pump(); task.reject(error); }"
+  }
+ ]
+}

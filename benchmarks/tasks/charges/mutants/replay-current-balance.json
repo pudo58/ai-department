@@ -1,0 +1,11 @@
+{
+ "id": "replay-current-balance",
+ "description": "Replay reports the balance now instead of the original",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "return Promise.resolve({ ...record.result, replayed: true });",
+   "replace": "return Promise.resolve({ ...record.result, balance: balances.get(account), replayed: true });"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "list-window-closed",
+ "description": "List windows include touching bookings",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "overlaps(b, { start: from, end: to })",
+   "replace": "(b.start <= to && from <= b.end)"
+  }
+ ]
+}

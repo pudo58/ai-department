@@ -1,0 +1,11 @@
+{
+ "id": "cancel-at-start-allowed",
+ "description": "A confirmed booking can still be cancelled at its start",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "now() >= b.start",
+   "replace": "now() > b.start"
+  }
+ ]
+}

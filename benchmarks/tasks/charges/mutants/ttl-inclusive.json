@@ -1,0 +1,11 @@
+{
+ "id": "ttl-inclusive",
+ "description": "Key stays live one tick too long (<= instead of <)",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "now() < record.at + ttl",
+   "replace": "now() <= record.at + ttl"
+  }
+ ]
+}

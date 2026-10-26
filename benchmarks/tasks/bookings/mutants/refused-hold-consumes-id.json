@@ -1,0 +1,11 @@
+{
+ "id": "refused-hold-consumes-id",
+ "description": "A refused hold still takes its id",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "if (bookings.has(id)) throw fail('ID_TAKEN', id);",
+   "replace": "if (bookings.has(id)) throw fail('ID_TAKEN', id);\n      bookings.set(id, { id, room: name, start, end, status: 'cancelled', heldAt: 0 });"
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "id": "charges",
+ "title": "KeyedCharges — idempotent, concurrency-safe charging",
+ "stratum": "hard",
+ "signals": [
+  "idempotency",
+  "concurrency",
+  "time-boundary",
+  "atomicity"
+ ],
+ "codeFile": "src/charges.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "verify",
+ "minMutants": 10,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

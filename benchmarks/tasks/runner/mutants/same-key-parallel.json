@@ -1,0 +1,11 @@
+{
+ "id": "same-key-parallel",
+ "description": "Tasks of one key may run together",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "(task) => !runningKeys.has(task.key)",
+   "replace": "() => true"
+  }
+ ]
+}

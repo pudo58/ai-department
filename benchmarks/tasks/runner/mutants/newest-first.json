@@ -1,0 +1,11 @@
+{
+ "id": "newest-first",
+ "description": "The newest startable task starts first",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "const index = queue.findIndex((task) => !runningKeys.has(task.key));",
+   "replace": "const index = queue.findLastIndex((task) => !runningKeys.has(task.key));"
+  }
+ ]
+}

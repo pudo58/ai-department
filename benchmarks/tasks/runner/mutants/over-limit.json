@@ -1,0 +1,11 @@
+{
+ "id": "over-limit",
+ "description": "One task more than the limit runs",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "while (running < concurrency)",
+   "replace": "while (running <= concurrency)"
+  }
+ ]
+}

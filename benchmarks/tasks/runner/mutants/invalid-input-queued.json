@@ -1,0 +1,15 @@
+{
+ "id": "invalid-input-queued",
+ "description": "Invalid input throws instead of rejecting",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "{ reject(fail('INVALID_INPUT')); return; }",
+   "replace": "{ throw fail('INVALID_INPUT'); }"
+  },
+  {
+   "find": "return new Promise((resolve, reject) => {\n        if (typeof key",
+   "replace": "if (typeof key !== 'string' || key.length === 0 || typeof fn !== 'function') throw fail('INVALID_INPUT');\n      return new Promise((resolve, reject) => {\n        if (typeof key"
+  }
+ ]
+}

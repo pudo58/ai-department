@@ -1,0 +1,11 @@
+{
+ "id": "touching-conflicts",
+ "description": "Touching intervals are treated as overlapping",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "a.start < b.end && b.start < a.end",
+   "replace": "a.start <= b.end && b.start <= a.end"
+  }
+ ]
+}

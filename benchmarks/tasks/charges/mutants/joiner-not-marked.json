@@ -1,0 +1,11 @@
+{
+ "id": "joiner-not-marked",
+ "description": "Joiners get replayed:false",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "flight.promise.then((result) => ({ ...result, replayed: true }))",
+   "replace": "flight.promise.then((result) => result)"
+  }
+ ]
+}

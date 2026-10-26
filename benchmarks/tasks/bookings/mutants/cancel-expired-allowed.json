@@ -1,0 +1,11 @@
+{
+ "id": "cancel-expired-allowed",
+ "description": "Expired holds can be cancelled",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "if (status === 'expired') throw fail('HOLD_EXPIRED');\n      if (status === 'confirmed' && now() >= b.start)",
+   "replace": "if (status === 'confirmed' && now() >= b.start)"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "id-from-key",
+ "description": "chargeId is derived from the key, so a re-charge reuses it",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "`c${++counter}`",
+   "replace": "`c-${key}`"
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "id": "runner",
+ "title": "KeyedRunner — bounded concurrency with per-key ordering",
+ "stratum": "hard",
+ "signals": [
+  "concurrency",
+  "ordering",
+  "cancellation"
+ ],
+ "codeFile": "src/runner.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "verify",
+ "minMutants": 10,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

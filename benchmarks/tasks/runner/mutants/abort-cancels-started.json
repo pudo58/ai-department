@@ -1,0 +1,15 @@
+{
+ "id": "abort-cancels-started",
+ "description": "Aborting a started task rejects it",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "    if (task.signal) task.signal.removeEventListener('abort', task.onAbort);\n",
+   "replace": ""
+  },
+  {
+   "find": "            if (index < 0) return;\n            queue.splice(index, 1);",
+   "replace": "            if (index >= 0) queue.splice(index, 1);"
+  }
+ ]
+}

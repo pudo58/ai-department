@@ -1,0 +1,11 @@
+{
+ "id": "mismatch-ignored",
+ "description": "Same key with another payload is replayed instead of rejected",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "if (record.result.account !== account || record.result.amount !== amount) throw fail('IDEMPOTENCY_MISMATCH');",
+   "replace": ""
+  }
+ ]
+}

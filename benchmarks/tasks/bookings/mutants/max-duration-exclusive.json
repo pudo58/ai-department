@@ -1,0 +1,11 @@
+{
+ "id": "max-duration-exclusive",
+ "description": "Exactly maxDuration is refused",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "end - start > maxDuration",
+   "replace": "end - start >= maxDuration"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "authorize-on-replay",
+ "description": "Replays call authorize again",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "        if (record && now() < record.at + ttl) {",
+   "replace": "        if (record && now() < record.at + ttl) {\n          if (authorize) authorize({ key, account, amount });"
+  }
+ ]
+}

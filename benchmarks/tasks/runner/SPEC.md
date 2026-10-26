@@ -1,0 +1,15 @@
+# KeyedRunner — bounded concurrency with per-key ordering
+
+Implement `src/runner.js` as an in-memory task runner. Export `createRunner({ concurrency = 2 } = {})`. The runner exposes `run(key, fn, { signal } = {})`, `drain()` and `stats()`. `run` returns a promise; `fn` is a function that returns a value or a promise.
+
+1. `concurrency` must be a positive safe integer, otherwise `createRunner` throws an `Error` with `code` `INVALID_INPUT`. `run` never throws: an empty or non-string `key`, or an `fn` that is not a function, makes the returned promise reject with an `Error` whose `code` is `INVALID_INPUT`, and nothing is queued.
+2. A task is running from the moment its `fn` is called until the promise `fn` returned settles. If `fn` returns a plain value, the task is finished at once; if `fn` throws, the task is finished and the promise returned by `run` rejects with the thrown error. Otherwise the promise returned by `run` settles exactly like the promise `fn` returned (same value, same error object).
+3. At most `concurrency` tasks run at the same time.
+4. Tasks with the same `key` never run at the same time and start in the order in which `run` was called for that key. A task that fails does not stop the later tasks of its key.
+5. Tasks with different keys may run at the same time, subject to rule 3. There is no head-of-line blocking: whenever a slot is free, the runner starts the oldest queued task whose key has no running task, even if older queued tasks are waiting for their own key. A task that can start immediately (a free slot and an idle key, with nothing older that could use the slot) has its `fn` called synchronously inside `run`.
+6. The slot of a finished task is released, and the next eligible task has been started, before the promise returned by `run` for the finished task settles. A caller that awaits `run` and then reads `stats()` therefore never sees the finished task as running, and sees the next task already running if there was one.
+7. `signal` is an optional `AbortSignal`. If it is already aborted when `run` is called, the promise rejects with an `Error` with `code` `CANCELLED` and `fn` is never called. If it is aborted while the task is queued, the task is removed from the queue, its promise rejects with `CANCELLED` (without waiting for any other task), and `fn` is never called. Aborting a task that has already started has no effect on it.
+8. `stats()` returns `{ running, queued }`: the number of running tasks and of tasks waiting in the queue.
+9. `drain()` returns a promise that resolves once the runner is completely idle (nothing running, nothing queued). Tasks submitted after `drain()` was called, but before the runner became idle, are waited for too. If the runner is already idle it resolves promptly. `drain()` never rejects, whatever the tasks do.
+
+Error precedence is specified only where stated above; do not test inputs that break several unrelated rules at once. No timers, persistence or priorities are required. Keep the source compact, use the public API in tests, and do not add behavior beyond this contract.

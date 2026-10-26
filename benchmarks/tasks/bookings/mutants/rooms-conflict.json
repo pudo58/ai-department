@@ -1,0 +1,11 @@
+{
+ "id": "rooms-conflict",
+ "description": "Different rooms conflict",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "other.room === name && active(other)",
+   "replace": "active(other)"
+  }
+ ]
+}

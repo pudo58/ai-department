@@ -1,0 +1,11 @@
+{
+ "id": "expired-still-blocks",
+ "description": "Expired holds keep blocking their slot",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "const active = (b) => ['held', 'confirmed'].includes(statusOf(b));",
+   "replace": "const active = (b) => ['held', 'confirmed'].includes(b.status);"
+  }
+ ]
+}

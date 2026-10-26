@@ -1,6 +1,6 @@
 // Task packs for the Department-vs-Single experiment: benchmarks/tasks/<id>/{task.json,SPEC.md,scaffold/,reference/,grader/,mutants/}.
 // Grading never happens inside the candidate's workspace: its src/ is copied next to the hidden grader in a scratch folder.
-import { cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, symlink, writeFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
@@ -41,6 +41,8 @@ const run = (command, args, options) => new Promise((resolve) => execFile(comman
 
 /** Runs the hidden grader against a folder holding `src/` and returns how many of its tests pass. */
 export async function gradeSource(task, sourceRoot, { timeoutMs = 120_000 } = {}) {
+  // A run that stopped before it had a workspace has nothing to grade: that is a score of zero, not a crash.
+  if (!(await stat(path.join(sourceRoot, 'src')).then(() => true, () => false))) return { passed: 0, total: 0, failed: [], loadError: true, noSource: true };
   const scratch = await mkdtemp(path.join(tmpdir(), 'aidept-grade-'));
   try {
     await cp(path.join(sourceRoot, 'src'), path.join(scratch, 'src'), { recursive: true });

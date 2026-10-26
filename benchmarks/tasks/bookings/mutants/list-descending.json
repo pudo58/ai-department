@@ -1,0 +1,11 @@
+{
+ "id": "list-descending",
+ "description": "List is sorted by start descending",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "a.start - b.start || text(a.id, b.id)",
+   "replace": "b.start - a.start || text(a.id, b.id)"
+  }
+ ]
+}

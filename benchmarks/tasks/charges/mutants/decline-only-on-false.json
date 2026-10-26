@@ -1,0 +1,11 @@
+{
+ "id": "decline-only-on-false",
+ "description": "Anything but false is approved",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "if (approved !== true) throw fail('DECLINED');",
+   "replace": "if (approved === false) throw fail('DECLINED');"
+  }
+ ]
+}

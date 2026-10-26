@@ -1,0 +1,11 @@
+{
+ "id": "release-after-settle",
+ "description": "The next task starts after the caller is told",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "      pump();\n      settle(value);",
+   "replace": "      settle(value);\n      queueMicrotask(pump);"
+  }
+ ]
+}

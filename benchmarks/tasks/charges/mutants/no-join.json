@@ -1,0 +1,11 @@
+{
+ "id": "no-join",
+ "description": "Concurrent same-key calls each run their own attempt",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "const flight = inflight.get(key);",
+   "replace": "const flight = undefined;"
+  }
+ ]
+}

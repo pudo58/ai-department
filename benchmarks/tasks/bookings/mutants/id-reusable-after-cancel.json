@@ -1,0 +1,11 @@
+{
+ "id": "id-reusable-after-cancel",
+ "description": "Ids of cancelled or expired bookings can be reused",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "if (bookings.has(id)) throw fail('ID_TAKEN', id);",
+   "replace": "if (bookings.has(id) && active(bookings.get(id))) throw fail('ID_TAKEN', id);"
+  }
+ ]
+}

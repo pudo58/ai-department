@@ -1,0 +1,11 @@
+{
+ "id": "stats-queued-wrong",
+ "description": "Queued counts running tasks too",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "queued: queue.length }",
+   "replace": "queued: queue.length + running }"
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "id": "bookings",
+ "title": "RoomBookings — holds and cancellations on half-open intervals",
+ "stratum": "hard",
+ "signals": [
+  "time-boundary",
+  "state-transition",
+  "half-open-interval"
+ ],
+ "codeFile": "src/bookings.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "verify",
+ "minMutants": 10,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

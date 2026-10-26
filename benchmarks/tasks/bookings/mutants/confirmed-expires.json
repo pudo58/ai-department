@@ -1,0 +1,11 @@
+{
+ "id": "confirmed-expires",
+ "description": "Confirmed bookings expire like holds",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "b.status === 'held' && now()",
+   "replace": "(b.status === 'held' || b.status === 'confirmed') && now()"
+  }
+ ]
+}

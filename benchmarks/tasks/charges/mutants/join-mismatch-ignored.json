@@ -1,0 +1,11 @@
+{
+ "id": "join-mismatch-ignored",
+ "description": "A mismatching joiner is allowed to join",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "if (flight.account !== account || flight.amount !== amount) throw fail('IDEMPOTENCY_MISMATCH');",
+   "replace": ""
+  }
+ ]
+}

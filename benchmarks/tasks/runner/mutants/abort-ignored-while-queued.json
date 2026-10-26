@@ -1,0 +1,11 @@
+{
+ "id": "abort-ignored-while-queued",
+ "description": "Aborting a queued task does nothing",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "signal.addEventListener('abort', task.onAbort, { once: true });",
+   "replace": ""
+  }
+ ]
+}

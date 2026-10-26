@@ -1,0 +1,11 @@
+{
+ "id": "failure-consumes-key",
+ "description": "A failed charge leaves a replayable record behind",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "if (current < amount) throw fail('INSUFFICIENT_FUNDS');",
+   "replace": "if (current < amount) { records.set(key, { result: { chargeId: 'ghost', key, account, amount, balance: 0, replayed: false }, at: now() }); throw fail('INSUFFICIENT_FUNDS'); }"
+  }
+ ]
+}

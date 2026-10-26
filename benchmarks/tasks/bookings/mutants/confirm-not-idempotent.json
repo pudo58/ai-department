@@ -1,0 +1,11 @@
+{
+ "id": "confirm-not-idempotent",
+ "description": "Confirming twice fails",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "if (status === 'confirmed') return view(b);",
+   "replace": "if (status === 'confirmed') throw fail('ALREADY_CANCELLED');"
+  }
+ ]
+}

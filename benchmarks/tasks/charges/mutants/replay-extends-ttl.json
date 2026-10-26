@@ -1,0 +1,11 @@
+{
+ "id": "replay-extends-ttl",
+ "description": "Replaying a key restarts its lifetime",
+ "file": "src/charges.js",
+ "edits": [
+  {
+   "find": "return Promise.resolve({ ...record.result, replayed: true });",
+   "replace": "record.at = now(); return Promise.resolve({ ...record.result, replayed: true });"
+  }
+ ]
+}

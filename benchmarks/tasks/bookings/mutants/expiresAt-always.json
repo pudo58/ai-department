@@ -1,0 +1,11 @@
+{
+ "id": "expiresAt-always",
+ "description": "Expired holds still show expiresAt",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "if (status === 'held') out.expiresAt",
+   "replace": "if (status !== 'cancelled') out.expiresAt"
+  }
+ ]
+}

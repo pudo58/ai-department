@@ -1,0 +1,11 @@
+{
+ "id": "past-start-inclusive",
+ "description": "A start equal to now is refused",
+ "file": "src/bookings.js",
+ "edits": [
+  {
+   "find": "start < now()",
+   "replace": "start <= now()"
+  }
+ ]
+}
