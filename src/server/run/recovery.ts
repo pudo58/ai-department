@@ -1,4 +1,4 @@
-import { DiagnosisSchema as Diagnosis, diagnosisProblems, diagnosisOutputGuide } from '../../core/diagnosis.js';
+import { DiagnosisSchema as Diagnosis, diagnosisProblems, diagnosisOutputGuide, normalizeDiagnosis } from '../../core/diagnosis.js';
 import type { Diagnosis as DiagnosisValue } from '../../core/diagnosis.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
 import { auditManifestAssertions, assertionTokens } from '../../core/authoring.js';
@@ -16,6 +16,8 @@ import type { ScopePolicy } from './scope.js';
 import { Blocked, HttpError } from './support.js';
 
 const REVIEW = 'Author test diagnosis attempt';
+/** A run may apply this many valid Author test corrections by itself; a further one waits for a person. */
+const MAX_AUTO_TEST_REPAIRS = 3;
 
 /** Failed assertions remain locked. Author may propose a test-only correction, never activate it. */
 export class TestRecovery {
@@ -70,7 +72,15 @@ ${extra}` });
       const paths=locked.manifest.entries.filter(e=>cases.includes(e.caseId)).map(e=>e.path);
       for(let round=0;round<2;round++){
         let errors:string[]=[];
-        try{diagnosis=parseOutput(Diagnosis,output);const linkedIds=locked.manifest.entries.filter(e=>diagnosis!.caseIds.includes(e.caseId)&&failedIds.includes(e.testId)).map(e=>e.testId);errors=diagnosisProblems(run,diagnosis,cases,linkedIds,paths,(await runtime.changes(run,slot)).files);}catch(error){errors=[(error as Error).message];}
+        try{
+          const parsed=parseOutput(Diagnosis,output),changedFiles=(await runtime.changes(run,slot)).files;
+          const linkedFor=(ids:readonly string[])=>locked.manifest.entries.filter(e=>ids.includes(e.caseId)&&failedIds.includes(e.testId)).map(e=>e.testId);
+          // A "the test is wrong" diagnosis is read by its decision and its diff; redundant fields are restated from the runner's facts.
+          const normalized=normalizeDiagnosis(run,parsed,{failingCaseIds:cases,testPaths:paths,changedPaths:changedFiles,failedTestIds:linkedFor(cases)});
+          diagnosis=normalized.diagnosis;
+          if(normalized.notes.length)this.s.log(runId,'diagnosis.normalized',`Chẩn đoán được chuẩn hoá: ${normalized.notes.join(' ')}`);
+          errors=diagnosisProblems(run,diagnosis,cases,linkedFor(diagnosis.caseIds),paths,changedFiles);
+        }catch(error){errors=[(error as Error).message];}
         if(!errors.length)break;
         const changes=await runtime.changes(run,slot);
         this.s.artifact(runId,{kind:'report',title:'Author diagnosis rejected',content:JSON.stringify({output,errors,patch:changes.patch,checkpoint:run.checkpoint,manifestHash:locked.hash}),checkpoint:run.checkpoint});
@@ -114,13 +124,13 @@ ${extra}` });
 
   /**
    * Nobody is there to read a diff in the middle of a run, so a proposal that already passed every check above (grounded
-   * in the contract, matching the locked assertion, inside the Author's own test files) is applied once per run. It is
+   * in the contract, matching the locked assertion, inside the Author's own test files) is applied (up to three times per run). It is
    * flagged as a degraded run and the receipt says the system, not a person, approved it. AIDEPT_AUTO_TEST_REPAIR=0 restores the manual gate.
    */
   private autoApprove(runId: string, caseIds: readonly string[], reason: string): void {
     if (process.env.AIDEPT_AUTO_TEST_REPAIR === '0') return;
     const run = this.s.run(runId), artifacts = this.s.store.artifacts.list(runId);
-    if (artifacts.some(a => a.title === 'Test repair receipt' && a.valid && a.contractVersion === run.contract.version)) return;
+    if (artifacts.filter(a => a.title === 'Test repair receipt' && a.valid && a.contractVersion === run.contract.version).length >= MAX_AUTO_TEST_REPAIRS) return;
     const pending = pendingTestRepair(run, artifacts);
     if (!pending) return;
     this.s.mutate(runId, r => { r.testRepairApproval = { artifactId: pending.id, artifactHash: pending.hash, auto: true }; });

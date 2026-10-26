@@ -135,37 +135,48 @@ describe('Team modes', () => {
     expect(detail.attempts.filter((a) => a.independence?.independent)).toHaveLength(2);
   });
 
-  it('verify locks Author tests, keeps the Developer out of them, and gates findings', async () => {
+  const blockerFinding = { category: 'behavior', severity: 'blocker', title: 'Retry tạo đơn thứ hai', location: 'src/order.ts:12', evidence: 'Hai request đồng thời tạo hai đơn', suggestion: 'Dùng idempotency key' };
+  const styleFinding = { category: 'design', severity: 'major', title: 'Ý kiến phong cách', location: 'src/order.ts', evidence: 'Không thích tên biến', suggestion: '' };
+  const verdict = (findings: unknown[]) => `ok\n\`\`\`json\n${JSON.stringify({ decision: findings.length ? 'block' : 'pass', findings })}\n\`\`\``;
+
+  it('verify locks Author tests and keeps the Developer out of them; a doubt without a counterexample gets one repair round', async () => {
     let verifierCalls = 0;
     const { orchestrator, create, drive, store } = setup({
       check: () => green,
       files: (e) => (e.role === 'author' ? ['tests/order.test.ts'] : ['src/order.ts']),
-      reply: (e) => {
-        if (e.role !== 'verifier') return undefined;
-        verifierCalls++;
-        const findings = verifierCalls === 1 ? [
-          { category: 'behavior', severity: 'blocker', title: 'Retry tạo đơn thứ hai', location: 'src/order.ts:12', evidence: 'Hai request đồng thời tạo hai đơn', suggestion: 'Dùng idempotency key' },
-          { category: 'design', severity: 'major', title: 'Ý kiến phong cách', location: 'src/order.ts', evidence: 'Không thích tên biến', suggestion: '' },
-        ] : [];
-        return `ok\n\`\`\`json\n${JSON.stringify({ decision: findings.length ? 'block' : 'pass', findings })}\n\`\`\``;
-      },
+      reply: (e) => (e.role !== 'verifier' ? undefined : verdict(++verifierCalls === 1 ? [blockerFinding, styleFinding] : [])),
     });
     const run = await drive(create({ mode: 'verify', budgetUsd: 10 }));
-    let detail = orchestrator.detail(run.id);
-    expect(detail.attempts.map((a) => a.role)).toEqual(['planner', 'author', 'developer', 'verifier']);
+    const detail = orchestrator.detail(run.id);
+    expect(detail.attempts.map((a) => a.role)).toEqual(['planner', 'author', 'developer', 'verifier', 'developer', 'verifier']);
     expect(detail.artifacts.find((a) => a.kind === 'acceptance')?.title).toMatch(/Author/);
-    // A design "major" with no D-code, rule or precedent is demoted; only the behavior blocker holds.
+    // A design "major" with no D-code, rule or precedent is demoted; only the behavior blocker is repaired.
     expect(detail.findings.map((f) => f.severity).sort()).toEqual(['blocker', 'minor']);
-    expect(detail.run.status).toBe('blocked');
-    expect(detail.completion.reasons.join(' ')).toMatch(/1 finding blocker/);
-
     const blocker = detail.findings.find((f) => f.severity === 'blocker')!;
-    orchestrator.confirmFinding(run.id, blocker.id);
-    orchestrator.repairFindings(run.id); await orchestrator.idle();
-    detail = orchestrator.detail(run.id);
     expect(store.findings.get(blocker.id)!.status).toBe('resolved');
-    expect(detail.run.status).toBe('awaiting_acceptance');
     expect(detail.attempts.filter((a) => a.role === 'developer' && a.stage === 'verify')).toHaveLength(1);
+    expect(detail.run.status).toBe('awaiting_acceptance');
+  });
+
+  it('a doubt the Verifier keeps raising is repaired once and then stays as a warning instead of blocking', async () => {
+    const { orchestrator, create, drive } = setup({
+      check: () => green,
+      files: (e) => (e.role === 'author' ? ['tests/order.test.ts'] : ['src/order.ts']),
+      reply: (e) => (e.role !== 'verifier' ? undefined : verdict([blockerFinding])),
+    });
+    const run = await drive(create({ mode: 'verify', budgetUsd: 10 }));
+    const detail = orchestrator.detail(run.id);
+    expect(detail.attempts.filter((a) => a.role === 'developer' && a.stage === 'verify')).toHaveLength(1);
+    expect(detail.attempts.filter((a) => a.role === 'verifier')).toHaveLength(2);
+    expect(detail.run.status).toBe('awaiting_acceptance');
+    expect(detail.completion.ready).toBe(true);
+    const open = detail.findings.filter((f) => f.severity === 'blocker' && f.status !== 'resolved');
+    expect(open.length).toBeGreaterThan(0);
+    expect(open.every((f) => f.attempted && !f.confirmed)).toBe(true);
+    const report = await orchestrator.report(run.id);
+    expect(report.readiness).toBe('ready_with_warnings');
+    expect(report.warnings.some((w) => w.level === 'warn' && /Verifier còn nghi ngờ/.test(w.text))).toBe(true);
+    expect(detail.degraded?.stages).toContain('Finding của Verifier');
   });
 
   it('a simulated Verify run gets past the Author step: the simulated Author writes a test file', async () => {

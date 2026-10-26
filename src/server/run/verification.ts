@@ -2,7 +2,7 @@ import { MutationChecks } from './mutation.js';
 import { randomUUID } from 'node:crypto';
 import type { Finding, Independence } from '../../shared/types.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
-import { gateFinding } from '../../core/findings.js';
+import { gateFinding, needsAutoRepair } from '../../core/findings.js';
 import { FindingsSchema, parseOutput } from '../../core/outputs.js';
 import { PROMPTS } from '../../core/prompts.js';
 import { readVerdict, type VerifierVerdict } from '../../core/report.js';
@@ -26,8 +26,34 @@ export class Verification {
     const run = this.s.run(runId);
     this.s.mutate(runId, (r) => { r.stage = 'verify'; });
     await new MutationChecks(this.s).run(runId, signal, checksOnly);
-    if (!checksOnly && (run.mode === 'verify' || run.mode === 'compare') && !readVerdict(this.s.store.artifacts.list(runId), run)) await this.independentVerifier(runId, signal);
+    const verifies = run.mode === 'verify' || run.mode === 'compare';
+    if (!checksOnly && verifies && !readVerdict(this.s.store.artifacts.list(runId), run)) await this.independentVerifier(runId, signal);
+    // Nobody is present to confirm a finding the Verifier could not reproduce: give the Developer one round on it, then let it go.
+    if (!checksOnly && verifies && await this.autoRepairUnconfirmed(runId, signal)) return;
     this.outcome.finish(runId);
+  }
+
+  /**
+   * One repair round, once per contract version, for blocker/major findings that have no runnable counterexample. Afterwards those
+   * findings (and any the re-verification raises without a counterexample) are warnings, not blockers. Returns true when the repair
+   * round ran and finished the run itself.
+   */
+  private async autoRepairUnconfirmed(runId: string, signal: AbortSignal): Promise<boolean> {
+    const run = this.s.run(runId);
+    const targets = this.s.store.findings.list(runId).filter((f) => needsAutoRepair(f, run.contract.version)).map((f) => ({ ...f, attempted: true }));
+    if (!targets.length) return false;
+    const marker = 'Unconfirmed finding repair';
+    const already = this.s.store.artifacts.list(runId).some((a) => a.title === marker && a.valid && a.contractVersion === run.contract.version);
+    for (const f of targets) this.s.store.findings.put(f);
+    const budget = remainingFor(budgetState(run, this.s.store.attempts.list(runId)), 'verify');
+    if (already || budget <= 0) {
+      this.s.fallback(runId, 'Finding của Verifier', `${targets.length} finding chưa có phản ví dụ chạy được ${already ? 'xuất hiện sau vòng sửa tự động' : 'và hết ngân sách để sửa'}; giữ làm cảnh báo, không chặn: ${targets.map((f) => f.title).join('; ').slice(0, 300)}`);
+      return false;
+    }
+    this.s.artifact(runId, { kind: 'report', title: marker, content: JSON.stringify({ findingIds: targets.map((f) => f.id) }), checkpoint: run.checkpoint });
+    this.s.log(runId, 'verify.auto_repair', `${targets.length} finding chưa có phản ví dụ chạy được: Developer có một vòng sửa trước khi chúng thành cảnh báo.`);
+    await this.repairPhase(runId, signal, targets);
+    return true;
   }
 
   private async independentVerifier(runId: string, signal: AbortSignal): Promise<void> {
@@ -44,6 +70,7 @@ export class Verification {
     const { output, attempt } = await this.s.attempt(runId, { role: 'verifier', stage: 'verify', slot: run.selectedSlot, prompt: `${PROMPTS.verifier(run, diff)}\nBằng chứng runner hiện hành: ${JSON.stringify(checkEvidence)}\n${reproductionGuide}\nBổ sung scope={reviewed:["file/điều khoản đã thực sự review"],checkIds:["ID check hiện hành đã dùng"],limitations:["phần chưa xác nhận"],additionalChecks:[{command:"lệnh chính xác",status:"passed|failed|incomplete",detail:"kết quả"}] vào JSON cuối. Không coi pass là đã tự chạy test. Lệnh lỗi môi trường phải ghi incomplete/failed và giới hạn.`, independence, signal });
     await this.s.discardStrayEdits(runId, run.selectedSlot, 'Verifier');
     const created:Finding[]=[];
+    const afterAutoRound = this.s.store.artifacts.list(runId).some((a) => a.title === 'Unconfirmed finding repair' && a.valid && a.contractVersion === run.contract.version);
     try {
       const parsed = parseOutput(FindingsSchema, output);
       const raw=this.s.store.artifacts.list(runId).find(a=>a.kind==='raw' && a.attemptId===attempt.id)?.content??'';
@@ -57,12 +84,16 @@ export class Verification {
           location: gated.location, rule: gated.rule, precedent: gated.precedent, evidence: gated.evidence, suggestion: gated.suggestion,
           status: 'open', confirmed: false, checkpoint: run.checkpoint, contractVersion: run.contract.version, createdAt: this.s.stamp(),
           dispute: gated.downgradedBecause,
+          // After the automatic round, a doubt without a runnable counterexample is only a warning from the start.
+          ...(afterAutoRound && (gated.severity === 'blocker' || gated.severity === 'major') && !(scenario?.success && !reproProblems.length) ? { attempted: true } : {}),
           ...(scenario?.success&&!reproProblems.length?{reproduction:scenario.data}:{}),
           ...(raw.reproductionLimitation||reproProblems.length||(!scenario&&raw.category==='behavior')?{reproductionLimitation:raw.reproductionLimitation||reproProblems.join(' ')||'Verifier chưa cung cấp phản ví dụ có thể chạy.'}:{}),
         };
         this.s.store.findings.put(finding);
         created.push(finding);
       }
+      const doubts = created.filter((f) => f.attempted);
+      if (doubts.length) this.s.fallback(runId, 'Finding của Verifier', `${doubts.length} finding chưa có phản ví dụ chạy được xuất hiện sau vòng sửa tự động; giữ làm cảnh báo, không chặn: ${doubts.map((f) => f.title).join('; ').slice(0, 300)}`);
       this.s.log(runId, 'verify', `Verifier (${parsed.decision}): ${parsed.findings.length} finding, chờ runner hoặc người xác nhận trước khi chặn.`, { attempt: attempt.id });
       this.recordVerdict(runId, { decision: parsed.decision, summary: verifierNarrative(output), findingCount: parsed.findings.length,scope });
     } catch (error) {
@@ -127,12 +158,12 @@ export class Verification {
   }
 
   /** One repair round on confirmed findings, then fresh checks on the new checkpoint. */
-  async repairPhase(runId: string, signal: AbortSignal): Promise<void> {
+  async repairPhase(runId: string, signal: AbortSignal, extraTargets: Finding[] = []): Promise<void> {
     let run = this.s.run(runId);
     const runtime = this.s.runtimeFor(run);
     const slot = run.selectedSlot;
     this.s.mutate(runId, (r) => { r.stage = 'verify'; });
-    const targets = this.s.store.findings.list(runId).filter((f) => f.confirmed && f.status === 'open' && f.contractVersion === run.contract.version);
+    const targets = [...this.s.store.findings.list(runId).filter((f) => f.confirmed && f.status === 'open' && f.contractVersion === run.contract.version), ...extraTargets.filter((f) => !f.confirmed)];
     const problems = targets.map((f) => `${f.title} (${f.location}): ${f.evidence}. Gợi ý: ${f.suggestion}`);
     const resume = this.s.sessions.get(`${runId}:${slot}`);
     await this.s.attempt(runId, { role: 'developer', stage: 'verify', slot, prompt: resume ? PROMPTS.repairFollowUp(problems) : PROMPTS.repair(run, problems), signal, resumeSession: resume });

@@ -32,9 +32,17 @@ export function gateFinding(raw: RawFinding): GatedFinding {
   return missing.length ? { ...raw, severity: 'minor', downgradedBecause: `Thiếu ${missing.join(', ')}.` } : raw;
 }
 
-/** Open or disputed blocker/major findings stop acceptance until a person resolves them. */
-export const blocksCompletion = (f: Pick<Finding, 'severity' | 'status'>): boolean =>
-  (f.severity === 'blocker' || f.severity === 'major') && f.status !== 'resolved';
+/**
+ * Open or disputed blocker/major findings stop acceptance until a person resolves them. The exception is a finding with no
+ * runnable counterexample that an automatic repair round has already tried: nobody present can confirm or refute it, so it is
+ * kept as a warning in the report instead of ending the run.
+ */
+export const blocksCompletion = (f: Pick<Finding, 'severity' | 'status'> & Partial<Pick<Finding, 'attempted' | 'confirmed' | 'reproduction'>>): boolean =>
+  (f.severity === 'blocker' || f.severity === 'major') && f.status !== 'resolved' && !(f.attempted && !f.confirmed && !f.reproduction);
+
+/** An unconfirmed blocker/major finding with no runnable counterexample that has not had its automatic repair round yet. */
+export const needsAutoRepair = (f: Finding, contractVersion: number): boolean =>
+  !f.confirmed && !f.attempted && !f.reproduction && f.status === 'open' && f.contractVersion === contractVersion && (f.severity === 'blocker' || f.severity === 'major');
 
 /** Only confirmed findings (runner-reproduced or approved by a person) open an automatic repair round. */
 export const opensRepair = (f: Finding, contractVersion: number): boolean =>

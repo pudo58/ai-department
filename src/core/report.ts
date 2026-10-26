@@ -141,6 +141,9 @@ export function buildReport(input: ReportInput): AcceptanceReport {
   if (run.provider === 'fake') warn('Run mô phỏng: không có bằng chứng thật.');
   for(const audit of input.assertionAudit??[])if(audit.status==='unsupported')warn(`Assertion ${audit.path}: ${audit.message}`);
   const findingReplays=input.findingReplays??[];
+  for (const f of findings.filter(f => f.contractVersion === run.contract.version && f.attempted && !f.confirmed && !f.reproduction && f.status !== 'resolved' && (f.severity === 'blocker' || f.severity === 'major'))) {
+    warn(`Verifier còn nghi ngờ nhưng chưa có phản ví dụ chạy được, dù đã có một vòng sửa tự động: ${f.title}${f.location ? ` (${f.location})` : ''}. Đọc và tự kiểm tra trước khi nghiệm thu.`);
+  }
   for(const finding of findings.filter(f=>f.contractVersion===run.contract.version)){
     if(finding.reproductionLimitation)warn(`Phản ví dụ ${finding.title}: ${finding.reproductionLimitation}`);
     const replay=findingReplays.filter(r=>r.findingId===finding.id&&r.checkpoint===run.checkpoint).at(-1);

@@ -1,7 +1,7 @@
 // The registered pilot: build the manifest, run its assignments (resumable), report.
 //   node scripts/eval-pilot.mjs build  [--out benchmarks/eval/pilot-1.manifest.json] [--seed 20261026]
 //   npm run eval -- register benchmarks/eval/pilot-1.manifest.json          (locks it; nothing runs before this)
-//   node scripts/eval-pilot.mjs run    benchmarks/eval/pilot-1.manifest.json [--only <taskId>] [--arm <arm>] [--limit N]
+//   node scripts/eval-pilot.mjs run    benchmarks/eval/pilot-1.manifest.json [--only <taskId>] [--arm <arm>] [--limit N] [--ids a:arm:1,b:arm:2] [--variant name]
 //   node scripts/eval-pilot.mjs report benchmarks/eval/pilot-1.manifest.json [--amended]
 import { execFileSync } from 'node:child_process';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
@@ -45,7 +45,9 @@ if (command === 'build') {
 
 const file = path.resolve(manifestArg ?? '');
 const { manifest, hash } = await loadLocked(file);
-const rowsDir = path.join(repoRoot, 'test-results', 'eval-pilot', manifest.id);
+// --variant keeps a rerun with changed product code apart from the registered results: same assignments, own folder.
+const variant = flag('variant');
+const rowsDir = path.join(repoRoot, 'test-results', 'eval-pilot', variant ? `${manifest.id}__${variant}` : manifest.id);
 await mkdir(rowsDir, { recursive: true });
 
 async function rowsFor(assignmentId) {
@@ -57,16 +59,16 @@ async function rowsFor(assignmentId) {
 const finalRow = async (id) => (await rowsFor(id)).filter((r) => !r.error).at(-1);
 
 if (command === 'run') {
-  const only = flag('only'), armOnly = flag('arm'), limit = Number(flag('limit', '1000'));
+  const only = flag('only'), armOnly = flag('arm'), limit = Number(flag('limit', '1000')), ids = flag('ids')?.split(',');
   let done = 0;
   for (const assignment of manifest.assignments) {
-    if ((only && assignment.taskId !== only) || (armOnly && assignment.arm !== armOnly)) continue;
+    if ((only && assignment.taskId !== only) || (armOnly && assignment.arm !== armOnly) || (ids && !ids.includes(assignment.id))) continue;
     if (await finalRow(assignment.id)) continue;
     if (done >= limit) break;
     const attempt = (await rowsFor(assignment.id)).length + 1;
     const task = await loadTask(assignment.taskId), declared = manifest.tasks.find((t) => t.id === assignment.taskId);
     if (await taskHash(task.dir) !== declared.taskPackHash) throw new Error(`Task pack ${assignment.taskId} đã đổi sau khi đăng ký.`);
-    const name = `pilot-${safe(assignment.id)}-a${attempt}`;
+    const name = `pilot${variant ? `-${variant}` : ''}-${safe(assignment.id)}-a${attempt}`;
     console.log(JSON.stringify({ event: 'started', assignment: assignment.id, attempt }));
     const row = await runArm({ task, plan: runPlan(assignment.arm, declared), name, outDir: rowsDir });
     await writeFile(path.join(rowsDir, `${safe(assignment.id)}.a${attempt}.json`), JSON.stringify({ assignmentId: assignment.id, arm: assignment.arm, attempt, manifestHash: hash, ...row }, null, 2));
