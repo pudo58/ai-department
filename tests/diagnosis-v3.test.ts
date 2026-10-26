@@ -51,6 +51,21 @@ it('corrects a contradictory diagnosis once before Developer, then requires exac
  const after=f.orch.detail(d.run.id);expect(after.run.status,after.run.blocker??'').toBe('awaiting_acceptance');expect(after.checks.at(-1)!.counts).toEqual({passed:1,failed:0,skipped:0});expect(after.quality.cases[0]!.status).toBe('passed');expect(f.calls.filter(c=>c.startsWith('developer'))).toHaveLength(1);
  const manifest=JSON.parse(after.artifacts.filter(a=>a.title==='Test manifest').at(-1)!.content);expect(manifest.entries[0].assertions[2].expression).toBe("expect(q.claim()).toBe('C')");expect(manifest.assertionAudit[0].status).toBe('checked');expect(readFileSync(path.join(f.source,'src/queue.js'),'utf8')).toContain('stub');await app.close();f.store.close();
 },60000);
+it('applies a valid Author test correction by itself once, marks the run degraded and says nobody approved it',async()=>{
+ process.env.AIDEPT_AUTO_TEST_REPAIR='1';
+ try{
+  const f=await fixture(),d=f.orch.detail(f.run.id);
+  expect(d.run.status,d.run.blocker??'').toBe('awaiting_acceptance');expect(d.testRepair).toBeUndefined();
+  expect(d.checks.at(-1)!.counts).toEqual({passed:1,failed:0,skipped:0});expect(d.quality.cases[0]!.status).toBe('passed');
+  const receipt=JSON.parse(d.artifacts.filter(a=>a.title==='Test repair receipt').at(-1)!.content);
+  expect(receipt.source).toBe('auto_approved');expect(receipt.caseIds).toEqual(['C-1']);
+  expect(d.degraded?.stages).toContain('Sửa test của Author');
+  const report=await f.orch.report(f.run.id);
+  expect(report.readiness).toBe('ready_with_warnings');
+  expect(report.warnings.some(w=>w.level==='warn'&&/tự áp dụng bản sửa test/.test(w.text))).toBe(true);
+  f.store.close();
+ }finally{process.env.AIDEPT_AUTO_TEST_REPAIR='0';}
+},60000);
 it('routes a genuine implementation defect into source repair and preserves the Author tests',async()=>{
  const f=await fixture(true,'implementation'),d=f.orch.detail(f.run.id);expect(d.run.status,d.run.blocker??'').toBe('awaiting_acceptance');expect(f.calls.filter(c=>c.startsWith('developer'))).toHaveLength(2);expect(f.calls.filter(c=>c==='author:repair')).toHaveLength(1);expect(d.testRepair).toBeUndefined();expect(readFileSync(path.join(f.runtime.workspacePath(d.run,'A'),'tests/queue.test.js'),'utf8')).toBe(f.testSource(true));f.store.close();
 },60000);

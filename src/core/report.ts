@@ -114,8 +114,9 @@ export function buildReport(input: ReportInput): AcceptanceReport {
   const info = (text: string) => warnings.push({ level: 'info', text });
   for (const receipt of artifacts.filter(a => a.title === 'Test repair receipt' && a.valid && a.contractVersion === run.contract.version)) {
     try {
-      const repair = JSON.parse(receipt.content) as { kind?: 'setup' | 'assertion'; caseIds: string[]; reason: string; previousCheckpoint: string; checkpoint: string };
-      info(`Test ${repair.caseIds.join(', ')} đã được sửa ${repair.kind === 'assertion' ? 'assertion' : 'setup'} theo diff người dùng duyệt (${repair.previousCheckpoint.slice(0, 8)} → ${repair.checkpoint.slice(0, 8)}): ${repair.reason}`);
+      const repair = JSON.parse(receipt.content) as { source?: string; assertionChanges?: { caseId: string; before: string; after: string }[]; kind?: 'setup' | 'assertion'; caseIds: string[]; reason: string; previousCheckpoint: string; checkpoint: string };
+      if (repair.source === 'auto_approved') warn(`Hệ thống tự áp dụng bản sửa test của Author (không có người duyệt) cho ${repair.caseIds.join(', ')}: ${repair.reason}${repair.assertionChanges?.length ? ` Assertion: ${repair.assertionChanges.map(c => `"${short(c.before, 80)}" → "${short(c.after, 80)}"`).join('; ')}.` : ''} Hãy xem lại trước khi nghiệm thu.`);
+      else info(`Test ${repair.caseIds.join(', ')} đã được sửa ${repair.kind === 'assertion' ? 'assertion' : 'setup'} theo diff người dùng duyệt (${repair.previousCheckpoint.slice(0, 8)} → ${repair.checkpoint.slice(0, 8)}): ${repair.reason}`);
     } catch { /* An unreadable audit record is not evidence that a check passed. */ }
   }
 

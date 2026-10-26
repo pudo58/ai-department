@@ -93,7 +93,7 @@ export interface Run {
   contractReviewReceipt?: ContractReviewReceipt;
   qualityPolicyVersion?: 1 | 2 | 3;
   /** A human-approved test-only proposal; persisted before enqueue so restart cannot lose its intent. */
-  testRepairApproval?: { artifactId: string; artifactHash: string; appliedCheckpoint?: string };
+  testRepairApproval?: { artifactId: string; artifactHash: string; appliedCheckpoint?: string; /** Applied by the system after every check passed, not by a person. */ auto?: boolean };
   /** Project context frozen for this run on first use, so later memory edits cannot change a run in flight. */
   context?: RunContext;
 }

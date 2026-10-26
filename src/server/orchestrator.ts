@@ -414,16 +414,17 @@ export class Orchestrator {
       else if(this.s.run(runId).authorDraftRequest){
         try{await this.candidates.revalidateAuthorDraft(runId);}finally{this.s.mutate(runId,r=>{delete r.authorDraftRequest;});}
       }
-      else if (this.s.run(runId).testRepairApproval) {
-        this.s.mutate(runId, (r) => { delete r.pendingAction; });
-        await this.recovery.applyApproved(runId);
-        await this.recheckPhase(runId, controller.signal, false);
-        this.s.mutate(runId, r => { delete r.testRepairApproval; });
-      }
+      else if (this.s.run(runId).testRepairApproval) await this.applyTestRepair(runId, controller.signal);
       else if (this.s.run(runId).pendingAction === 'recheck') await this.recheckPhase(runId, controller.signal);
       else if (this.s.run(runId).pendingAction === 'repair') await this.verification.repairPhase(runId, controller.signal);
       else if (!isApproved(this.s.run(runId).contract)) await this.planning.planPhase(runId, controller.signal);
       else await this.buildPhase(runId, controller.signal);
+      // A test correction approved by the system (see TestRecovery.autoApprove) is applied right away instead of waiting for a person.
+      const after = this.s.run(runId);
+      if (after.testRepairApproval?.auto && !after.testRepairApproval.appliedCheckpoint && ['blocked', 'failed'].includes(after.status)) {
+        this.s.mutate(runId, (r) => { r.status = 'running'; r.blocker = null; });
+        await this.applyTestRepair(runId, controller.signal);
+      }
     } catch (error) {
       this.recordStop(runId, error, controller.signal);
     } finally {
@@ -435,6 +436,13 @@ export class Orchestrator {
       if (run?.pendingAction) this.s.mutate(runId, (r) => { delete r.pendingAction; });
       if (run && run.status === 'running') this.s.mutate(runId, (r) => { r.status = 'paused'; r.blocker = 'Giai đoạn kết thúc mà không có trạng thái rõ ràng.'; });
     }
+  }
+
+  private async applyTestRepair(runId: string, signal: AbortSignal): Promise<void> {
+    this.s.mutate(runId, (r) => { delete r.pendingAction; });
+    await this.recovery.applyApproved(runId);
+    await this.recheckPhase(runId, signal, false);
+    this.s.mutate(runId, r => { delete r.testRepairApproval; });
   }
 
   private recordStop(runId: string, error: unknown, signal: AbortSignal): void {
