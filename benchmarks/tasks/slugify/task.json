@@ -9,7 +9,7 @@
  ],
  "codeFile": "src/slugify.js",
  "graderFile": "grade.test.js",
- "initialTeamMode": "single",
+ "initialTeamMode": "verify",
  "minMutants": 8,
  "budgetUsd": 6,
  "protectedPaths": [

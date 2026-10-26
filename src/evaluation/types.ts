@@ -51,6 +51,8 @@ export interface EvaluationTask {
   routingSignals: string[];
   /** Fixed before execution; escalation is recorded separately. */
   initialTeamMode: 'single' | 'clarify' | 'verify' | 'compare';
+  /** Hash of the whole task pack (spec, scaffold, reference, hidden grader, mutants), locked with the manifest. */
+  taskPackHash?: string;
   source?: { repository: string; baseSha: string; evaluatorHash: string; attestation: Attestation };
 }
 export interface Assignment { id: string; taskId: string; arm: Arm; repetition: number }

@@ -1,0 +1,425 @@
+{
+  "schemaVersion": 1,
+  "kind": "m0b",
+  "id": "pilot-1",
+  "provenance": "synthetic",
+  "description": "Pilot: harness-single vs harness-team (verify) vs native Codex on eight task packs with hidden graders.",
+  "seed": 20261026,
+  "protocol": {
+    "version": "pilot-1",
+    "rubric": "Accepted = the hidden grader of the task pack passes every test AND the run finished through its normal path (harness arms: reached awaiting_acceptance; native-full: the agent finished within the time limit). A run that stops, fails or is blocked is not accepted, whatever its code scores. Grader-only results and false-ready counts are reported separately. Contracts are approved unchanged and a valid Author test correction is applied automatically; both are recorded as protocol deviations.",
+    "lockedAt": "2026-10-26T07:12:59.799Z"
+  },
+  "repetitions": 2,
+  "arms": [
+    "native-full",
+    "harness-single",
+    "harness-team"
+  ],
+  "tasks": [
+    {
+      "id": "bookings",
+      "stratum": "hard",
+      "requirement": "# RoomBookings — holds, confirmations and cancellations on half-open time intervals\n\nImplement `src/bookings.js` as an in-memory room booking service. Export `createBookings({ rooms = [], holdTtl = 100, now = () => 0, maxDuration = 480 } = {})`. `rooms` is an array of unique nonempty room names. `now` is a function returning the current time as a nonnegative safe integer (minutes); the service never reads a wall clock. All times are nonnegative safe integers. Methods are synchronous, and callers may also `await` them. Inputs and results are plain JSON values.\n\nThe service exposes `hold({ id, room, start, end })`, `confirm(id)`, `cancel(id)`, `get(id)` and `list(room, { from, to } = {})`.\n\n1. Errors are `Error` objects with a string `code`. `createBookings` throws `INVALID_INPUT` when `rooms` is not an array of unique nonempty strings, or `holdTtl` or `maxDuration` is not a positive safe integer. For `hold`: `id` must be a nonempty string (`INVALID_INPUT`); `room` must be one of `rooms` (`UNKNOWN_ROOM`); `start` and `end` must be nonnegative safe integers with `start < end` (`INVALID_INTERVAL`); `end - start` must not exceed `maxDuration`, and exactly `maxDuration` is allowed (`TOO_LONG`); `start` must not be before `now()`, and `start === now()` is allowed (`IN_THE_PAST`). An `id` that was ever used, even by a booking that was cancelled or expired, is taken forever (`ID_TAKEN`).\n2. Intervals are half-open: `[start, end)`. Two intervals overlap when `a.start < b.end && b.start < a.end`, so intervals that only touch (`[0, 10)` and `[10, 20)`) do not overlap. Within one room, a hold that overlaps an active booking is refused with `CONFLICT` and changes nothing. Different rooms never conflict. Active bookings are holds that have not expired and confirmed bookings.\n3. `hold` creates a booking with status `held`. A hold made at time `t` is active while `now() < t + holdTtl`. At `now() >= t + holdTtl` it has expired: its status is `expired`, it blocks nothing (another hold may take exactly its slot at that moment), and it no longer appears in `list`.\n4. `confirm(id)` turns an active hold into a `confirmed` booking and returns its view. Confirming an already confirmed booking returns the same view unchanged. An expired hold fails with `HOLD_EXPIRED`, a cancelled booking with `ALREADY_CANCELLED`, an unknown id with `UNKNOWN_BOOKING`. A confirmed booking never expires, even after its end time has passed.\n5. `cancel(id)` cancels a hold that is still active, at any time before it expires, and returns its view with status `cancelled`. A confirmed booking can be cancelled only while `now() < start`; at `now() >= start` it fails with `TOO_LATE` and stays confirmed. Cancelling an expired hold fails with `HOLD_EXPIRED`. Cancelling a booking that is already cancelled returns its view unchanged. An unknown id fails with `UNKNOWN_BOOKING`. A cancelled booking frees its slot at once.\n6. A view is `{ id, room, start, end, status }`, with `status` one of `held`, `confirmed`, `cancelled`, `expired`, plus `expiresAt` (`t + holdTtl`) only while the status is `held`. `get(id)` returns the view as of `now()` or throws `UNKNOWN_BOOKING`.\n7. `list(room)` returns the views of the active bookings of that room (held and confirmed), sorted by `start` ascending and then by `id` using JavaScript string comparison. With `{ from, to }` it returns only those overlapping the half-open window `[from, to)`; a missing `from` means 0 and a missing `to` means no upper limit. A window with `from >= to` or non-integer bounds fails with `INVALID_INTERVAL`; an unknown room with `UNKNOWN_ROOM`.\n\nError precedence is specified only where stated above; do not test inputs that break several unrelated rules at once. No persistence, network, timers or cleanup of old bookings is required. Keep the source compact, use the public API in tests, and do not add behavior beyond this contract.\n",
+      "routingSignals": [
+        "time-boundary",
+        "state-transition",
+        "half-open-interval"
+      ],
+      "initialTeamMode": "verify",
+      "taskPackHash": "b1bc86d50f6997e4cdf72086eff5741dbb32de8605cd96a049862ece758df6f0"
+    },
+    {
+      "id": "charges",
+      "stratum": "hard",
+      "requirement": "# KeyedCharges — idempotent, concurrency-safe charging\r\n\r\nImplement `src/charges.js` as an in-memory charge service. Export `createCharges({ accounts = {}, ttl = 1000, now = () => 0, authorize } = {})`. `accounts` maps an account name to its starting balance. `now` is a function returning the current logical time as a nonnegative safe integer; the service never reads a wall clock. `authorize`, when given, is `async ({ key, account, amount }) => boolean`. Every method returns a promise, and callers always `await` it. Inputs and results are plain JSON values.\r\n\r\nThe service exposes `charge({ key, account, amount })`, `deposit({ account, amount })` and `balance(account)`.\r\n\r\n1. Errors are `Error` objects with a string `code`. `key` must be a nonempty string, otherwise `INVALID_INPUT`. `amount` must be a positive safe integer, otherwise `INVALID_AMOUNT`. An account that was not given in `accounts` is unknown: `UNKNOWN_ACCOUNT`. Starting balances must be nonnegative safe integers and `ttl` a positive safe integer, otherwise `createCharges` throws `INVALID_INPUT`. `balance(account)` returns the current balance or throws `UNKNOWN_ACCOUNT`. `deposit` adds `amount` to the account and returns the new balance.\r\n2. A successful `charge` subtracts `amount` from the account and resolves to `{ chargeId, key, account, amount, balance, replayed: false }`, where `balance` is the account balance immediately after this charge and `chargeId` is a string that is unique among all charges the service ever made. A charge that would take the balance below zero fails with `INSUFFICIENT_FUNDS` and changes nothing.\r\n3. A charge is idempotent by `key`. While the key of an earlier successful charge is live, repeating `charge` with the same `key`, `account` and `amount` does not subtract anything and resolves to the original result with the same `chargeId` and the original `balance` (the balance right after that first charge, not the balance now) but with `replayed: true`. The same `key` with a different `account` or `amount` while the key is live fails with `IDEMPOTENCY_MISMATCH` and changes nothing.\r\n4. The key of a successful charge is live while `now() < t + ttl`, where `t` is the value of `now()` at the moment the money moved. At `now() === t + ttl` and later it has expired, and a charge with that key is a new, independent charge with a new `chargeId` (it replaces the old record for that key).\r\n5. A failed charge never consumes its key. After `INSUFFICIENT_FUNDS` or `DECLINED`, the same key may be used again, even with a different account or amount, and is treated as a first use.\r\n6. Input validation (rule 1) happens before anything else, so invalid calls never reach `authorize`. If `authorize` is present it is called exactly once per new attempt, before any money moves. A replay under rule 3 and a join under rule 8 are not new attempts and never call it. If it resolves to anything other than `true`, the charge fails with `DECLINED` and changes nothing. If it rejects, that same error is propagated and nothing changes.\r\n7. Checking the balance and subtracting the amount happen together, after authorization has finished. Two concurrent charges with different keys on the same account, whose total exceeds the balance, must never overdraw it, however slowly `authorize` answers: the attempt whose authorization finishes first is charged first.\r\n8. Concurrent calls with the same `key` are one attempt. While a charge for a key is in flight (its `authorize` has not yet finished), another call with the same key, account and amount joins it: `authorize` is not called again, and both calls observe the same outcome. If it succeeds, the first caller gets `replayed: false` and every joiner gets the same result with `replayed: true`. If it fails, every caller gets an error with the same `code`. A call joining with a different account or amount fails with `IDEMPOTENCY_MISMATCH` and does not disturb the attempt in flight.\r\n9. `deposit` and `balance` never wait for in-flight charges.\r\n\r\nError precedence is specified only where stated above; do not test inputs that break several unrelated rules at once. No persistence, network, timers, or key cleanup schedule is required. Keep the source compact, use the public API in tests, and do not add behavior beyond this contract.\r\n",
+      "routingSignals": [
+        "idempotency",
+        "concurrency",
+        "time-boundary",
+        "atomicity"
+      ],
+      "initialTeamMode": "verify",
+      "taskPackHash": "137ddbac41fd769c0b31571c439db0d65d0a74ed10272aa9ba5322a439d385c6"
+    },
+    {
+      "id": "lru",
+      "stratum": "easy",
+      "requirement": "# LruCache — a bounded least-recently-used cache\n\nImplement `src/lru.js` exporting `createLru({ capacity, onEvict } = {})`. All methods are synchronous.\n\n1. `capacity` must be a positive safe integer and `onEvict`, if given, a function. Otherwise `createLru` throws an `Error` whose `code` is `INVALID_INPUT`.\n2. `set(key, value)` stores the value under `key` and marks `key` as the most recently used. Keys are compared like `Map` keys (strict equality, with `NaN` equal to `NaN`). It returns the cache itself so calls can be chained. Setting an existing key replaces its value and never evicts anything.\n3. When `set` adds a new key and the cache then holds more than `capacity` entries, the least recently used entry is removed, and `onEvict(key, value)` is called once for it with the removed key and its value. `onEvict` is called after the removal is complete (so `size` is already back to `capacity` inside the callback) and is called for no other reason: not for `delete`, `clear`, or replacing a value.\n4. `get(key)` returns the value, or `undefined` if the key is absent, and marks the key as the most recently used when it is present.\n5. `peek(key)` returns the value like `get` but does not change the recency order. `has(key)` returns a boolean and does not change the order either.\n6. `delete(key)` removes the key and returns `true`, or returns `false` if it was absent.\n7. `size` is a read-only property with the number of entries. `keys()` returns a new array of the keys from the most recently used to the least recently used. `clear()` removes every entry without calling `onEvict`.\n8. A stored value may be any value, including `undefined`; `has` tells it apart from a missing key.\n\nKeep the source compact, use the public API in tests, and do not add behavior beyond this contract.\n",
+      "routingSignals": [
+        "cache",
+        "ordering",
+        "callback"
+      ],
+      "initialTeamMode": "verify",
+      "taskPackHash": "6a3c0040e64ed6c9ec18c32bb74db58ac14ca53d9a706e864df88e38bd562071"
+    },
+    {
+      "id": "pulsegraph",
+      "stratum": "hard",
+      "requirement": "# PulseGraph — deterministic dependency scheduler\n\nImplement `src/scheduler.js` as an in-memory deterministic job scheduler. Export `createScheduler({now=0,retryBase=2,maxAttempts=3}={})` and `restoreScheduler(snapshot)`. Methods are synchronous or async; callers may always await them. Inputs/results are plain JSON.\n\nThe scheduler exposes `submit({id,dependsOn=[],priority=0})`, `get(id)`, `claim({worker,leaseFor})`, `renew({id,worker,token,leaseFor})`, `complete({id,worker,token,result})`, `fail({id,worker,token,error})`, `cancel(id)`, `advance(time)`, and `snapshot()`.\n\n1. IDs and worker names are nonempty strings. A new job ID is unique forever. `dependsOn` contains unique IDs of jobs that already exist; self/unknown/duplicate dependencies are invalid. Because dependencies must pre-exist, accepted jobs form a DAG. Priority is a safe integer; larger values run first. `retryBase` and `maxAttempts` are positive safe integers. Logical time starts at nonnegative safe integer `now`.\n2. A job is `waiting` while one or more dependencies are unfinished; it is `ready` when all dependencies are `done`. A dependency ending `dead`, `cancelled` or `blocked` makes the job `blocked`; blocking propagates transitively. A queued retry is `ready` but cannot be claimed before `availableAt`. Terminal states are `done`, `dead`, `cancelled`, and `blocked`.\n   Every job view contains `id,dependsOn,priority,sequence,status,attempt,availableAt`; `blockedBy` appears only on blocked jobs, `worker,token,leaseUntil` only on leased jobs, and `result`/`lastError` only when present. Views are detached.\n3. `submit` is atomic. If dependencies are already done, the new job is immediately ready. If a dependency is already terminal-unsuccessful, it is immediately blocked. Jobs cannot be deleted. Initial `attempt` is 0, `availableAt` is current time, `result` and `lastError` are absent.\n4. `claim` validates nonempty worker and positive safe integer `leaseFor`. It returns null if no ready job is available. Otherwise select by priority descending, submission order ascending, then ID using JavaScript string comparison. Claim increments that job's attempt and a scheduler-wide fencing token, then returns a detached job view with `worker`, `token`, and `leaseUntil=now+leaseFor`. Tokens start at 1, increase globally for every claim, and never repeat after restore.\n5. A lease is current only while the job is `leased` and worker/token match; otherwise lease operations throw an Error with code `LEASE_LOST`. `advance` expires leases at the exact boundary before returning, so a later operation with that token sees `LEASE_LOST`. `renew` at a current lease extends to `max(oldLeaseUntil, now+leaseFor)` and keeps the token. `complete` stores a detached result, clears `lastError` and the lease, changes state to done and readies newly-unblocked dependents. `fail` requires a nonempty error string, records it, clears the lease and either schedules retry at `now + retryBase * 2^(attempt-1)` (if attempts < maxAttempts) or marks the job dead and blocks descendants. The attempt limit includes the original claim.\n6. `cancel(id)` cancels any nonterminal job, including a leased one, invalidates its lease, and blocks descendants. Cancelling a terminal job throws `JOB_TERMINAL`. A blocked job view has `blockedBy` set to its first dependency in dependsOn that is dead/cancelled/blocked. Unknown IDs throw `UNKNOWN_JOB`; submitting an existing ID throws `JOB_EXISTS`; invalid scalar fields throw `INVALID_INPUT`; invalid dependency lists throw `INVALID_DEPENDENCIES`; missing dependencies throw `UNKNOWN_DEPENDENCY`.\n7. `advance(time)` requires a nonnegative safe integer not less than current time or throws `INVALID_TIME` without changing state. It expires every lease with `leaseUntil <= time`, processing deadline then submission order. Each expiry follows the same retry/dead rule as fail, with lastError `LEASE_EXPIRED`. It returns `{now,expired:[jobIds]}` in that processing order. No wall clock is used; `claim` never implicitly expires leases. Advancing with no expiry still updates time.\n8. `snapshot()` returns exactly `{schemaVersion:1,now,retryBase,maxAttempts,nextSequence,nextToken,jobs}`; each job has its complete view including `sequence`, current status, and optional lease/result/error fields. Mutating caller input, returned result, view or snapshot cannot change scheduler state. Snapshot/JSON-clone/restore preserves time, options, submission order, every job and dependency, retry schedule, result/error, lease, next fencing token and terminal history. Original and restored schedulers then evolve independently. Only snapshots produced by this implementation are required inputs to restore.\n\nError precedence is specified only where stated above; do not test precedence for inputs violating several unrelated rules at once. No persistence, network, threads, timers, worker execution, fairness guarantee beyond the stated ordering, or dependency deletion is required. Keep source compact, use the public API in tests, and do not add behavior beyond this contract.",
+      "routingSignals": [
+        "dependency-graph",
+        "lease-fencing",
+        "retry",
+        "time-boundary",
+        "snapshot"
+      ],
+      "initialTeamMode": "verify",
+      "taskPackHash": "f1c6b2bc918fdab79468709c5377afcf4eb14fcaadb575ba864824a78a4cb9e5"
+    },
+    {
+      "id": "ranges",
+      "stratum": "easy",
+      "requirement": "# Ranges — merge and query closed integer ranges\n\nImplement `src/ranges.js` exporting `mergeRanges(list)`, `totalLength(list)`, `contains(list, n)` and `gaps(list, bounds)`. All are pure functions.\n\n1. A range is an array `[start, end]` of two safe integers with `start <= end`. It is closed: it contains `start`, `end` and every integer between them. A list is an array of ranges. Any other shape (a non-array list, a range that is not a pair of safe integers, or `start > end`) makes the function throw an `Error` whose `code` is `INVALID_RANGE`.\n2. `mergeRanges(list)` returns a new list in which ranges that overlap or are adjacent are combined into one. Two ranges are adjacent when one starts exactly one integer after the other ends (`[1, 3]` and `[4, 6]` merge into `[1, 6]`; `[1, 3]` and `[5, 6]` do not merge). The result is sorted by `start` ascending and contains no two ranges that could still be merged. The input list and its ranges are not changed, and the returned ranges are new arrays. An empty list gives an empty list.\n3. `totalLength(list)` returns the number of distinct integers covered by the ranges in the list. Overlapping ranges count each integer once; `[5, 5]` has length 1. An empty list gives 0.\n4. `contains(list, n)` returns `true` when the integer `n` lies in any range of the list, else `false`. `n` must be a safe integer, otherwise it throws `INVALID_RANGE`.\n5. `gaps(list, [from, to])` returns the sorted list of maximal closed ranges of integers inside `[from, to]` that are not covered by any range of `list`. `[from, to]` is itself a range under rule 1. Parts of the list outside `[from, to]` are ignored. If everything is covered, the result is an empty list; if nothing is covered, it is `[[from, to]]`.\n\nKeep the source compact, use the public API in tests, and do not add behavior beyond this contract.\n",
+      "routingSignals": [
+        "intervals",
+        "boundary",
+        "immutability"
+      ],
+      "initialTeamMode": "verify",
+      "taskPackHash": "0f7713aaef5822a957e6ff5d92df1c08d484eba48a719810e46a82b15c3ed983"
+    },
+    {
+      "id": "runner",
+      "stratum": "hard",
+      "requirement": "# KeyedRunner — bounded concurrency with per-key ordering\n\nImplement `src/runner.js` as an in-memory task runner. Export `createRunner({ concurrency = 2 } = {})`. The runner exposes `run(key, fn, { signal } = {})`, `drain()` and `stats()`. `run` returns a promise; `fn` is a function that returns a value or a promise.\n\n1. `concurrency` must be a positive safe integer, otherwise `createRunner` throws an `Error` with `code` `INVALID_INPUT`. `run` never throws: an empty or non-string `key`, or an `fn` that is not a function, makes the returned promise reject with an `Error` whose `code` is `INVALID_INPUT`, and nothing is queued.\n2. A task is running from the moment its `fn` is called until the promise `fn` returned settles. If `fn` returns a plain value, the task is finished at once; if `fn` throws, the task is finished and the promise returned by `run` rejects with the thrown error. Otherwise the promise returned by `run` settles exactly like the promise `fn` returned (same value, same error object).\n3. At most `concurrency` tasks run at the same time.\n4. Tasks with the same `key` never run at the same time and start in the order in which `run` was called for that key. A task that fails does not stop the later tasks of its key.\n5. Tasks with different keys may run at the same time, subject to rule 3. There is no head-of-line blocking: whenever a slot is free, the runner starts the oldest queued task whose key has no running task, even if older queued tasks are waiting for their own key. A task that can start immediately (a free slot and an idle key, with nothing older that could use the slot) has its `fn` called synchronously inside `run`.\n6. The slot of a finished task is released, and the next eligible task has been started, before the promise returned by `run` for the finished task settles. A caller that awaits `run` and then reads `stats()` therefore never sees the finished task as running, and sees the next task already running if there was one.\n7. `signal` is an optional `AbortSignal`. If it is already aborted when `run` is called, the promise rejects with an `Error` with `code` `CANCELLED` and `fn` is never called. If it is aborted while the task is queued, the task is removed from the queue, its promise rejects with `CANCELLED` (without waiting for any other task), and `fn` is never called. Aborting a task that has already started has no effect on it.\n8. `stats()` returns `{ running, queued }`: the number of running tasks and of tasks waiting in the queue.\n9. `drain()` returns a promise that resolves once the runner is completely idle (nothing running, nothing queued). Tasks submitted after `drain()` was called, but before the runner became idle, are waited for too. If the runner is already idle it resolves promptly. `drain()` never rejects, whatever the tasks do.\n\nError precedence is specified only where stated above; do not test inputs that break several unrelated rules at once. No timers, persistence or priorities are required. Keep the source compact, use the public API in tests, and do not add behavior beyond this contract.\n",
+      "routingSignals": [
+        "concurrency",
+        "ordering",
+        "cancellation"
+      ],
+      "initialTeamMode": "verify",
+      "taskPackHash": "5bcb6f364ead6f5dc1740227cc5d2204c52f9127fdf00eb5153a8fa981117ca0"
+    },
+    {
+      "id": "slugify",
+      "stratum": "easy",
+      "requirement": "# Slugify — turn text into a URL-safe slug\n\nImplement `src/slugify.js` exporting `slugify(input, { maxLength = 80, separator = '-' } = {})`, a pure function that returns a string.\n\n1. `input` must be a string, `maxLength` a positive safe integer and `separator` either `'-'` or `'_'`. Otherwise `slugify` throws an `Error` whose `code` is `INVALID_INPUT`.\n2. The text is first normalized with Unicode NFKD, every combining mark (Unicode category `Mn`) is removed, and the result is lower-cased. So `é` becomes `e`, and `Å` becomes `a`.\n3. A character is kept only if it is an ASCII letter or digit. Every maximal run of other characters (spaces, punctuation, symbols, and any non-ASCII character that did not decompose into ASCII, such as `đ` or `ß`) becomes exactly one `separator`.\n4. Separators at the very start and at the very end are removed.\n5. If the result is longer than `maxLength`, it is cut to its first `maxLength` characters, and then any separator left at the end is removed. The cut does not look for word boundaries.\n6. If nothing is left, the result is the empty string.\n7. Digits are kept as they are. The function never returns two separators in a row.\n\nKeep the source compact, use the public API in tests, and do not add behavior beyond this contract.\n",
+      "routingSignals": [
+        "string",
+        "unicode",
+        "boundary"
+      ],
+      "initialTeamMode": "verify",
+      "taskPackHash": "6dbecc178e8055880b085bd404fd73d559b78f4370d0fb6396573eb25e04a8fe"
+    },
+    {
+      "id": "versions",
+      "stratum": "easy",
+      "requirement": "# Versions — parse, compare and sort semantic versions\n\nImplement `src/versions.js` exporting `parseVersion(text)`, `compareVersions(a, b)`, `sortVersions(list)` and `maxVersion(list)`. All are pure functions.\n\n1. A version is `MAJOR.MINOR.PATCH`, optionally preceded by a single `v` or `V`, optionally followed by `-PRERELEASE` and then `+BUILD`. `MAJOR`, `MINOR` and `PATCH` are non-negative decimal integers without leading zeros (`0` is fine, `01` is not). `PRERELEASE` and `BUILD` are dot-separated, nonempty identifiers made of ASCII letters, digits and hyphens; a purely numeric prerelease identifier must not have leading zeros. Surrounding whitespace is not allowed.\n2. `parseVersion(text)` returns `{ major, minor, patch, prerelease, build }`. `major`, `minor` and `patch` are numbers. `prerelease` and `build` are arrays of identifiers; in `prerelease` a purely numeric identifier is a number and every other identifier is a string. `build` identifiers are always strings. Both arrays are empty when absent. A text that is not a version, or is not a string, makes it throw an `Error` whose `code` is `INVALID_VERSION`.\n3. `compareVersions(a, b)` takes two version strings and returns `-1`, `0` or `1` by semantic-version precedence. Compare `major`, then `minor`, then `patch` numerically. A version with a prerelease has lower precedence than the same version without one. Two prereleases are compared identifier by identifier from the left: numeric identifiers are compared as numbers; alphanumeric identifiers are compared as strings in ASCII order (`B` before `a`); a numeric identifier is lower than an alphanumeric one; if all the shared identifiers are equal, the version with more identifiers is higher. `BUILD` is ignored, and so is a leading `v`. An invalid version throws `INVALID_VERSION`.\n4. `sortVersions(list)` returns a new array of the same strings in ascending precedence. Versions with equal precedence keep their order from `list` (the sort is stable). It does not change `list`, and the returned items are the original strings, unchanged.\n5. `maxVersion(list)` returns the original string with the highest precedence, the first of them if several are equal, or `null` for an empty list. An invalid entry throws `INVALID_VERSION`.\n\nKeep the source compact, use the public API in tests, and do not add behavior beyond this contract.\n",
+      "routingSignals": [
+        "parsing",
+        "ordering",
+        "semver"
+      ],
+      "initialTeamMode": "verify",
+      "taskPackHash": "cc300551c3ab89fcc2b05b7c56d5609473a2cb54bf37335f00073aef8922ab34"
+    }
+  ],
+  "assignments": [
+    {
+      "id": "lru:native-full:1",
+      "taskId": "lru",
+      "arm": "native-full",
+      "repetition": 1
+    },
+    {
+      "id": "charges:harness-single:1",
+      "taskId": "charges",
+      "arm": "harness-single",
+      "repetition": 1
+    },
+    {
+      "id": "bookings:native-full:2",
+      "taskId": "bookings",
+      "arm": "native-full",
+      "repetition": 2
+    },
+    {
+      "id": "versions:native-full:2",
+      "taskId": "versions",
+      "arm": "native-full",
+      "repetition": 2
+    },
+    {
+      "id": "ranges:native-full:1",
+      "taskId": "ranges",
+      "arm": "native-full",
+      "repetition": 1
+    },
+    {
+      "id": "slugify:native-full:1",
+      "taskId": "slugify",
+      "arm": "native-full",
+      "repetition": 1
+    },
+    {
+      "id": "runner:native-full:1",
+      "taskId": "runner",
+      "arm": "native-full",
+      "repetition": 1
+    },
+    {
+      "id": "lru:native-full:2",
+      "taskId": "lru",
+      "arm": "native-full",
+      "repetition": 2
+    },
+    {
+      "id": "slugify:harness-team:2",
+      "taskId": "slugify",
+      "arm": "harness-team",
+      "repetition": 2
+    },
+    {
+      "id": "pulsegraph:harness-team:2",
+      "taskId": "pulsegraph",
+      "arm": "harness-team",
+      "repetition": 2
+    },
+    {
+      "id": "versions:harness-single:1",
+      "taskId": "versions",
+      "arm": "harness-single",
+      "repetition": 1
+    },
+    {
+      "id": "bookings:native-full:1",
+      "taskId": "bookings",
+      "arm": "native-full",
+      "repetition": 1
+    },
+    {
+      "id": "bookings:harness-single:1",
+      "taskId": "bookings",
+      "arm": "harness-single",
+      "repetition": 1
+    },
+    {
+      "id": "slugify:harness-team:1",
+      "taskId": "slugify",
+      "arm": "harness-team",
+      "repetition": 1
+    },
+    {
+      "id": "ranges:native-full:2",
+      "taskId": "ranges",
+      "arm": "native-full",
+      "repetition": 2
+    },
+    {
+      "id": "slugify:native-full:2",
+      "taskId": "slugify",
+      "arm": "native-full",
+      "repetition": 2
+    },
+    {
+      "id": "runner:harness-single:2",
+      "taskId": "runner",
+      "arm": "harness-single",
+      "repetition": 2
+    },
+    {
+      "id": "lru:harness-single:1",
+      "taskId": "lru",
+      "arm": "harness-single",
+      "repetition": 1
+    },
+    {
+      "id": "charges:native-full:1",
+      "taskId": "charges",
+      "arm": "native-full",
+      "repetition": 1
+    },
+    {
+      "id": "lru:harness-team:2",
+      "taskId": "lru",
+      "arm": "harness-team",
+      "repetition": 2
+    },
+    {
+      "id": "charges:native-full:2",
+      "taskId": "charges",
+      "arm": "native-full",
+      "repetition": 2
+    },
+    {
+      "id": "bookings:harness-single:2",
+      "taskId": "bookings",
+      "arm": "harness-single",
+      "repetition": 2
+    },
+    {
+      "id": "pulsegraph:harness-team:1",
+      "taskId": "pulsegraph",
+      "arm": "harness-team",
+      "repetition": 1
+    },
+    {
+      "id": "lru:harness-single:2",
+      "taskId": "lru",
+      "arm": "harness-single",
+      "repetition": 2
+    },
+    {
+      "id": "pulsegraph:harness-single:1",
+      "taskId": "pulsegraph",
+      "arm": "harness-single",
+      "repetition": 1
+    },
+    {
+      "id": "versions:native-full:1",
+      "taskId": "versions",
+      "arm": "native-full",
+      "repetition": 1
+    },
+    {
+      "id": "runner:native-full:2",
+      "taskId": "runner",
+      "arm": "native-full",
+      "repetition": 2
+    },
+    {
+      "id": "pulsegraph:native-full:2",
+      "taskId": "pulsegraph",
+      "arm": "native-full",
+      "repetition": 2
+    },
+    {
+      "id": "versions:harness-single:2",
+      "taskId": "versions",
+      "arm": "harness-single",
+      "repetition": 2
+    },
+    {
+      "id": "bookings:harness-team:1",
+      "taskId": "bookings",
+      "arm": "harness-team",
+      "repetition": 1
+    },
+    {
+      "id": "charges:harness-single:2",
+      "taskId": "charges",
+      "arm": "harness-single",
+      "repetition": 2
+    },
+    {
+      "id": "pulsegraph:native-full:1",
+      "taskId": "pulsegraph",
+      "arm": "native-full",
+      "repetition": 1
+    },
+    {
+      "id": "lru:harness-team:1",
+      "taskId": "lru",
+      "arm": "harness-team",
+      "repetition": 1
+    },
+    {
+      "id": "charges:harness-team:1",
+      "taskId": "charges",
+      "arm": "harness-team",
+      "repetition": 1
+    },
+    {
+      "id": "ranges:harness-single:2",
+      "taskId": "ranges",
+      "arm": "harness-single",
+      "repetition": 2
+    },
+    {
+      "id": "ranges:harness-team:2",
+      "taskId": "ranges",
+      "arm": "harness-team",
+      "repetition": 2
+    },
+    {
+      "id": "runner:harness-team:1",
+      "taskId": "runner",
+      "arm": "harness-team",
+      "repetition": 1
+    },
+    {
+      "id": "versions:harness-team:2",
+      "taskId": "versions",
+      "arm": "harness-team",
+      "repetition": 2
+    },
+    {
+      "id": "runner:harness-single:1",
+      "taskId": "runner",
+      "arm": "harness-single",
+      "repetition": 1
+    },
+    {
+      "id": "versions:harness-team:1",
+      "taskId": "versions",
+      "arm": "harness-team",
+      "repetition": 1
+    },
+    {
+      "id": "ranges:harness-team:1",
+      "taskId": "ranges",
+      "arm": "harness-team",
+      "repetition": 1
+    },
+    {
+      "id": "ranges:harness-single:1",
+      "taskId": "ranges",
+      "arm": "harness-single",
+      "repetition": 1
+    },
+    {
+      "id": "runner:harness-team:2",
+      "taskId": "runner",
+      "arm": "harness-team",
+      "repetition": 2
+    },
+    {
+      "id": "pulsegraph:harness-single:2",
+      "taskId": "pulsegraph",
+      "arm": "harness-single",
+      "repetition": 2
+    },
+    {
+      "id": "charges:harness-team:2",
+      "taskId": "charges",
+      "arm": "harness-team",
+      "repetition": 2
+    },
+    {
+      "id": "slugify:harness-single:2",
+      "taskId": "slugify",
+      "arm": "harness-single",
+      "repetition": 2
+    },
+    {
+      "id": "bookings:harness-team:2",
+      "taskId": "bookings",
+      "arm": "harness-team",
+      "repetition": 2
+    },
+    {
+      "id": "slugify:harness-single:1",
+      "taskId": "slugify",
+      "arm": "harness-single",
+      "repetition": 1
+    }
+  ],
+  "settings": {
+    "taskBudgetUsd": 10.8,
+    "modelVersion": "gpt-6-luna (medium)",
+    "cliVersions": {
+      "codex": "codex-cli 0.163.0"
+    },
+    "harnessSingleSubagents": false,
+    "nativeFeatures": "all-supported",
+    "followupHours": 0,
+    "targetWeights": {
+      "easy": 0.5,
+      "hard": 0.5
+    },
+    "bootstrapSamples": 2000
+  }
+}

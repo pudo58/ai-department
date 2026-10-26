@@ -65,3 +65,26 @@ Kết quả: `test-results/eval/<task>-<arm>-<tag>.json`. Hợp đồng được
 - Hợp đồng tự duyệt nguyên trạng, nên không đo công sức duyệt của người.
 - Reference, grader và mutant do cùng một người viết; kiểm chứng chéo bằng cách chấm các lời giải do model viết (nếu một lời giải hợp lệ bị fail, xem lại test đó) rồi mới khóa hash.
 - Một lần chạy một task chỉ là chỉ báo. Kết luận cần cỡ mẫu theo `npm run eval -- sample-size` và khoảng tin cậy từ `report-m0b`.
+
+## Pilot M0b đã đăng ký (`benchmarks/eval/pilot-1.manifest.json`)
+
+8 task (4 dễ, 4 khó) × 3 nhánh × 2 lần = 48 assignment, thứ tự xáo bằng seed đã đăng ký. Manifest chứa hash của từng gói task (SPEC, scaffold, reference, grader, mutant), nên đổi grader sau khi đăng ký làm bộ chạy từ chối chạy.
+
+| Nhánh M0b | Chạy thế nào |
+|---|---|
+| `harness-single` | chế độ Single của ứng dụng |
+| `harness-team` | chế độ Verify của ứng dụng (mọi task đặt `initialTeamMode: verify` để nhánh này luôn khác Single) |
+| `native-full` | Codex CLI chạy riêng, cùng model, effort, sandbox, giới hạn 30 phút, bật đủ tính năng (kể cả subagent) |
+
+```bash
+node node_modules/tsx/dist/cli.mjs scripts/eval-pilot.mjs build                      # tạo manifest (đã làm)
+node node_modules/tsx/dist/cli.mjs src/evaluation/cli.ts register benchmarks/eval/pilot-1.manifest.json   # khóa (đã làm)
+node node_modules/tsx/dist/cli.mjs scripts/eval-pilot.mjs run benchmarks/eval/pilot-1.manifest.json [--only <task>] [--arm <arm>] [--limit N]
+node node_modules/tsx/dist/cli.mjs scripts/eval-pilot.mjs report benchmarks/eval/pilot-1.manifest.json
+```
+
+- **Chạy tiếp được:** `run` bỏ qua assignment đã có kết quả. Lỗi hạ tầng (ổ đầy, máy sập) được ghi lại nhưng không tính là kết quả; assignment đó chạy lại ở lần `run` sau.
+- **"Được nghiệm thu"** (chỉ số chính của M0b) = grader ẩn đạt toàn bộ **và** run đi hết đường bình thường (harness: tới `awaiting_acceptance`; native: agent kết thúc trong giới hạn). `report` in thêm, riêng: số lần grader đạt, `falseReady`, số run chạy suy giảm, chi phí và thời gian trung bình theo nhánh.
+- **Nguồn gốc `synthetic`:** gói task do AI viết, chưa có người độc lập xác nhận, nên CLI cảnh báo kết quả chỉ để thử bộ đo. Muốn nâng lên `human-attested`, người xác nhận phải đọc từng grader và ký vào từng task, rồi tạo manifest mới (hash mới).
+- Hợp đồng tự duyệt nguyên trạng và đề xuất sửa test hợp lệ được tự áp dụng; cả hai ghi vào `protocolDeviations`.
+- Phát hiện subagent ở nhánh native là heuristic trên log JSONL của Codex.
