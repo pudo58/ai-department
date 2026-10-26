@@ -55,18 +55,21 @@ const clip = (t: string): string => (t.length > 8000 ? t.slice(0, 8000) : t);
  * is exactly the case the diagnosis exists for. Implementation and ambiguous diagnoses are left as they are. Every change is listed.
  */
 export function normalizeDiagnosis(run: Run, d: Diagnosis, ctx: { failingCaseIds: readonly string[]; testPaths: readonly string[]; changedPaths: readonly string[]; failedTestIds: readonly string[] }): { diagnosis: Diagnosis; notes: string[] } {
-  if (run.qualityPolicyVersion !== 3 || !d.assessment || (d.decision !== 'test_setup' && d.decision !== 'test_assertion')) return { diagnosis: d, notes: [] };
+  if (run.qualityPolicyVersion !== 3 || !d.assessment) return { diagnosis: d, notes: [] };
   const out: Diagnosis = structuredClone(d), a = out.assessment!, notes: string[] = [];
-  const known = out.caseIds.filter(id => ctx.failingCaseIds.includes(id));
-  if (known.length !== out.caseIds.length || !known.length) { out.caseIds = known.length ? known : [...ctx.failingCaseIds]; notes.push('caseIds được đưa về các ca thực sự thất bại.'); }
-  if (a.target !== 'test' || a.testConformsToContract !== false) { a.target = 'test'; a.testConformsToContract = false; notes.push('target/testConformsToContract được đặt theo quyết định "test sai".'); }
-  const line = /:\d+(?:-\d+)?$/.exec(a.location)?.[0] ?? '';
-  const file = a.location.replace(/:\d+(?:-\d+)?$/, '').replace(/\\/g, '/');
-  if (!ctx.testPaths.includes(file)) {
-    const target = ctx.changedPaths.find(p => ctx.testPaths.includes(p)) ?? ctx.testPaths[0];
-    if (target) { a.location = `${target}${line}`; notes.push(`location được đưa về file test của ca lỗi (${target}).`); }
+  // Only a "the test is wrong" decision has its redundant fields restated; every decision gets quotations tied to the contract.
+  if (d.decision === 'test_setup' || d.decision === 'test_assertion') {
+    const known = out.caseIds.filter(id => ctx.failingCaseIds.includes(id));
+    if (known.length !== out.caseIds.length || !known.length) { out.caseIds = known.length ? known : [...ctx.failingCaseIds]; notes.push('caseIds được đưa về các ca thực sự thất bại.'); }
+    if (a.target !== 'test' || a.testConformsToContract !== false) { a.target = 'test'; a.testConformsToContract = false; notes.push('target/testConformsToContract được đặt theo quyết định "test sai".'); }
+    const line = /:\d+(?:-\d+)?$/.exec(a.location)?.[0] ?? '';
+    const file = a.location.replace(/:\d+(?:-\d+)?$/, '').replace(/\\/g, '/');
+    if (!ctx.testPaths.includes(file)) {
+      const target = ctx.changedPaths.find(p => ctx.testPaths.includes(p)) ?? ctx.testPaths[0];
+      if (target) { a.location = `${target}${line}`; notes.push(`location được đưa về file test của ca lỗi (${target}).`); }
+    }
+    if (a.failingTestIds.some(id => resolveFailingTest(id, ctx.failedTestIds) === undefined) && ctx.failedTestIds.length) { a.failingTestIds = [...ctx.failedTestIds]; notes.push('failingTestIds được lấy từ report của runner.'); }
   }
-  if (a.failingTestIds.some(id => resolveFailingTest(id, ctx.failedTestIds) === undefined) && ctx.failedTestIds.length) { a.failingTestIds = [...ctx.failedTestIds]; notes.push('failingTestIds được lấy từ report của runner.'); }
   const caseReqs = [...new Set(run.contract.testPlan?.cases.filter(c => out.caseIds.includes(c.id)).flatMap(c => c.requirementIds) ?? [])];
   const ground = (oracle: Oracle): Oracle => {
     const references = oracle.references.flatMap(ref => {

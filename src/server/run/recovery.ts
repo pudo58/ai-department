@@ -82,7 +82,9 @@ ${extra}` });
           const normalized=normalizeDiagnosis(run,parsed,{failingCaseIds:cases,testPaths:paths,changedPaths:changedFiles,failedTestIds:linkedFor(cases)});
           diagnosis=normalized.diagnosis;
           if(normalized.notes.length)this.s.log(runId,'diagnosis.normalized',`Chẩn đoán được chuẩn hoá: ${normalized.notes.join(' ')}`);
-          errors=diagnosisProblems(run,diagnosis,cases,linkedFor(diagnosis.caseIds),paths,changedFiles);
+          // An implementation or ambiguous diagnosis cannot edit anything: whatever the Author touched is thrown away at the end of this turn anyway.
+          const edits=diagnosis.decision==='implementation'||diagnosis.decision==='ambiguous'?[]:changedFiles;
+          errors=diagnosisProblems(run,diagnosis,cases,linkedFor(diagnosis.caseIds),paths,edits);
         }catch(error){errors=[(error as Error).message];}
         if(!errors.length)break;
         const changes=await runtime.changes(run,slot);

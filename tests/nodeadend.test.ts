@@ -40,13 +40,15 @@ describe('normalizeDiagnosis', () => {
     const { diagnosis: fixed } = normalizeDiagnosis(run, raw, ctx);
     expect(fixed.assessment!.oracle.references.map((r) => r.quote)).toEqual(['CLAIM each ready job once', 'claim each ready job once, in order']);
   });
-  it('leaves implementation and ambiguous diagnoses exactly as they were', () => {
+  it('only grounds the quotations of implementation and ambiguous diagnoses, leaving everything else as it was', () => {
     const run = runWithContract();
     for (const decision of ['implementation', 'ambiguous'] as const) {
       const raw = diagnosis({ decision });
       const out = normalizeDiagnosis(run, raw, ctx);
-      expect(out.diagnosis).toEqual(raw);
-      expect(out.notes).toEqual([]);
+      expect(out.diagnosis.assessment).toMatchObject({ target: 'source', testConformsToContract: true, location: 'src/queue.js:10' });
+      expect(out.diagnosis.caseIds).toEqual(raw.caseIds);
+      expect(out.diagnosis.assessment!.oracle.references).toEqual([{ requirementId: 'R-1', quote: run.contract.requirements[0]!.text }]);
+      expect(out.notes.every((n) => /Trích dẫn|Căn cứ/.test(n))).toBe(true);
     }
   });
   it('does nothing for policies before v3', () => {
