@@ -12,7 +12,8 @@ export class ScopePolicy {
 
   scopeFor(runId: string): ScopeInput {
     const run = this.s.run(runId);
-    const lockedPaths = this.lockedArtifacts(runId).flatMap((a) => (JSON.parse(a.content) as { paths: string[] }).paths);
+    // Regression tests already in the project (shipped by an earlier run or added by this one) are as locked as the Author's tests.
+    const lockedPaths = [...this.lockedArtifacts(runId).flatMap((a) => (JSON.parse(a.content) as { paths: string[] }).paths), ...(this.s.regressions.get(runId) ?? []).map(r => r.path)];
     // Without a known base file list nothing may be scaffolded: the safe default is the plain protected set.
     const baseFiles = run.configSnapshot.allowScaffold ? this.s.baseFileCache.get(runId) : undefined;
     return { modules: [...run.configSnapshot.modules, ...(run.approvedPaths ?? [])], protectedPaths: run.configSnapshot.protectedPaths, lockedPaths, ...(baseFiles ? { scaffold: { baseFiles } } : {}) };

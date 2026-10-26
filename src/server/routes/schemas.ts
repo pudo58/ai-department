@@ -25,6 +25,8 @@ export const ProjectBody = z.object({
   agentNetwork: z.string().max(100).default('aidept-agent'),
   executionMode: z.enum(['docker', 'local']).default('local'),
   mutationRoot: z.string().max(300).refine((p) => p === '' || p === '.' || isSafeRelative(p), 'Thư mục mutation phải nằm trong repo.').optional(),
+  regressionDir: z.string().max(300).refine((p) => p === '' || isSafeRelative(p), 'Thư mục regression phải nằm trong repo.').optional(),
+  regressionRecipe: z.union([z.literal(''), z.string().regex(/^[A-Za-z0-9_-]{1,40}$/)]).optional(),
   contextEnabled: z.boolean().default(false),
   allowScaffold: z.boolean().default(false),
   previewCommand: z.array(z.string().min(1).max(1000)).max(50).default([]),

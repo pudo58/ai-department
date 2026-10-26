@@ -1,0 +1,78 @@
+{
+  "assignmentId": "ticketflow:department:1",
+  "taskId": "ticketflow",
+  "repetition": 1,
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "startedAt": "2026-10-26T14:51:24.762Z",
+  "endedAt": "2026-10-26T14:59:15.275Z",
+  "arm": "department",
+  "mode": "verify",
+  "runId": "run_39fd2f71",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "stoppedByOrchestrator": null,
+  "automaticMs": 426518,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "evidenceComplete": true,
+  "ready": true,
+  "grader": {
+    "passed": 29,
+    "total": 29,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.1938925999999999,
+  "estimatedCost": true,
+  "attempts": 6,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 1
+    }
+  ],
+  "findings": [],
+  "findingsReproduced": 0,
+  "regressionsProposed": 0,
+  "regressionsCreated": 0,
+  "authorTestsWrong": {
+    "diagnosedAsTestError": 0,
+    "diagnoses": 0,
+    "proposals": 0,
+    "approved": 0
+  },
+  "interventions": [
+    {
+      "round": 1,
+      "kind": "contract",
+      "action": "revise",
+      "note": "Form-only revision against SPEC rule 5/6: R-14 (no wall clock/persistence/timers) cannot be tested through the public API, so it is marked manual as the planner prompt prescribes; the Author's question about merge priority is answered by SPEC rule 5 (base priority), so it is removed and recorded as an assumption; C-12 contained only the unanswered question instead of an expected result and is dropped (C-11 still covers merge). No expected result was added or changed.",
+      "at": "2026-10-26T14:54:58.234Z"
+    },
+    {
+      "round": 2,
+      "kind": "contract",
+      "action": "approve",
+      "note": "After the form-only revision the plan states SPEC rules 1-7 without adding or dropping behavior; each step's expected result follows the cited rule.",
+      "at": "2026-10-26T14:55:09.831Z"
+    }
+  ],
+  "repairRounds": 0,
+  "completionReasons": [],
+  "usageTokens": 892073
+}

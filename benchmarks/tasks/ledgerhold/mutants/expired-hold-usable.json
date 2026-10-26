@@ -1,0 +1,11 @@
+{
+ "id": "expired-hold-usable",
+ "description": "An expired hold can still be captured or released",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "if (!active(hold)) throw fail('HOLD_EXPIRED');",
+   "replace": ""
+  }
+ ]
+}

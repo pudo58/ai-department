@@ -38,7 +38,7 @@ export class CheckRunner {
       const previous = this.s.store.checks.list(runId).filter((c) => c.recipeId === recipe.id && c.quarantined).pop();
       const artifacts = this.s.store.artifacts.list(runId);
       const manifest = readManifest(run, artifacts);
-      const expected = lockedIds(run, artifacts, recipe.id);
+      const expected = lockedIds(run, artifacts, recipe.id, this.s.regressions.get(runId) ?? []);
       const workspace = runtime.workspacePath?.(run, slot);
       // Normalize the reporter namespace before comparing it with the locked manifest.
       const result = summarizeCheck({

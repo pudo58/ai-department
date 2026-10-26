@@ -1,0 +1,11 @@
+{
+ "id": "replay-reapplies",
+ "description": "A replayed key runs the call again",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "return structuredClone(seen.result);",
+   "replace": "const again = run(); return structuredClone(again);"
+  }
+ ]
+}

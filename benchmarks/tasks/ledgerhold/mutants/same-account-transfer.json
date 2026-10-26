@@ -1,0 +1,11 @@
+{
+ "id": "same-account-transfer",
+ "description": "A transfer from an account to itself is accepted",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "if (from === to) throw fail('SAME_ACCOUNT');",
+   "replace": ""
+  }
+ ]
+}

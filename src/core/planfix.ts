@@ -1,7 +1,7 @@
 import type { TaskContract } from '../shared/types.js';
 import { RISK_GROUPS, TEST_PRIORITIES } from '../shared/quality.js';
 import { extractJsonBlock } from './outputs.js';
-import { AuthorTestPlanSchema } from './testplan.js';
+import { AuthorTestPlanSchema, DRAFT_PLAN_MARKER } from './testplan.js';
 import { snapQuote } from './quote.js';
 export { snapQuote } from './quote.js';
 import type { TestPlan } from '../shared/quality.js';
@@ -40,7 +40,7 @@ const asText = (v: unknown): string | undefined => {
   return undefined;
 };
 
-export function normalizeTestPlan(raw: unknown, contract: Pick<TaskContract, 'requirements'>): { value: unknown; changes: string[] } {
+export function normalizeTestPlan(raw: unknown, contract: Pick<TaskContract, 'requirements'>, strict = false): { value: unknown; changes: string[] } {
   const changes: string[] = [];
   if (!isRecord(raw) || !Array.isArray(raw.cases)) return { value: raw, changes };
   const requirementText = new Map(contract.requirements.map(r => [r.id, r.text]));
@@ -77,7 +77,8 @@ export function normalizeTestPlan(raw: unknown, contract: Pick<TaskContract, 're
       c.oracle = { ...c.oracle, references };
     }
     if (ids) c.requirementIds = ids;
-    if (c.priority === 'high' && c.required === false) { c.required = true; changes.push(`${label}: ca rủi ro cao được đặt là bắt buộc.`); }
+    // Making a high-risk case mandatory changes what must pass; under v4 the validator reports it and a person decides.
+    if (!strict && c.priority === 'high' && c.required === false) { c.required = true; changes.push(`${label}: ca rủi ro cao được đặt là bắt buộc.`); }
     return c;
   });
 
@@ -93,8 +94,9 @@ export function normalizeTestPlan(raw: unknown, contract: Pick<TaskContract, 're
       const to = typeof entry.group === 'string' ? named(entry.group, GROUP_ALIASES, RISK_GROUPS) : undefined;
       const group = to ?? entry.group;
       if (to) changes.push(`Nhóm "${String(entry.group)}" trong phần không áp dụng → "${to}".`);
-      // A group with a case in the plan has been considered; the contradicting "not applicable" line is the one that goes.
-      if (covered.has(group)) { changes.push(`Nhóm ${String(group)} đã có ca nên dòng "không áp dụng" bị bỏ.`); return []; }
+      // A group with a case in the plan has been considered; the contradicting "not applicable" line is the one that goes
+      // (v4 keeps it, and the validator names the contradiction for a person to settle).
+      if (!strict && covered.has(group)) { changes.push(`Nhóm ${String(group)} đã có ca nên dòng "không áp dụng" bị bỏ.`); return []; }
       if (seen.has(group)) { changes.push(`Nhóm ${String(group)} khai "không áp dụng" nhiều lần; giữ lần đầu.`); return []; }
       seen.add(group);
       return [{ ...entry, group }];
@@ -104,11 +106,26 @@ export function normalizeTestPlan(raw: unknown, contract: Pick<TaskContract, 're
 }
 
 /** Reads an Author's plan: the JSON, the clean-up above, then the schema. Throws the same error shape as parseOutput. */
-export function parseTestPlanOutput(output: string, contract: Pick<TaskContract, 'requirements'>): { plan: TestPlan; changes: string[] } {
-  const { value, changes } = normalizeTestPlan(extractJsonBlock(output), contract);
+export function parseTestPlanOutput(output: string, contract: Pick<TaskContract, 'requirements'>, strict = false): { plan: TestPlan; changes: string[] } {
+  const { value, changes } = normalizeTestPlan(extractJsonBlock(output), contract, strict);
   const result = AuthorTestPlanSchema.safeParse(value);
   if (!result.success) throw new Error(`Phản hồi sai định dạng: ${result.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ')}`);
   return { plan: result.data, changes };
+}
+
+/**
+ * v4: when the Author gave no usable plan, the person still needs something to edit. This is that starting point and nothing
+ * more: every case carries the draft label, which keeps validation failing until a person has rewritten the basis, the steps
+ * and the observable results. It is never counted as a valid plan, and nothing in it is claimed to come from the Author.
+ */
+export function draftTestPlan(contract: Pick<TaskContract, 'requirements'>, questions: readonly string[] = []): TestPlan {
+  const cases: TestPlan['cases'] = contract.requirements.filter(r => r.required && !r.manual).map((req, index) => ({
+    id: `C-${index + 1}`, requirementIds: [req.id], group: 'happy', risk: `${DRAFT_PLAN_MARKER} Yêu cầu ${req.id} cần ca kiểm thử do Author hoặc bạn viết.`, priority: 'high', required: true, method: 'automated',
+    preconditions: `${DRAFT_PLAN_MARKER} Theo mô tả của yêu cầu.`, actions: `${DRAFT_PLAN_MARKER} Thực hiện hành vi mà yêu cầu mô tả.`, expected: clip(req.text),
+    oracle: { references: [{ requirementId: req.id, quote: clip(req.text) }], explanation: `${DRAFT_PLAN_MARKER} Bản nháp lập từ nguyên văn yêu cầu; chưa có người hoặc Author xác nhận kết quả mong đợi.` },
+    steps: [{ id: 'S-1', before: `${DRAFT_PLAN_MARKER} Trạng thái ban đầu`, after: `${DRAFT_PLAN_MARKER} Trạng thái sau thao tác`, requirementIds: [req.id], action: `${DRAFT_PLAN_MARKER} Thực hiện hành vi của yêu cầu`, expected: clip(req.text) }],
+  }));
+  return { schemaVersion: 2, reasoningVersion: 1, statefulModelVersion: 1, cases, notApplicable: [], questions: [...questions] };
 }
 
 export interface CompletionOptions { schema2: boolean; reasoning: boolean }

@@ -1,0 +1,11 @@
+{
+ "id": "transfer-not-atomic",
+ "description": "A transfer debits the source before it finds that the target does not exist",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "const source = account(from), target = account(to); money(amount);",
+   "replace": "const source = account(from); source.total -= amount; const target = account(to); money(amount); source.total += amount;"
+  }
+ ]
+}

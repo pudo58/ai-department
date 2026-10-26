@@ -1,0 +1,11 @@
+{
+ "id": "cancelled-order-replays",
+ "description": "A cancelled order id is replayed instead of refused",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "if (seen.status === 'cancelled') throw fail('ORDER_CANCELLED');",
+   "replace": "if (seen.status === 'cancelled') return structuredClone(seen.result);"
+  }
+ ]
+}

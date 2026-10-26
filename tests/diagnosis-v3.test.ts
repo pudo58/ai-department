@@ -8,7 +8,7 @@ import {Store} from '../src/server/store.js';
 import {Orchestrator} from '../src/server/orchestrator.js';
 import {buildApp} from '../src/server/app.js';
 import type {AgentExecution} from '../src/runtime/types.js';
-import {profile} from './helpers.js';
+import {profile,pinV3} from './helpers.js';
 import {fence} from './quality-fixtures.js';
 import {reasoningPlan,reasoningEntries} from './reasoning-fixtures.js';
 const dirs:string[]=[];afterEach(()=>{for(const d of dirs.splice(0))rmSync(d,{recursive:true,force:true,maxRetries:5,retryDelay:100});});
@@ -36,7 +36,7 @@ async function fixture(correctOnSecond=true,fault:'test'|'implementation'='test'
   }
  }
  const store=new Store(':memory:'),runtime=new Scripted({dataDir});store.projects.put(profile({repository:source,executionMode:'local',checks:[{id:'test',command:[process.execPath,path.resolve('node_modules/vitest/vitest.mjs'),'run','--configLoader','runner','--reporter=json','--outputFile=.aidept-report.json'],required:true,reportPath:'.aidept-report.json',timeoutMs:30000}]}));
- const orch=new Orchestrator(store,()=>runtime),run=orch.createRun({projectId:'prj_test',title:'PulseGraph C5 fixture',originalRequirement:requirement,mode:'verify',provider:'codex',budgetUsd:10,signals:[]});
+ const orch=new Orchestrator(store,()=>runtime),run=orch.createRun({projectId:'prj_test',title:'PulseGraph C5 fixture',originalRequirement:requirement,mode:'verify',provider:'codex',budgetUsd:10,signals:[]});pinV3(store,run);
  orch.startRun(run.id);await orch.idle();orch.approveContract(run.id,{contractHash:orch.detail(run.id).contractReview.contractHash,acknowledgeWarnings:true});await orch.idle();
  return {store,runtime,orch,run,source,dataDir,calls,testSource,implementation};
 }

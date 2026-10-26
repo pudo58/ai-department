@@ -1,0 +1,1 @@
+{"action":"approve","note":"Contract restates SPEC rules 1-9; the two assumptions ask about behavior the SPEC does not decide (safe-integer overflow, invalid now()), which stays unspecified: approval does not add a rule for them."}

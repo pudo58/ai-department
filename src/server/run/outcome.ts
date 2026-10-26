@@ -1,4 +1,7 @@
-import { degradedOf } from '../../core/report.js';
+import { degradedOf, readVerdict } from '../../core/report.js';
+import { policyOf } from '../../core/policy.js';
+import { evidenceBlockers, findingProofs } from '../../core/findingproof.js';
+import { readRegressionProposals } from '../../core/regression.js';
 import { qualityDetail, deepQuality } from '../../core/qualityevidence.js';
 import { readTestPlanReview, validateTestPlan } from '../../core/testplan.js';
 import type { RunDetail } from '../../shared/types.js';
@@ -31,9 +34,12 @@ export class RunOutcome {
       for (const c of quality.cases.filter(c => c.required && c.method === 'automated' && c.status !== 'passed')) completion.reasons.push(`${c.caseId}: ca bắt buộc ${c.status === 'failed' ? 'thất bại' : 'chưa có bằng chứng đạt'}.`);
       completion.ready = completion.reasons.length === 0;
     }
+    const policy = policyOf(run), regressions = this.s.regressions.get(runId) ?? [];
+    if (policy.strict) completion.reasons.push(...evidenceBlockers(run, { verdict: readVerdict(artifacts, run), findings, artifacts, regressions }).filter(r => !completion.reasons.includes(r)));
+    if (policy.strict) completion.ready = completion.reasons.length === 0;
     const contractReview = reviewContract(run.contract);
-    if ((run.qualityPolicyVersion??0) >= 2 && run.contract.testPlan?.schemaVersion !== 2) contractReview.problems.push('Chính sách v2+ cần kế hoạch ca có căn cứ v2.');
-    if(run.qualityPolicyVersion===3&&run.contract.testPlan)contractReview.problems.push(...validateTestPlan(run.contract,true,true).filter(p=>!contractReview.problems.includes(p)));
+    if (policy.structured && run.contract.testPlan?.schemaVersion !== 2) contractReview.problems.push('Chính sách v2+ cần kế hoạch ca có căn cứ v2.');
+    if(policy.reasoning&&run.contract.testPlan)contractReview.problems.push(...validateTestPlan(run.contract,true,true,policy.strict).filter(p=>!contractReview.problems.includes(p)));
     if (deepQuality(run) && !run.contract.testPlan) contractReview.problems.push(...validateTestPlan(run.contract, true));
     return {
       planReview: readTestPlanReview(run.contract, artifacts, contractReview.contractHash),
@@ -41,6 +47,7 @@ export class RunOutcome {
       execution:executionMetrics(run,attempts,this.s.now().getTime()), authorDraft:pendingAuthorDraft(run,artifacts),
       environment:readEnvironment(run,artifacts),
       findingReplays:readFindingReplays(run,artifacts),
+      ...(policy.strict?{regressionProposals:readRegressionProposals(run,artifacts),findingProofs:findingProofs(run,findings,artifacts),regressionFiles:regressions}:{}),
       quality, contractReview, testRepair: pendingTestRepair(run, artifacts),
       run, attempts, artifacts: this.s.store.artifacts.list(runId), findings, checks, events: this.s.store.events(runId),
       matrix: buildMatrix(run, checks), completion, budget,

@@ -29,7 +29,7 @@ export class Acceptance {
     }
     return buildReport({
       planReview: detail.planReview,
-      findingReplays:detail.findingReplays,assertionAudit:readManifest(run,detail.artifacts)?.manifest.assertionAudit,
+      findingReplays:detail.findingReplays,findingProofs:detail.findingProofs,regressionFiles:detail.regressionFiles,regressionProposals:detail.regressionProposals,assertionAudit:readManifest(run,detail.artifacts)?.manifest.assertionAudit,
       environment:detail.environment,
       quality: detail.quality, liveChecks: latestChecks(run, detail.checks), run, attempts: detail.attempts, checks: detail.checks, findings: detail.findings, artifacts: detail.artifacts, matrix: detail.matrix,
       completion: detail.completion, budget: detail.budget, changes, deliveryTarget: runtime.deliveryTarget?.(run, run.selectedSlot), now: this.s.now(),

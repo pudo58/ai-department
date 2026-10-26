@@ -1,0 +1,11 @@
+{
+ "id": "never-autocloses",
+ "description": "A resolved ticket stays resolved until closed by hand",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "if (t.status === 'resolved' && time >= t.resolvedAt + reopenWindow) t.status = 'closed';",
+   "replace": ""
+  }
+ ]
+}

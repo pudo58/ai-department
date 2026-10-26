@@ -37,8 +37,11 @@ export function gateFinding(raw: RawFinding): GatedFinding {
  * runnable counterexample that an automatic repair round has already tried: nobody present can confirm or refute it, so it is
  * kept as a warning in the report instead of ending the run.
  */
-export const blocksCompletion = (f: Pick<Finding, 'severity' | 'status'> & Partial<Pick<Finding, 'attempted' | 'confirmed' | 'reproduction'>>): boolean =>
-  (f.severity === 'blocker' || f.severity === 'major') && f.status !== 'resolved' && !(f.attempted && !f.confirmed && !f.reproduction);
+export const blocksCompletion = (f: Pick<Finding, 'severity' | 'status'> & Partial<Pick<Finding, 'attempted' | 'confirmed' | 'reproduction' | 'resolution'>>, strict = false): boolean =>
+  (f.severity === 'blocker' || f.severity === 'major') && (strict
+    // v4: an unproven doubt keeps blocking after a repair round, and "resolved" must say how (the runner's proof, or a person's reasons).
+    ? f.status !== 'resolved' || !f.resolution
+    : f.status !== 'resolved' && !(f.attempted && !f.confirmed && !f.reproduction));
 
 /** An unconfirmed blocker/major finding with no runnable counterexample that has not had its automatic repair round yet. */
 export const needsAutoRepair = (f: Finding, contractVersion: number): boolean =>

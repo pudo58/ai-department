@@ -4,6 +4,10 @@ import { fileURLToPath } from 'node:url';
 
 // Explicit allowlist: this command must never grow to include live-provider or Docker E2E suites implicitly.
 const reliabilityTests = [
+  // v4 evidence policy and the counterexample → regression loop.
+  'tests/policy-v4.test.ts', 'tests/regression-loop.test.ts', 'tests/regression-edges.test.ts', 'tests/regression-ui.test.ts', 'tests/eval-v4.test.ts',
+  // Fallbacks, plan normalization, hardening and the evaluation pilot.
+  'tests/nodeadend.test.ts', 'tests/planfix.test.ts', 'tests/hardening.test.ts', 'tests/pilot.test.ts',
   'tests/author-manifest-repair.test.ts',
   'tests/reasoning.test.ts', 'tests/diagnosis-v3.test.ts', 'tests/reproduction.test.ts', 'tests/reasoning-ui.test.ts',
   'tests/testplan-repair.test.ts',

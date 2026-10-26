@@ -1,0 +1,15 @@
+{
+ "id": "counter-advances-on-failure",
+ "description": "Hold numbers are used up by holds that fail",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "return once('hold', key, [name, amount], () => {",
+   "replace": "return once('hold', key, [name, amount], () => { counter++;"
+  },
+  {
+   "find": "const holdId = `h${++counter}`;",
+   "replace": "const holdId = `h${counter}`;"
+  }
+ ]
+}

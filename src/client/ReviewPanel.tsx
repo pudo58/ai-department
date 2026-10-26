@@ -1,5 +1,6 @@
 import { QualityResults } from './Quality';
 import {FindingReplayResults} from './FindingReplays';
+import { FindingProofList } from './FindingEvidence';
 import { useCallback, useEffect, useState } from 'react';
 import type { AcceptanceReport } from '../core/report';
 import { needsAcknowledgement } from '../core/report';
@@ -83,6 +84,7 @@ export function ReviewPanel({ detail, busy, onAccept, onReject }: { detail: RunD
 
   return <div className="stack review">
     <QualityResults quality={report.quality}/>
+    <FindingProofList proofs={report.findingProofs}/>
     <FindingReplayResults replays={report.findingReplays} checkpoint={run.checkpoint}/>
     {run.delivery?.status === 'failed' && <div className="banner error" role="alert"><span><strong>Chưa giao được kết quả</strong><br/>{run.delivery.error} Workspace được giữ để thử giao lại.</span></div>}
     {run.delivery?.status === 'unknown' && <div className="banner warn" role="alert"><span><strong>Chưa xác nhận giao kết quả</strong><br/>{run.delivery.error} Workspace được giữ để thử giao lại.</span></div>}

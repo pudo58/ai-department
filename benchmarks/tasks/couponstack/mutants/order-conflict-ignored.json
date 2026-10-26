@@ -1,0 +1,11 @@
+{
+ "id": "order-conflict-ignored",
+ "description": "A different request under the same order id is replayed",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "if (seen.signature !== signature) throw fail('ORDER_CONFLICT');",
+   "replace": ""
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+{
+  "assignmentId": "ledgerhold:department:1",
+  "taskId": "ledgerhold",
+  "repetition": 1,
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "startedAt": "2026-10-26T14:59:15.277Z",
+  "endedAt": "2026-10-26T15:04:29.274Z",
+  "arm": "department",
+  "mode": "verify",
+  "runId": "run_08ce268c",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "stoppedByOrchestrator": null,
+  "automaticMs": 290725,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "evidenceComplete": true,
+  "ready": true,
+  "grader": {
+    "passed": 32,
+    "total": 32,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 0.9213378000000001,
+  "estimatedCost": true,
+  "attempts": 5,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [],
+  "findings": [],
+  "findingsReproduced": 0,
+  "regressionsProposed": 0,
+  "regressionsCreated": 0,
+  "authorTestsWrong": {
+    "diagnosedAsTestError": 0,
+    "diagnoses": 0,
+    "proposals": 0,
+    "approved": 0
+  },
+  "interventions": [
+    {
+      "round": 1,
+      "kind": "contract",
+      "action": "approve",
+      "note": "Plan is valid under v4 (no blocking problems); read against SPEC rules 1-10: cases cover validation, balances/holds, capture/release, transfer atomicity and idempotent keys; scenario numbers follow the cited rules. Two advisory notes about step clauses were left as written.",
+      "at": "2026-10-26T15:01:23.772Z"
+    }
+  ],
+  "repairRounds": 0,
+  "completionReasons": [],
+  "usageTokens": 700147
+}

@@ -1,0 +1,71 @@
+{
+  "assignmentId": "ticketflow:department:2",
+  "taskId": "ticketflow",
+  "repetition": 2,
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "startedAt": "2026-10-26T15:40:33.008Z",
+  "endedAt": "2026-10-26T15:48:33.845Z",
+  "arm": "department",
+  "mode": "verify",
+  "runId": "run_e4260732",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "stoppedByOrchestrator": null,
+  "automaticMs": 453088,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "evidenceComplete": true,
+  "ready": true,
+  "grader": {
+    "passed": 29,
+    "total": 29,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.1607858,
+  "estimatedCost": true,
+  "attempts": 6,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 1
+    }
+  ],
+  "findings": [],
+  "findingsReproduced": 0,
+  "regressionsProposed": 0,
+  "regressionsCreated": 0,
+  "authorTestsWrong": {
+    "diagnosedAsTestError": 0,
+    "diagnoses": 0,
+    "proposals": 0,
+    "approved": 0
+  },
+  "interventions": [
+    {
+      "round": 1,
+      "kind": "contract",
+      "action": "approve",
+      "note": "Contract restates SPEC rules 1-7 without adding behavior; assumptions only record the unspecified list-assignee error code and merge-source view. Orchestrator observation, not edited: R-2 does not restate the SPEC default priority = 'normal' for create; approved unchanged, so the contract's omission stays in the record. Plan has no blockers; step-basis notes are advisories only.",
+      "at": "2026-10-26T15:44:54.730Z"
+    }
+  ],
+  "repairRounds": 0,
+  "completionReasons": [],
+  "usageTokens": 821783
+}

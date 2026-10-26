@@ -1,0 +1,11 @@
+{
+ "id": "new-window-ignored",
+ "description": "A ticket resolved again keeps its first window",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "t.status = 'resolved'; t.resolvedAt = now();",
+   "replace": "t.status = 'resolved'; t.resolvedAt ??= now();"
+  }
+ ]
+}

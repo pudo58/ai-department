@@ -1,0 +1,11 @@
+{
+ "id": "quote-counts-uses",
+ "description": "Quoting counts a use",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "quote: (request) => price(request),",
+   "replace": "quote: (request) => { const priced = price(request); for (const { code } of priced.discounts) bump(code, request.customer, 1); return priced; },"
+  }
+ ]
+}

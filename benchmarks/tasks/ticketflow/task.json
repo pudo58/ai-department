@@ -1,0 +1,24 @@
+{
+ "id": "ticketflow",
+ "title": "TicketFlow — ticket states, reopening, escalation and merging",
+ "stratum": "hard",
+ "signals": [
+  "time-boundary",
+  "state-transition",
+  "multi-rule"
+ ],
+ "codeFile": "src/tickets.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "verify",
+ "minMutants": 12,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

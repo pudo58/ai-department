@@ -1,0 +1,11 @@
+{
+ "id": "percent-on-subtotal",
+ "description": "Every percent coupon takes its share of the original subtotal",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "Math.floor((running * d.value) / 100)",
+   "replace": "Math.floor((subtotal * d.value) / 100)"
+  }
+ ]
+}

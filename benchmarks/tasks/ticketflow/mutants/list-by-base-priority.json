@@ -1,0 +1,11 @@
+{
+ "id": "list-by-base-priority",
+ "description": "The list is sorted by priority, ignoring escalation",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "RANK[b.v.effectivePriority] - RANK[a.v.effectivePriority]",
+   "replace": "RANK[b.t.priority] - RANK[a.t.priority]"
+  }
+ ]
+}

@@ -1,4 +1,7 @@
 import { deepQuality } from '../core/qualityevidence.js';
+import { policyOf } from '../core/policy.js';
+import { EVIDENCE_POLICY_V4 } from '../shared/regression.js';
+import { readRegressionProposals, regressionFor } from '../core/regression.js';
 import { validateTestPlan } from '../core/testplan.js';
 import { randomUUID } from 'node:crypto';
 import type { CheckResult, ContractApprovalInput, Finding, HumanTime, Mode, ProjectProfile, Run, RunDetail, RunStatus, Slot, TaskContract, TaskKind } from '../shared/types.js';
@@ -140,7 +143,7 @@ export class Orchestrator {
     const run: Run = {
       id: `run_${randomUUID().slice(0, 8)}`, executionSpans: [], projectId: project.id, title: input.title, originalRequirement: input.originalRequirement,
       mode: input.mode, initialMode: input.mode, taskKind: input.taskKind, selectedSlot: 'A', provider: input.provider,
-      status: 'draft', stage: 'prepare', ...(input.mode === 'verify' ? { qualityPolicyVersion: 3 as const } : {}), contract: initialContract(input.originalRequirement), interpretations: [],
+      status: 'draft', stage: 'prepare', ...(input.mode === 'verify' ? { qualityPolicyVersion: 4 as const, evidencePolicy: structuredClone(EVIDENCE_POLICY_V4) } : {}), contract: initialContract(input.originalRequirement), interpretations: [],
       baseSha: null, checkpoint: null, branch: null, budgetUsd: budget, baseBudgetUsd: input.budgetUsd,
       configSnapshot: structuredClone(project), signals: input.signals, recommendation, escalations: [], usage: [], humanTime: [],
       repairCount: 0, blocker: null, createdAt: now, updatedAt: now,
@@ -230,9 +233,10 @@ export class Orchestrator {
     if (run.status !== 'awaiting_approval') throw new HttpError(409, 'Hợp đồng chỉ được duyệt khi run đang chờ duyệt.');
     const review = reviewContract(run.contract);
     if (input.contractHash !== review.contractHash) throw new HttpError(409, 'Hợp đồng đã thay đổi. Hãy tải lại và đọc bản hiện tại trước khi duyệt.');
-    const planProblems = deepQuality(run) ? validateTestPlan(run.contract, true, run.qualityPolicyVersion===3) : [];
+    const policy = policyOf(run);
+    const planProblems = deepQuality(run) ? validateTestPlan(run.contract, true, policy.reasoning, policy.strict) : [];
     if (planProblems.length) throw new HttpError(400, planProblems.join(' '));
-    if ((run.qualityPolicyVersion??0) >= 2 && run.contract.testPlan?.schemaVersion !== 2) throw new HttpError(409, 'Chính sách v2+ cần kế hoạch ca có căn cứ v2.');
+    if (policy.structured && run.contract.testPlan?.schemaVersion !== 2) throw new HttpError(409, 'Chính sách v2+ cần kế hoạch ca có căn cứ v2.');
     const contract = this.s.guard(() => approveContract(run.contract, this.now()));
     if (review.warnings.length && !input.acknowledgeWarnings) throw new HttpError(409, 'Hợp đồng có cảnh báo cần đọc; hãy xác nhận đã đọc và đồng ý dùng hợp đồng này.');
     const receipt = { contractHash: review.contractHash, contractVersion: review.contractVersion, reviewedAt: contract.approvedAt!, acknowledgedWarnings: review.warnings.map((w) => w.code) };
@@ -305,14 +309,42 @@ export class Orchestrator {
 
   // ------------------------------------------------------------ findings/checks
 
-  confirmFinding(runId: string, findingId: string): Finding { return this.patchFinding(runId, findingId, (f) => { f.confirmed = true; f.status = 'open'; }); }
+  /**
+   * v4: a finding is confirmed against the exact regression proposal a person read (its hash), or by a manual review that says why.
+   * Older runs keep the one-click confirmation they were made with.
+   */
+  confirmFinding(runId: string, findingId: string, input: { proposalHash?: string; manualReason?: string } = {}): Finding {
+    if (!policyOf(this.s.run(runId)).strict) return this.patchFinding(runId, findingId, (f) => { f.confirmed = true; f.status = 'open'; });
+    return this.patchFinding(runId, findingId, (f) => { Object.assign(f, this.verification.regressions.confirm(runId, f, input)); }, true);
+  }
   disputeFinding(runId: string, findingId: string, dispute: string): Finding { return this.patchFinding(runId, findingId, (f) => { f.status = 'disputed'; f.dispute = dispute; }); }
-  resolveFinding(runId: string, findingId: string): Finding { return this.patchFinding(runId, findingId, (f) => { f.status = 'resolved'; }); }
+  /** v4: closing without the runner's proof is a recorded decision with a reason, never a bare id. */
+  resolveFinding(runId: string, findingId: string, input: { reason?: string } = {}): Finding {
+    if (!policyOf(this.s.run(runId)).strict) return this.patchFinding(runId, findingId, (f) => { f.status = 'resolved'; });
+    const reason = input.reason?.trim();
+    if (!reason || reason.length < 10) throw new HttpError(400, 'Đóng finding cần lý do review thủ công (ít nhất 10 ký tự): nêu bạn đã kiểm tra gì. Finding chỉ tự được đánh dấu đã sửa khi runner chứng minh được.');
+    return this.patchFinding(runId, findingId, (f) => { f.status = 'resolved'; f.resolution = { kind: 'manual_review', at: this.s.stamp(), reason, checkpoint: this.s.run(runId).checkpoint ?? undefined }; }, true);
+  }
+  /** Runs the counterexample of one finding again on the live checkpoint. It uses the queue and the run's lock, and calls no AI. */
+  replayFinding(runId: string, findingId: string, proposalHash?: string): Run {
+    this.s.assertNotDelivering(runId);
+    const run = this.s.run(runId), finding = this.store.findings.get(findingId);
+    if (!finding || finding.runId !== runId) throw new HttpError(404, 'Finding không tồn tại.');
+    if (!['blocked', 'paused', 'failed', 'awaiting_acceptance'].includes(run.status)) throw new HttpError(409, 'Chỉ chạy lại phản ví dụ khi run đang chờ người dùng.');
+    if (!finding.reproduction) throw new HttpError(409, 'Finding này chưa có kịch bản phản ví dụ chạy được.');
+    if (!run.checkpoint) throw new HttpError(409, 'Chưa có checkpoint để chạy phản ví dụ.');
+    const current = regressionFor(readRegressionProposals(run, this.store.artifacts.list(runId)), finding);
+    if (proposalHash && proposalHash !== current?.hash) throw new HttpError(409, 'Đề xuất regression đã đổi; tải lại trạng thái hiện tại.');
+    this.s.retry(runId, 'user_request', 'Người dùng yêu cầu chạy lại phản ví dụ của một finding; không gọi AI.');
+    this.s.mutate(runId, (r) => { r.pendingAction = 'replay'; r.pendingReplay = { findingId, ...(proposalHash ? { proposalHash } : {}) }; });
+    return this.enqueue(runId);
+  }
 
-  private patchFinding(runId: string, id: string, change: (f: Finding) => void): Finding {
+  private patchFinding(runId: string, id: string, change: (f: Finding) => void, requireIdle = false): Finding {
     this.s.assertNotDelivering(runId);
     const finding = this.store.findings.get(id);
     if (!finding || finding.runId !== runId) throw new HttpError(404, 'Finding không tồn tại.');
+    if (requireIdle && this.busy(this.s.run(runId))) throw new HttpError(409, 'Run đang chạy; chờ nó dừng rồi mới đổi trạng thái finding.');
     change(finding);
     this.store.findings.put(finding);
     this.s.log(runId, 'finding.update', `Finding "${finding.title}" → ${finding.status}${finding.confirmed ? ' (đã xác nhận)' : ''}.`);
@@ -340,6 +372,10 @@ export class Orchestrator {
     if (!['blocked', 'awaiting_acceptance'].includes(run.status)) throw new HttpError(409, 'Chỉ sửa finding khi run đang chờ người dùng.');
     const targets = this.store.findings.list(runId).filter((f) => f.confirmed && f.status === 'open' && f.contractVersion === run.contract.version);
     if (!targets.length) throw new HttpError(409, 'Chưa có finding nào được xác nhận.');
+    if (policyOf(run).strict) {
+      const artifacts = this.store.artifacts.list(runId), stale = targets.filter((f) => !this.verification.regressions.confirmationValid(run, f, artifacts));
+      if (stale.length) throw new HttpError(409, `Xác nhận của ${stale.map((f) => `"${f.title}"`).join(', ')} không còn khớp đề xuất hiện tại; chạy lại phản ví dụ rồi xác nhận lại.`);
+    }
     this.s.mutate(runId, (r) => { r.status = 'queued'; r.blocker = null; r.pendingAction = 'repair'; });
     this.queue.enqueue(runId);
     return this.s.run(runId);
@@ -399,7 +435,7 @@ export class Orchestrator {
     const span=this.s.startSpan(runId,'run','Điều phối run');
     try {
       this.s.mutate(runId, (r) => { r.status = 'running'; });
-      if (this.s.run(runId).baseSha) { await this.s.ensureContext(runId); await this.s.loadBaseFiles(runId); }
+      if (this.s.run(runId).baseSha) { await this.s.ensureContext(runId); await this.s.loadBaseFiles(runId); await this.s.refreshRegressions(runId); }
       if(this.s.run(runId).preflightRequest){
         try {
           await new EnvironmentChecks(this.s).run(runId,controller.signal,true);
@@ -417,6 +453,7 @@ export class Orchestrator {
       else if (this.s.run(runId).testRepairApproval) await this.applyTestRepair(runId, controller.signal);
       else if (this.s.run(runId).pendingAction === 'recheck') await this.recheckPhase(runId, controller.signal);
       else if (this.s.run(runId).pendingAction === 'repair') await this.verification.repairPhase(runId, controller.signal);
+      else if (this.s.run(runId).pendingAction === 'replay') await this.verification.replayPhase(runId, controller.signal);
       else if (!isApproved(this.s.run(runId).contract)) await this.planning.planPhase(runId, controller.signal);
       else await this.buildPhase(runId, controller.signal);
       await this.autoRecover(runId, controller.signal);
@@ -428,7 +465,7 @@ export class Orchestrator {
       const run = this.store.runs.get(runId);
       // Reached on every normal exit (finished, blocked, stopped by the person) but not when the server dies mid-turn, so an
       // interrupted request is still there to be carried out when the run is resumed.
-      if (run?.pendingAction) this.s.mutate(runId, (r) => { delete r.pendingAction; });
+      if (run?.pendingAction) this.s.mutate(runId, (r) => { delete r.pendingAction; delete r.pendingReplay; });
       if (run && run.status === 'running') this.s.mutate(runId, (r) => { r.status = 'paused'; r.blocker = 'Giai đoạn kết thúc mà không có trạng thái rõ ràng.'; });
     }
   }

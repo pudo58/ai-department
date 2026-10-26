@@ -1,0 +1,11 @@
+{
+ "id": "cancel-twice-gives-back-twice",
+ "description": "Cancelling again gives the uses back again",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "if (order.status === 'active') {\n        order.status = 'cancelled';\n        for (const code of order.codes) bump(code, order.customer, -1);\n      }",
+   "replace": "order.status = 'cancelled';\n      for (const code of order.codes) bump(code, order.customer, -1);"
+  }
+ ]
+}

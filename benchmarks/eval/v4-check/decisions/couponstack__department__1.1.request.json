@@ -1,0 +1,523 @@
+{
+  "assignment": "v4check-couponstack__department__1",
+  "arm": "department",
+  "task": "couponstack",
+  "round": 1,
+  "kind": "contract",
+  "contractHash": "990b788ea0f65f700d18dded34407c97fc7ae01962dc69184cf2585c50e35700",
+  "version": 3,
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "createCoupons({ coupons = [], now = () => 0 } = {}) throws an Error with code INVALID_INPUT if coupons is not an array or any coupon definition violates a stated field, type, range, uniqueness, or validity-window rule.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-2",
+      "text": "quote and redeem reject invalid request fields with INVALID_INPUT: customer and orderId (for redeem) are nonempty strings; lines is a nonempty array of valid { sku, unitPrice, qty } entries; codes is an array of strings.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-3",
+      "text": "A repeated code in one request fails with DUPLICATE_CODE; an undefined coupon code fails with UNKNOWN_COUPON. A failed call leaves coupon counts and remembered orders unchanged.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-4",
+      "text": "subtotal is the sum of unitPrice × qty across lines. Coupon eligibility uses that pre-discount subtotal and checks, in order, activity, minSubtotal, maxUses, then perCustomer; failures use COUPON_NOT_ACTIVE, MIN_SUBTOTAL, COUPON_EXHAUSTED, and LIMIT_REACHED respectively. For multiple ineligible codes, the first code in request order determines the error.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-5",
+      "text": "A non-stackable coupon listed with any other code fails with NOT_STACKABLE; any number of stackable coupons may be combined.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-6",
+      "text": "Discounts are calculated from a running subtotal: percent coupons first in request order using floor(running × value / 100), then fixed coupons in request order. Each discount is limited by its cap when set and by the remaining amount; total never falls below zero.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-7",
+      "text": "quote returns { subtotal, discounts, total }, with one { code, amount } entry per requested coupon in application order, including zero discounts, and does not change usage counts or order state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-8",
+      "text": "redeem returns { orderId, subtotal, discounts, total } using quote pricing and counts one use per listed coupon for the order customer. If eligibility fails, no use is counted and the orderId is not remembered.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-9",
+      "text": "Redeeming an orderId again with the same customer, lines, and codes in the same order counts nothing and returns a deep copy of the original result, even if coupon eligibility has since changed. Reusing that orderId for a different request fails with ORDER_CONFLICT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-10",
+      "text": "cancel(orderId) returns { orderId, status: 'cancelled' }, restores each use counted by that order exactly once, and returns the same value on repeated cancellation. Unknown orderIds fail with UNKNOWN_ORDER; redeeming a cancelled orderId fails with ORDER_CANCELLED.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-11",
+      "text": "uses(code) and usesBy(code, customer) report currently counted uses globally and for that customer; querying an unknown code fails with UNKNOWN_COUPON.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-12",
+      "text": "The engine does not read a wall clock; time is obtained through the supplied now function.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    },
+    {
+      "id": "R-13",
+      "text": "The implementation adds no persistence, network access, timers, cleanup behavior, or behavior outside the stated contract.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    }
+  ],
+  "acceptanceExamples": [
+    "With subtotal 1000 cents, a 10% coupon followed by a fixed 100-cent coupon yields discounts 100 and 100 and total 800.",
+    "With subtotal 100 cents and a 100% coupon followed by a fixed 50-cent coupon, both coupons appear in discounts and total is 0.",
+    "A coupon with validFrom 5 and validTo 10 is inactive at now() = 4, active at 5 and 9, and inactive at 10.",
+    "After redeeming an order using a coupon with maxUses 1, a different order using that coupon fails with COUPON_EXHAUSTED; cancelling the first order restores the use.",
+    "Repeating a successful redeem with the same orderId and identical request returns an equal result without increasing uses; changing the request for that orderId fails with ORDER_CONFLICT."
+  ],
+  "interfaces": [
+    "Export createCoupons({ coupons = [], now = () => 0 } = {}).",
+    "Engine methods: quote({ customer, lines, codes = [] }), redeem({ orderId, customer, lines, codes = [] }), cancel(orderId), uses(code), and usesBy(code, customer).",
+    "Failures are Error objects with a string code; methods are synchronous and may also be awaited."
+  ],
+  "assumptions": [
+    "No additional assumptions are needed; where error precedence is unspecified, acceptance checks should avoid requests violating multiple unrelated rules at once."
+  ],
+  "scope": [
+    "Implement the in-memory coupon engine in src/coupons.js and assess it through the public API.",
+    "Do not modify dependencies, configuration, SPEC, or the scaffold test; do not read sibling projects or controller data."
+  ],
+  "problems": [],
+  "warnings": [
+    "Hợp đồng có giả định cần bạn xác nhận.",
+    "Kế hoạch ca: C-4.steps.0: thiếu điều khoản trong căn cứ đã duyệt.",
+    "Kế hoạch ca: C-6.steps.0: thiếu điều khoản trong căn cứ đã duyệt.",
+    "Kế hoạch ca: C-8.steps.0: thiếu điều khoản trong căn cứ đã duyệt.",
+    "Kế hoạch ca: C-8: ca Nhất quán dữ liệu bắt buộc nên mô tả chuỗi ít nhất hai bước; test chỉ kiểm tra một bước nên có thể bỏ sót lỗi chỉ lộ ra sau nhiều thao tác."
+  ],
+  "planReview": {
+    "outcome": "valid",
+    "remaining": [],
+    "advisories": [
+      "C-4.steps.0: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó).",
+      "C-6.steps.0: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó).",
+      "C-8.steps.0: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó).",
+      "C-8: ca Nhất quán dữ liệu bắt buộc nên mô tả chuỗi ít nhất hai bước; test chỉ kiểm tra một bước nên có thể bỏ sót lỗi chỉ lộ ra sau nhiều thao tác."
+    ],
+    "normalizations": []
+  },
+  "testPlan": {
+    "schemaVersion": 2,
+    "questions": [],
+    "notApplicable": [],
+    "cases": [
+      {
+        "id": "C-1",
+        "group": "happy",
+        "required": true,
+        "method": "automated",
+        "expected": "Trả {subtotal:300,discounts:[],total:300}.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-4",
+              "quote": "subtotal is the sum of unitPrice × qty across lines."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "quote returns { subtotal, discounts, total }, with one { code, amount } entry per requested coupon in application order, including zero discounts, and does not change usage counts or order state."
+            }
+          ],
+          "explanation": "Tổng hai dòng là 125×2 + 50×1 = 300. Không có coupon nên discounts rỗng và total bằng subtotal; quote không đổi trạng thái."
+        },
+        "invariants": [
+          "quote không làm thay đổi usage hoặc trạng thái order."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi quote với hai dòng hàng đã nêu và codes rỗng.",
+            "expected": "Kết quả có subtotal 300, discounts rỗng và total 300."
+          }
+        ]
+      },
+      {
+        "id": "C-2",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "now=4 và now=10 lỗi COUPON_NOT_ACTIVE; now=5 và now=9 quote thành công.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-4",
+              "quote": "Coupon eligibility uses that pre-discount subtotal and checks, in order, activity, minSubtotal, maxUses, then perCustomer; failures use COUPON_NOT_ACTIVE, MIN_SUBTOTAL, COUPON_EXHAUSTED, and LIMIT_REA…"
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "quote returns { subtotal, discounts, total }, with one { code, amount } entry per requested coupon in application order, including zero discounts, and does not change usage counts or order state."
+            }
+          ],
+          "explanation": "Điều khoản hiệu lực quy định validFrom được bao gồm và validTo bị loại trừ. Quote không đổi usage hoặc order state."
+        },
+        "invariants": [
+          "Các lần quote không làm tăng uses(\"P\") hoặc usesBy(\"P\", \"alice\")."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Quote đơn subtotal 100 với codes [\"P\"].",
+            "expected": "Lỗi COUPON_NOT_ACTIVE."
+          },
+          {
+            "id": "S-2",
+            "action": "Quote cùng đơn với codes [\"P\"].",
+            "expected": "Quote thành công."
+          },
+          {
+            "id": "S-3",
+            "action": "Quote cùng đơn với codes [\"P\"].",
+            "expected": "Quote thành công."
+          },
+          {
+            "id": "S-4",
+            "action": "Quote cùng đơn với codes [\"P\"].",
+            "expected": "Lỗi COUPON_NOT_ACTIVE."
+          }
+        ]
+      },
+      {
+        "id": "C-3",
+        "group": "authorization",
+        "required": true,
+        "method": "automated",
+        "expected": "Mỗi lời gọi lỗi với Error có code INVALID_INPUT.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "quote and redeem reject invalid request fields with INVALID_INPUT: customer and orderId (for redeem) are nonempty strings; lines is a nonempty array of valid { sku, unitPrice, qty } entries; codes is …"
+            },
+            {
+              "requirementId": "R-3",
+              "quote": "A repeated code in one request fails with DUPLICATE_CODE; an undefined coupon code fails with UNKNOWN_COUPON. A failed call leaves coupon counts and remembered orders unchanged."
+            }
+          ],
+          "explanation": "Mỗi yêu cầu chỉ vi phạm một trường đầu vào được nêu, nên expected là INVALID_INPUT; lỗi không được làm thay đổi state."
+        },
+        "invariants": [
+          "Các lời gọi lỗi không làm thay đổi usage hoặc ghi nhận order."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Quote với customer \"\", lines [{sku:\"A\",unitPrice:1,qty:1}], codes [].",
+            "expected": "Lỗi INVALID_INPUT."
+          },
+          {
+            "id": "S-2",
+            "action": "Quote với customer \"alice\", lines [], codes [].",
+            "expected": "Lỗi INVALID_INPUT."
+          },
+          {
+            "id": "S-3",
+            "action": "Quote với customer \"alice\", lines [{sku:\"A\",unitPrice:1,qty:1}], codes [1].",
+            "expected": "Lỗi INVALID_INPUT."
+          }
+        ]
+      },
+      {
+        "id": "C-4",
+        "group": "dependency",
+        "required": true,
+        "method": "automated",
+        "expected": "Quote thành công vì cả hai coupon eligibility được xét trên subtotal ban đầu; discounts theo thứ tự áp dụng gồm B=100 rồi A=100; total=800.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-4",
+              "quote": "Coupon eligibility uses that pre-discount subtotal"
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "Discounts are calculated from a running subtotal: percent coupons first in request order using floor(running × value / 100), then fixed coupons in request order."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "quote returns { subtotal, discounts, total }, with one { code, amount } entry per requested coupon in application order, including zero discounts, and does not change usage counts or order state."
+            }
+          ],
+          "explanation": "A đủ minSubtotal trên subtotal trước giảm giá. B là percent nên được áp dụng trước A dù B được liệt kê trước; mức giảm lần lượt là 100 và 100."
+        },
+        "invariants": [
+          "Quote không tăng usage của A hoặc B."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Quote với một dòng subtotal 1000 và codes [\"B\",\"A\"].",
+            "expected": "Trả subtotal 1000, discounts [{code:\"B\",amount:100},{code:\"A\",amount:100}], total 800."
+          }
+        ]
+      },
+      {
+        "id": "C-5",
+        "group": "concurrency",
+        "required": true,
+        "method": "automated",
+        "expected": "O1 thành công và usage L bằng 1; O2 lỗi COUPON_EXHAUSTED, usage vẫn bằng 1.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-4",
+              "quote": "Coupon eligibility uses that pre-discount subtotal and checks, in order, activity, minSubtotal, maxUses, then perCustomer; failures use COUPON_NOT_ACTIVE, MIN_SUBTOTAL, COUPON_EXHAUSTED, and LIMIT_REA…"
+            },
+            {
+              "requirementId": "R-8",
+              "quote": "redeem returns { orderId, subtotal, discounts, total } using quote pricing and counts one use per listed coupon for the order customer. If eligibility fails, no use is counted and the orderId is not r…"
+            }
+          ],
+          "explanation": "Redeem O1 chiếm lượt duy nhất. O2 gặp maxUses đã đạt nên lỗi COUPON_EXHAUSTED và không phát sinh usage hay order."
+        },
+        "invariants": [
+          "uses(L) không vượt maxUses=1.",
+          "Lỗi redeem O2 không làm thay đổi usage hoặc ghi nhận order."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Redeem O1 cho alice với subtotal 100 và codes [\"L\"].",
+            "expected": "Trả kết quả redeem thành công."
+          },
+          {
+            "id": "S-2",
+            "action": "Redeem O2 cho bob với cùng lines và codes [\"L\"].",
+            "expected": "Lỗi COUPON_EXHAUSTED."
+          }
+        ]
+      },
+      {
+        "id": "C-6",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "Retry trả kết quả tương đương mà không tăng usage; cancel hoàn lại đúng một lượt và lặp cancel trả cùng kết quả; redeem order đã hủy lỗi ORDER_CANCELLED.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-9",
+              "quote": "Redeeming an orderId again with the same customer, lines, and codes in the same order counts nothing and returns a deep copy of the original result, even if coupon eligibility has since changed."
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "cancel(orderId) returns { orderId, status: 'cancelled' }, restores each use counted by that order exactly once, and returns the same value on repeated cancellation. Unknown orderIds fail with UNKNOWN_…"
+            }
+          ],
+          "explanation": "Chuỗi quan sát usage qua uses(S) kiểm tra redeem, idempotent retry, hoàn lượt đúng một lần khi cancel, và trạng thái cancelled ngăn redeem lại."
+        },
+        "invariants": [
+          "Sau retry cùng request, usage vẫn là một lượt.",
+          "Sau cancel đầu tiên và mọi bước tiếp theo, lượt dùng của order đã được hoàn đúng một lần."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Redeem O1 cho alice với lines [{sku:\"A\",unitPrice:100,qty:1}], codes [\"S\"].",
+            "expected": "Trả kết quả redeem thành công."
+          },
+          {
+            "id": "S-2",
+            "action": "Redeem lại O1 với cùng customer, lines và codes theo cùng thứ tự.",
+            "expected": "Trả deep copy tương đương kết quả ban đầu; usage không tăng."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi cancel(\"O1\").",
+            "expected": "Trả {orderId:\"O1\",status:\"cancelled\"}; usage được hoàn."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi cancel(\"O1\") lần nữa.",
+            "expected": "Trả cùng giá trị cancelled; usage không đổi."
+          },
+          {
+            "id": "S-5",
+            "action": "Redeem O1 lại với request ban đầu.",
+            "expected": "Lỗi ORDER_CANCELLED."
+          }
+        ]
+      },
+      {
+        "id": "C-7",
+        "group": "consistency",
+        "required": true,
+        "method": "automated",
+        "expected": "Quote không đổi usage; redeem làm usage toàn cục và alice tăng một; cancel đưa cả hai về 0.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-7",
+              "quote": "quote returns { subtotal, discounts, total }, with one { code, amount } entry per requested coupon in application order, including zero discounts, and does not change usage counts or order state."
+            },
+            {
+              "requirementId": "R-8",
+              "quote": "redeem returns { orderId, subtotal, discounts, total } using quote pricing and counts one use per listed coupon for the order customer."
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "cancel(orderId) returns { orderId, status: 'cancelled' }, restores each use counted by that order exactly once, and returns the same value on repeated cancellation."
+            },
+            {
+              "requirementId": "R-11",
+              "quote": "uses(code) and usesBy(code, customer) report currently counted uses globally and for that customer; querying an unknown code fails with UNKNOWN_COUPON."
+            }
+          ],
+          "explanation": "Các truy vấn công khai kiểm tra quote không ghi usage, redeem ghi một lượt cho khách, và cancel hoàn lượt; R-11 quy định cách quan sát các bộ đếm."
+        },
+        "invariants": [
+          "uses(C) bằng tổng lượt đang được tính; sau từng bước trong chuỗi, kết quả truy vấn tương ứng với usage của order hiện tại."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Quote đơn subtotal 100 với codes [\"C\"], sau đó gọi uses(C) và usesBy(C,\"alice\").",
+            "expected": "Quote thành công; cả hai truy vấn usage trả 0."
+          },
+          {
+            "id": "S-2",
+            "action": "Redeem O1 cho alice với cùng lines và codes [\"C\"], sau đó truy vấn usage.",
+            "expected": "Redeem thành công; uses(C) và usesBy(C,\"alice\") đều trả 1."
+          },
+          {
+            "id": "S-3",
+            "action": "Cancel O1, sau đó truy vấn usage toàn cục và theo alice.",
+            "expected": "Cancel trả trạng thái cancelled; cả hai truy vấn usage trả 0."
+          }
+        ]
+      },
+      {
+        "id": "C-8",
+        "group": "consistency",
+        "required": true,
+        "method": "automated",
+        "expected": "Discounts gồm P=100 và F=0 theo thứ tự; total=0.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-6",
+              "quote": "Each discount is limited by its cap when set and by the remaining amount; total never falls below zero."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "quote returns { subtotal, discounts, total }, with one { code, amount } entry per requested coupon in application order, including zero discounts, and does not change usage counts or order state."
+            }
+          ],
+          "explanation": "Percent 100% làm running subtotal về 0; fixed coupon vì thế có amount 0 nhưng vẫn phải xuất hiện trong discounts."
+        },
+        "invariants": [
+          "Total không âm; mỗi coupon được yêu cầu có đúng một discount entry; quote không đổi usage."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Quote đơn subtotal 100 với codes [\"P\",\"F\"].",
+            "expected": "Trả discounts [{code:\"P\",amount:100},{code:\"F\",amount:0}] và total 0."
+          }
+        ]
+      },
+      {
+        "id": "C-9",
+        "group": "happy",
+        "required": true,
+        "method": "automated",
+        "expected": "Mỗi trường hợp lỗi ném Error có code INVALID_INPUT.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-1",
+              "quote": "createCoupons({ coupons = [], now = () => 0 } = {}) throws an Error with code INVALID_INPUT if coupons is not an array or any coupon definition violates a stated field, type, range, uniqueness, or val…"
+            }
+          ],
+          "explanation": "R-1 yêu cầu INVALID_INPUT cho coupons không phải array và cho mọi definition vi phạm quy tắc trường, kiểu, miền giá trị, duy nhất hoặc validity window. Các lần tạo độc lập chỉ vi phạm một quy tắc để tránh ép thứ tự lỗi không quy định."
+        },
+        "invariants": [
+          "Không có engine hợp lệ được tạo từ bất kỳ đầu vào coupons không hợp lệ nào."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi createCoupons với coupons không phải array; lặp lại bằng các definition sai lệch riêng từng quy tắc được liệt kê.",
+            "expected": "Mỗi lần tạo lỗi ném Error với code INVALID_INPUT."
+          }
+        ]
+      },
+      {
+        "id": "C-10",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Yêu cầu chứa N cùng coupon khác lỗi NOT_STACKABLE; yêu cầu chỉ có coupon stackable thành công.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-5",
+              "quote": "A non-stackable coupon listed with any other code fails with NOT_STACKABLE; any number of stackable coupons may be combined."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "quote returns { subtotal, discounts, total }, with one { code, amount } entry per requested coupon in application order, including zero discounts, and does not change usage counts or order state."
+            }
+          ],
+          "explanation": "R-5 quy định mã non-stackable đi cùng bất kỳ mã nào phải lỗi NOT_STACKABLE, đồng thời cho phép kết hợp các mã stackable. Quote thành công không làm thay đổi usage theo R-7."
+        },
+        "invariants": [
+          "Các quote không làm tăng usage hoặc ghi nhận order.",
+          "Coupon không stackable không được kết hợp với code khác trong một quote thành công."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Quote subtotal 100 với codes [\"N\",\"A\"].",
+            "expected": "Lỗi NOT_STACKABLE."
+          },
+          {
+            "id": "S-2",
+            "action": "Quote subtotal 100 với codes [\"A\",\"B\"].",
+            "expected": "Quote thành công với hai coupon stackable."
+          }
+        ]
+      }
+    ]
+  }
+}

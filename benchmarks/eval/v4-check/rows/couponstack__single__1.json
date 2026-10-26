@@ -1,0 +1,73 @@
+{
+  "assignmentId": "couponstack:single:1",
+  "taskId": "couponstack",
+  "repetition": 1,
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "startedAt": "2026-10-26T15:07:52.147Z",
+  "endedAt": "2026-10-26T15:11:17.531Z",
+  "arm": "single",
+  "mode": "single",
+  "runId": "run_026648f5",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "stoppedByOrchestrator": null,
+  "automaticMs": 189207,
+  "reachedDeveloper": true,
+  "readiness": "ready",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "evidenceComplete": true,
+  "ready": true,
+  "grader": {
+    "passed": 33,
+    "total": 33,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.4662212,
+  "estimatedCost": true,
+  "attempts": 4,
+  "roles": [
+    "planner:prepare:completed",
+    "developer:implement:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "missing_evidence",
+      "count": 1
+    },
+    {
+      "reason": "check_failure",
+      "count": 1
+    }
+  ],
+  "findings": [],
+  "findingsReproduced": 0,
+  "regressionsProposed": 0,
+  "regressionsCreated": 0,
+  "authorTestsWrong": {
+    "diagnosedAsTestError": 0,
+    "diagnoses": 0,
+    "proposals": 0,
+    "approved": 0
+  },
+  "interventions": [
+    {
+      "round": 1,
+      "kind": "contract",
+      "action": "approve",
+      "note": "Contract restates SPEC rules 1-9; the two assumptions ask about behavior the SPEC does not decide (safe-integer overflow, invalid now()), which stays unspecified: approval does not add a rule for them.",
+      "at": "2026-10-26T15:08:22.943Z"
+    }
+  ],
+  "repairRounds": 0,
+  "completionReasons": [],
+  "usageTokens": 1881302
+}

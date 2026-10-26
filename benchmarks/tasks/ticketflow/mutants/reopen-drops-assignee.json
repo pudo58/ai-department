@@ -1,0 +1,11 @@
+{
+ "id": "reopen-drops-assignee",
+ "description": "Reopening forgets the assignee",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "t.reopenCount += 1; t.status = 'assigned';",
+   "replace": "t.reopenCount += 1; t.status = 'assigned'; t.assignee = null;"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "wait-from-open",
+ "description": "An unassigned ticket can wait for the customer",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "wait: (id) => move(find(id), ['assigned'], 'pending'),",
+   "replace": "wait: (id) => move(find(id), ['open', 'assigned'], 'pending'),"
+  }
+ ]
+}

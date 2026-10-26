@@ -1,0 +1,121 @@
+{
+  "assignment": "v4check-couponstack__single__1",
+  "arm": "single",
+  "task": "couponstack",
+  "round": 1,
+  "kind": "contract",
+  "contractHash": "8ae14717e8f27d51a38e307a38ae3e22c3db31343feafbd0b34a0ddb5b44838d",
+  "version": 2,
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "Export createCoupons({ coupons = [], now = () => 0 } = {}). Reject invalid coupon collections or definitions with an Error whose code is INVALID_INPUT, following the definition constraints in the request.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-2",
+      "text": "Validate request fields as specified: customer and orderId (where applicable) are nonempty strings; lines is a nonempty array of valid line objects; codes is an array of strings. Invalid requests fail with INVALID_INPUT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-3",
+      "text": "Reject duplicate codes with DUPLICATE_CODE and undefined codes with UNKNOWN_COUPON. Failed calls do not change usage counts or remembered orders.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-4",
+      "text": "Compute subtotal as the sum of unitPrice * qty. For each listed coupon, check active period, minimum subtotal, global usage limit, then per-customer usage limit; report the first applicable eligibility error, considering coupons in codes order.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-5",
+      "text": "Reject combining any non-stackable coupon with another coupon using NOT_STACKABLE; allow combinations consisting only of stackable coupons.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-6",
+      "text": "Apply percentage discounts first in codes order, then fixed discounts in codes order. Each discount is limited by its cap when set and by the remaining amount; the running total never becomes negative. Include an entry for every applied coupon, including zero discounts.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-7",
+      "text": "quote returns { subtotal, discounts, total } with discounts in application order and does not change usage counts or order state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-8",
+      "text": "redeem returns the quote pricing plus orderId and counts one use per listed coupon for the order customer. If eligibility fails, it counts nothing and does not remember the order.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-9",
+      "text": "A repeated redeem with the same orderId and equal customer, lines, and codes in the same order returns a deep copy of the original result without recounting, even if eligibility has since changed. Reusing the orderId with a different request fails with ORDER_CONFLICT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-10",
+      "text": "cancel(orderId) returns { orderId, status: 'cancelled' }, restores each counted use once, and is idempotent. Unknown orders fail with UNKNOWN_ORDER; redeeming a cancelled order fails with ORDER_CANCELLED.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-11",
+      "text": "uses(code) and usesBy(code, customer) report current global and per-customer use counts. An unknown code fails with UNKNOWN_COUPON.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-12",
+      "text": "Methods are synchronous and return plain JSON values; callers may also await their results.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    }
+  ],
+  "acceptanceExamples": [
+    "With subtotal 1000 cents, a 10% coupon followed by a fixed 250-cent coupon yields discounts of 100 and 250 cents and total 650 cents.",
+    "With a subtotal of 100 cents and two fixed coupons of 80 cents each, the discounts are 80 and 20 cents and the total is 0.",
+    "A coupon valid from time 5 through exclusive validTo 10 is active at now() = 5 and inactive at now() = 10.",
+    "After redeeming an order once, repeating the identical request leaves uses unchanged; cancelling it reduces each counted use once, and repeating cancellation leaves counts unchanged."
+  ],
+  "interfaces": [
+    "createCoupons({ coupons = [], now = () => 0 } = {})",
+    "quote({ customer, lines, codes = [] }) returns { subtotal, discounts, total }",
+    "redeem({ orderId, customer, lines, codes = [] }) returns { orderId, subtotal, discounts, total }",
+    "cancel(orderId) returns { orderId, status: 'cancelled' }",
+    "uses(code) returns a count; usesBy(code, customer) returns a count"
+  ],
+  "assumptions": [
+    "The specification does not define behavior when arithmetic such as unitPrice * qty or the subtotal sum exceeds JavaScript's safe integer range; confirm whether such requests should be rejected.",
+    "The specification requires now() to return a nonnegative safe integer but does not specify an error code or validation behavior if the supplied function returns an invalid value; confirm expected handling."
+  ],
+  "scope": [
+    "Implement the in-memory coupon engine at src/coupons.js and exercise it through the public API.",
+    "Do not add persistence, network access, timers, cleanup behavior, or behavior beyond the stated contract."
+  ],
+  "problems": [],
+  "warnings": [
+    "Chưa có tiêu chí về hành vi không được xảy ra.",
+    "Hợp đồng có giả định cần bạn xác nhận."
+  ]
+}

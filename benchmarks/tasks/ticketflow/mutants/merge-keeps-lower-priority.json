@@ -1,0 +1,11 @@
+{
+ "id": "merge-keeps-lower-priority",
+ "description": "The target takes the lower priority of the two",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "RANK[source.priority] > RANK[target.priority]",
+   "replace": "RANK[source.priority] < RANK[target.priority]"
+  }
+ ]
+}

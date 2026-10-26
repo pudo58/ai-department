@@ -1,0 +1,11 @@
+{
+ "id": "hold-ignores-held",
+ "description": "A hold only looks at the total, not at what is already held",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "if (view(name).available < amount) throw fail('INSUFFICIENT_FUNDS');",
+   "replace": "if (accounts.get(name).total < amount) throw fail('INSUFFICIENT_FUNDS');"
+  }
+ ]
+}

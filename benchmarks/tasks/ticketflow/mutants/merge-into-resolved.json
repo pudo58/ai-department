@@ -1,0 +1,11 @@
+{
+ "id": "merge-into-resolved",
+ "description": "A ticket may be merged into a resolved one",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "const live = ['open', 'assigned', 'pending'];",
+   "replace": "const live = ['open', 'assigned', 'pending', 'resolved'];"
+  }
+ ]
+}

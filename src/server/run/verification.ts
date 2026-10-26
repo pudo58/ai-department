@@ -17,10 +17,13 @@ import { latestChecks } from '../../core/qualityevidence.js';
 import { normalizeVerifierScope } from '../../core/verifierscope.js';
 import {ReproductionSchema,reproductionProblems,reproductionGuide,readFindingReplays,scenarioHash} from '../../core/reproduction.js';
 import {FindingReplays} from './reproduction.js';
+import {Regressions} from './regression.js';
+import {policyOf} from '../../core/policy.js';
 
 /** Final verification: the independent Verifier, its stored verdict, and the repair round for confirmed findings. */
 export class Verification {
-  constructor(private readonly s: RunServices, private readonly scope: ScopePolicy, private readonly outcome: RunOutcome, private readonly checks: CheckRunner) {}
+  readonly regressions: Regressions;
+  constructor(private readonly s: RunServices, private readonly scope: ScopePolicy, private readonly outcome: RunOutcome, private readonly checks: CheckRunner) { this.regressions = new Regressions(s, scope); }
 
   async verifyPhase(runId: string, signal: AbortSignal, checksOnly = false): Promise<void> {
     const run = this.s.run(runId);
@@ -29,7 +32,8 @@ export class Verification {
     const verifies = run.mode === 'verify' || run.mode === 'compare';
     if (!checksOnly && verifies && !readVerdict(this.s.store.artifacts.list(runId), run)) await this.independentVerifier(runId, signal);
     // Nobody is present to confirm a finding the Verifier could not reproduce: give the Developer one round on it, then let it go.
-    if (!checksOnly && verifies && await this.autoRepairUnconfirmed(runId, signal)) return;
+    // v4 keeps an unproven doubt as a blocker for a person to settle; only older policies give it one automatic repair round.
+    if (!checksOnly && verifies && !policyOf(run).strict && await this.autoRepairUnconfirmed(runId, signal)) return;
     this.outcome.finish(runId);
   }
 
@@ -67,10 +71,10 @@ export class Verification {
     const diff = reviewDiff(await this.changesSinceBase(runId));
     const independence: Independence = { independent: true, reason: 'Phiên mới; lập checklist từ hợp đồng trước khi đọc diff, không nhận giải thích của Developer.' };
     const checkEvidence=latestChecks(run,this.s.store.checks.list(runId)).map(c=>({id:c.id,recipeId:c.recipeId,checkpoint:c.checkpoint,contractVersion:c.contractVersion,status:c.status,counts:c.counts,issues:c.issues}));
-    const { output, attempt } = await this.s.attempt(runId, { role: 'verifier', stage: 'verify', slot: run.selectedSlot, prompt: `${PROMPTS.verifier(run, diff)}\nBằng chứng runner hiện hành: ${JSON.stringify(checkEvidence)}\n${reproductionGuide}\nBổ sung scope={reviewed:["file/điều khoản đã thực sự review"],checkIds:["ID check hiện hành đã dùng"],limitations:["phần chưa xác nhận"],additionalChecks:[{command:"lệnh chính xác",status:"passed|failed|incomplete",detail:"kết quả"}] vào JSON cuối. Không coi pass là đã tự chạy test. Lệnh lỗi môi trường phải ghi incomplete/failed và giới hạn.`, independence, signal });
+    const { output, attempt } = await this.s.attempt(runId, { role: 'verifier', stage: 'verify', slot: run.selectedSlot, prompt: `${PROMPTS.verifier(run, diff)}\nBằng chứng runner hiện hành: ${JSON.stringify(checkEvidence)}\n${reproductionGuide}\n${policyOf(run).strict?'Với finding hành vi (behavior), trả kịch bản tái hiện chạy được trong trường reproduction. Không cần tạo finding cho đủ số lượng; nếu chưa viết được kịch bản, ghi reproductionLimitation cụ thể (vì sao không tái hiện được qua public API Node ESM) và không bịa kết quả. Finding blocker/major không có phản ví dụ vẫn chặn nghiệm thu cho tới khi người dùng xử lý có lý do.\n':''}Bổ sung scope={reviewed:["file/điều khoản đã thực sự review"],checkIds:["ID check hiện hành đã dùng"],limitations:["phần chưa xác nhận"],additionalChecks:[{command:"lệnh chính xác",status:"passed|failed|incomplete",detail:"kết quả"}] vào JSON cuối. Không coi pass là đã tự chạy test. Lệnh lỗi môi trường phải ghi incomplete/failed và giới hạn.`, independence, signal });
     await this.s.discardStrayEdits(runId, run.selectedSlot, 'Verifier');
     const created:Finding[]=[];
-    const afterAutoRound = this.s.store.artifacts.list(runId).some((a) => a.title === 'Unconfirmed finding repair' && a.valid && a.contractVersion === run.contract.version);
+    const afterAutoRound = !policyOf(run).strict && this.s.store.artifacts.list(runId).some((a) => a.title === 'Unconfirmed finding repair' && a.valid && a.contractVersion === run.contract.version);
     try {
       const parsed = parseOutput(FindingsSchema, output);
       const raw=this.s.store.artifacts.list(runId).find(a=>a.kind==='raw' && a.attemptId===attempt.id)?.content??'';
@@ -100,7 +104,11 @@ export class Verification {
       this.s.log(runId, 'verify.parse_failed', `Output Verifier không hợp lệ; coi như chưa kiểm tra: ${(error as Error).message}`);
       this.recordVerdict(runId, { decision: 'unparsed', summary: verifierNarrative(output), findingCount: 0 });
     }
-    await new FindingReplays(this.s).runBatch(runId,created,signal);
+    const replays=await new FindingReplays(this.s).runBatch(runId,created,signal);
+    if(policyOf(run).regression)for(const f of created){
+      const replay=f.reproduction?replays.find(r=>r.findingId===f.id&&r.checkpoint===run.checkpoint&&r.scenarioHash===scenarioHash(f.reproduction!)):undefined;
+      if(replay?.status==='reproduced')await this.regressions.propose(runId,f,replay,signal);
+    }
   }
 
   /**
@@ -157,14 +165,34 @@ export class Verification {
     this.s.artifact(runId, { kind: 'report', title: 'Verifier verdict', content: JSON.stringify(verdict), checkpoint: this.s.run(runId).checkpoint });
   }
 
+  /** A person asked for one finding's counterexample to be run again on the live checkpoint. No agent is called. */
+  async replayPhase(runId: string, signal: AbortSignal): Promise<void> {
+    const run = this.s.run(runId), request = run.pendingReplay, finding = request ? this.s.store.findings.get(request.findingId) : undefined;
+    if (!finding || finding.runId !== runId || !finding.reproduction) throw new Blocked('Finding không có kịch bản phản ví dụ để chạy lại.');
+    this.s.mutate(runId, (r) => { r.stage = 'verify'; });
+    const [replay] = await new FindingReplays(this.s).runBatch(runId, [finding], signal, { force: true });
+    if (policyOf(run).regression && replay?.status === 'reproduced') await this.regressions.propose(runId, finding, replay, signal);
+    this.outcome.finish(runId);
+  }
+
   /** One repair round on confirmed findings, then fresh checks on the new checkpoint. */
   async repairPhase(runId: string, signal: AbortSignal, extraTargets: Finding[] = []): Promise<void> {
     let run = this.s.run(runId);
     const runtime = this.s.runtimeFor(run);
     const slot = run.selectedSlot;
     this.s.mutate(runId, (r) => { r.stage = 'verify'; });
-    const targets = [...this.s.store.findings.list(runId).filter((f) => f.confirmed && f.status === 'open' && f.contractVersion === run.contract.version), ...extraTargets.filter((f) => !f.confirmed)];
-    const problems = targets.map((f) => `${f.title} (${f.location}): ${f.evidence}. Gợi ý: ${f.suggestion}`);
+    const policy = policyOf(run);
+    const confirmed = this.s.store.findings.list(runId).filter((f) => f.confirmed && f.status === 'open' && f.contractVersion === run.contract.version);
+    if (policy.strict) {
+      // A confirmation names the exact proposal a person read; one that no longer matches the checkpoint, contract or configuration is not a go-ahead.
+      const artifacts = this.s.store.artifacts.list(runId), stale = confirmed.filter(f => !this.regressions.confirmationValid(run, f, artifacts));
+      if (stale.length) throw new Blocked(`Xác nhận của ${stale.map(f => `"${f.title}"`).join(', ')} không còn khớp đề xuất hiện tại (checkpoint, hợp đồng, cấu hình hoặc test đã đổi). Chạy lại phản ví dụ rồi xác nhận lại đề xuất mới.`);
+    }
+    const targets = [...confirmed, ...extraTargets.filter((f) => !f.confirmed)];
+    // The regression tests go in and are locked before the Developer is called, so the unrepaired code is already failing them.
+    if (policy.strict) { await this.regressions.applyConfirmed(runId, targets); run = this.s.run(runId); }
+    const noted = this.s.store.artifacts.list(runId);
+    const problems = targets.map((f) => `${f.title} (${f.location}): ${f.evidence}. Gợi ý: ${f.suggestion}.${this.regressions.note(run, f, noted)}`);
     const resume = this.s.sessions.get(`${runId}:${slot}`);
     await this.s.attempt(runId, { role: 'developer', stage: 'verify', slot, prompt: resume ? PROMPTS.repairFollowUp(problems) : PROMPTS.repair(run, problems), signal, resumeSession: resume });
     run = this.s.run(runId);
@@ -182,7 +210,8 @@ export class Verification {
     if (outcome.problems.length) { this.outcome.park(runId, 'blocked', outcome.problems.join(' ')); return; }
     const priorReplays=readFindingReplays(run,this.s.store.artifacts.list(runId));
     const afterReplays=await new FindingReplays(this.s).runBatch(runId,targets,signal);
-    for (const f of targets) {
+    if (policy.strict) this.regressions.settle(runId, targets, priorReplays, afterReplays, checkpoint);
+    else for (const f of targets) {
       if(f.reproduction){
         const hash=scenarioHash(f.reproduction),before=priorReplays.some(r=>r.findingId===f.id&&r.checkpoint===f.checkpoint&&r.scenarioHash===hash&&r.status==='reproduced');
         const after=afterReplays.find(r=>r.findingId===f.id&&r.checkpoint===checkpoint&&r.scenarioHash===hash);

@@ -14,6 +14,8 @@ import { evaluateChanges } from '../../core/scope.js';
 import { hashContract, sha256 } from '../../core/contract.js';
 import { unsafeTestPatch, validAssertionChanges } from '../../core/recovery.js';
 import type { Slot } from '../../shared/types.js';
+import { policyOf } from '../../core/policy.js';
+import { setupRepairProblems, assertionCorrectionProblems } from '../../core/authoring.js';
 import type { RunServices } from './services.js';
 import type { ScopePolicy } from './scope.js';
 import { Blocked, HttpError } from './support.js';
@@ -27,7 +29,7 @@ export class TestRecovery {
   constructor(private readonly s: RunServices, private readonly scope: ScopePolicy) {}
 
   async diagnose(runId: string, slot: Slot, problems: string[], signal: AbortSignal): Promise<string | undefined> {
-    const run = this.s.run(runId), runtime = this.s.runtimeFor(run);
+    const run = this.s.run(runId), runtime = this.s.runtimeFor(run), policy = policyOf(run);
     if (!deepQuality(run) || !runtime.applyPatch) return;
     const artifacts = this.s.store.artifacts.list(runId), locked = readManifest(run, artifacts);
     if (!locked) return;
@@ -58,6 +60,9 @@ export class TestRecovery {
     if (!cases.length) return;
     // Persist before calling AI: interrupt/resume cannot silently buy another diagnosis.
     this.s.artifact(runId, { kind: 'report', title: REVIEW, content: JSON.stringify({ slot, caseIds: cases, manifestHash: locked.hash,configHash:testRepairConfigHash(run),checkpoint:run.checkpoint }), checkpoint: run.checkpoint });
+    // v4 judges a correction against what the file said before the Author touched it, so read that first.
+    const workspace = runtime.workspacePath?.(run, slot), beforeSources = new Map<string, string>();
+    if (policy.strict && workspace) for (const e of locked.manifest.entries) if (!beforeSources.has(e.path)) beforeSources.set(e.path, await readFile(path.join(workspace, e.path), 'utf8').catch(() => ''));
     try {
       const request = (extra='') => this.s.attempt(runId, { role: 'author', stage: 'repair', slot, signal, prompt: `Bạn là Author chẩn đoán test thất bại. Đối chiếu hợp đồng, setup test và lỗi chạy thật; không lấy việc code hiện tại làm chuẩn đúng.
 ${contractText(run.contract)}
@@ -67,7 +72,7 @@ Bằng chứng runner: ${problems.join('\n').slice(0, 16000)}
 Nếu lỗi implementation: KHÔNG sửa file, trả decision implementation. Nếu chưa đủ bằng chứng: KHÔNG sửa file, trả ambiguous và câu hỏi cụ thể.
 Chỉ khi chứng minh setup test mâu thuẫn hợp đồng, đề xuất test_setup bằng cách sửa đúng file test của ca lỗi trong workspace. Giữ nguyên assertion hành vi, mã C-x/R-x và định danh test; không xóa/skip test, không sửa source, contract, recipe hay manifest. Mọi sửa đổi chỉ là đề xuất, sẽ bị hoàn nguyên và chờ người dùng đọc diff để duyệt.
 Nếu assertion sai theo điều khoản rõ ràng, dùng test_assertion: chỉ sửa assertion của ca lỗi, giữ danh tính và số ca. Bắt buộc assertionChanges=[{caseId,before,after,oracle:{references:[{requirementId,quote}],explanation}}], trích nguyên văn hợp đồng, giải thích vì sao before sai và after phù hợp. Không đủ oracle thì ambiguous, không sửa để khớp implementation.
-${run.qualityPolicyVersion===3?`Giao thức v3: assessment bắt buộc. Đọc nhãn cùng expected/actual/đích sửa trước khi chốt; implementation chỉ khi testConformsToContract=true và target=source. Test sai thì target=test, conformity=false. Không đủ căn cứ dùng ambiguous/unknown/null. failingTestIds lấy NGUYÊN VĂN từ report. before/after trong assertionChanges phải là nguyên biểu thức assertion thực trong source; không mô tả bằng văn xuôi.\n${diagnosisOutputGuide}`:'Kết thúc bằng khối json: {"decision":"implementation|test_setup|test_assertion|ambiguous","reason":"...","evidence":"...","caseIds":["C-x"],"assertionChanges":[]}.'}
+${policy.structuredDiagnosis?`Giao thức ${policy.strict?'v4':'v3'}: assessment bắt buộc. Đọc nhãn cùng expected/actual/đích sửa trước khi chốt; implementation chỉ khi testConformsToContract=true và target=source. Test sai thì target=test, conformity=false. Không đủ căn cứ dùng ambiguous/unknown/null. failingTestIds lấy NGUYÊN VĂN từ report. before/after trong assertionChanges phải là nguyên biểu thức assertion thực trong source; không mô tả bằng văn xuôi.\n${diagnosisOutputGuide}`:'Kết thúc bằng khối json: {"decision":"implementation|test_setup|test_assertion|ambiguous","reason":"...","evidence":"...","caseIds":["C-x"],"assertionChanges":[]}.'}
 ${extra}` });
       let {output}=await request();
       let diagnosis: DiagnosisValue | undefined;
@@ -91,7 +96,7 @@ ${extra}` });
         this.s.artifact(runId,{kind:'report',title:'Author diagnosis rejected',content:JSON.stringify({output,errors,patch:changes.patch,checkpoint:run.checkpoint,manifestHash:locked.hash}),checkpoint:run.checkpoint});
         await runtime.revert(run,slot);
         diagnosis=undefined;
-        if(run.qualityPolicyVersion!==3||round===1||remainingFor(budgetState(run,this.s.store.attempts.list(runId)),'repair')<=0)return this.keepLocked(runId, `Chẩn đoán Author không hợp lệ (${errors.join(' ')})`);
+        if(!policy.authorRepair||round===1||remainingFor(budgetState(run,this.s.store.attempts.list(runId)),'repair')<=0)return this.keepLocked(runId, `Chẩn đoán Author không hợp lệ (${errors.join(' ')})`);
         // Saved before the second call; resume never grants another correction batch.
         this.s.artifact(runId,{kind:'report',title:'Author diagnosis correction attempt',content:JSON.stringify({manifestHash:locked.hash,checkpoint:run.checkpoint,errors}),checkpoint:run.checkpoint});
         this.s.retry(runId,'invalid_output','Author sửa chẩn đoán mâu thuẫn một lần, trước khi gọi Developer.');
@@ -118,13 +123,29 @@ ${extra}` });
       if (changes.files.length && !changes.patch) why.push('diff rỗng');
       if (changes.patch.length > 1_000_000) why.push('diff quá lớn');
       if (unsafeTestPatch(changes.patch)) why.push('diff tạo/xóa/đổi tên file hoặc thêm skip/only');
+      if (policy.strict && changes.files.length) {
+        // A setup correction keeps every assertion; an assertion correction changes exactly the assertions it declared.
+        if (!workspace) why.push('runtime không cho đối chiếu source trước/sau nên không chứng minh được bản sửa chỉ đổi đúng phần đã khai báo');
+        else {
+          const consumed = new Set<string>();
+          for (const file of changes.files) {
+            const before = beforeSources.get(file), after = await readFile(path.join(workspace, file), 'utf8').catch(() => undefined);
+            if (before === undefined || after === undefined) { why.push(`${file}: không đọc được source trước/sau khi sửa`); continue; }
+            if (diagnosis.decision === 'test_assertion') {
+              const result = assertionCorrectionProblems(file, before, after, diagnosis.assertionChanges ?? []);
+              why.push(...result.problems); result.used.forEach(u => consumed.add(u));
+            } else why.push(...setupRepairProblems(file, before, after));
+          }
+          if (diagnosis.decision === 'test_assertion') for (const change of diagnosis.assertionChanges ?? []) if (!consumed.has(assertionTokens(change.before))) why.push(`assertion "${change.before.slice(0, 80)}" khai báo trong assertionChanges không được sửa trong file nào`);
+        }
+      }
       if (why.length) {
         this.s.artifact(runId, { kind: 'report', title: 'Author test proposal rejected', content: JSON.stringify({ why, files: changes.files, patch: changes.patch.slice(0, 200_000), checkpoint: run.checkpoint }), checkpoint: run.checkpoint });
         return this.keepLocked(runId, `Đề xuất sửa test của Author không hợp lệ (${why.join('; ')})`);
       }
       const proposal: TestRepairProposal = { schemaVersion: 1, checkpoint: run.checkpoint!, contractVersion: run.contract.version, contractHash: hashContract(run.contract), slot, configHash: testRepairConfigHash(run), manifestHash: locked.hash, paths: changes.files, patch: changes.patch, ...diagnosis, kind: diagnosis.decision === 'test_assertion' ? 'assertion' : 'setup' };
       if (!validAssertionChanges(run, proposal)) return this.keepLocked(runId, 'Bản sửa assertion của Author thiếu căn cứ hợp đồng hoặc giá trị trước/sau hợp lệ');
-      if(run.qualityPolicyVersion===3&&proposal.kind==='assertion'&&proposal.assertionChanges!.some(change=>!locked.manifest.entries.some(e=>e.caseId===change.caseId&&e.assertions?.some(a=>assertionTokens(a.expression)===assertionTokens(change.before)))))return this.keepLocked(runId, 'Giá trị "before" của bản sửa assertion không khớp assertion đã khóa');
+      if(policy.reasoning&&proposal.kind==='assertion'&&proposal.assertionChanges!.some(change=>!locked.manifest.entries.some(e=>e.caseId===change.caseId&&e.assertions?.some(a=>assertionTokens(a.expression)===assertionTokens(change.before)))))return this.keepLocked(runId, 'Giá trị "before" của bản sửa assertion không khớp assertion đã khóa');
       this.s.artifact(runId, { kind: 'report', title: TEST_REPAIR_TITLE, content: JSON.stringify(proposal), checkpoint: run.checkpoint });
       this.autoApprove(runId, proposal.caseIds, proposal.reason);
       return `Author đề xuất sửa ${proposal.kind === 'assertion' ? 'assertion' : 'setup'} test. Hãy đọc căn cứ và diff rồi duyệt trước khi thay bộ test đã khóa.`;
@@ -137,7 +158,13 @@ ${extra}` });
    * A diagnosis we cannot use is not a reason to stop: the locked tests stay authoritative and the Developer keeps
    * repairing the code. The report says the Author's second opinion was dropped, so the person can look at it at the end.
    */
-  private keepLocked(runId: string, why: string): undefined {
+  private keepLocked(runId: string, why: string): string | undefined {
+    if (policyOf(this.s.run(runId)).strict) {
+      // v4 never turns a diagnosis it cannot use into "the code must be wrong": it stops, says why, and says what a person can do.
+      const message = `Chẩn đoán test dừng ở đây: ${why}. Bộ test đã khóa không đổi và Developer không được gọi để đoán nguyên nhân. Bước tiếp theo của bạn: đọc chẩn đoán đã lưu trong lịch sử run, rồi sửa hợp đồng hoặc kế hoạch ca (lên phiên bản mới để Author làm lại) nếu test nghi sai, hoặc chuyển chế độ nếu bạn muốn thử cách khác.`;
+      this.s.log(runId, 'diagnosis.stopped', message);
+      return message;
+    }
     this.s.fallback(runId, 'Chẩn đoán test', `${why}. Giữ nguyên bộ test đã khóa và tiếp tục sửa code; nếu cuối cùng vẫn không đạt, hãy xem lại test bị nghi.`);
     return undefined;
   }
@@ -148,7 +175,8 @@ ${extra}` });
    * flagged as a degraded run and the receipt says the system, not a person, approved it. AIDEPT_AUTO_TEST_REPAIR=0 restores the manual gate.
    */
   private autoApprove(runId: string, caseIds: readonly string[], reason: string): void {
-    if (process.env.AIDEPT_AUTO_TEST_REPAIR === '0') return;
+    // v4 freezes this at false: only a person who read the diff applies a correction.
+    if (!policyOf(this.s.run(runId)).autoTestRepair) return;
     const run = this.s.run(runId), artifacts = this.s.store.artifacts.list(runId);
     if (artifacts.filter(a => a.title === 'Test repair receipt' && a.valid && a.contractVersion === run.contract.version).length >= MAX_AUTO_TEST_REPAIRS) return;
     const pending = pendingTestRepair(run, artifacts);
@@ -195,7 +223,7 @@ ${extra}` });
       await runtime.revert(run, p.slot); throw new Blocked('Diff áp dụng không khớp file test đã duyệt.');
     }
     let entries=structuredClone(manifest.manifest.entries);
-    if(run.qualityPolicyVersion===3){
+    if(policyOf(run).reasoning){
       for(const e of entries)for(const binding of e.assertions??[]){
         delete binding.line;
         const correction=p.assertionChanges?.find(c=>c.caseId===e.caseId&&assertionTokens(c.before)===assertionTokens(binding.expression));
@@ -207,6 +235,11 @@ ${extra}` });
     let audit=await auditManifestAssertions(run.contract,entries,runtime.workspacePath?.(run,p.slot),allPaths);
     const evidenceProblems=[...manifestFindings(run.contract,entries,run.configSnapshot.checks,allPaths,{derived:derivedManifest}).blocking,...audit.problems];
     let advisories:string[]=[];
+    if(evidenceProblems.length&&policyOf(run).strict){
+      // v4 never falls back to binding by test title: an assertion that no longer matches its step is a reason to stop.
+      await runtime.revert(run,p.slot);
+      throw new Blocked(`Bản sửa không giữ liên kết assertion với bước đã duyệt, nên không áp dụng: ${evidenceProblems.join(' ')}`);
+    }
     if(evidenceProblems.length){
       // The correction changed text the assertion bindings pointed at. Tests are still identified by title, so bind by title and
       // say in the report that assertions are no longer tied to steps; stop only if even the titles no longer cover the plan.
@@ -225,7 +258,7 @@ ${extra}` });
     for (const a of artifacts.filter(a => a.kind === 'acceptance' && a.valid && a.contractVersion === run.contract.version)) this.s.store.artifacts.put({ ...a, valid: false });
     this.s.mutate(runId, r => { r.checkpoint = checkpoint; r.testRepairApproval!.appliedCheckpoint = checkpoint; });
     run = this.s.run(runId);
-    const nextManifest = this.s.artifact(runId, { kind: 'acceptance', title: 'Test manifest', content: JSON.stringify({ ...manifest.manifest, entries, ...(run.qualityPolicyVersion===3?{assertionAudit:audit.audits}:{}), ...(advisories.length?{advisories}:{}),...(derivedManifest?{derived:true}:{}), revision: { previousHash: manifest.hash, proposalId: p.id } }), checkpoint });
+    const nextManifest = this.s.artifact(runId, { kind: 'acceptance', title: 'Test manifest', content: JSON.stringify({ ...manifest.manifest, entries, ...(policyOf(run).reasoning?{assertionAudit:audit.audits}:{}), ...(advisories.length?{advisories}:{}),...(derivedManifest?{derived:true}:{}), revision: { previousHash: manifest.hash, proposalId: p.id } }), checkpoint });
     this.scope.lockAcceptance(runId, allPaths, checkpoint, 'Acceptance suite (Author)', true);
     this.s.artifact(runId, { kind: 'diff', title: 'Diff Author test repair', content: p.patch, checkpoint });
     this.s.artifact(runId, { kind: 'report', title: 'Test repair receipt', content: JSON.stringify({ schemaVersion: 1, source: approval.auto ? 'auto_approved' : 'human_approved', kind: p.kind ?? 'setup', contractHash: hashContract(run.contract), assertionChanges: p.assertionChanges, proposalId: p.id, proposalHash: p.hash, previousCheckpoint: p.checkpoint, checkpoint, previousManifestHash: manifest.hash, manifestHash: nextManifest.hash, caseIds: p.caseIds, reason: p.reason }), checkpoint });

@@ -1,0 +1,11 @@
+{
+ "id": "percent-rounds-up",
+ "description": "A percent discount is rounded up",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "Math.floor((running * d.value) / 100)",
+   "replace": "Math.ceil((running * d.value) / 100)"
+  }
+ ]
+}

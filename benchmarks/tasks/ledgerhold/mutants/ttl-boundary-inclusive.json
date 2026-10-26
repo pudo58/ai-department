@@ -1,0 +1,11 @@
+{
+ "id": "ttl-boundary-inclusive",
+ "description": "A hold is still active at createdAt + holdTtl",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "now() < hold.createdAt + holdTtl",
+   "replace": "now() <= hold.createdAt + holdTtl"
+  }
+ ]
+}

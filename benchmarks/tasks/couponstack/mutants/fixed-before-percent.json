@@ -1,0 +1,11 @@
+{
+ "id": "fixed-before-percent",
+ "description": "Fixed coupons are applied before percent coupons",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "for (const kind of ['percent', 'fixed'])",
+   "replace": "for (const kind of ['fixed', 'percent'])"
+  }
+ ]
+}

@@ -126,7 +126,7 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
         {tab === 'review' && reviewable && <ReviewPanel detail={detail} busy={locked} onAccept={(ack) => act(`/api/runs/${id}/accept`, { acknowledgeWarnings: ack })} onReject={() => setModal('reject')}/>}
         {tab === 'progress' && <ProgressPanel detail={detail}/>}
         {tab === 'contract' && <ContractPanel detail={detail} busy={locked} onApprove={(body) => act(`/api/runs/${id}/approve-contract`, body)}/>}
-        {tab === 'verify' && <VerifyPanel detail={detail} busy={locked} onQuarantine={(checkId, reason) => act(`/api/runs/${id}/checks/${checkId}/quarantine`, { reason })} onFinding={(fid, action, body) => act(`/api/runs/${id}/findings/${fid}/${action}`, body)}/>}
+        {tab === 'verify' && <VerifyPanel detail={detail} busy={locked} onQuarantine={(checkId, reason) => act(`/api/runs/${id}/checks/${checkId}/quarantine`, { reason })} onFinding={(fid, action, body) => act(`/api/runs/${id}/findings/${fid}/${action}`, body ?? {})}/>}
         {tab === 'code' && <CodePanel detail={detail}/>}
         {tab === 'cost' && <CostPanel detail={detail} onAct={act}/>}
         {run.mode === 'single' && tab !== 'cost' && <p className="faint small dossier-note">Single: lập kế hoạch, viết test và tự soát đều do một agent làm. Đó là tự review, không phải kiểm chứng độc lập.</p>}

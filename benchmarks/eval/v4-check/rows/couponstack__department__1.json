@@ -1,0 +1,103 @@
+{
+  "assignmentId": "couponstack:department:1",
+  "taskId": "couponstack",
+  "repetition": 1,
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "startedAt": "2026-10-26T15:31:41.067Z",
+  "endedAt": "2026-10-26T15:40:33.006Z",
+  "arm": "department",
+  "mode": "verify",
+  "runId": "run_3d08bb44",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "stoppedByOrchestrator": null,
+  "automaticMs": 498537,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "evidenceComplete": true,
+  "ready": true,
+  "grader": {
+    "passed": 32,
+    "total": 33,
+    "failed": [
+      "redeeming treats an equal request written with other key order and the same codes as the same order"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": true,
+  "costUsd": 1.4022558,
+  "estimatedCost": true,
+  "attempts": 8,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "verifier:verify:completed",
+    "developer:verify:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 1
+    }
+  ],
+  "findings": [
+    {
+      "id": "fnd_01293af8",
+      "severity": "major",
+      "category": "behavior",
+      "title": "quote throws an un-coded TypeError for a null request",
+      "status": "resolved",
+      "confirmed": true,
+      "reproducible": true,
+      "resolution": "verified_fix"
+    },
+    {
+      "id": "fnd_a0b347b8",
+      "severity": "minor",
+      "category": "behavior",
+      "title": "Tính phần trăm có thể sai ở subtotal lớn",
+      "status": "open",
+      "confirmed": false,
+      "reproducible": false,
+      "resolution": null
+    }
+  ],
+  "findingsReproduced": 1,
+  "regressionsProposed": 1,
+  "regressionsCreated": 1,
+  "authorTestsWrong": {
+    "diagnosedAsTestError": 0,
+    "diagnoses": 0,
+    "proposals": 0,
+    "approved": 0
+  },
+  "interventions": [
+    {
+      "round": 1,
+      "kind": "contract",
+      "action": "approve",
+      "note": "Plan is valid under v4 with no questions; it states SPEC rules 1-9 without adding or dropping behavior.",
+      "at": "2026-10-26T15:33:59.232Z"
+    },
+    {
+      "round": 2,
+      "kind": "findings",
+      "action": "confirm",
+      "note": "SPEC rule 1: a request needs a nonempty string customer and a nonempty lines array, and violations fail with INVALID_INPUT. A null request has no customer, so INVALID_INPUT follows; the runner reproduced a native TypeError instead, and the generated regression failed at exactly that step.",
+      "at": "2026-10-26T15:38:32.218Z"
+    }
+  ],
+  "repairRounds": 1,
+  "completionReasons": [],
+  "usageTokens": 1289481
+}

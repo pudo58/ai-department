@@ -1,0 +1,11 @@
+{
+ "id": "per-customer-counts-everyone",
+ "description": "perCustomer is checked against the uses of all customers",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "(countedBy.get(by(d.code, customer)) ?? 0) >= d.perCustomer",
+   "replace": "(counted.get(d.code) ?? 0) >= d.perCustomer"
+  }
+ ]
+}

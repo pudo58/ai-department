@@ -1,0 +1,11 @@
+{
+ "id": "autoclose-one-minute-late",
+ "description": "A resolved ticket closes one minute after the window",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "time >= t.resolvedAt + reopenWindow",
+   "replace": "time > t.resolvedAt + reopenWindow"
+  }
+ ]
+}

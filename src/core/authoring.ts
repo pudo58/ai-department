@@ -95,6 +95,59 @@ export function authorRepairSourceProblems(file: string, before: string, after: 
   return [...new Set(problems)];
 }
 
+/** What a test file says, split into the statements that assert and everything else (setup, calls, titles). */
+function splitTestSource(file: string, source: string): { body: string[]; assertions: string[]; titles: string[] } {
+  const tree = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, /tsx$/.test(file) ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+  const spans: { start: number; end: number; tokens: string }[] = [], titles: string[] = [];
+  const root = (n: ts.Node): string | undefined => ts.isIdentifier(n) ? n.text : ts.isCallExpression(n) ? root(n.expression) : ts.isPropertyAccessExpression(n) ? root(n.expression) : ts.isAwaitExpression(n) ? root(n.expression) : undefined;
+  const isCall = (n: ts.Node, names: string[]): n is ts.CallExpression => ts.isCallExpression(n) && ts.isIdentifier(n.expression) && names.includes(n.expression.text);
+  const visit = (n: ts.Node, chain: string[]): void => {
+    if (ts.isExpressionStatement(n) && ['expect', 'assert'].includes(root(n.expression) ?? '')) spans.push({ start: n.getStart(tree), end: n.end, tokens: assertionTokens(n.expression.getText(tree)) });
+    if (isCall(n, ['describe', 'test', 'it'])) {
+      const first = n.arguments[0];
+      if (first && ts.isStringLiteralLike(first)) {
+        if (isCall(n, ['describe'])) { n.arguments.forEach(a => visit(a, [...chain, first.text])); return; }
+        titles.push([...chain, first.text].join(' > '));
+      }
+    }
+    ts.forEachChild(n, c => visit(c, chain));
+  };
+  visit(tree, []);
+  let stripped = source;
+  for (const s of [...spans].reverse()) stripped = stripped.slice(0, s.start) + stripped.slice(s.end);
+  return { body: assertionTokenList(stripped), assertions: spans.map(s => s.tokens), titles };
+}
+const sameSequence = (a: readonly string[], b: readonly string[]): boolean => a.length === b.length && a.every((x, i) => x === b[i]);
+const sameBag = (a: readonly string[], b: readonly string[]): boolean => sameMembers(a, b) && a.length === b.length && [...new Set(a)].every(x => a.filter(y => y === x).length === b.filter(y => y === x).length);
+
+/** v4: a setup correction may change anything but what the test asserts or is called. */
+export function setupRepairProblems(file: string, before: string, after: string): string[] {
+  if (!/\.[cm]?[jt]sx?$/.test(file)) return [`${file}: chỉ đối chiếu được assertion của test JS/TS; bản sửa setup ngoài JS/TS cần Author chuyển sang đề xuất thủ công.`];
+  const a = splitTestSource(file, before), b = splitTestSource(file, after), problems: string[] = [];
+  if (!sameBag(a.assertions, b.assertions)) problems.push(`${file}: bản sửa setup không được thêm, xóa hoặc đổi assertion nào.`);
+  if (!sameSequence(a.titles, b.titles)) problems.push(`${file}: bản sửa setup không được đổi tên, thêm hoặc xóa test.`);
+  return problems;
+}
+
+/**
+ * v4: a correction of assertions may change exactly the assertions it declared, each from its stated `before` to its stated
+ * `after`. `used` lists the declared `before` expressions (as tokens) this file satisfied.
+ */
+export function assertionCorrectionProblems(file: string, before: string, after: string, changes: readonly { before: string; after: string }[]): { problems: string[]; used: string[] } {
+  if (!/\.[cm]?[jt]sx?$/.test(file)) return { problems: [`${file}: chỉ đối chiếu được assertion của test JS/TS.`], used: [] };
+  const a = splitTestSource(file, before), b = splitTestSource(file, after), problems: string[] = [], used: string[] = [];
+  if (!sameSequence(a.body, b.body)) problems.push(`${file}: ngoài các assertion đã khai báo, bản sửa còn đổi setup, thao tác hoặc danh tính test.`);
+  if (!sameSequence(a.titles, b.titles)) problems.push(`${file}: bản sửa assertion không được đổi tên, thêm hoặc xóa test.`);
+  const expected = [...a.assertions];
+  for (const change of changes) {
+    const was = assertionTokens(change.before), index = expected.indexOf(was);
+    if (index < 0) continue;
+    expected.splice(index, 1, assertionTokens(change.after)); used.push(was);
+  }
+  if (!sameBag(expected, b.assertions)) problems.push(`${file}: tập assertion sau khi sửa khác với đúng các thay đổi trước → sau mà bản đề xuất đã khai báo.`);
+  return { problems, used };
+}
+
 /** Exact source snippets and line numbers for correction; no identity or oracle is inferred. */
 export function assertionInventory(file: string, source: string): { path: string; line: number; expression: string }[] {
   const tree = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, /tsx$/.test(file) ? ts.ScriptKind.TSX : ts.ScriptKind.TS);

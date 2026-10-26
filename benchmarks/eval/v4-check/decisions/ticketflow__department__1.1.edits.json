@@ -1,0 +1,7 @@
+{
+  "manual": ["R-14"],
+  "dropCases": ["C-12"],
+  "clearQuestions": true,
+  "addAssumptions": ["merge compares the `priority` fields of the two tickets (SPEC rule 5: the target's `priority` becomes the higher of the two priorities); `effectivePriority` is not used for that comparison."],
+  "note": "Form-only revision against SPEC rule 5/6: R-14 (no wall clock/persistence/timers) cannot be tested through the public API, so it is marked manual as the planner prompt prescribes; the Author's question about merge priority is answered by SPEC rule 5 (base priority), so it is removed and recorded as an assumption; C-12 contained only the unanswered question instead of an expected result and is dropped (C-11 still covers merge). No expected result was added or changed."
+}

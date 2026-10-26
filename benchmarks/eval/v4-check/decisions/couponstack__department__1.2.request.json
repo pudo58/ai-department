@@ -1,0 +1,67 @@
+{
+  "assignment": "v4check-couponstack__department__1",
+  "arm": "department",
+  "task": "couponstack",
+  "round": 2,
+  "kind": "findings",
+  "findings": [
+    {
+      "id": "fnd_01293af8",
+      "severity": "major",
+      "category": "behavior",
+      "title": "quote throws an un-coded TypeError for a null request",
+      "location": "src/coupons.js:44,92-94",
+      "evidence": "validateRequest destructures its argument before checking its fields. Calling quote(null) therefore throws a native TypeError before fail('INVALID_INPUT') can run. This is reproducible through the public API.",
+      "suggestion": "Check that the request is a non-null, non-array object before destructuring, and throw INVALID_INPUT otherwise.",
+      "status": "open",
+      "confirmed": false,
+      "scenario": {
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "quote and redeem reject invalid request fields with INVALID_INPUT"
+            }
+          ],
+          "explanation": "null is not a valid quote request, so the public API should throw an Error whose code is INVALID_INPUT."
+        },
+        "steps": [
+          {
+            "id": "S-1",
+            "method": "quote",
+            "args": [
+              null
+            ],
+            "expect": {
+              "path": [],
+              "throwsCode": "INVALID_INPUT"
+            }
+          }
+        ]
+      },
+      "replay": {
+        "status": "reproduced",
+        "message": "Sai khác tại S-1; đối chiếu oracle trước khi xác nhận finding.",
+        "observations": [
+          {
+            "stepId": "S-1",
+            "actual": "TypeError",
+            "actualType": "string",
+            "expected": "INVALID_INPUT",
+            "matched": false,
+            "error": "Cannot destructure property 'customer' of 'object null' as it is null."
+          }
+        ]
+      },
+      "proposal": {
+        "hash": "fbfa6d98d8724282729f39d8c9a9afe1fabb2ac5eefb28524a678355d6c1c1ea",
+        "path": "tests/aidept-regressions/coupons-fnd_01293af8.test.js",
+        "trial": {
+          "status": "failed_as_expected",
+          "message": "Test regression thất bại đúng ở assertion của bước S-1: AssertionError: AIDEPT-REG:S-1: expected 'TypeError' to be 'INVALID_INPUT' // Object.is equality"
+        }
+      }
+    }
+  ],
+  "blocker": "1 finding blocker/major chưa xử lý."
+}

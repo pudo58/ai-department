@@ -59,8 +59,10 @@ export function registerRunRoutes({ app, store, orchestrator, idOf, disposeWorks
   });
   app.post('/api/runs/:id/findings/:fid/:action', async (request) => {
     const { id, fid, action } = request.params as { id: string; fid: string; action: string };
-    if (action === 'confirm') return orchestrator.confirmFinding(id, fid);
-    if (action === 'resolve') return orchestrator.resolveFinding(id, fid);
+    // v4 findings are confirmed against the hash of the regression proposal the person read, or by a manual review with a reason.
+    if (action === 'confirm') return orchestrator.confirmFinding(id, fid, z.object({ proposalHash: z.string().regex(/^[0-9a-f]{64}$/).optional(), manualReason: z.string().max(2000).optional() }).strict().parse(request.body ?? {}));
+    if (action === 'resolve') return orchestrator.resolveFinding(id, fid, z.object({ reason: z.string().max(2000).optional() }).strict().parse(request.body ?? {}));
+    if (action === 'replay') return orchestrator.replayFinding(id, fid, z.object({ proposalHash: z.string().regex(/^[0-9a-f]{64}$/).optional() }).strict().parse(request.body ?? {}).proposalHash);
     if (action === 'dispute') return orchestrator.disputeFinding(id, fid, z.object({ reason: z.string().min(3).max(2000) }).parse(request.body).reason);
     throw new HttpError(404, 'Hành động không tồn tại.');
   });

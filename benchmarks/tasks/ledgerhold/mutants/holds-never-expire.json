@@ -1,0 +1,11 @@
+{
+ "id": "holds-never-expire",
+ "description": "Holds count as held forever",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "hold.state === 'open' && now() < hold.createdAt + holdTtl",
+   "replace": "hold.state === 'open'"
+  }
+ ]
+}

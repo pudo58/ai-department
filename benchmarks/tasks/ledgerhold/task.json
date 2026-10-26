@@ -1,0 +1,24 @@
+{
+ "id": "ledgerhold",
+ "title": "LedgerHold — idempotent deposits, holds, captures and transfers",
+ "stratum": "hard",
+ "signals": [
+  "idempotency",
+  "state-transition",
+  "rollback"
+ ],
+ "codeFile": "src/ledger.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "verify",
+ "minMutants": 12,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

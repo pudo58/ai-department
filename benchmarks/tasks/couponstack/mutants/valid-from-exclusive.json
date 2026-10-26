@@ -1,0 +1,11 @@
+{
+ "id": "valid-from-exclusive",
+ "description": "A coupon is not active yet at validFrom",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "time < d.validFrom",
+   "replace": "time <= d.validFrom"
+  }
+ ]
+}

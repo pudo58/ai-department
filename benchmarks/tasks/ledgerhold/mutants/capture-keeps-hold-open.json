@@ -1,0 +1,11 @@
+{
+ "id": "capture-keeps-hold-open",
+ "description": "Capture leaves the rest of the hold held and open",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "hold.state = 'captured';",
+   "replace": "hold.amount -= amount;"
+  }
+ ]
+}

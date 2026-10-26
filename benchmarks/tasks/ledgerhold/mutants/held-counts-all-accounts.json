@@ -1,0 +1,11 @@
+{
+ "id": "held-counts-all-accounts",
+ "description": "Holds of other accounts reduce this account",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "h.account === name && ",
+   "replace": ""
+  }
+ ]
+}

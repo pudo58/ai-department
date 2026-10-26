@@ -6,10 +6,10 @@ import { manifestFindings, StoredManifestSchema } from '../src/core/testplan.js'
 import { blocksCompletion, needsAutoRepair } from '../src/core/findings.js';
 import type { Finding } from '../src/shared/types.js';
 import { reasoningPlan } from './reasoning-fixtures.js';
-import { setup } from './helpers.js';
+import { setupV3 } from './helpers.js';
 
 const runWithContract = () => {
-  const run = setup().create({ mode: 'verify' });
+  const run = setupV3().create({ mode: 'verify' });
   const base = initialContract('Claim each ready job once.');
   run.contract = { ...base, testPlan: reasoningPlan(base) };
   run.originalRequirement = 'Original text: claim each ready job once, in order.';

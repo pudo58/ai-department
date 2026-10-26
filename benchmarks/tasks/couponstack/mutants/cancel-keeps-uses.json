@@ -1,0 +1,11 @@
+{
+ "id": "cancel-keeps-uses",
+ "description": "Cancelling does not give the uses back",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "for (const code of order.codes) bump(code, order.customer, -1);",
+   "replace": ""
+  }
+ ]
+}

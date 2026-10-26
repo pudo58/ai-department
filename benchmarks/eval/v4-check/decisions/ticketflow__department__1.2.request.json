@@ -1,0 +1,691 @@
+{
+  "assignment": "v4check-ticketflow__department__1",
+  "arm": "department",
+  "task": "ticketflow",
+  "round": 2,
+  "kind": "contract",
+  "contractHash": "037a722f25d336f621f9cfcb1aa9e77ddf34ce9ae026909c1ab6f1fc83e9e59d",
+  "version": 4,
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "Export createTickets({ now = () => 0, reopenWindow = 100, maxReopens = 2, escalateAfter = 50 } = {}). Validate that now is a function, reopenWindow and escalateAfter are positive safe integers, and maxReopens is a nonnegative safe integer; invalid configuration throws an Error with code INVALID_INPUT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-2",
+      "text": "All failures throw Error objects whose code is a string. A failed call leaves ticket state unchanged.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-3",
+      "text": "create requires a nonempty string id and subject, and priority equal to low, normal, high, or urgent; invalid values fail with INVALID_INPUT. An id previously used, including one belonging to a merged ticket, fails with ID_TAKEN.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-4",
+      "text": "A newly created ticket has status open, assignee null, and reopenCount 0. Its creation time is obtained from now().",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-5",
+      "text": "Methods operating on an unknown ticket id fail with UNKNOWN_TICKET. assign requires a nonempty string agent and otherwise fails with INVALID_INPUT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-6",
+      "text": "Only these transitions succeed: assign from open, assigned, or pending sets status assigned and sets or replaces the assignee; wait changes assigned to pending; customerReply changes pending to assigned while keeping its assignee; resolve changes assigned to resolved and records the call time; reopen changes resolved to assigned, keeps its assignee, and increments reopenCount; close changes resolved to closed. Other transitions fail with BAD_STATE.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-7",
+      "text": "reopen fails with REOPEN_LIMIT when reopenCount is at least maxReopens; otherwise it succeeds if the ticket is resolved and within its reopen window. A ticket resolved again after reopening starts a new window at the new resolve time.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-8",
+      "text": "A resolved ticket is closed automatically when now() is at least resolvedAt + reopenWindow. This status is reflected by get, list, and method state checks; before that threshold, the ticket remains resolved and can be reopened.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-9",
+      "text": "A ticket not assigned before createdAt + escalateAfter becomes escalated at that threshold and remains escalated even if assigned later. A ticket assigned before the threshold is never escalated by this rule. Escalation raises effectivePriority by one level (low to normal, normal to high, high to urgent, urgent remains urgent).",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-10",
+      "text": "merge requires different source and target ids (otherwise SAME_TICKET), and both tickets must be open, assigned, or pending (otherwise BAD_STATE). On success, source status becomes merged and mergedInto is the target id; source cannot transition to another status. Target retains its status and assignee, takes the higher priority, and is escalated from then on if either ticket was escalated at merge time.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-11",
+      "text": "Ticket views contain id, subject, priority, effectivePriority, status, assignee (null when unassigned), and reopenCount. They include mergedInto only for merged tickets.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-12",
+      "text": "get returns the ticket view as of now(). create, assign, wait, customerReply, resolve, reopen, and close return the changed ticket's view; merge returns the target ticket's view. Methods are synchronous and their results may be awaited.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-13",
+      "text": "list accepts optional status and assignee filters and returns tickets matching every supplied filter as of now(). An invalid status (not one of the six statuses) fails with INVALID_INPUT; assignee must be a string. Results sort by effectivePriority descending from urgent to low, then by creation order.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-14",
+      "text": "The service does not read a wall clock, persist data, use network access, schedule timers, or require cleanup.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    },
+    {
+      "id": "R-15",
+      "text": "Do not add behavior or API beyond the stated ticket workflow contract.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    }
+  ],
+  "acceptanceExamples": [
+    "Với now trả về 10, tạo ticket id T1, subject Login, priority low: view có status open, assignee null, reopenCount 0, effectivePriority low.",
+    "Tạo ticket tại thời điểm 0 với escalateAfter 50; tại thời điểm 50, get cho effectivePriority tăng một bậc nếu ticket chưa từng được assign.",
+    "Assign ticket trước createdAt + escalateAfter thì ticket không bị escalation theo quy tắc thời gian, kể cả khi được kiểm tra sau ngưỡng.",
+    "Resolve tại thời điểm 20 với reopenWindow 100: tại thời điểm 119 ticket vẫn resolved và có thể reopen; tại thời điểm 120, get/list phản ánh closed.",
+    "Với maxReopens 1, resolve rồi reopen thành công một lần; sau khi resolve lại, lần reopen tiếp theo thất bại với REOPEN_LIMIT.",
+    "Merge một ticket high vào ticket low đang mở: ticket nguồn thành merged với mergedInto là id đích; ticket đích giữ trạng thái và assignee, có priority high."
+  ],
+  "interfaces": [
+    "createTickets({ now, reopenWindow, maxReopens, escalateAfter }) trả về service có create({ id, subject, priority }), assign(id, agent), wait(id), customerReply(id), resolve(id), reopen(id), close(id), merge(sourceId, targetId), get(id), và list({ status, assignee })."
+  ],
+  "assumptions": [
+    "Các giá trị now() được cung cấp tuân theo tiền điều kiện của hợp đồng: số nguyên an toàn không âm và không giảm; không cần quy định xử lý khi bên gọi vi phạm tiền điều kiện này.",
+    "Hợp đồng không quy định thứ tự ưu tiên lỗi khi một lời gọi đồng thời vi phạm nhiều điều kiện độc lập; acceptance tests không kết hợp các lỗi như vậy.",
+    "merge compares the `priority` fields of the two tickets (SPEC rule 5: the target's `priority` becomes the higher of the two priorities); `effectivePriority` is not used for that comparison."
+  ],
+  "scope": [
+    "Phạm vi triển khai là workflow ticket hỗ trợ lưu trong bộ nhớ và public API được nêu trong yêu cầu.",
+    "Không mở rộng sang persistence, network, timer, cleanup, hoặc API bổ sung."
+  ],
+  "problems": [],
+  "warnings": [
+    "Hợp đồng có giả định cần bạn xác nhận.",
+    "Kế hoạch ca: C-8.steps.0: thiếu điều khoản trong căn cứ đã duyệt."
+  ],
+  "testPlan": {
+    "schemaVersion": 2,
+    "questions": [],
+    "notApplicable": [
+      {
+        "group": "authorization",
+        "reason": "Public API không có người dùng, vai trò, quyền hoặc ranh giới truy cập; R-1 đến R-14 không quy định hành vi authorization để kiểm thử."
+      },
+      {
+        "group": "concurrency",
+        "reason": "Hợp đồng quy định methods synchronous và dữ liệu chỉ trong bộ nhớ; không có thao tác đồng thời, khóa hoặc thứ tự cạnh tranh được quy định. Không áp đặt semantics concurrency ngoài hợp đồng."
+      },
+      {
+        "group": "dependency",
+        "reason": "Hợp đồng không yêu cầu dịch vụ phụ thuộc bên ngoài; R-14 loại trừ network, persistence, timers và cleanup."
+      }
+    ],
+    "cases": [
+      {
+        "id": "C-1",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Mỗi lần khởi tạo thất bại bằng Error có code INVALID_INPUT.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-1",
+              "quote": "Validate that now is a function, reopenWindow and escalateAfter are positive safe integers, and maxReopens is a nonnegative safe integer; invalid configuration throws an Error with code INVALID_INPUT."
+            }
+          ],
+          "explanation": "Mỗi bước làm sai riêng một điều kiện cấu hình được nêu trong R-1; expected kiểm tra Error và code mà điều khoản quy định."
+        },
+        "invariants": [
+          "Mỗi cấu hình sai đều làm khởi tạo thất bại bằng Error có code INVALID_INPUT."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi createTickets với now: 1 và các cấu hình còn lại mặc định.",
+            "expected": "Ném Error có code INVALID_INPUT."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi createTickets với reopenWindow: 0.",
+            "expected": "Ném Error có code INVALID_INPUT."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi createTickets với escalateAfter là Number.MAX_SAFE_INTEGER + 1.",
+            "expected": "Ném Error có code INVALID_INPUT."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi createTickets với maxReopens: -1.",
+            "expected": "Ném Error có code INVALID_INPUT."
+          }
+        ]
+      },
+      {
+        "id": "C-2",
+        "group": "happy",
+        "required": true,
+        "method": "automated",
+        "expected": "create trả view open, assignee null, reopenCount 0, effectivePriority low; get trả cùng view. Các phương thức có kết quả đồng bộ dùng được trực tiếp.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-4",
+              "quote": "A newly created ticket has status open, assignee null, and reopenCount 0. Its creation time is obtained from now()."
+            },
+            {
+              "requirementId": "R-11",
+              "quote": "Ticket views contain id, subject, priority, effectivePriority, status, assignee (null when unassigned), and reopenCount. They include mergedInto only for merged tickets."
+            },
+            {
+              "requirementId": "R-12",
+              "quote": "get returns the ticket view as of now(). create, assign, wait, customerReply, resolve, reopen, and close return the changed ticket's view; merge returns the target ticket's view. Methods are synchrono…"
+            }
+          ],
+          "explanation": "Bước đầu kiểm tra giá trị tạo mới và view trả về qua create; bước sau kiểm tra get. R-4, R-11 và R-12 là căn cứ cho các trường và tính đồng bộ."
+        },
+        "invariants": [
+          "T1 được tạo với status open, assignee null và reopenCount 0.",
+          "View không có mergedInto khi ticket chưa merged."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi create({ id: 'T1', subject: 'Login', priority: 'low' }) và quan sát giá trị trả về.",
+            "expected": "Trả ticket view có id T1, subject Login, priority low, effectivePriority low, status open, assignee null, reopenCount 0."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi get('T1').",
+            "expected": "Trả ticket view hiện tại của T1."
+          }
+        ]
+      },
+      {
+        "id": "C-3",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Các giá trị sai bị từ chối INVALID_INPUT; ID A đã dùng bị từ chối ID_TAKEN; các lỗi không làm đổi trạng thái ticket.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "All failures throw Error objects whose code is a string. A failed call leaves ticket state unchanged."
+            },
+            {
+              "requirementId": "R-3",
+              "quote": "create requires a nonempty string id and subject, and priority equal to low, normal, high, or urgent; invalid values fail with INVALID_INPUT. An id previously used, including one belonging to a merged…"
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "On success, source status becomes merged and mergedInto is the target id; source cannot transition to another status."
+            },
+            {
+              "requirementId": "R-11",
+              "quote": "They include mergedInto only for merged tickets."
+            }
+          ],
+          "explanation": "Ba bước đầu kiểm tra từng dạng đầu vào sai riêng biệt. Sau đó merge tạo trạng thái cần thiết để thử tái sử dụng ID nguồn; expected dựa trên R-3 và view merged theo R-10/R-11."
+        },
+        "invariants": [
+          "Mỗi lời gọi thất bại ném Error có code dạng chuỗi và không làm đổi trạng thái ticket.",
+          "ID đã dùng vẫn bị chiếm sau khi ticket nguồn được merge."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi create với id rỗng, subject hợp lệ và priority normal.",
+            "expected": "Ném Error có code INVALID_INPUT; không có ticket nào được tạo."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi create với id C, subject rỗng và priority normal.",
+            "expected": "Ném Error có code INVALID_INPUT; không có ticket nào được tạo."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi create với id C, subject hợp lệ và priority invalid.",
+            "expected": "Ném Error có code INVALID_INPUT; không có ticket nào được tạo."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi merge('A', 'B').",
+            "expected": "A có status merged và mergedInto B; B giữ status open."
+          },
+          {
+            "id": "S-5",
+            "action": "Gọi create với id A và subject mới.",
+            "expected": "Ném Error có code ID_TAKEN; A vẫn merged và B vẫn open."
+          }
+        ]
+      },
+      {
+        "id": "C-4",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "ID không tồn tại trả UNKNOWN_TICKET; agent rỗng trả INVALID_INPUT; lỗi không đổi trạng thái.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "All failures throw Error objects whose code is a string. A failed call leaves ticket state unchanged."
+            },
+            {
+              "requirementId": "R-5",
+              "quote": "Methods operating on an unknown ticket id fail with UNKNOWN_TICKET. assign requires a nonempty string agent and otherwise fails with INVALID_INPUT."
+            }
+          ],
+          "explanation": "Các lời gọi lần lượt cô lập lỗi unknown ID và agent rỗng; trạng thái trước/sau thể hiện không có thay đổi sau lỗi."
+        },
+        "invariants": [
+          "Mọi lỗi có code dạng chuỗi và không làm đổi trạng thái ticket."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi get('X').",
+            "expected": "Ném Error có code UNKNOWN_TICKET."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi assign('X', 'agent').",
+            "expected": "Ném Error có code UNKNOWN_TICKET."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi assign('T', '').",
+            "expected": "Ném Error có code INVALID_INPUT; T không đổi."
+          }
+        ]
+      },
+      {
+        "id": "C-5",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "T lần lượt assigned/agent-a, assigned/agent-b, pending/agent-b, assigned/agent-b.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-6",
+              "quote": "assign from open, assigned, or pending sets status assigned and sets or replaces the assignee; wait changes assigned to pending; customerReply changes pending to assigned while keeping its assignee"
+            },
+            {
+              "requirementId": "R-12",
+              "quote": "create, assign, wait, customerReply, resolve, reopen, and close return the changed ticket's view"
+            }
+          ],
+          "explanation": "Chuỗi bước kiểm tra các trạng thái nguồn được phép, khả năng thay assignee và việc giữ assignee khi chuyển pending/assigned."
+        },
+        "invariants": [
+          "Assignee đổi chỉ theo thao tác assign; wait và customerReply giữ assignee.",
+          "Mỗi kết quả method trả view của ticket sau thay đổi."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi assign('T', 'agent-a').",
+            "expected": "Trả view T với status assigned và assignee agent-a."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi assign('T', 'agent-b').",
+            "expected": "Trả view T với status assigned và assignee agent-b."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi wait('T').",
+            "expected": "Trả view T với status pending và assignee agent-b."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi customerReply('T').",
+            "expected": "Trả view T với status assigned và assignee agent-b."
+          }
+        ]
+      },
+      {
+        "id": "C-6",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "Cả hai lời gọi không hợp lệ ném BAD_STATE; trạng thái quan sát được không đổi.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "A failed call leaves ticket state unchanged."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "Other transitions fail with BAD_STATE."
+            },
+            {
+              "requirementId": "R-8",
+              "quote": "before that threshold, the ticket remains resolved and can be reopened."
+            }
+          ],
+          "explanation": "Từ open, wait không thuộc transition được phép; từ resolved còn trong cửa sổ, assign không thuộc transition được phép. get kiểm tra trạng thái sau lỗi."
+        },
+        "invariants": [
+          "Transition bị từ chối không thay đổi trạng thái hoặc assignee của ticket.",
+          "Mọi lỗi có code dạng chuỗi."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi wait('T').",
+            "expected": "Ném Error có code BAD_STATE; get('T') vẫn cho status open."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi assign('U', 'agent').",
+            "expected": "Ném Error có code BAD_STATE; get('U') vẫn cho status resolved."
+          }
+        ]
+      },
+      {
+        "id": "C-7",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "Reopen lần đầu thành công; resolve lại mở cửa sổ mới; lần reopen thứ hai thất bại REOPEN_LIMIT và không đổi trạng thái.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "A failed call leaves ticket state unchanged."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "resolve changes assigned to resolved and records the call time; reopen changes resolved to assigned, keeps its assignee, and increments reopenCount"
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "A ticket resolved again after reopening starts a new window at the new resolve time."
+            },
+            {
+              "requirementId": "R-8",
+              "quote": "before that threshold, the ticket remains resolved and can be reopened."
+            },
+            {
+              "requirementId": "R-12",
+              "quote": "create, assign, wait, customerReply, resolve, reopen, and close return the changed ticket's view"
+            }
+          ],
+          "explanation": "Thời điểm 119 nằm trước ngưỡng 120 nên lần reopen đầu đủ điều kiện. Resolve lần nữa ở 130 tạo cửa sổ tới 230; lần reopen tiếp theo bị chặn bởi maxReopens = 1 trước khi hết cửa sổ."
+        },
+        "invariants": [
+          "reopenCount chỉ tăng khi reopen thành công.",
+          "Lỗi REOPEN_LIMIT không đổi ticket.",
+          "Mỗi lần resolve sau reopen đặt thời điểm bắt đầu cửa sổ mới."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi resolve('T').",
+            "expected": "Trả view T với status resolved."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi reopen('T').",
+            "expected": "Trả view T với status assigned, giữ assignee và reopenCount 1."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi resolve('T').",
+            "expected": "Trả view T với status resolved."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi reopen('T').",
+            "expected": "Ném Error có code REOPEN_LIMIT; trạng thái T vẫn resolved."
+          }
+        ]
+      },
+      {
+        "id": "C-8",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "T còn resolved tại 119; ở 120 get/list thấy closed và reopen thất bại BAD_STATE.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "A failed call leaves ticket state unchanged."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "Other transitions fail with BAD_STATE."
+            },
+            {
+              "requirementId": "R-8",
+              "quote": "A resolved ticket is closed automatically when now() is at least resolvedAt + reopenWindow. This status is reflected by get, list, and method state checks; before that threshold, the ticket remains re…"
+            },
+            {
+              "requirementId": "R-13",
+              "quote": "list accepts optional status and assignee filters and returns tickets matching every supplied filter as of now()."
+            }
+          ],
+          "explanation": "Bước 1 và 2 xác nhận hành vi trước ngưỡng. Bước 3 kiểm tra ngưỡng đúng bằng resolvedAt + reopenWindow qua get và list; bước 4 kiểm tra method state check thấy ticket đã closed."
+        },
+        "invariants": [
+          "Ở mỗi bước, trạng thái được quan sát phản ánh thời gian now hiện tại.",
+          "Sau ngưỡng resolvedAt + reopenWindow, T không thể reopen."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi get('T').",
+            "expected": "View có status resolved."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi assign('T', 'agent-b').",
+            "expected": "Ném BAD_STATE vì T đang resolved; trạng thái vẫn resolved."
+          },
+          {
+            "id": "S-3",
+            "action": "Đặt now = 120, gọi get('T') và list({ status: 'closed' }).",
+            "expected": "get cho status closed; list trả T trong kết quả lọc closed."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi reopen('T').",
+            "expected": "Ném BAD_STATE; T vẫn closed."
+          }
+        ]
+      },
+      {
+        "id": "C-9",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "Chưa tới ngưỡng không escalated; chưa assign tại ngưỡng thì effectivePriority tăng và vẫn tăng sau assign muộn; assign trước ngưỡng thì không escalated.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-9",
+              "quote": "A ticket not assigned before createdAt + escalateAfter becomes escalated at that threshold and remains escalated even if assigned later. A ticket assigned before the threshold is never escalated by th…"
+            },
+            {
+              "requirementId": "R-11",
+              "quote": "Ticket views contain id, subject, priority, effectivePriority, status, assignee (null when unassigned), and reopenCount."
+            },
+            {
+              "requirementId": "R-12",
+              "quote": "create, assign, wait, customerReply, resolve, reopen, and close return the changed ticket's view"
+            }
+          ],
+          "explanation": "Các mốc 49 và 50 kiểm tra ranh giới ngưỡng. Bước assign sau ngưỡng kiểm tra tính bền của escalation; ticket A được assign tại 49 để kiểm tra ngoại lệ assign sớm. Ticket urgent kiểm tra mức trần."
+        },
+        "invariants": [
+          "Ticket assigned trước ngưỡng không bị escalation theo quy tắc thời gian.",
+          "Escalation đã đạt ngưỡng vẫn ảnh hưởng effectivePriority sau khi assign muộn.",
+          "effectivePriority không vượt urgent."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi get('L').",
+            "expected": "effectivePriority của L là low."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi get('L') và get('E').",
+            "expected": "L có effectivePriority normal; E có effectivePriority urgent."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi assign('L', 'agent').",
+            "expected": "View trả về của L vẫn có effectivePriority normal."
+          },
+          {
+            "id": "S-4",
+            "action": "Tạo A tại 0; đặt now = 49 và assign A.",
+            "expected": "A assigned trước createdAt + escalateAfter."
+          },
+          {
+            "id": "S-5",
+            "action": "Gọi get('A').",
+            "expected": "effectivePriority của A vẫn low."
+          }
+        ]
+      },
+      {
+        "id": "C-10",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Status sai ném INVALID_INPUT; assignee sai kiểu bị từ chối; bộ lọc hợp lệ trả đúng A.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "All failures throw Error objects whose code is a string. A failed call leaves ticket state unchanged."
+            },
+            {
+              "requirementId": "R-13",
+              "quote": "list accepts optional status and assignee filters and returns tickets matching every supplied filter as of now(). An invalid status (not one of the six statuses) fails with INVALID_INPUT; assignee mus…"
+            }
+          ],
+          "explanation": "Bước đầu cô lập status sai. Bước hai cung cấp assignee sai kiểu; R-13 không nêu mã lỗi cho trường hợp này nên chỉ kiểm tra lỗi có code dạng chuỗi và không áp đặt mã cụ thể. Bước ba kiểm tra đồng thời hai filter."
+        },
+        "invariants": [
+          "List chỉ trả ticket khớp mọi filter được cung cấp.",
+          "Lỗi filter không làm đổi trạng thái ticket."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi list({ status: 'unknown' }).",
+            "expected": "Ném Error có code INVALID_INPUT."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi list({ assignee: 1 }).",
+            "expected": "Lời gọi thất bại; Error có code dạng chuỗi và ticket không đổi."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi list({ status: 'open', assignee: 'agent-a' }).",
+            "expected": "Kết quả chỉ gồm A."
+          }
+        ]
+      },
+      {
+        "id": "C-11",
+        "group": "consistency",
+        "required": true,
+        "method": "automated",
+        "expected": "S thành merged và trỏ T; T giữ status/assignee, priority high; source không chuyển trạng thái; self-merge SAME_TICKET.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "A failed call leaves ticket state unchanged."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "Other transitions fail with BAD_STATE."
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "merge requires different source and target ids (otherwise SAME_TICKET), and both tickets must be open, assigned, or pending (otherwise BAD_STATE). On success, source status becomes merged and mergedIn…"
+            },
+            {
+              "requirementId": "R-11",
+              "quote": "They include mergedInto only for merged tickets."
+            },
+            {
+              "requirementId": "R-12",
+              "quote": "merge returns the target ticket's view."
+            }
+          ],
+          "explanation": "Merge high source vào assigned low target kiểm tra kết quả trả về, trạng thái/assignee target, priority và view source. Các bước sau kiểm tra source không chuyển status và self-merge bị từ chối."
+        },
+        "invariants": [
+          "Ticket merged giữ mergedInto và không chuyển sang status khác.",
+          "Target giữ status và assignee khi merge; priority là mức cao hơn.",
+          "Lỗi không đổi trạng thái ticket."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi merge('S', 'T').",
+            "expected": "Trả view T với status assigned, assignee agent-t, priority high; get('S') cho status merged và mergedInto T."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi assign('S', 'agent-x').",
+            "expected": "Ném BAD_STATE; S vẫn merged."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi merge('T', 'T').",
+            "expected": "Ném Error có code SAME_TICKET; ticket không đổi."
+          }
+        ]
+      }
+    ]
+  }
+}

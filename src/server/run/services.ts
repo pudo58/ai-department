@@ -12,6 +12,11 @@ import { Semaphore } from '../scheduler.js';
 import type { Store } from '../store.js';
 import { RESUMES_SESSIONS } from '../../shared/providers.js';
 import { skillPromptBlock } from '../../core/skills.js';
+import { policyOf } from '../../core/policy.js';
+import { regressionDirOf, scanRegressions } from '../../core/regression.js';
+import type { RegressionRef } from '../../shared/regression.js';
+import { readdir, readFile, stat } from 'node:fs/promises';
+import path from 'node:path';
 import type { ResolvedSkill } from '../../runtime/types.js';
 import type { SkillLibrary } from '../../runtime/skilllibrary.js';
 import { HttpError, Blocked, Stopped } from './support.js';
@@ -34,6 +39,8 @@ export class RunServices {
   readonly sessions = new Map<string, { sessionId: string; cumulative?: import('../../runtime/providers.js').UsageCheckpoint }>();
   readonly baseFileCache = new Map<string, ReadonlySet<string>>();
   readonly deliveryLocks = new Set<string>();
+  /** Generated regression tests present in each run's working copy (scanned when a run starts and after tests are added). */
+  readonly regressions = new Map<string, RegressionRef[]>();
 
   isDelivering(id: string): boolean { return this.deliveryLocks.has(id) || this.run(id).delivery?.status === 'in_progress'; }
   /**
@@ -258,6 +265,29 @@ export class RunServices {
     // The full path list only serves the check above; the run keeps the readable parts.
     this.mutate(runId, (r) => { r.context = { enabled: true, capturedAt, repoMap: { ...repoMap, paths: [] }, memory }; });
     this.log(runId, 'context.captured', `Ngữ cảnh project: ${memory.length} mục bộ nhớ, bản đồ repo ${repoMap.tree ? 'có' : 'trống'}.`);
+  }
+
+  /**
+   * Finds the regression tests this project already holds (made by an earlier run or by this one), by the header the generator writes.
+   * They are locked from every agent and must keep running and passing; a file that no longer matches its own header is reported as edited.
+   */
+  async refreshRegressions(runId: string): Promise<void> {
+    const run = this.run(runId);
+    if (!policyOf(run).regression) return;
+    const workspace = this.runtimeFor(run).workspacePath?.(run, run.selectedSlot);
+    if (!workspace || !run.baseSha) { this.regressions.set(runId, []); return; }
+    const dir = regressionDirOf(run.configSnapshot), found: { path: string; content: string }[] = [];
+    const walk = async (relative: string, depth: number): Promise<void> => {
+      let entries;
+      try { entries = await readdir(path.join(workspace, relative), { withFileTypes: true }); } catch { return; }
+      for (const entry of entries) {
+        const next = `${relative}/${entry.name}`;
+        if (entry.isDirectory() && depth < 3) await walk(next, depth + 1);
+        else if (entry.isFile() && /.test.[cm]?[jt]sx?$/.test(entry.name) && (await stat(path.join(workspace, next))).size <= 1_000_000) found.push({ path: next, content: await readFile(path.join(workspace, next), 'utf8') });
+      }
+    };
+    await walk(dir, 0);
+    this.regressions.set(runId, scanRegressions(found));
   }
 
   /** Base snapshot file list, needed only when the project lets the agent create setup files. */

@@ -1,0 +1,11 @@
+{
+ "id": "replay-counts-again",
+ "description": "A replayed order counts its uses again",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "return structuredClone(seen.result);",
+   "replace": "for (const code of seen.codes) bump(code, customer, 1);\n        return structuredClone(seen.result);"
+  }
+ ]
+}

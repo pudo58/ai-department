@@ -1,0 +1,805 @@
+{
+  "schemaVersion": 1,
+  "id": "v4-check-1",
+  "provenance": "synthetic",
+  "lockedAt": "2026-10-26T14:51:11.709Z",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "cliVersions": {
+    "codex": "codex-cli 0.164.0"
+  },
+  "effectiveCapUsd": 10.8,
+  "automaticLimitMinutes": 30,
+  "maxDecisionRounds": 8,
+  "maxRepairRounds": 2,
+  "seed": 20261027,
+  "arms": [
+    "department",
+    "single"
+  ],
+  "repetitions": 2,
+  "tasks": [
+    {
+      "id": "ledgerhold",
+      "stratum": "hard",
+      "signals": [
+        "idempotency",
+        "state-transition",
+        "rollback"
+      ],
+      "packHash": "79899c6432874219f1ed62a49d4b4eb554e5137d296006c3e9b87b5e92d138f8"
+    },
+    {
+      "id": "ticketflow",
+      "stratum": "hard",
+      "signals": [
+        "time-boundary",
+        "state-transition",
+        "multi-rule"
+      ],
+      "packHash": "b6364ef358a8cea4a6690c3940d5cf1917a41dda6c321596e8d857738a0a3f58"
+    },
+    {
+      "id": "couponstack",
+      "stratum": "hard",
+      "signals": [
+        "idempotency",
+        "rollback",
+        "multi-rule"
+      ],
+      "packHash": "43022eb024101edfaa507b9652b99f0ac877d27c3c8582620b579eafc094b430"
+    }
+  ],
+  "assignments": [
+    {
+      "id": "ticketflow:department:1",
+      "taskId": "ticketflow",
+      "arm": "department",
+      "repetition": 1
+    },
+    {
+      "id": "ledgerhold:department:1",
+      "taskId": "ledgerhold",
+      "arm": "department",
+      "repetition": 1
+    },
+    {
+      "id": "ticketflow:single:1",
+      "taskId": "ticketflow",
+      "arm": "single",
+      "repetition": 1
+    },
+    {
+      "id": "couponstack:single:1",
+      "taskId": "couponstack",
+      "arm": "single",
+      "repetition": 1
+    },
+    {
+      "id": "ledgerhold:single:2",
+      "taskId": "ledgerhold",
+      "arm": "single",
+      "repetition": 2
+    },
+    {
+      "id": "ledgerhold:department:2",
+      "taskId": "ledgerhold",
+      "arm": "department",
+      "repetition": 2
+    },
+    {
+      "id": "couponstack:department:2",
+      "taskId": "couponstack",
+      "arm": "department",
+      "repetition": 2
+    },
+    {
+      "id": "ledgerhold:single:1",
+      "taskId": "ledgerhold",
+      "arm": "single",
+      "repetition": 1
+    },
+    {
+      "id": "ticketflow:single:2",
+      "taskId": "ticketflow",
+      "arm": "single",
+      "repetition": 2
+    },
+    {
+      "id": "couponstack:single:2",
+      "taskId": "couponstack",
+      "arm": "single",
+      "repetition": 2
+    },
+    {
+      "id": "couponstack:department:1",
+      "taskId": "couponstack",
+      "arm": "department",
+      "repetition": 1
+    },
+    {
+      "id": "ticketflow:department:2",
+      "taskId": "ticketflow",
+      "arm": "department",
+      "repetition": 2
+    }
+  ],
+  "singleMeans": "AI Department Single mode: Planner plus one agent that writes code, tests and its own review; no independent Author or Verifier, no subagents.",
+  "departmentMeans": "AI Department Verify mode with qualityPolicyVersion 4 (frozen in the run).",
+  "productSnapshot": {
+    "files": 165,
+    "sha256": "a58cf79b85111c7dcf1e4b6d248144e2bc284f90675ef72e636f33e70e4c9462",
+    "entries": [
+      [
+        "package.json",
+        "9a8c32f911082e0650ac04cc284e503d481cf3a5d05c3954d0349331f0daba7b"
+      ],
+      [
+        "pnpm-lock.yaml",
+        "dd0dc4b038f2d1466648d13200c941b61cef18fc0a19939d305b1350b85ea91a"
+      ],
+      [
+        "scripts/eval-v4.mjs",
+        "21c3bd78df706c293bc03fed99397057ac990a0bdf4fc459335bdb0e093c5adc"
+      ],
+      [
+        "scripts/lib/evaltask.mjs",
+        "7aed0814637425b99c3d06603eb68c45927d885526dd5b49a57df4d5a27d4d47"
+      ],
+      [
+        "scripts/lib/evalv4.mjs",
+        "4838f1e92b5c5ad686534016a56a8e0ecff2d553b170c04ceed3ba8c30deef7c"
+      ],
+      [
+        "src/client/App.tsx",
+        "355fa90b4b3be4c8cb2a6c54ca796c104e075dc3c2676852882cd6fee82a3984"
+      ],
+      [
+        "src/client/ConnectPage.tsx",
+        "d5dc4c6eb1d975b58ed8a1715df2d0b830e0c96c833ad0c06627e81924f95798"
+      ],
+      [
+        "src/client/ExecutionPanel.tsx",
+        "10ce175cca8373c4ef82ac470478c61ec0d69ff91a8c3aa21240419d79ba486c"
+      ],
+      [
+        "src/client/FindingEvidence.tsx",
+        "7265377612027e015f9eba372f55bb1febaad71b8ff32d6ca6dbb6f05e6cd92d"
+      ],
+      [
+        "src/client/FindingReplays.tsx",
+        "740a333bae0aff72b8f93b93842bc6dc44829550690d022dd15008a2c38967e2"
+      ],
+      [
+        "src/client/Monitor.tsx",
+        "f7e13f7db566c671fc4829b24effc9dd1fe74f656e208cb18cfd872c69973596"
+      ],
+      [
+        "src/client/MonitorCharts.tsx",
+        "53cd1719b3ad6cbb0ed3f63f863be4ba506cdd7a220836963ac45569ed72ea75"
+      ],
+      [
+        "src/client/MonitorHub.tsx",
+        "cdb0ef8d5fc702feed9620c805631338ecac35157250ff96cf2e1a52b31c26b5"
+      ],
+      [
+        "src/client/MonitorLive.tsx",
+        "2c9c5deb409450e95afb3615a2d2cd69c67559d1af9f946a39bc5968a53f2137"
+      ],
+      [
+        "src/client/MonitorPanels.tsx",
+        "54214c910a43304046decdc57d986ee0e6c54d7138b82e1cd03a2102ddc32911"
+      ],
+      [
+        "src/client/Preview.tsx",
+        "2cbd0cd0f795587a1f8978cc7e6c965bf0272254efe83f798222d3732be66c84"
+      ],
+      [
+        "src/client/ProjectContext.tsx",
+        "47971fface66101d9f27867faac446b16d35448e8e18932b305b25ddfd4afd0c"
+      ],
+      [
+        "src/client/Quality.tsx",
+        "9ba7dbcf87274c585398a4490e7d4e010851cb2eaae2c838c4447d63338406d5"
+      ],
+      [
+        "src/client/ReviewPanel.tsx",
+        "184d0ea1affbea51b1ef7b6b7b242ae7d469b67e39aedc2943c7f4c8791078f2"
+      ],
+      [
+        "src/client/RunPage.tsx",
+        "d462af29b5980d30e955525fa9eaf6d0a44ae55b4a3d3c1439503452254eda2e"
+      ],
+      [
+        "src/client/RunPanels.tsx",
+        "33fc3ec4c6ad7ecf0c662c5dd43c689308fdffb5237c95152f447cfba893a4ae"
+      ],
+      [
+        "src/client/SkillsPage.tsx",
+        "30148d857a59abc384e1b800af9f3c3ed532130f08e9eed455e716df0e16f546"
+      ],
+      [
+        "src/client/TestRepair.tsx",
+        "42606c7e462f4d252cdf8954ddabd664fdb98c087a36ea8d695d347cdc8b7e3c"
+      ],
+      [
+        "src/client/api.ts",
+        "8d10154ba77e46eab2a49d21f3b83c6edeaa727fb668af92e24a9363beacb329"
+      ],
+      [
+        "src/client/argv.ts",
+        "330b3199529a9040c119bc4e319e2f5a96a4d4ac213a4edbc406ac53688627b8"
+      ],
+      [
+        "src/client/checkdraft.ts",
+        "bde7594890ffc75f1ea70eee07540bcf41f66c91de54770787085927d8c6b07e"
+      ],
+      [
+        "src/client/forms.tsx",
+        "e14324623f1393a9c8d8ab8279d911917a89bad73fa240612dc6469dff658bef"
+      ],
+      [
+        "src/client/labels.ts",
+        "3dc05e0b82bc9ced0a6512baaa73819ca380a18d467c2a1de8e268d131dd8de3"
+      ],
+      [
+        "src/client/main.tsx",
+        "b57ca0caf76f390aab6db5121dfd195178b7b93d59d043973ebf68bdc3c47494"
+      ],
+      [
+        "src/client/paging.ts",
+        "955a92c21bf14887a2e30ef11afdcde9ebb694d2f762db638afdc21fc3a18f84"
+      ],
+      [
+        "src/client/projectfields.tsx",
+        "365959f25151270e7869f2e606f0095229f545f95a9235967871dc88fb234f7e"
+      ],
+      [
+        "src/client/projectform.tsx",
+        "8bebbb8e06d971f920b2ccbd8553d9de4fd9b217bec61367bd9fb9366c836ac1"
+      ],
+      [
+        "src/client/styles.css",
+        "e77d1e7f135072f3467e5116114e4a6db2d97ef9a6098b542eff0d3defeb04c6"
+      ],
+      [
+        "src/client/styles/base.css",
+        "bb29427820b12e57c90e069aca9cf0434a0691c0884f1b292b460b26006c9c7b"
+      ],
+      [
+        "src/client/styles/components.css",
+        "f8a9efd2a8c8b8f978ee29cebd7cd7ddb2c550d49c343a83fcf0e34e46be8a24"
+      ],
+      [
+        "src/client/styles/frame.css",
+        "35200ea1f7c7af197a8753d707349c273150a4afb1f5eb6e13da39ff3d3f6823"
+      ],
+      [
+        "src/client/styles/pages/connect.css",
+        "d198295dcf70e16cf0e98b4c37ddce8980734393f0d5b885e5a87ce0b704941b"
+      ],
+      [
+        "src/client/styles/pages/dossier.css",
+        "31b64c48b1224cd6e9f12f99d862211c79b986a5fff644b6100f6f63978ae739"
+      ],
+      [
+        "src/client/styles/pages/monitor.css",
+        "24d1f2c6adbbfd203ed70e0a6953116b7679f7e41d6ddd0a21a1ccf29d7f4d46"
+      ],
+      [
+        "src/client/styles/pages/projects.css",
+        "378f1edd9bd0497943c80539f4cd077582f706f781e457f96a5ee25e7b1b3c04"
+      ],
+      [
+        "src/client/styles/pages/work.css",
+        "75f4db2707cbc495970b612eb851118c8902f4fea930dc0c0b24153f8b20a4e1"
+      ],
+      [
+        "src/client/styles/tokens.css",
+        "a382ef2df7fcaa5b0fd4f7bde93bf9cb7b68aaa903550968d86d75893db99c59"
+      ],
+      [
+        "src/client/ui.tsx",
+        "5be1cc496d6c302094c6e2a9602a32ef2d3ed0cf7227482ce030bd9e2dd03cfc"
+      ],
+      [
+        "src/core/authordraft.ts",
+        "619ff62d4ae14cfea48210f1473252bfaffd303752cdb434533138de4562634c"
+      ],
+      [
+        "src/core/authoring.ts",
+        "e321e455468757f3979fa3e2fb4ce2cec55996e4d587f21e3ac969d9c52c2f99"
+      ],
+      [
+        "src/core/authormanifest.ts",
+        "cac89ed1f8c46560c6001e786e1502cf05ca1a3ebe6ed4dc12b68a8d0e1496e5"
+      ],
+      [
+        "src/core/budget.ts",
+        "1d34a464a0ddbca69ab60dcfc0fd4e144f8dfb383522a6ae854d43fd3c0a0811"
+      ],
+      [
+        "src/core/checkrouting.ts",
+        "9583811bdf137f7f7daf2d1b2d4d6a4e84aa4ed504cdd1e91de951acad1ef2d2"
+      ],
+      [
+        "src/core/checks.ts",
+        "80221d0f825c04bd341ee4ad86b58bb227368a93de65cdebef3705f558f859fc"
+      ],
+      [
+        "src/core/completion.ts",
+        "46dd173b4d5322c96b0910187e1ca1302c1c3b2525a865db6af25c080cc4d1df"
+      ],
+      [
+        "src/core/context.ts",
+        "d9767a297ea8b611ecf44cb3220f73fa70626b44df46fe41e79128e53901712c"
+      ],
+      [
+        "src/core/contract.ts",
+        "5d41cafcb1d8c7aaf651f6194a5692e7501b4c2b78f0311b9f7406ccfd1bbb48"
+      ],
+      [
+        "src/core/delivery.ts",
+        "d533337754ca31270a8a42b3cfef2f5d3c95176fa896a64e72105fb8ec374228"
+      ],
+      [
+        "src/core/diagnosis.ts",
+        "6d72c91cc0284f931d5eff76655d9bc16cd935279704d4e123b3dc1b5a0b729a"
+      ],
+      [
+        "src/core/environment.ts",
+        "3c2261814ff56eb828bccc18e90b2c149048020515957eca317f53b19d8bbf50"
+      ],
+      [
+        "src/core/envplan.ts",
+        "7edfe3c5a138b64343185bf33226dab3928341b91b42bba4ab2204958f1bdf4b"
+      ],
+      [
+        "src/core/execution.ts",
+        "bcd5a80e9838200854d5d6bdbf6f8a17ec77bb75e3bb9399bd79d3de9bfa45ba"
+      ],
+      [
+        "src/core/findingproof.ts",
+        "4cfbe447fc93484d84fb348006a8dac7f7b0eb187d52268467b59f60a8e64ef5"
+      ],
+      [
+        "src/core/findings.ts",
+        "083b7a800e8436ca30788c2dff4c715d31272724b0d539382943a7b5f3d3ece1"
+      ],
+      [
+        "src/core/memory.ts",
+        "1e6eed889faa54b9666d58ea698d778847cdcfd2b290c6c8c574e0d80489607c"
+      ],
+      [
+        "src/core/metrics.ts",
+        "ab597f6444b071bf020aadb7e74762cb2aff03ece22aebd483b08909a1abd39d"
+      ],
+      [
+        "src/core/monitor.ts",
+        "59ed63d4ff69c51eafa877ab4f5e5e83b4dd6350b5fc4d3fc9655b3aa1a885c0"
+      ],
+      [
+        "src/core/nodever.ts",
+        "445f21d40e13c0fef1a7ae9a6ed2cf465498ca8fa1e8c5498f19e3d8527fae5e"
+      ],
+      [
+        "src/core/outputs.ts",
+        "ced59cffc51a5081e3a3ea1ab57d7a6cc907e052720b88b2b777beb67268d6aa"
+      ],
+      [
+        "src/core/planfix.ts",
+        "297136373f35dddf47caee9092ac61e4413d8b36be422e9550c1a702bdeb685b"
+      ],
+      [
+        "src/core/policy.ts",
+        "6b0ec40bc36c8cdcd7e2cd65ecab27dfbd27af999e103abae7c53b5c03d36246"
+      ],
+      [
+        "src/core/prompts.ts",
+        "6ac659669651848ece407d9feb7d1dcae03e278687533cbda77f25efcb970112"
+      ],
+      [
+        "src/core/qualityevidence.ts",
+        "9d525d21237ece1d9e47210b6ee6208e1c1cadb66c6c21cbd2fd1281493c4d11"
+      ],
+      [
+        "src/core/quote.ts",
+        "f7d9321327e7d34df888d83696af7e68c205f2dfad1b4e143d7592cd205e9c88"
+      ],
+      [
+        "src/core/recovery.ts",
+        "987afcb36a722cfb0e1a92e9603e56ab224778ffe5b2e39497f6e2e6b1ef181b"
+      ],
+      [
+        "src/core/regression.ts",
+        "e01bc7963fb879b9e87990683dc2372f443021af2512c963a714fa1f5f482ff4"
+      ],
+      [
+        "src/core/repomap.ts",
+        "d7ac961dbe2bf8703aeb8ee3d8f5290384e1de1b036f52c92c12a3f3cb594cfb"
+      ],
+      [
+        "src/core/report.ts",
+        "29669b8de4171a943952a874dec7b53f9b7786a1f5d7711a32e5fbaa7e9a2585"
+      ],
+      [
+        "src/core/reproduction.ts",
+        "c5205c70c1e01868f0b1a08fbecdadb44f0789a651a6388255bc6550ec9c9243"
+      ],
+      [
+        "src/core/reviewdiff.ts",
+        "abc093128cf570c2250f776366d3b90fac47fe55b370ea041218d8dff6a3f6fc"
+      ],
+      [
+        "src/core/routing.ts",
+        "b249a0419a833a5f762838f27f8f3c81dfd063a1cd628c1a8d82e13f558592be"
+      ],
+      [
+        "src/core/scope.ts",
+        "09e642051fd96e7d56a436a82f1565d60526b706e5f7412e688c05a6f699adda"
+      ],
+      [
+        "src/core/selection.ts",
+        "929404d5c9dc1f0af72860264e06e70b135b151d1553186ff1bc17e376402ddc"
+      ],
+      [
+        "src/core/skills.ts",
+        "016176063b99a2a1a2cbc9fe3fb86ee5a62a60992b1b9dbdb1ca48c5b67d17d0"
+      ],
+      [
+        "src/core/sourcebindings.ts",
+        "984c45a20ebbcb989c1fd48264e287a0239385a86da0094fddfb219dcbd35ae0"
+      ],
+      [
+        "src/core/stackdetect.ts",
+        "261f90c77845fcd64b1381538172ae839198d2d4a9fdcfdd97074f671b75d45b"
+      ],
+      [
+        "src/core/stackother.ts",
+        "9af84538f8c06b63a6fc591470a95196bd69b2c8af81f5e7250bb23207495399"
+      ],
+      [
+        "src/core/testids.ts",
+        "8ad2cd62c874cc32a6d49c5966e83544f2d9787ac89982eed4558b23fcbf2399"
+      ],
+      [
+        "src/core/testlines.ts",
+        "e0bfdd3629463baa09f869f2aa8e58b8606993059a07cf7c893218871b800e30"
+      ],
+      [
+        "src/core/testpath.ts",
+        "b91b4fd64dc4f28421edd4aab5c9deaa7c997e508ee1857ee0b6616484c54981"
+      ],
+      [
+        "src/core/testplan.ts",
+        "40e49051cff1a97570bf394d7dfd882c80711da180d232fc54dc65bb6e360fd8"
+      ],
+      [
+        "src/core/tools.ts",
+        "9713d577c27b1ede49cef5b55063cc961b6fa9615adbbe23147bed3975856561"
+      ],
+      [
+        "src/core/verifierscope.ts",
+        "001d214b5d0d683deb3ab3091244b5770f80bd1fc72898570542e08d7db05b91"
+      ],
+      [
+        "src/core/waste.ts",
+        "8af3d7187a5f2e7bb6b1a264b961232705d6d9b0c56cf07f882848a7e8949d78"
+      ],
+      [
+        "src/evaluation/cli.ts",
+        "800eddbd5c037199ea6ef3ab97e54271ca74b337f56587f2830317502922cd2a"
+      ],
+      [
+        "src/evaluation/m0a.ts",
+        "679edb7c632b910bd259972ce3c6e781978573bde4d75b06f1b9257d85c8ba09"
+      ],
+      [
+        "src/evaluation/m0b.ts",
+        "1d0966548f266e76b7a9b223b750bce409fe393131ac004d434579c26098f09b"
+      ],
+      [
+        "src/evaluation/manifest.ts",
+        "578de38a049ea6a4fdf0bcc4c10349b16d3f325f07816bc3d992060fd8940192"
+      ],
+      [
+        "src/evaluation/pilot.ts",
+        "565dbab6df1cfc70999c3c09c1bbc05a52e1ccb9c6fe6832d594ce862490dce0"
+      ],
+      [
+        "src/evaluation/stats.ts",
+        "92f580fd9f5db3dd47fd6d4181faca1a4ea46c627c1b5fba2509c6e8f2d9ddc7"
+      ],
+      [
+        "src/evaluation/types.ts",
+        "00a6f0ba0563fb6e04eab0520a45dc390303c8b7b8ebb979511fc2f562c7d3f2"
+      ],
+      [
+        "src/runtime/agentclis.ts",
+        "ed1360acb0bd05929c22827fec77cf9288e5e7c135ecee66bcc3352b5d03d637"
+      ],
+      [
+        "src/runtime/agyhome.ts",
+        "9f4fcf8e846832df481b091f6f2581029540b74b0fa1913411dd2bd065d351e0"
+      ],
+      [
+        "src/runtime/codexmodel.ts",
+        "4515b2f430d6fccfd14aea7bfbc10290ddae2ba6ac99503a1130c5bb7f8191fd"
+      ],
+      [
+        "src/runtime/describe.ts",
+        "64218d9f15ac39dabebed2ae5972c1acb3a0800a1575a94e8aea607d5ec85090"
+      ],
+      [
+        "src/runtime/docker.ts",
+        "b19914e60545e1a01311c6c2a72baec29aaf0f9250f8bb9c6ed7e70fc81cde6e"
+      ],
+      [
+        "src/runtime/fake.ts",
+        "9098ad465c3679432b5063ef58d0d4ed5c37ecd982b7e09d229fd69c4ef24c43"
+      ],
+      [
+        "src/runtime/gitworkspace.ts",
+        "64b240788a85f56de67a6d59d0de0183e6cb364efcf77059f2a865ba5dd9fcb5"
+      ],
+      [
+        "src/runtime/hostcommand.ts",
+        "b566c9ae6b8ddd52f94ccb91dc6fd8fbc2665112c35c642d5b50fb957710f65c"
+      ],
+      [
+        "src/runtime/local.ts",
+        "4fbca61436c8f454db6df637ceab78650ed4445e4f46f51533c2ca3c9ec39066"
+      ],
+      [
+        "src/runtime/mutation-worker.cjs",
+        "a2a6ee2088b2fd4cea4e514bd78c4377a703bb6eded09705ceee51def6770211"
+      ],
+      [
+        "src/runtime/mutation.ts",
+        "21becd121663a62213189ecea5472eb4e7e7a7cd751b407f2b8b14f30c1b0e42"
+      ],
+      [
+        "src/runtime/mutationdetect.ts",
+        "788b2bda01e695d860f46ac4bec08c029af590ebc79e00472ea50db1159ecd55"
+      ],
+      [
+        "src/runtime/nodever.ts",
+        "925c3b78f153c991f20860d989bb41dfa605fd836e92dd3e7fcfe03bbbb3a092"
+      ],
+      [
+        "src/runtime/preflight.ts",
+        "4e5a99529c0230814fb56b698c6d4faead3f25d3963c1135d7017dbbce4bc41e"
+      ],
+      [
+        "src/runtime/process.ts",
+        "0e9930f64796935a800dcea85ba0ba86cb79b20b551fc4410a474eb10de665d2"
+      ],
+      [
+        "src/runtime/providers.ts",
+        "f97a63322263625f1b830dcd3171e7e64b8cbd74dddb2ec3dbe94bc1dadcda7e"
+      ],
+      [
+        "src/runtime/pythonenv.ts",
+        "d16a082b42e100aeba4bb27f0c6c115e8eb7b5cc5da8262f98d40074e65d2b28"
+      ],
+      [
+        "src/runtime/report.ts",
+        "d283591477a26947c028eaa26f3ee83854a863c308c79a1c2fc166454b977f55"
+      ],
+      [
+        "src/runtime/reproduction-worker.cjs",
+        "39778dd2ae3dd2fa23a902a3b0276f793d7780d3fd61303de93990f3c400ce34"
+      ],
+      [
+        "src/runtime/reproduction.ts",
+        "bf9c942c2fc35c9d821a16f02c1c4d7b6bfafa164a195d176d8bfc26b5ab5fe9"
+      ],
+      [
+        "src/runtime/skilllibrary.ts",
+        "4e11127798f04c29926bfbb1d20c282e9b3eb360abf8cbe914584ce61635881e"
+      ],
+      [
+        "src/runtime/skillmount.ts",
+        "a98c140f1d11deb382bd0a8d796b13e40487d1f71e639ab8a96006d3c0d3765d"
+      ],
+      [
+        "src/runtime/streaming.ts",
+        "3d269a740284ca9722e883759e4568e351b87ea6814ab20d3136ee8dcd1cb356"
+      ],
+      [
+        "src/runtime/toolchain.ts",
+        "6848c01e35567b883af4406e40c5d1d921941d42598417211cb639628d07b228"
+      ],
+      [
+        "src/runtime/types.ts",
+        "2fb9207c33d9c9cc1171c4bc1e9f4bafbe39a92d0f575aba9df5e8f248a3f986"
+      ],
+      [
+        "src/runtime/unzip.ts",
+        "080447ef726c0761c8353997714394dccb90eb5892a2194b8d81ae8c831c08d6"
+      ],
+      [
+        "src/server/app.ts",
+        "c54b38fbc3a3ba01ba60a41269a0aca250194b1b81cfaa8527d05d57d27bd9e3"
+      ],
+      [
+        "src/server/attest.ts",
+        "db2c5ba66e405b9aba2f5873713a9dcad91b0a09fdb57771955cfe0c01b17639"
+      ],
+      [
+        "src/server/autoclean.ts",
+        "f77b7b23e80a33a5ec9b8094263c7ed41d8e9c4d23ecb1a1df71ddc33dc0d032"
+      ],
+      [
+        "src/server/environment.ts",
+        "fd2a2728c5e8396b4771e16abac41882982c09f3d0c7ef0d0fa09724747debdb"
+      ],
+      [
+        "src/server/folders.ts",
+        "77323bc8be65fe177e99d13438e01c3eec7a6bb84fd8e65f4979dfd54712942a"
+      ],
+      [
+        "src/server/main.ts",
+        "1ad8ffcd7c5b4a52301654b8bacac802c85e3428ce5abc969a3e659f4eaf1cf0"
+      ],
+      [
+        "src/server/orchestrator.ts",
+        "1b8e7319cfc13c41e99fae45ba0e8ec4df440694767644ac2e2b45166108bb40"
+      ],
+      [
+        "src/server/preview.ts",
+        "2ab48ee914c12683cd7d43fe216c357c768b34642c040e3941d9a0e1fb5d3258"
+      ],
+      [
+        "src/server/routes/context.ts",
+        "ce2cc16571e3eee30b02cf5e757bbb794590ce21f70ff0727f454c816e899db2"
+      ],
+      [
+        "src/server/routes/memory.ts",
+        "0a0d205c36113ded30cf9887472b83983696ec56d97bfcd9ab0b52e0cb940b32"
+      ],
+      [
+        "src/server/routes/monitor.ts",
+        "4fbffded52f84b1f8e0229d42dad06493c3a497d6caf3753da91f5792382f29a"
+      ],
+      [
+        "src/server/routes/previews.ts",
+        "3a9233a32ca542bb9d6bbe7882c102c00f6cc36b1fd735aa65b20dee97385d57"
+      ],
+      [
+        "src/server/routes/projects.ts",
+        "5ac52e4ba2fa153ea47f3f85422caf6eb6736915f74cdd67a6ed1b39699419fb"
+      ],
+      [
+        "src/server/routes/providers.ts",
+        "56b6362ede9eb2c5cc7abccd4d196bd99a340fb4f20bea4dcebc81ec458f98f8"
+      ],
+      [
+        "src/server/routes/runs.ts",
+        "4f85cd0b38331a20983def019fbd58ab68afc11cb6de2160378cc25e5ec78bd9"
+      ],
+      [
+        "src/server/routes/schemas.ts",
+        "51568c07f51b7c53ed1b389de7bf21341e24de7d30c55b8b7990774d6ecd1819"
+      ],
+      [
+        "src/server/routes/skills.ts",
+        "e71b7a62fccd9d69c5f8a7428b9b7afa6db376ffeb93e26241e07cd9e5fe0077"
+      ],
+      [
+        "src/server/routes/system.ts",
+        "561bdb22abb437d94886da8fdfda3cf26d96b764897ed94f9d2f8d89102998da"
+      ],
+      [
+        "src/server/run/acceptance.ts",
+        "bfad64538e87b22dcee09cbd69e0f437ee2484275390d00ca32ef7b161283ca6"
+      ],
+      [
+        "src/server/run/candidates.ts",
+        "f2022aa016073d837887c37d4cd949e362f6ca3be7a4541010b6c41429019eb9"
+      ],
+      [
+        "src/server/run/checks.ts",
+        "3f1d9bfa82f7640347ae56cc253737d196d7572aed7e378e8bcd139bd84ff089"
+      ],
+      [
+        "src/server/run/environment.ts",
+        "3182437b9cc83a201b9bfb824fb2022b670b61cff0c1354d5454f3b87e24f973"
+      ],
+      [
+        "src/server/run/mutation.ts",
+        "21e2726da999a6569da246ca12a2ef28434cc22e94ed65eda75c610e8eadc063"
+      ],
+      [
+        "src/server/run/outcome.ts",
+        "858ca68b6f865d1780a983643c66335d7ff80452877a20467af4c4709e21cfd2"
+      ],
+      [
+        "src/server/run/planning.ts",
+        "72c1cf329a688c51b80ff132052bc2524fe10ffe05454b8a7fa1aabd1800764e"
+      ],
+      [
+        "src/server/run/recovery.ts",
+        "5815d6621f35702279350096546c5d39f048ad511cb57160b6e2fb3801108dee"
+      ],
+      [
+        "src/server/run/regression.ts",
+        "1205798a0babb5d4e8795260d9bfd7bd2fa452431c9cd160fdc67fa38dfb0ec8"
+      ],
+      [
+        "src/server/run/reproduction.ts",
+        "e2c11916948b5761307fd35ddb7d5189bc0fbfaa66fee0ec7eee4afefc83c245"
+      ],
+      [
+        "src/server/run/scope.ts",
+        "e1a68aa545ef5b804680004db098c7fac9e96202624003ddcbe9585623be1f19"
+      ],
+      [
+        "src/server/run/services.ts",
+        "7cd58678e559a706fd818978cef450aa9c6a60b1814d143c60480ed6c4d08c79"
+      ],
+      [
+        "src/server/run/support.ts",
+        "597b2c72b2015f52fb4cdcfb8f9c8fffbbcc3cb1d794fe091e9aa022eb434330"
+      ],
+      [
+        "src/server/run/timers.ts",
+        "765b489f520749503ce856c2256b2fcf09e69af75a778e3a41d8497066b81276"
+      ],
+      [
+        "src/server/run/verification.ts",
+        "876a9cdce8ff6fe1d10768cdaac22ff84c9e5ede00b2df6cb3fb59c7c7832e3e"
+      ],
+      [
+        "src/server/scheduler.ts",
+        "cdab5f5832e441f9a760da88830db98b17af2949ad38091cc394243f23da17c3"
+      ],
+      [
+        "src/server/storage.ts",
+        "ce88efe0cce4b4cb2b1768a33fbd68713971f5e0660f241e43eb5e1cfc0be66c"
+      ],
+      [
+        "src/server/store.ts",
+        "ad9f45998a4eab95f993376eb69a1bc20037f069bea4119a600c759fad365d26"
+      ],
+      [
+        "src/shared/execution.ts",
+        "fb6bc3f0232b916ea331ced0b42aa178a5d42277931e66bb7351212e5896764b"
+      ],
+      [
+        "src/shared/guidance.ts",
+        "873bd27207f4a447c25abefbefa1a717200ee28f55a003e1669e1490272abe70"
+      ],
+      [
+        "src/shared/providers.ts",
+        "bc2c0e7e637d35aa890b38aa5e3c3535c85146343d307fb8bd5efe363ba887e6"
+      ],
+      [
+        "src/shared/quality.ts",
+        "8eb62cddeb2c679efa17351f3cfb88f7f150e40bf9e5c504e0c203d0280116c8"
+      ],
+      [
+        "src/shared/regression.ts",
+        "5b62f689ab2fdb45ae1a3d8e2ef0cb3e3d45e1aeb9e121b9540f3fd7388540b7"
+      ],
+      [
+        "src/shared/reproduction.ts",
+        "a40ce15726b707fcf54e0c88e809be22e24d419f7133d6daa3344390848705f3"
+      ],
+      [
+        "src/shared/types.ts",
+        "5d5c3d6dd88279a085cbc751c9f04b69188610df1be48d52967068d503dbbbc1"
+      ]
+    ]
+  },
+  "auditHash": "13c6f3a9196dc33c483b05f86495c06799bfbc78de77b1551ffe293d9b751374",
+  "orchestratorPolicy": [
+    "Decisions are made by the orchestrating AI against the locked SPEC.md of the task, never against the hidden grader, the reference or another candidate.",
+    "A contract is approved when it states the SPEC without adding or dropping behavior. A contract that cannot be approved as written may be revised only in form (labels, missing not-applicable reasons, links to steps); no expected result is added or changed. Every revision is recorded.",
+    "A test correction proposal is approved only when the cited SPEC clause makes the old assertion wrong and the new one right. Otherwise it is rejected.",
+    "A finding is confirmed (by its proposal hash, or by a reasoned manual review when no regression can be generated) only when its oracle quotes a SPEC clause and its expected values follow from it; findings about behavior the SPEC does not decide are disputed.",
+    "The orchestrator never writes or edits code or tests for a model, never adds business rules, and never retries a run that failed or was blocked. At most two repair rounds per run."
+  ],
+  "labels": "Task packs, graders, mutants and orchestrator decisions are AI-generated (synthetic).",
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e"
+}

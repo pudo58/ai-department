@@ -1,0 +1,11 @@
+{
+ "id": "valid-to-inclusive",
+ "description": "A coupon is still active at validTo",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "d.validTo !== null && time >= d.validTo",
+   "replace": "d.validTo !== null && time > d.validTo"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "over-capture-allowed",
+ "description": "Capture may exceed the hold",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "if (amount > hold.amount) throw fail('OVER_CAPTURE');",
+   "replace": ""
+  }
+ ]
+}
