@@ -100,11 +100,26 @@ ${extra}` });
       this.s.retry(runId,diagnosis.decision==='implementation'?'implementation':'test_error',`Chẩn đoán: ${diagnosis.decision}`);
       if (diagnosis.decision === 'implementation') return;
       if (diagnosis.decision === 'ambiguous') return this.keepLocked(runId, `Author chưa chắc test ${cases.join(', ')} đúng hay sai (${diagnosis.reason.slice(0, 300)})`);
-      const changes = await runtime.changes(run, slot);
+      let changes = await runtime.changes(run, slot);
       const allowedPaths = locked.manifest.entries.filter(e => diagnosis.caseIds.includes(e.caseId)).map(e => e.path);
-      const allowed = diagnosis.caseIds.length && diagnosis.caseIds.every(id => cases.includes(id)) && changes.files.length && changes.files.every(f => allowedPaths.includes(f));
+      // An Author that says the test is wrong but left the workspace untouched gets one reminder to make the edit.
+      if (!changes.files.length && remainingFor(budgetState(this.s.run(runId), this.s.store.attempts.list(runId)), 'repair') > 0) {
+        await request(`Bạn kết luận test sai nhưng workspace chưa có thay đổi nào. Sửa trực tiếp file test của ca lỗi (${allowedPaths.join(', ') || paths.join(', ')}) theo đúng kết luận rồi trả lại cùng quyết định; không sửa source, hợp đồng hay manifest.`);
+        changes = await runtime.changes(run, slot);
+      }
       const scope = evaluateChanges(changes.files, { ...this.scope.scopeFor(runId), lockedPaths: [] });
-      if (!allowed || !scope.accepted || !changes.patch || changes.patch.length > 1_000_000 || unsafeTestPatch(changes.patch)) return this.keepLocked(runId, 'Đề xuất sửa test của Author vượt phạm vi hoặc không có diff hợp lệ');
+      const why: string[] = [];
+      if (!diagnosis.caseIds.length || !diagnosis.caseIds.every(id => cases.includes(id))) why.push('caseIds không thuộc ca lỗi');
+      if (!changes.files.length) why.push('Author không sửa file nào');
+      else if (!changes.files.every(f => allowedPaths.includes(f))) why.push(`file ngoài các file test của ca lỗi: ${changes.files.filter(f => !allowedPaths.includes(f)).join(', ')}`);
+      if (changes.files.length && !scope.accepted) why.push('thay đổi nằm ngoài phạm vi cho phép');
+      if (changes.files.length && !changes.patch) why.push('diff rỗng');
+      if (changes.patch.length > 1_000_000) why.push('diff quá lớn');
+      if (unsafeTestPatch(changes.patch)) why.push('diff tạo/xóa/đổi tên file hoặc thêm skip/only');
+      if (why.length) {
+        this.s.artifact(runId, { kind: 'report', title: 'Author test proposal rejected', content: JSON.stringify({ why, files: changes.files, patch: changes.patch.slice(0, 200_000), checkpoint: run.checkpoint }), checkpoint: run.checkpoint });
+        return this.keepLocked(runId, `Đề xuất sửa test của Author không hợp lệ (${why.join('; ')})`);
+      }
       const proposal: TestRepairProposal = { schemaVersion: 1, checkpoint: run.checkpoint!, contractVersion: run.contract.version, contractHash: hashContract(run.contract), slot, configHash: testRepairConfigHash(run), manifestHash: locked.hash, paths: changes.files, patch: changes.patch, ...diagnosis, kind: diagnosis.decision === 'test_assertion' ? 'assertion' : 'setup' };
       if (!validAssertionChanges(run, proposal)) return this.keepLocked(runId, 'Bản sửa assertion của Author thiếu căn cứ hợp đồng hoặc giá trị trước/sau hợp lệ');
       if(run.qualityPolicyVersion===3&&proposal.kind==='assertion'&&proposal.assertionChanges!.some(change=>!locked.manifest.entries.some(e=>e.caseId===change.caseId&&e.assertions?.some(a=>assertionTokens(a.expression)===assertionTokens(change.before)))))return this.keepLocked(runId, 'Giá trị "before" của bản sửa assertion không khớp assertion đã khóa');
