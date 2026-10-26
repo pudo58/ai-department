@@ -32,7 +32,8 @@ export async function taskHash(dir) {
   for (const sub of ['SPEC.md', 'task.json', 'scaffold', 'reference', 'grader', 'mutants']) {
     const full = path.join(dir, sub);
     const files = sub.includes('.') ? [''] : await filesUnder(full);
-    for (const file of files) parts.push(`${sub}/${file}:${sha256(await readFile(path.join(full, file)))}`);
+    // Line endings are normalised, so a checkout with CRLF conversion does not change what the pack means.
+    for (const file of files) parts.push(`${sub}/${file}:${sha256((await readFile(path.join(full, file), 'utf8')).replace(/\r\n/g, '\n'))}`);
   }
   return sha256(parts.join('\n'));
 }

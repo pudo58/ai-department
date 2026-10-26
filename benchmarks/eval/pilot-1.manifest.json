@@ -8,7 +8,7 @@
   "protocol": {
     "version": "pilot-1",
     "rubric": "Accepted = the hidden grader of the task pack passes every test AND the run finished through its normal path (harness arms: reached awaiting_acceptance; native-full: the agent finished within the time limit). A run that stops, fails or is blocked is not accepted, whatever its code scores. Grader-only results and false-ready counts are reported separately. Contracts are approved unchanged and a valid Author test correction is applied automatically; both are recorded as protocol deviations.",
-    "lockedAt": "2026-10-26T07:12:59.799Z"
+    "lockedAt": "2026-10-26T07:27:36.896Z"
   },
   "repetitions": 2,
   "arms": [
@@ -27,7 +27,7 @@
         "half-open-interval"
       ],
       "initialTeamMode": "verify",
-      "taskPackHash": "b1bc86d50f6997e4cdf72086eff5741dbb32de8605cd96a049862ece758df6f0"
+      "taskPackHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f"
     },
     {
       "id": "charges",
@@ -40,7 +40,7 @@
         "atomicity"
       ],
       "initialTeamMode": "verify",
-      "taskPackHash": "137ddbac41fd769c0b31571c439db0d65d0a74ed10272aa9ba5322a439d385c6"
+      "taskPackHash": "f81b2ffc26fb50b69e8d77506f8b1146fb7e68770a4b6b10fd6ab5187549aed3"
     },
     {
       "id": "lru",
@@ -52,7 +52,7 @@
         "callback"
       ],
       "initialTeamMode": "verify",
-      "taskPackHash": "6a3c0040e64ed6c9ec18c32bb74db58ac14ca53d9a706e864df88e38bd562071"
+      "taskPackHash": "dfc0a32606361a4b4c81e730ebb7f1e3ed69d9f7fb66e1191fe8baeae3fef842"
     },
     {
       "id": "pulsegraph",
@@ -66,7 +66,7 @@
         "snapshot"
       ],
       "initialTeamMode": "verify",
-      "taskPackHash": "f1c6b2bc918fdab79468709c5377afcf4eb14fcaadb575ba864824a78a4cb9e5"
+      "taskPackHash": "e8d9f7cfb2d247f98421d52fd51fdeb80328c8b4dc0bb1be3adef4565f71637f"
     },
     {
       "id": "ranges",
@@ -78,7 +78,7 @@
         "immutability"
       ],
       "initialTeamMode": "verify",
-      "taskPackHash": "0f7713aaef5822a957e6ff5d92df1c08d484eba48a719810e46a82b15c3ed983"
+      "taskPackHash": "a8826a2482cce433815f6f10104c70259372e9b1b8dc44e3c7cc4fb1110e85d4"
     },
     {
       "id": "runner",
@@ -90,7 +90,7 @@
         "cancellation"
       ],
       "initialTeamMode": "verify",
-      "taskPackHash": "5bcb6f364ead6f5dc1740227cc5d2204c52f9127fdf00eb5153a8fa981117ca0"
+      "taskPackHash": "fa3034e634b3f1c2b916ed6e41e08b1851bc8bc31189103923c94f2cdd06810a"
     },
     {
       "id": "slugify",
@@ -102,7 +102,7 @@
         "boundary"
       ],
       "initialTeamMode": "verify",
-      "taskPackHash": "6dbecc178e8055880b085bd404fd73d559b78f4370d0fb6396573eb25e04a8fe"
+      "taskPackHash": "9c6e110043a71522926a74925d89a62453f681adab46d14cdf9b050a13a7fc20"
     },
     {
       "id": "versions",
@@ -114,7 +114,7 @@
         "semver"
       ],
       "initialTeamMode": "verify",
-      "taskPackHash": "cc300551c3ab89fcc2b05b7c56d5609473a2cb54bf37335f00073aef8922ab34"
+      "taskPackHash": "3fd25ce23fd9b871dcd3d6ce4350f0fdf2395059faf97b8309299f609b160ae3"
     }
   ],
   "assignments": [
