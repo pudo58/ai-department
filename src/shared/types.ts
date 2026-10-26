@@ -111,6 +111,8 @@ export interface RunSummary {
 }
 export interface Independence { independent: boolean; reason: string }
 export interface RunDetail {
+  /** Set when automatic fallbacks weakened this run's evidence; see degradedOf in core/report.ts. */
+  degraded?: import('../core/report.js').DegradedRun;
   findingReplays?: import('./reproduction.js').FindingReplay[];
   execution?: import('./execution.js').ExecutionMetrics;
   environment?: import('./execution.js').EnvironmentProbe;

@@ -1,3 +1,4 @@
+import { degradedOf } from '../../core/report.js';
 import { qualityDetail, deepQuality } from '../../core/qualityevidence.js';
 import { readTestPlanReview, validateTestPlan } from '../../core/testplan.js';
 import type { RunDetail } from '../../shared/types.js';
@@ -36,6 +37,7 @@ export class RunOutcome {
     if (deepQuality(run) && !run.contract.testPlan) contractReview.problems.push(...validateTestPlan(run.contract, true));
     return {
       planReview: readTestPlanReview(run.contract, artifacts, contractReview.contractHash),
+      ...(degradedOf(artifacts).items ? { degraded: degradedOf(artifacts) } : {}),
       execution:executionMetrics(run,attempts,this.s.now().getTime()), authorDraft:pendingAuthorDraft(run,artifacts),
       environment:readEnvironment(run,artifacts),
       findingReplays:readFindingReplays(run,artifacts),

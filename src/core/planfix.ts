@@ -120,8 +120,9 @@ const clip = (text: string, max = 8000): string => (text.length > max ? text.sli
  * automatic case. Each fix is mechanical (it restates what the contract or the Author's own case already says), none
  * weakens a case, and every one is returned so the approval screen can list it.
  */
-export function completeTestPlan(input: TestPlan | undefined, contract: Pick<TaskContract, 'requirements'>, options: CompletionOptions): { plan: TestPlan; changes: string[]; assumptions: string[] } {
+export function completeTestPlan(input: TestPlan | undefined, contract: Pick<TaskContract, 'requirements'>, options: CompletionOptions): { plan: TestPlan; changes: string[]; assumptions: string[]; synthesized: number; dropped: number } {
   const changes: string[] = [], assumptions: string[] = [];
+  let synthesized = 0, dropped = 0;
   const plan: TestPlan = structuredClone(input ?? { schemaVersion: options.schema2 ? 2 : 1, statefulModelVersion: 1, cases: [], notApplicable: [], questions: [] });
   const known = new Map(contract.requirements.map(r => [r.id, r]));
   if (options.schema2 && plan.schemaVersion !== 2) { plan.schemaVersion = 2; changes.push('Kế hoạch được nâng lên căn cứ v2; căn cứ từng ca lấy từ điều khoản của ca.'); }
@@ -136,7 +137,7 @@ export function completeTestPlan(input: TestPlan | undefined, contract: Pick<Tas
     const c = original;
     const ids = [...new Set(c.requirementIds)].filter(id => known.has(id));
     if (ids.length !== new Set(c.requirementIds).size) changes.push(`${c.id}: bỏ mã yêu cầu không tồn tại trong hợp đồng.`);
-    if (!ids.length) { changes.push(`${c.id}: không còn yêu cầu hợp lệ nào nên ca bị bỏ; yêu cầu liên quan sẽ được phủ bằng ca tự sinh.`); continue; }
+    if (!ids.length) { dropped++; changes.push(`${c.id}: không còn yêu cầu hợp lệ nào nên ca bị bỏ; yêu cầu liên quan sẽ được phủ bằng ca tự sinh.`); continue; }
     c.requirementIds = ids;
     if (usedCaseIds.has(c.id)) { const id = nextCaseId(); changes.push(`Mã ca ${c.id} bị trùng; ca sau được đổi thành ${id}.`); c.id = id; }
     usedCaseIds.add(c.id);
@@ -169,7 +170,7 @@ export function completeTestPlan(input: TestPlan | undefined, contract: Pick<Tas
       ...(options.schema2 ? { oracle: oracleFor([req.id]) } : {}),
       ...(options.reasoning ? { steps: [{ id: 'S-1', before: 'Trạng thái ban đầu theo yêu cầu', after: 'Trạng thái sau thao tác theo yêu cầu', requirementIds: [req.id], action: 'Thực hiện hành vi mà yêu cầu mô tả.', expected: clip(req.text) }] } : {}),
     });
-    changes.push(`${req.id}: chưa có ca tự động bắt buộc nên ca ${id} được tự sinh từ nguyên văn yêu cầu.`);
+    synthesized++; changes.push(`${req.id}: chưa có ca tự động bắt buộc nên ca ${id} được tự sinh từ nguyên văn yêu cầu.`);
   }
 
   if (plan.questions.length) {
@@ -177,5 +178,5 @@ export function completeTestPlan(input: TestPlan | undefined, contract: Pick<Tas
     changes.push(`${plan.questions.length} câu hỏi chưa giải quyết được chuyển thành giả định trong hợp đồng để bạn xác nhận.`);
     plan.questions = [];
   }
-  return { plan, changes, assumptions };
+  return { plan, changes, assumptions, synthesized, dropped };
 }

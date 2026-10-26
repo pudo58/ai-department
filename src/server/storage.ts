@@ -13,6 +13,19 @@ export interface WorkspaceUsage {
 export interface StorageReport { computedAt: string | null; computing: boolean; disk: DiskSpace | null; workspaces: WorkspaceUsage[]; totalBytes: number }
 
 const GB = 1024 ** 3;
+/** Below this a new run is not started: copying the project and installing dependencies would fail halfway. */
+export const MIN_FREE_BYTES = 512 * 1024 ** 2;
+
+/** Free space on the drive that holds `target`, using the nearest folder that already exists. */
+export async function diskNear(target: string): Promise<DiskSpace | null> {
+  let dir = path.resolve(target);
+  for (let i = 0; i < 5; i++) {
+    const found = await diskSpace(dir);
+    if (found) return found;
+    dir = path.dirname(dir);
+  }
+  return null;
+}
 const STALE_MS = 7 * 24 * 3_600_000;
 const MAX_FILES_PER_RUN = 200_000;
 

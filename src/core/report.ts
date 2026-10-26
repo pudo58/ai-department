@@ -12,7 +12,21 @@ export interface ChangedFile { path: string; added: number; removed: number; sta
 export interface ReportWarning { level: 'warn' | 'info'; text: string }
 export interface VerifierVerdict { decision: 'pass' | 'block' | 'abstain' | 'skipped' | 'unparsed'; summary: string; findingCount: number; scope?: VerifierScope }
 
+/** Fallbacks that weakened the evidence (level warn), so a run that was patched up never counts as a clean one. */
+export interface DegradedRun { stages: string[]; items: number }
+export function degradedOf(artifacts: readonly Artifact[]): DegradedRun {
+  const notes: { stage: string; level?: string }[] = [];
+  for (const a of artifacts) {
+    if (a.title !== 'Pipeline fallback' || !a.valid) continue;
+    try { notes.push(JSON.parse(a.content) as { stage: string; level?: string }); } catch { /* An unreadable note proves nothing either way. */ }
+  }
+  const weakening = notes.filter(n => n.level !== 'info');
+  return { stages: [...new Set(weakening.map(n => n.stage))], items: weakening.length };
+}
+
 export interface AcceptanceReport {
+  /** Present only when the run was completed with automatic fallbacks that weaken its evidence. */
+  degraded?: DegradedRun;
   findingReplays?: FindingReplay[];
   planReview?: TestPlanReview;
   execution?: ExecutionMetrics; environment?: EnvironmentProbe;
@@ -179,6 +193,7 @@ export function buildReport(input: ReportInput): AcceptanceReport {
   const readiness = !completion.ready ? 'not_ready' : warnings.some((w) => w.level === 'warn') ? 'ready_with_warnings' : 'ready';
   return {
     planReview: input.planReview,
+    ...(degradedOf(artifacts).items ? { degraded: degradedOf(artifacts) } : {}),
     findingReplays,
     execution:executionMetrics(run,attempts,(input.now??new Date()).getTime()),
     environment:input.environment,
@@ -213,7 +228,8 @@ const mins = (ms: number) => (ms < 60_000 ? `${Math.round(ms / 1000)}s` : `${Mat
 /** Plain Markdown, so the report can be saved, pasted into a PR description, or kept as the record of what was accepted. */
 export function renderReportMarkdown(r: AcceptanceReport): string {
   const state = { ready: 'Sẵn sàng nghiệm thu', ready_with_warnings: 'Có thể nghiệm thu sau khi đọc cảnh báo', not_ready: 'Chưa đủ điều kiện nghiệm thu' }[r.readiness];
-  const out: string[] = [`# Báo cáo nghiệm thu: ${r.title}`, '', `**Trạng thái:** ${state}`, `**Chế độ:** ${r.mode}${r.provider === 'fake' ? ' (mô phỏng)' : ''} · **Checkpoint:** \`${(r.checkpoint ?? '-').slice(0, 10)}\` · **Tạo lúc:** ${r.generatedAt}`, '', '## Yêu cầu gốc', '', r.requirement, ''];
+  const out: string[] = [`# Báo cáo nghiệm thu: ${r.title}`, '', `**Trạng thái:** ${state}${r.degraded ? ' — **chạy suy giảm**' : ''}`, `**Chế độ:** ${r.mode}${r.provider === 'fake' ? ' (mô phỏng)' : ''} · **Checkpoint:** \`${(r.checkpoint ?? '-').slice(0, 10)}\` · **Tạo lúc:** ${r.generatedAt}`, '', '## Yêu cầu gốc', '', r.requirement, ''];
+  if (r.degraded) out.push(`> **Chạy suy giảm:** ${r.degraded.items} bước đã được hệ thống tự xử lý thay vì dừng (${r.degraded.stages.join(', ')}). Bằng chứng yếu hơn một run sạch; xem mục Cảnh báo.`, '');
   if (r.notReadyReasons.length) out.push('## Lý do chưa đủ điều kiện', '', ...r.notReadyReasons.map((x) => `- ${x}`), '');
   if (r.warnings.length) out.push('## Cảnh báo', '', ...r.warnings.map((w) => `- ${w.level === 'warn' ? '**Cần đọc:**' : 'Lưu ý:'} ${w.text}`), '');
   out.push('## Yêu cầu và bằng chứng', '', '| Mã | Yêu cầu | Hành vi | Trạng thái | Test chứng minh |', '|---|---|---|---|---|');

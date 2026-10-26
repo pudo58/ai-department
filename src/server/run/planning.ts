@@ -13,6 +13,8 @@ import { redactSecrets } from '../../runtime/process.js';
 import { Stopped } from './support.js';
 import type { RunServices } from './services.js';
 import { EnvironmentChecks } from './environment.js';
+import { diskNear, MIN_FREE_BYTES } from '../storage.js';
+import { Blocked } from './support.js';
 
 /** The first stage: workspace snapshot, optional independent interpretations, and the Planner's contract proposal. */
 export class Planning {
@@ -33,6 +35,8 @@ export class Planning {
     this.s.mutate(runId, (r) => { r.stage = 'prepare'; });
     const runtime = this.s.runtimeFor(run);
     if (!run.baseSha) {
+      const workspace = runtime.workspacePath?.(run, 'A'), disk = workspace ? await diskNear(workspace) : null;
+      if (disk && disk.freeBytes < MIN_FREE_BYTES) throw new Blocked(`Ổ ${disk.path} chỉ còn ${Math.round(disk.freeBytes / 1024 ** 2)} MB trống, không đủ để tạo bản sao làm việc. Dọn dung lượng (tab Hệ thống) rồi chạy tiếp; chưa tốn lượt AI nào.`);
       const setup = run.configSnapshot.setupCommand;
       this.s.log(runId, 'prepare.start', `Đang tạo bản sao làm việc${setup.length ? ` và chạy "${setup.join(' ')}" (có thể mất vài phút, tối đa ${Math.round((run.configSnapshot.limits?.setupMs ?? 20 * 60_000) / 60_000)} phút)` : ''}…`);
       const prepared = await this.s.withHeartbeat(runId, 'setup', 'Chuẩn bị bản sao/cài dependency', () => runtime.prepare(run, 'A', this.s.runtimeLog(runId, 'setup')));
@@ -121,7 +125,7 @@ export class Planning {
     plan = completion.plan; normalizations = [...normalizations, ...completion.changes];
     const settled = testPlanFindings({ ...run.contract, testPlan: plan }, true, policy === 3);
     problems = [...settled.blocking, ...carried]; advisories = settled.advisories;
-    if (completion.changes.length) this.s.fallback(runId, 'Lập kế hoạch ca', `Kế hoạch ca được hoàn thiện tự động (${completion.changes.length} chỗ): ${completion.changes.slice(0, 4).join(' ')}${completion.changes.length > 4 ? ' …' : ''}`, 'info');
+    if (completion.changes.length) this.s.fallback(runId, 'Lập kế hoạch ca', `Kế hoạch ca được hoàn thiện tự động (${completion.changes.length} chỗ): ${completion.changes.slice(0, 4).join(' ')}${completion.changes.length > 4 ? ' …' : ''}`, !authored || completion.synthesized || completion.dropped ? 'warn' : 'info');
     {
       const next = reviseContract(run.contract, { ...run.contract, testPlan: plan, assumptions: [...run.contract.assumptions, ...completion.assumptions] });
       this.s.mutate(runId, r => { r.contract = next; });
@@ -148,7 +152,7 @@ export class Planning {
     const review: TestPlanReview = { schemaVersion: 1, source: 'server', contractHash: hashContract(next), contractVersion: next.version, attemptIds: [], firstPassValid: false, repairAttempted: false, repairAccepted: false,
       outcome: 'invalid_output', initialProblems: ['Lượt lập kế hoạch ca trước bị gián đoạn nên không có kế hoạch của Author.'], remainingProblems: settled.blocking, remainingAdvisories: settled.advisories, normalizations: completion.changes };
     this.s.artifact(runId, { kind: 'report', title: 'Test plan review', content: JSON.stringify(review), checkpoint: null });
-    this.s.fallback(runId, 'Lập kế hoạch ca', 'Lượt lập kế hoạch trước bị gián đoạn; hệ thống không gọi lại AI mà lập kế hoạch tối thiểu từ hợp đồng để bạn duyệt.', 'info');
+    this.s.fallback(runId, 'Lập kế hoạch ca', 'Lượt lập kế hoạch trước bị gián đoạn; hệ thống không gọi lại AI mà lập kế hoạch tối thiểu từ hợp đồng để bạn duyệt.', 'warn');
     this.s.log(runId, 'awaiting_approval', 'Kế hoạch ca tối thiểu từ hợp đồng; chờ người dùng duyệt.');
   }
 

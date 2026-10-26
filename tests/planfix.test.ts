@@ -4,6 +4,8 @@ import { completeTestPlan, normalizeTestPlan, parseTestPlanOutput, snapQuote } f
 import { deriveTitleManifest } from '../src/core/sourcebindings.js';
 import { manifestFindings } from '../src/core/testplan.js';
 import { reasoningPlan } from './reasoning-fixtures.js';
+import { degradedOf } from '../src/core/report.js';
+import type { Artifact } from '../src/shared/types.js';
 import { testPlanFindings, validateTestPlan } from '../src/core/testplan.js';
 import { setupV2 as setup } from './helpers.js';
 import { currentPlan, fence, plan, qualityGreen, qualityReply } from './quality-fixtures.js';
@@ -125,6 +127,7 @@ describe('Author plan with form-only problems', () => {
     expect(d.planReview?.normalizations?.join(' ')).toContain('priority "critical" → "high"');
     expect(d.planReview?.remainingAdvisories?.join(' ')).toContain('Chưa xét nhóm');
     expect(d.contractReview.warnings.some(w => w.code === 'plan_advisory')).toBe(true);
+    expect(d.degraded).toBeUndefined();
     expect(() => e.orchestrator.approveContract(run.id, { contractHash: d.contractReview.contractHash })).toThrow(/cảnh báo/);
     e.orchestrator.approveContract(run.id, { contractHash: d.contractReview.contractHash, acknowledgeWarnings: true });
     await e.orchestrator.idle();
@@ -189,5 +192,14 @@ describe('deriveTitleManifest', () => {
     expect(found.blocking).toEqual([]);
     expect(found.advisories.join(' ')).toContain('suy ra từ tên test');
     expect(manifestFindings(c, entries, [{ id: 'test', reportPath: 'r.json' }], ['tests/q.test.js']).blocking.join(' ')).toContain('thiếu liên kết assertion');
+  });
+});
+
+describe('degradedOf', () => {
+  const note = (stage: string, level: string, valid = true) => ({ title: 'Pipeline fallback', valid, content: JSON.stringify({ stage, message: 'x', level }) }) as unknown as Artifact;
+  it('counts only valid notes that weakened the evidence', () => {
+    expect(degradedOf([])).toEqual({ stages: [], items: 0 });
+    expect(degradedOf([note('Lập kế hoạch ca', 'info'), note('Chẩn đoán test', 'warn', false)])).toEqual({ stages: [], items: 0 });
+    expect(degradedOf([note('Chẩn đoán test', 'warn'), note('Chẩn đoán test', 'warn'), note('Khóa test của Author', 'warn'), note('Lập kế hoạch ca', 'info')])).toEqual({ stages: ['Chẩn đoán test', 'Khóa test của Author'], items: 3 });
   });
 });

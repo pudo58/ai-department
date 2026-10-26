@@ -3,7 +3,7 @@ import {z} from 'zod';
 import {extractJsonBlock,parseOutput} from '../src/core/outputs.js';
 import {authorTestProblems,planningScaffold} from '../src/core/authoring.js';
 import {initialContract} from '../src/core/contract.js';
-import {sha256} from '../src/core/contract.js';
+import {renderReportMarkdown} from '../src/core/report.js';
 import {setupV2 as setup} from './helpers.js';
 import {qualityReply,qualityGreen,qualityReport} from './quality-fixtures.js';
 
@@ -34,7 +34,9 @@ it('does not stop on an unusable diagnosis or buy another one: locked tests stay
  const d=e.orchestrator.detail(run.id);
  expect(d.artifacts.filter(a=>a.title==='Pipeline fallback').map(a=>a.content).join(' ')).toContain('Giữ nguyên bộ test đã khóa');
  expect(d.attempts.filter(a=>a.role==='author'&&a.stage==='repair')).toHaveLength(1);
+ expect(d.degraded).toEqual({stages:['Chẩn đoán test'],items:1});
  const report=await e.orchestrator.report(run.id);
+ expect(report.degraded).toEqual(d.degraded);expect(renderReportMarkdown(report)).toContain('chạy suy giảm');
  expect(report.warnings.some(w=>w.level==='warn'&&/Tự xử lý ở bước "Chẩn đoán test"/.test(w.text))).toBe(true);
 });
 it.each([false,true])('retries a protected smoke-test edit once without changing scope; repeated violation=%s',async repeat=>{

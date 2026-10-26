@@ -18,7 +18,7 @@ void orchestrator.backfillModels().then((n) => { if (n) console.log(`Đã bổ s
 
 // The packaged build runs from the person's data folder and points here at the UI shipped inside the package.
 const staticDir = path.resolve(process.env.AIDEPT_STATIC_DIR ?? 'dist/client');
-const app = await buildApp({ store, orchestrator, dataDir, port, staticDir, skills });
+const app = await buildApp({ store, orchestrator, dataDir, port, staticDir, skills, autoClean: process.env.AIDEPT_AUTO_CLEAN !== '0' });
 // Loopback only: the API can edit repositories and spend money.
 await app.listen({ host: '127.0.0.1', port });
 console.log(`AI Department API: http://127.0.0.1:${port}`);

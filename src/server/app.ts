@@ -15,14 +15,15 @@ import { registerRunRoutes } from './routes/runs.js';
 import { registerSystemRoutes } from './routes/system.js';
 import { registerSkillRoutes } from './routes/skills.js';
 import type { SkillLibrary } from '../runtime/skilllibrary.js';
+import { startAutoClean } from './autoclean.js';
 
-export interface AppOptions { store: Store; orchestrator: Orchestrator; dataDir: string; port: number; staticDir?: string; skills?: SkillLibrary }
+export interface AppOptions { store: Store; orchestrator: Orchestrator; dataDir: string; port: number; staticDir?: string; skills?: SkillLibrary; /** Only the real server turns this on; tests never delete folders in the background. */ autoClean?: boolean }
 
 /**
  * Loopback-only API. Defence in depth for a local tool a browser can reach: Host must be a loopback name
  * (blocks DNS rebinding), Origin must match on writes, and writes need the per-process CSRF token.
  */
-export async function buildApp({ store, orchestrator, dataDir, port, staticDir, skills }: AppOptions): Promise<FastifyInstance> {
+export async function buildApp({ store, orchestrator, dataDir, port, staticDir, skills, autoClean }: AppOptions): Promise<FastifyInstance> {
   const app = Fastify({ logger: false, bodyLimit: 1_000_000 });
   const token = randomBytes(24).toString('hex');
   const hosts = new Set(['127.0.0.1', 'localhost', '[::1]'].flatMap((h) => [`${h}:${port}`, `${h}:5173`]));
@@ -59,6 +60,10 @@ export async function buildApp({ store, orchestrator, dataDir, port, staticDir, 
   registerPreviewRoutes(context);
   registerMonitorRoutes(context);
   registerSkillRoutes(context);
+  if (autoClean) {
+    const stop = startAutoClean({ store, dataDir, stopPreview: (id) => context.previews.stop(id) });
+    app.addHook('onClose', async () => stop());
+  }
 
   if (staticDir && existsSync(staticDir)) {
     await app.register(fastifyStatic, { root: staticDir });

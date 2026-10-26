@@ -88,6 +88,7 @@ export function ReviewPanel({ detail, busy, onAccept, onReject }: { detail: RunD
     {run.delivery?.status === 'unknown' && <div className="banner warn" role="alert"><span><strong>Chưa xác nhận giao kết quả</strong><br/>{run.delivery.error} Workspace được giữ để thử giao lại.</span></div>}
     {run.status === 'completed' && !done && <div className="banner warn" role="alert"><span><strong>Chưa xác nhận giao kết quả</strong><br/>Lịch sử nghiệm thu{run.acceptedAt ? ` lúc ${dateTime(run.acceptedAt)}` : ''} vẫn được giữ. Cần thử giao lại để xác nhận bản code này đã được giao.</span></div>}
     {delivering && <div className="banner warn" role="status">Đang giao kết quả…</div>}
+    {report.degraded && <div className="banner warn" role="status"><span><strong>Chạy suy giảm</strong><br/>{report.degraded.items} bước được hệ thống tự xử lý thay vì dừng ({report.degraded.stages.join(', ')}). Bằng chứng yếu hơn một run sạch; đọc phần cảnh báo.</span></div>}
     <div className={`verdict ${verdictCls}`}>
       <div><span className="kicker">Kết luận của hệ thống</span><strong>{done ? 'Đã nghiệm thu' : title}</strong>
         <p>{report.readiness === 'not_ready' ? report.notReadyReasons.join(' ') : report.readiness === 'ready' ? 'Mọi điều kiện tự động đều đạt và không có điều gì cần xem lại.' : 'Mọi điều kiện tự động đều đạt, nhưng có điểm hệ thống không chứng minh được. Đọc phần cảnh báo bên dưới.'}</p></div>
