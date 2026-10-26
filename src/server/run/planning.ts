@@ -1,6 +1,6 @@
 import { deepQuality } from '../../core/qualityevidence.js';
 import { planRepairProblems, planRepairNotes, casesNamedBy, UNRESOLVED_PLAN_QUESTIONS, testPlanFindings } from '../../core/testplan.js';
-import { parseTestPlanOutput } from '../../core/planfix.js';
+import { parseTestPlanOutput, completeTestPlan } from '../../core/planfix.js';
 import { canonicalJson, hashContract } from '../../core/contract.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
 import { Blocked } from './support.js';
@@ -29,7 +29,7 @@ export class Planning {
         return;
       }
       const blocked = this.s.store.artifacts.list(runId).some(a => a.title === 'Test plan attempt' && a.valid && a.contractVersion === run.contract.version && a.content === hashContract(run.contract));
-      if (blocked) throw new Blocked('Lượt lập kế hoạch ca trước chưa hoàn tất. Sửa kế hoạch trong Hợp đồng; không tự gọi lại AI.');
+      if (blocked) { this.settleInterruptedPlan(runId); return; }
     }
     this.s.mutate(runId, (r) => { r.stage = 'prepare'; });
     const runtime = this.s.runtimeFor(run);
@@ -112,8 +112,19 @@ export class Planning {
       repairAttempted = true;
       this.s.retry(runId, 'invalid_output', `Author sửa kế hoạch ca một lần theo ${problems.length} lỗi kiểm tra; chưa duyệt hợp đồng.`);
     }
-    if (plan) {
-      const next = reviseContract(run.contract, { ...run.contract, testPlan: plan });
+    // The person approving this cannot repair a plan by hand, so whatever is still unusable is completed from the contract.
+    const policy = run.qualityPolicyVersion ?? 0, authored = !!plan, carried = reason === 'repair_rejected' || !authored ? [...problems] : [];
+    const completion = completeTestPlan(plan, run.contract, { schema2: policy >= 2, reasoning: policy === 3 });
+    if (!authored) {
+      completion.changes.unshift('Author không trả kế hoạch đọc được nên hệ thống lập kế hoạch tối thiểu từ hợp đồng (mỗi yêu cầu bắt buộc một ca).');
+      completion.assumptions.push(...questions.map(q => `Câu hỏi Author chưa được trả lời (Author tự giả định, hãy xác nhận): ${q}`));
+    }
+    plan = completion.plan; normalizations = [...normalizations, ...completion.changes];
+    const settled = testPlanFindings({ ...run.contract, testPlan: plan }, true, policy === 3);
+    problems = [...settled.blocking, ...carried]; advisories = settled.advisories;
+    if (completion.changes.length) this.s.fallback(runId, 'Lập kế hoạch ca', `Kế hoạch ca được hoàn thiện tự động (${completion.changes.length} chỗ): ${completion.changes.slice(0, 4).join(' ')}${completion.changes.length > 4 ? ' …' : ''}`, 'info');
+    {
+      const next = reviseContract(run.contract, { ...run.contract, testPlan: plan, assumptions: [...run.contract.assumptions, ...completion.assumptions] });
       this.s.mutate(runId, r => { r.contract = next; });
       this.s.artifact(runId, { kind: 'report', title: 'Test plan', attemptId: selectedAttemptId,
         content: JSON.stringify({ schemaVersion: 1, source: 'author', contractHash: hashContract(next), plan }), checkpoint: null });
@@ -121,11 +132,25 @@ export class Planning {
     const current = this.s.run(runId).contract;
     const review: TestPlanReview = { schemaVersion: 1, source: 'server', contractHash: hashContract(current), contractVersion: current.version,
       attemptIds, firstPassValid: !initialProblems.length, repairAttempted, repairAccepted: repairAttempted && !problems.length,
-      outcome: !plan ? 'invalid_output' : problems.length ? 'needs_review' : 'valid', reason, initialProblems, remainingProblems: [...new Set(problems)], remainingAdvisories: [...new Set(advisories)], normalizations };
+      outcome: !authored ? 'invalid_output' : problems.length ? 'needs_review' : 'valid', reason, initialProblems, remainingProblems: [...new Set(problems)], remainingAdvisories: [...new Set(advisories)], normalizations };
     this.s.artifact(runId, { kind: 'report', title: 'Test plan review', content: JSON.stringify(review), checkpoint: null });
     if (normalizations.length) this.s.log(runId, 'testplan.normalized', `Server chuẩn hoá ${normalizations.length} chỗ trong kế hoạch ca (không đổi nội dung nghiệp vụ): ${normalizations.slice(0, 6).join(' ')}${normalizations.length > 6 ? ' …' : ''}`);
     this.s.log(runId, 'testplan.review', problems.length ? `Kế hoạch ca cần người dùng xử lý: ${review.remainingProblems.join(' ')}` : 'Kế hoạch ca hợp lệ theo validator; chờ người dùng duyệt.', review);
-    if (!plan) throw new Blocked(`Không đọc được kế hoạch ca: ${review.remainingProblems.join(' ')}. Sửa Hợp đồng trước khi duyệt; không tự cấp thêm lượt AI.`);
+  }
+
+  /** A planning call was interrupted earlier; planning is never re-bought, so the contract gets the minimal plan and goes to approval. */
+  private settleInterruptedPlan(runId: string): void {
+    const run = this.s.run(runId), policy = run.qualityPolicyVersion ?? 0;
+    const completion = completeTestPlan(undefined, run.contract, { schema2: policy >= 2, reasoning: policy === 3 });
+    const next = reviseContract(run.contract, { ...run.contract, testPlan: completion.plan, assumptions: [...run.contract.assumptions, ...completion.assumptions] });
+    this.s.mutate(runId, r => { r.contract = next; r.status = 'awaiting_approval'; r.blocker = null; });
+    this.s.artifact(runId, { kind: 'report', title: 'Test plan', content: JSON.stringify({ schemaVersion: 1, source: 'server', contractHash: hashContract(next), plan: completion.plan }), checkpoint: null });
+    const settled = testPlanFindings(next, true, policy === 3);
+    const review: TestPlanReview = { schemaVersion: 1, source: 'server', contractHash: hashContract(next), contractVersion: next.version, attemptIds: [], firstPassValid: false, repairAttempted: false, repairAccepted: false,
+      outcome: 'invalid_output', initialProblems: ['Lượt lập kế hoạch ca trước bị gián đoạn nên không có kế hoạch của Author.'], remainingProblems: settled.blocking, remainingAdvisories: settled.advisories, normalizations: completion.changes };
+    this.s.artifact(runId, { kind: 'report', title: 'Test plan review', content: JSON.stringify(review), checkpoint: null });
+    this.s.fallback(runId, 'Lập kế hoạch ca', 'Lượt lập kế hoạch trước bị gián đoạn; hệ thống không gọi lại AI mà lập kế hoạch tối thiểu từ hợp đồng để bạn duyệt.', 'info');
+    this.s.log(runId, 'awaiting_approval', 'Kế hoạch ca tối thiểu từ hợp đồng; chờ người dùng duyệt.');
   }
 
   /** Independent readings: each sees only the original requirement and snapshot, never the contract or another reading. */

@@ -132,7 +132,9 @@ describe('reviewed test setup repair', () => {
   });
   it('rejects a test diagnosis that writes source files', async () => {
     const e = testRepairEnvironment({ wrongFile: true }), run = await e.drive(e.create({ mode: 'verify', budgetUsd: 10 }));
-    expect(run.status).toBe('blocked'); expect(e.orchestrator.detail(run.id).testRepair).toBeUndefined(); expect(e.runtime.calls).not.toContain('applyPatch:A');
+    // The unusable proposal is dropped, the locked tests stay, and the Developer keeps working; the report says so.
+    expect(['blocked', 'failed']).toContain(run.status); expect(e.orchestrator.detail(run.id).testRepair).toBeUndefined(); expect(e.runtime.calls).not.toContain('applyPatch:A');
+    expect(e.orchestrator.detail(run.id).artifacts.some(a => a.title === 'Pipeline fallback')).toBe(true);
   });
   it('can reject the proposal without unlocking tests or calling another agent', async () => {
     const e = testRepairEnvironment(), run = await e.drive(e.create({ mode: 'verify', budgetUsd: 10 })), p = e.orchestrator.detail(run.id).testRepair!;

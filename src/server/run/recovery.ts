@@ -44,7 +44,7 @@ export class TestRecovery {
         }
       }
       if(receipt && receipt.checkpoint===run.checkpoint && sha256(receipt.content)===receipt.hash){try{const d=JSON.parse(receipt.content),parsed=Diagnosis.parse(d),marker=JSON.parse(previousReview.content);const failedIds=latestChecks(run,this.s.store.checks.list(runId)).flatMap(c=>c.outcomes?.filter(o=>o.status==='failed').map(o=>o.id)??[]);if(d.manifestHash===locked.hash && d.slot===slot && d.checkpoint===run.checkpoint && d.configHash===testRepairConfigHash(run) && d.decision==='implementation'&&!diagnosisProblems(run,parsed,marker.caseIds??[],failedIds,locked.manifest.entries.map(e=>e.path),[]).length)return;}catch{}}
-      return 'Đã dùng lượt chẩn đoán cho hợp đồng/manifest này; kết luận chưa đủ hoặc không còn khớp checkpoint/cấu hình. Không tự gọi thêm AI.';
+      return this.keepLocked(runId, 'Đã dùng lượt chẩn đoán cho manifest này và kết luận không còn dùng được');
     }
     const checks = latestChecks({ ...run, selectedSlot: slot }, this.s.store.checks.list(runId));
     if (checks.some(c => c.required && (c.missingTestIds.length || c.issues?.some(i => i.kind !== 'assertion_failed')))) return;
@@ -76,30 +76,39 @@ ${extra}` });
         this.s.artifact(runId,{kind:'report',title:'Author diagnosis rejected',content:JSON.stringify({output,errors,patch:changes.patch,checkpoint:run.checkpoint,manifestHash:locked.hash}),checkpoint:run.checkpoint});
         await runtime.revert(run,slot);
         diagnosis=undefined;
-        if(run.qualityPolicyVersion!==3||round===1||remainingFor(budgetState(run,this.s.store.attempts.list(runId)),'repair')<=0)return `Chẩn đoán Author không hợp lệ; chưa gọi Developer: ${errors.join(' ')}`;
+        if(run.qualityPolicyVersion!==3||round===1||remainingFor(budgetState(run,this.s.store.attempts.list(runId)),'repair')<=0)return this.keepLocked(runId, `Chẩn đoán Author không hợp lệ (${errors.join(' ')})`);
         // Saved before the second call; resume never grants another correction batch.
         this.s.artifact(runId,{kind:'report',title:'Author diagnosis correction attempt',content:JSON.stringify({manifestHash:locked.hash,checkpoint:run.checkpoint,errors}),checkpoint:run.checkpoint});
         this.s.retry(runId,'invalid_output','Author sửa chẩn đoán mâu thuẫn một lần, trước khi gọi Developer.');
         output=(await request(`Bản trước đã hoàn nguyên. Sửa đúng các lỗi cấu trúc và phân loại, không đoán từ implementation:\n${errors.join('\n')}\nBản trước:\n${output.slice(0,20000)}`)).output;
       }
-      if(!diagnosis)return 'Chẩn đoán chưa hợp lệ; không gọi Developer.';
+      if(!diagnosis)return this.keepLocked(runId, 'Chẩn đoán chưa hợp lệ');
       this.s.artifact(runId,{kind:'report',title:'Author test diagnosis result',content:JSON.stringify({...diagnosis,manifestHash:locked.hash,slot,checkpoint:run.checkpoint,configHash:testRepairConfigHash(run)}),checkpoint:run.checkpoint});
       this.s.retry(runId,diagnosis.decision==='implementation'?'implementation':'test_error',`Chẩn đoán: ${diagnosis.decision}`);
       if (diagnosis.decision === 'implementation') return;
-      if (diagnosis.decision === 'ambiguous') return `Cần làm rõ test ${cases.join(', ')}: ${diagnosis.reason} ${diagnosis.evidence}`;
+      if (diagnosis.decision === 'ambiguous') return this.keepLocked(runId, `Author chưa chắc test ${cases.join(', ')} đúng hay sai (${diagnosis.reason.slice(0, 300)})`);
       const changes = await runtime.changes(run, slot);
       const allowedPaths = locked.manifest.entries.filter(e => diagnosis.caseIds.includes(e.caseId)).map(e => e.path);
       const allowed = diagnosis.caseIds.length && diagnosis.caseIds.every(id => cases.includes(id)) && changes.files.length && changes.files.every(f => allowedPaths.includes(f));
       const scope = evaluateChanges(changes.files, { ...this.scope.scopeFor(runId), lockedPaths: [] });
-      if (!allowed || !scope.accepted || !changes.patch || changes.patch.length > 1_000_000 || unsafeTestPatch(changes.patch)) return 'Đề xuất sửa test Author vượt phạm vi hoặc không có diff hợp lệ; bộ test đã khóa được giữ nguyên.';
+      if (!allowed || !scope.accepted || !changes.patch || changes.patch.length > 1_000_000 || unsafeTestPatch(changes.patch)) return this.keepLocked(runId, 'Đề xuất sửa test của Author vượt phạm vi hoặc không có diff hợp lệ');
       const proposal: TestRepairProposal = { schemaVersion: 1, checkpoint: run.checkpoint!, contractVersion: run.contract.version, contractHash: hashContract(run.contract), slot, configHash: testRepairConfigHash(run), manifestHash: locked.hash, paths: changes.files, patch: changes.patch, ...diagnosis, kind: diagnosis.decision === 'test_assertion' ? 'assertion' : 'setup' };
-      if (!validAssertionChanges(run, proposal)) return 'Bản sửa assertion thiếu căn cứ hợp đồng hoặc giá trị trước/sau hợp lệ; giữ nguyên test.';
-      if(run.qualityPolicyVersion===3&&proposal.kind==='assertion'&&proposal.assertionChanges!.some(change=>!locked.manifest.entries.some(e=>e.caseId===change.caseId&&e.assertions?.some(a=>assertionTokens(a.expression)===assertionTokens(change.before)))))return 'before của assertionChanges không khớp assertion đã khóa; giữ nguyên test.';
+      if (!validAssertionChanges(run, proposal)) return this.keepLocked(runId, 'Bản sửa assertion của Author thiếu căn cứ hợp đồng hoặc giá trị trước/sau hợp lệ');
+      if(run.qualityPolicyVersion===3&&proposal.kind==='assertion'&&proposal.assertionChanges!.some(change=>!locked.manifest.entries.some(e=>e.caseId===change.caseId&&e.assertions?.some(a=>assertionTokens(a.expression)===assertionTokens(change.before)))))return this.keepLocked(runId, 'Giá trị "before" của bản sửa assertion không khớp assertion đã khóa');
       this.s.artifact(runId, { kind: 'report', title: TEST_REPAIR_TITLE, content: JSON.stringify(proposal), checkpoint: run.checkpoint });
       return `Author đề xuất sửa ${proposal.kind === 'assertion' ? 'assertion' : 'setup'} test. Hãy đọc căn cứ và diff rồi duyệt trước khi thay bộ test đã khóa.`;
     } finally {
       await runtime.revert(this.s.run(runId), slot);
     }
+  }
+
+  /**
+   * A diagnosis we cannot use is not a reason to stop: the locked tests stay authoritative and the Developer keeps
+   * repairing the code. The report says the Author's second opinion was dropped, so the person can look at it at the end.
+   */
+  private keepLocked(runId: string, why: string): undefined {
+    this.s.fallback(runId, 'Chẩn đoán test', `${why}. Giữ nguyên bộ test đã khóa và tiếp tục sửa code; nếu cuối cùng vẫn không đạt, hãy xem lại test bị nghi.`);
+    return undefined;
   }
 
   approve(runId: string, id: string, hash: string): void {

@@ -26,18 +26,16 @@ it('generates authoritative quotes and all risk groups without changing the cont
  expect(s.requirements[0].quote).toBe(c.requirements[0]!.text);expect(s.groups).toHaveLength(7);
  expect(s.statefulCaseFields.steps).toHaveLength(2);expect(JSON.stringify(c)).toBe(original);
 });
-it.each([false,true])('re-reads a completed diagnosis without another Author; tampered raw=%s',async tampered=>{
+it('does not stop on an unusable diagnosis or buy another one: locked tests stay and the Developer goes on',async()=>{
  let developers=0,diagnoses=0;
  const e=setup({reply:x=>{if(x.role==='developer')developers++;if(x.prompt.includes('Author chẩn đoán')){diagnoses++;return 'Incomplete old output';}return qualityReply(x);},files:x=>x.role==='author'?['tests/order.test.ts']:['src/order.ts'],check:()=>({...qualityGreen,exitCode:developers>1?0:1,report:qualityReport(developers>1?'passed':'failed')})});
- const run=await e.drive(e.create({mode:'verify',budgetUsd:10}));expect(run.status).toBe('blocked');
- const d=e.orchestrator.detail(run.id),attempt=d.attempts.filter(a=>a.role==='author'&&a.stage==='repair').at(-1)!;
- const raw=d.artifacts.find(a=>a.kind==='raw'&&a.attemptId===attempt.id)!;
- const output='Reviewed contract.\n'+JSON.stringify({decision:'implementation',reason:'Public invariant broken by source',evidence:'Identified assertion failure and source operation',caseIds:['C-2'],assertionChanges:[]});
- const content=JSON.stringify({type:'item.completed',item:{type:'agent_message',text:output}});
- e.store.artifacts.put({...raw,content,hash:tampered?raw.hash:sha256(content)});
- e.orchestrator.resumeRun(run.id);await e.orchestrator.idle();
- expect(diagnoses).toBe(1);expect(developers).toBe(tampered?1:2);
- expect(e.orchestrator.detail(run.id).run.status).toBe(tampered?'blocked':'awaiting_acceptance');
+ const run=await e.drive(e.create({mode:'verify',budgetUsd:10}));
+ expect(diagnoses).toBe(1);expect(developers).toBe(2);expect(run.status).toBe('awaiting_acceptance');
+ const d=e.orchestrator.detail(run.id);
+ expect(d.artifacts.filter(a=>a.title==='Pipeline fallback').map(a=>a.content).join(' ')).toContain('Giữ nguyên bộ test đã khóa');
+ expect(d.attempts.filter(a=>a.role==='author'&&a.stage==='repair')).toHaveLength(1);
+ const report=await e.orchestrator.report(run.id);
+ expect(report.warnings.some(w=>w.level==='warn'&&/Tự xử lý ở bước "Chẩn đoán test"/.test(w.text))).toBe(true);
 });
 it.each([false,true])('retries a protected smoke-test edit once without changing scope; repeated violation=%s',async repeat=>{
  let authorCalls=0;

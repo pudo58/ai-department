@@ -136,6 +136,11 @@ export class RunServices {
     };
   }
 
+  /** A step that would have stopped the run was handled automatically; the acceptance report lists it so nothing is hidden. */
+  fallback(runId: string, stage: string, message: string, level: 'warn' | 'info' = 'warn'): void {
+    this.artifact(runId, { kind: 'report', title: 'Pipeline fallback', content: JSON.stringify({ schemaVersion: 1, stage, message, level }), checkpoint: this.run(runId).checkpoint });
+    this.log(runId, 'pipeline.fallback', `${stage}: ${message}`);
+  }
   artifact(runId: string, a: Parameters<RunServices['baseArtifact']>[1]): Artifact { return this.store.artifacts.put(this.baseArtifact(runId, a)); }
 
   async attempt(runId: string, input: {

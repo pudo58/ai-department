@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { initialContract, reviewContract } from '../src/core/contract.js';
-import { normalizeTestPlan, parseTestPlanOutput, snapQuote } from '../src/core/planfix.js';
+import { completeTestPlan, normalizeTestPlan, parseTestPlanOutput, snapQuote } from '../src/core/planfix.js';
+import { deriveTitleManifest } from '../src/core/sourcebindings.js';
+import { manifestFindings } from '../src/core/testplan.js';
+import { reasoningPlan } from './reasoning-fixtures.js';
 import { testPlanFindings, validateTestPlan } from '../src/core/testplan.js';
 import { setupV2 as setup } from './helpers.js';
 import { currentPlan, fence, plan, qualityGreen, qualityReply } from './quality-fixtures.js';
@@ -128,5 +131,63 @@ describe('Author plan with form-only problems', () => {
     const after = e.orchestrator.detail(run.id);
     expect(after.run.contractReviewReceipt?.acknowledgedWarnings).toContain('plan_advisory');
     expect(after.quality.planAdvisories?.join(' ')).toContain('Chưa xét nhóm');
+  });
+});
+
+describe('completeTestPlan: nothing a person cannot fix is left blocking', () => {
+  const c = contract(), options = { schema2: true, reasoning: true };
+  it('builds a usable plan from the contract when the Author gave none', () => {
+    const { plan, changes, assumptions } = completeTestPlan(undefined, c, options);
+    expect(plan.cases).toHaveLength(1);
+    expect(plan.cases[0]).toMatchObject({ requirementIds: ['R-1'], required: true, method: 'automated', expected: c.requirements[0]!.text });
+    expect(plan.cases[0]!.steps![0]!.id).toBe('S-1');
+    expect(changes.join(' ')).toContain('tự sinh');
+    expect(assumptions).toEqual([]);
+    expect(testPlanFindings({ ...c, testPlan: plan }, true, true).blocking).toEqual([]);
+  });
+
+  it('repairs ids, steps, oracle, manual flags and coverage without touching what the Author wrote', () => {
+    const base = reasoningPlan(c), original = JSON.parse(JSON.stringify(base));
+    base.cases.push({ ...structuredClone(base.cases[0]!), requirementIds: ['R-99', 'R-1'], method: 'manual', steps: [{ id: 'bad', action: 'a', expected: 'b' }, { id: 'bad', action: 'c', expected: 'd' }], oracle: undefined, priority: 'high', required: false });
+    base.questions = ['Chưa rõ?'];
+    const { plan, changes, assumptions } = completeTestPlan(base, c, options);
+    expect(plan.cases[0]).toEqual(original.cases[0]);
+    const dup = plan.cases[1]!;
+    expect(dup.id).not.toBe('C-1');
+    expect(dup).toMatchObject({ requirementIds: ['R-1'], method: 'automated', required: true });
+    expect(dup.steps!.map(s => s.id)).toEqual(['S-1', 'S-2']);
+    expect(dup.steps!.map(s => s.expected)).toEqual(['b', 'd']);
+    expect(dup.oracle!.references[0]).toMatchObject({ requirementId: 'R-1', quote: c.requirements[0]!.text });
+    expect(plan.questions).toEqual([]);
+    expect(assumptions[0]).toContain('Chưa rõ?');
+    expect(changes.length).toBeGreaterThan(4);
+    expect(testPlanFindings({ ...c, testPlan: plan }, true, true).blocking).toEqual([]);
+  });
+
+  it('adds a case for a required requirement that has none, and upgrades a v1 plan', () => {
+    const two = { ...c, requirements: [...c.requirements, { id: 'R-2', text: 'Mọi đơn có mã duy nhất.', required: true, manual: false }] };
+    const { plan } = completeTestPlan({ ...reasoningPlan(c), schemaVersion: 1, cases: [] }, two, options);
+    expect(plan.schemaVersion).toBe(2);
+    expect(plan.cases.map(x => x.requirementIds[0]).sort()).toEqual(['R-1', 'R-2']);
+    expect(testPlanFindings({ ...two, testPlan: plan }, true, true).blocking).toEqual([]);
+  });
+});
+
+describe('deriveTitleManifest', () => {
+  const c = { ...contract(), testPlan: reasoningPlan(contract()) };
+  const source = `describe('suite', () => {
+  it('[R-1][C-1] all jobs', () => { expect(1).toBe(1); });
+  it.skip('[R-1][C-1] skipped', () => {});
+  it('[R-1][C-9] unknown case', () => {});
+});`;
+  it('reads the case of each static test title and nothing else', () => {
+    const entries = deriveTitleManifest(c, 'tests/q.test.js', 'test', source);
+    expect(entries).toHaveLength(1);
+    expect(entries[0]).toMatchObject({ caseId: 'C-1', requirementIds: ['R-1'], recipeId: 'test', identity: { kind: 'json', file: 'tests/q.test.js', titles: ['suite', '[R-1][C-1] all jobs'] } });
+    expect(entries[0]!.assertions).toBeUndefined();
+    const found = manifestFindings(c, entries, [{ id: 'test', reportPath: 'r.json' }], ['tests/q.test.js'], { derived: true });
+    expect(found.blocking).toEqual([]);
+    expect(found.advisories.join(' ')).toContain('suy ra từ tên test');
+    expect(manifestFindings(c, entries, [{ id: 'test', reportPath: 'r.json' }], ['tests/q.test.js']).blocking.join(' ')).toContain('thiếu liên kết assertion');
   });
 });

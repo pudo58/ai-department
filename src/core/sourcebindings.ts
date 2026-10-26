@@ -2,7 +2,7 @@ import ts from 'typescript';
 import {z} from 'zod';
 import {readFile} from 'node:fs/promises';import path from 'node:path';
 import type {TaskContract} from '../shared/types.js';import type {ManifestEntry} from '../shared/quality.js';
-import {hashContract} from './contract.js';import {parseOutput} from './outputs.js';import {identityId} from './testids.js';
+import {hashContract} from './contract.js';import {parseOutput} from './outputs.js';import {identityId,extractCaseIds} from './testids.js';
 import {isSafeRelative} from './scope.js';import {isTestPath} from './testpath.js';
 
 export const SourceBindingSchema=z.object({bindingProtocol:z.literal(2),contractHash:z.string().regex(/^[a-f0-9]{64}$/),files:z.array(z.object({path:z.string().min(1),recipeId:z.string().min(1)})).min(1).max(200)});
@@ -52,5 +52,35 @@ export async function readSourceBindingManifest(contract:TaskContract,output:str
  const seen=new Set<string>(),entries:ManifestEntry[]=[];
  for(const f of data.files){const file=f.path.replace(/\\/g,'/');if(!isSafeRelative(file)||!isTestPath(file)||!paths.includes(file)||seen.has(file))throw Error(`Source binding không khớp file test thay đổi: ${file}`);seen.add(file);entries.push(...compileSourceBindings(contract,file,f.recipeId,await readFile(path.join(workspace,file),'utf8')));}
  if(paths.some(p=>!seen.has(p)))throw Error('Source binding chưa kê khai mọi file test thay đổi.');
+ return entries;
+}
+
+/**
+ * Last resort when an Author's own bookkeeping cannot be made valid: read which test belongs to which case from the
+ * static test titles (which must carry the case and requirement tags anyway). Assertions stay unbound, which the caller
+ * reports as an advisory; nothing here guesses an assertion or a step.
+ */
+export function deriveTitleManifest(contract:TaskContract,file:string,recipeId:string,source:string):ManifestEntry[]{
+ if(!/\.[cm]?[jt]sx?$/.test(file))return [];
+ const tree=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,/tsx$/.test(file)?ts.ScriptKind.TSX:ts.ScriptKind.TS);
+ const cases=new Map((contract.testPlan?.cases??[]).filter(c=>c.method==='automated').map(c=>[c.id,c]));
+ const entries:ManifestEntry[]=[];
+ const visit=(node:ts.Node,titles:string[]):void=>{
+  if(ts.isCallExpression(node)&&ts.isIdentifier(node.expression)&&['describe','test','it'].includes(node.expression.text)){
+   const first=node.arguments[0],callback=node.arguments.find(a=>ts.isArrowFunction(a)||ts.isFunctionExpression(a));
+   if(first&&ts.isStringLiteralLike(first)&&callback){
+    if(node.expression.text==='describe'){visit(callback,[...titles,first.text]);return;}
+    const all=[...titles,first.text];
+    for(const caseId of extractCaseIds(all.join(' '))){
+     const c=cases.get(caseId);if(!c)continue;
+     const identity={kind:'json' as const,file,titles:all};
+     entries.push({caseId,requirementIds:[...c.requirementIds],recipeId,path:file,identity,testId:identityId(identity)});
+    }
+    return;
+   }
+  }
+  ts.forEachChild(node,child=>visit(child,titles));
+ };
+ visit(tree,[]);
  return entries;
 }

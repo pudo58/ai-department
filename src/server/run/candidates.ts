@@ -24,7 +24,7 @@ import { routeCheckFailure } from '../../core/checkrouting.js';
 import { authorTestProblems, auditManifestAssertions } from '../../core/authoring.js';
 import { authorRepairSourceProblems, assertionInventory, sameMembers } from '../../core/authoring.js';
 import { parseAuthorManifest, resolveAuthorManifest, AUTHOR_MANIFEST_REPAIR_TITLE } from '../../core/authormanifest.js';
-import { SourceBindingSchema } from '../../core/sourcebindings.js';
+import { SourceBindingSchema, deriveTitleManifest } from '../../core/sourcebindings.js';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -252,7 +252,7 @@ export class CandidateBuilder {
     const run=this.s.run(runId),artifacts=this.s.store.artifacts.list(runId),draft=pendingAuthorDraft(run,artifacts);
     if(!draft)throw new Blocked('Không có draft Author đúng checkpoint/hợp đồng/cấu hình để sửa.');
     // Include historical markers, even if invalidated by a config change. A resume is not a new allowance.
-    if(artifacts.some(a=>a.title===AUTHOR_MANIFEST_REPAIR_TITLE&&a.contractVersion===run.contract.version))throw new Blocked('Đã dùng lượt sửa manifest Author cho hợp đồng này; draft còn lỗi hoặc lượt sửa bị gián đoạn. Không tự gọi thêm AI.');
+    if(artifacts.some(a=>a.title===AUTHOR_MANIFEST_REPAIR_TITLE&&a.contractVersion===run.contract.version)){if(await this.acceptDerivedManifest(runId,draft))return;throw new Blocked('Đã dùng lượt sửa manifest Author cho hợp đồng này; draft còn lỗi hoặc lượt sửa bị gián đoạn. Không tự gọi thêm AI.');}
     const runtime=this.s.runtimeFor(run),workspace=runtime.workspacePath?.(run,'A');
     const scope=evaluateChanges(draft.paths,this.scope.scopeFor(runId));
     if(!runtime.applyPatch||!workspace||!draft.patch||!draft.paths.length||draft.paths.some(p=>!isTestPath(p))||!scope.accepted)throw new Blocked('Draft Author không chỉ sửa test trong phạm vi hoặc runtime chưa hỗ trợ sửa draft.');
@@ -311,8 +311,47 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
     }catch(error){
       if(result){const changes=await runtime.changes(run,'A');const saved:AuthorDraft={schemaVersion:1,attemptId:result.attempt.id,checkpoint:draft.checkpoint,contractHash:hashContract(run.contract),contractVersion:run.contract.version,configHash:testRepairConfigHash(run),slot:'A',output:result.output,patch:changes.patch,paths:changes.files,problems:[(error as Error).message]};this.s.artifact(runId,{kind:'report',title:AUTHOR_DRAFT_TITLE,content:JSON.stringify(saved),checkpoint:run.checkpoint,attemptId:result.attempt.id});}
       await runtime.revert(this.s.run(runId),'A');
-      if(result)throw new Blocked(`Manifest Author vẫn chưa hợp lệ sau một lượt sửa: ${(error as Error).message}`);
+      if(result){if(await this.acceptDerivedManifest(runId,draft))return;throw new Blocked(`Manifest Author vẫn chưa hợp lệ sau một lượt sửa: ${(error as Error).message}`);}
       throw error;
+    }
+  }
+
+  /**
+   * The Author's tests exist but its bookkeeping stayed invalid after the one correction. Rather than stop, read the case of each
+   * test from its title, lock exactly those tests, and say in the report that assertions were not tied to steps.
+   */
+  private async acceptDerivedManifest(runId:string,draft:AuthorDraft&{artifactId?:string}):Promise<boolean>{
+    const run=this.s.run(runId),runtime=this.s.runtimeFor(run),workspace=runtime.workspacePath?.(run,'A');
+    if(run.qualityPolicyVersion!==3||!runtime.applyPatch||!workspace||!draft.patch||!draft.paths.length||draft.paths.some(p=>!isTestPath(p))||!evaluateChanges(draft.paths,this.scope.scopeFor(runId)).accepted)return false;
+    const recipes=run.configSnapshot.checks;
+    try{
+      await runtime.revert(run,'A');
+      await runtime.applyPatch({...run,checkpoint:draft.checkpoint},'A',draft.patch);
+      let named:string|undefined;
+      try{const out=extractJsonBlock(draft.output) as {files?:{recipeId?:string}[];entries?:{recipeId?:string}[]};named=out.files?.[0]?.recipeId??out.entries?.[0]?.recipeId;}catch{/* Any recipe that reports tests will do. */}
+      const recipeId=recipes.find(r=>r.id===named&&r.reportPath)?.id??recipes.find(r=>r.reportPath)?.id;
+      if(!recipeId){await runtime.revert(run,'A');return false;}
+      const seen=new Set<string>(),entries:TestManifest['entries']=[];
+      for(const file of draft.paths)for(const e of deriveTitleManifest(run.contract,file,recipeId,await readFile(path.join(workspace,file),'utf8'))){
+        const key=`${e.recipeId}:${normalizeTestId(e.testId)}`;if(seen.has(key))continue;seen.add(key);
+        entries.push({...e,path:e.path.replace(/\\/g,'/'),testId:normalizeTestId(e.testId)});
+      }
+      const found=manifestFindings(run.contract,entries,recipes,draft.paths,{derived:true});
+      const changes=await runtime.changes(run,'A');
+      if(found.blocking.length||changes.files.length!==draft.paths.length||changes.files.some(f=>!draft.paths.includes(f))){await runtime.revert(run,'A');this.s.log(runId,'author.derive_failed',`Không suy ra được manifest từ tên test: ${found.blocking.slice(0,3).join(' ')}`);return false;}
+      const checkpoint=await runtime.commit(run,'A',`${run.title}: acceptance tests (manifest derived from test titles)`);
+      const manifest:TestManifest={schemaVersion:2,source:'author',contractHash:hashContract(run.contract),contractVersion:run.contract.version,slot:'A',entries,advisories:[...new Set(found.advisories)]};
+      this.s.artifact(runId,{kind:'acceptance',title:'Test manifest',content:JSON.stringify(manifest),checkpoint});
+      this.s.artifact(runId,{kind:'diff',title:'Diff Author',content:changes.patch,checkpoint});
+      this.s.mutate(runId,r=>{r.checkpoint=checkpoint;});
+      this.scope.lockAcceptance(runId,draft.paths,checkpoint,'Acceptance suite (Author)',true);
+      for(const a of this.s.store.artifacts.list(runId).filter(a=>a.title===AUTHOR_DRAFT_TITLE&&a.valid&&a.contractVersion===run.contract.version))this.s.store.artifacts.put({...a,valid:false});
+      this.s.fallback(runId,'Khóa test của Author','Manifest Author vẫn sai sau một lượt sửa nên hệ thống suy ra ca của từng test từ tên test và khóa đúng các test đó; assertion chưa được đối chiếu với từng bước.');
+      return true;
+    }catch(error){
+      await runtime.revert(this.s.run(runId),'A').catch(()=>undefined);
+      this.s.log(runId,'author.derive_failed',`Không suy ra được manifest từ tên test: ${(error as Error).message.slice(0,200)}`);
+      return false;
     }
   }
 

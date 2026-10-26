@@ -55,6 +55,6 @@ it('routes a genuine implementation defect into source repair and preserves the 
  const f=await fixture(true,'implementation'),d=f.orch.detail(f.run.id);expect(d.run.status,d.run.blocker??'').toBe('awaiting_acceptance');expect(f.calls.filter(c=>c.startsWith('developer'))).toHaveLength(2);expect(f.calls.filter(c=>c==='author:repair')).toHaveLength(1);expect(d.testRepair).toBeUndefined();expect(readFileSync(path.join(f.runtime.workspacePath(d.run,'A'),'tests/queue.test.js'),'utf8')).toBe(f.testSource(true));f.store.close();
 },60000);
 it('stops after the bounded correction; restart/resume cannot buy another diagnosis or call Developer on the contradiction',async()=>{
- const f=await fixture(false),d=f.orch.detail(f.run.id);expect(d.run.status).toBe('blocked');expect(d.run.blocker).toContain('mâu thuẫn');expect(d.testRepair).toBeUndefined();const count=f.calls.length;
- const restarted=new Orchestrator(f.store,()=>f.runtime);await restarted.recover();restarted.resumeRun(d.run.id);await restarted.idle();expect(f.calls).toHaveLength(count);expect(restarted.detail(d.run.id).completion.ready).toBe(false);f.store.close();
+ const f=await fixture(false),d=f.orch.detail(f.run.id);expect(['blocked','failed']).toContain(d.run.status);expect(d.artifacts.filter(a=>a.title==='Pipeline fallback').map(a=>a.content).join(' ')).toContain('mâu thuẫn');expect(d.testRepair).toBeUndefined();const diagnoses=()=>f.calls.filter(c=>c==='author:repair').length,count=diagnoses();
+ const restarted=new Orchestrator(f.store,()=>f.runtime);await restarted.recover();restarted.resumeRun(d.run.id);await restarted.idle();expect(diagnoses()).toBe(count);expect(restarted.detail(d.run.id).completion.ready).toBe(false);f.store.close();
 },60000);

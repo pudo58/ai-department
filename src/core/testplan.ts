@@ -179,7 +179,7 @@ export function testPlanFindings(contract: TaskContract, required = false, reaso
     }
     if (c.priority === 'high' && !c.required) blocking.push(`${c.id}: ca rủi ro cao phải bắt buộc.`);
     if ((p.schemaVersion === 2 || p.statefulModelVersion === 1) && c.required && c.method === 'automated' && ['state', 'concurrency', 'consistency'].includes(c.group)) {
-      if (!c.steps || c.steps.length < 2) blocking.push(`${c.id}: ca ${RISK_LABELS[c.group]} bắt buộc phải mô tả chuỗi ít nhất hai bước.`);
+      if (!c.steps || c.steps.length < 2) advisories.push(`${c.id}: ca ${RISK_LABELS[c.group]} bắt buộc nên mô tả chuỗi ít nhất hai bước; test chỉ kiểm tra một bước nên có thể bỏ sót lỗi chỉ lộ ra sau nhiều thao tác.`);
       if (!c.invariants?.length) advisories.push(`${c.id}: ca ${RISK_LABELS[c.group]} bắt buộc phải nêu bất biến cần giữ sau từng bước.`);
     }
   }
@@ -198,7 +198,7 @@ export function testPlanFindings(contract: TaskContract, required = false, reaso
 /** Pure validation shared by contract approval and plan generation; never edits legacy contracts. Blocking findings only. */
 export const validateTestPlan = (contract: TaskContract, required = false, reasoningRequired = false): string[] => testPlanFindings(contract, required, reasoningRequired).blocking;
 
-export function manifestFindings(contract: TaskContract, entries: ManifestEntry[], recipes: readonly { id: string; reportPath?: string }[], files: readonly string[]): Findings {
+export function manifestFindings(contract: TaskContract, entries: ManifestEntry[], recipes: readonly { id: string; reportPath?: string }[], files: readonly string[], options: { derived?: boolean } = {}): Findings {
   const problems: string[] = [], advisories: string[] = [], seen = new Set<string>();
   for (const e of entries) {
     const c = contract.testPlan?.cases.find((c) => c.id === e.caseId);
@@ -208,7 +208,7 @@ export function manifestFindings(contract: TaskContract, entries: ManifestEntry[
     if (e.identity && (identityId(e.identity) !== e.testId || (e.identity.kind === 'json' && (e.identity.file !== e.path || !isSafeRelative(e.identity.file))))) problems.push(`${e.caseId}: danh tính test không khớp đường dẫn/ID.`);
     if (!extractCaseIds(e.testId).includes(e.caseId)) problems.push(`${e.caseId}: tên test thiếu mã ca.`);
     if (contract.testPlan?.reasoningVersion === 1 && c) {
-      if (!e.assertions?.length) problems.push(`${e.caseId}: thiếu liên kết assertion tới bước đã duyệt.`);
+      if (!e.assertions?.length && !options.derived) problems.push(`${e.caseId}: thiếu liên kết assertion tới bước đã duyệt.`);
       for (const a of e.assertions ?? []) {
         const step = c.steps?.find(s => s.id === a.stepId);
         if (!step || a.expected !== step.expected) problems.push(`${e.caseId}.${a.stepId}: assertion không khớp kết quả của bước đã duyệt.`);
@@ -226,7 +226,8 @@ export function manifestFindings(contract: TaskContract, entries: ManifestEntry[
     seen.add(key);
   }
   for (const c of contract.testPlan?.cases ?? []) if (c.required && c.method === 'automated' && !entries.some((e) => e.caseId === c.id)) problems.push(`${c.id}: thiếu test dự kiến cho ca bắt buộc.`);
-  if (contract.testPlan?.reasoningVersion === 1) for (const c of contract.testPlan.cases.filter(c=>c.required&&c.method==='automated')) for (const step of c.steps ?? []) if (!entries.some(e=>e.caseId===c.id&&e.assertions?.some(a=>a.stepId===step.id))) advisories.push(`${c.id}.${step.id}: bước bắt buộc chưa có assertion khai báo; kiểm tra bước này bằng tay hoặc bổ sung assertion.`);
+  if (options.derived) advisories.push('Manifest do hệ thống suy ra từ tên test (Author không khai báo được liên kết assertion với bước); bằng chứng dựa trên tên test chạy đạt, chưa đối chiếu từng assertion với từng bước.');
+  else if (contract.testPlan?.reasoningVersion === 1) for (const c of contract.testPlan.cases.filter(c=>c.required&&c.method==='automated')) for (const step of c.steps ?? []) if (!entries.some(e=>e.caseId===c.id&&e.assertions?.some(a=>a.stepId===step.id))) advisories.push(`${c.id}.${step.id}: bước bắt buộc chưa có assertion khai báo; kiểm tra bước này bằng tay hoặc bổ sung assertion.`);
   return { blocking: problems, advisories };
 }
 

@@ -110,3 +110,72 @@ export function parseTestPlanOutput(output: string, contract: Pick<TaskContract,
   if (!result.success) throw new Error(`Phản hồi sai định dạng: ${result.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ')}`);
   return { plan: result.data, changes };
 }
+
+export interface CompletionOptions { schema2: boolean; reasoning: boolean }
+const clip = (text: string, max = 8000): string => (text.length > max ? text.slice(0, max) : text);
+
+/**
+ * Closes the gaps that would otherwise stop a run for something the person approving the plan cannot fix by editing JSON:
+ * unknown requirement ids, duplicate case or step ids, an automatic case without steps, a required requirement with no
+ * automatic case. Each fix is mechanical (it restates what the contract or the Author's own case already says), none
+ * weakens a case, and every one is returned so the approval screen can list it.
+ */
+export function completeTestPlan(input: TestPlan | undefined, contract: Pick<TaskContract, 'requirements'>, options: CompletionOptions): { plan: TestPlan; changes: string[]; assumptions: string[] } {
+  const changes: string[] = [], assumptions: string[] = [];
+  const plan: TestPlan = structuredClone(input ?? { schemaVersion: options.schema2 ? 2 : 1, statefulModelVersion: 1, cases: [], notApplicable: [], questions: [] });
+  const known = new Map(contract.requirements.map(r => [r.id, r]));
+  if (options.schema2 && plan.schemaVersion !== 2) { plan.schemaVersion = 2; changes.push('Kế hoạch được nâng lên căn cứ v2; căn cứ từng ca lấy từ điều khoản của ca.'); }
+  if (options.reasoning && plan.reasoningVersion !== 1) { plan.reasoningVersion = 1; changes.push('Bật reasoningVersion=1 theo chính sách của run.'); }
+  const oracleFor = (ids: string[], explanation = 'Căn cứ tự sinh: toàn văn điều khoản mà ca này kiểm tra.') =>
+    ({ references: ids.map(id => ({ requirementId: id, quote: clip(known.get(id)!.text) })), explanation });
+  const usedCaseIds = new Set<string>();
+  const nextCaseId = (): string => { let n = 1; while (usedCaseIds.has(`C-${n}`) || plan.cases.some(c => c.id === `C-${n}`)) n++; return `C-${n}`; };
+
+  const kept: TestPlan['cases'] = [];
+  for (const original of plan.cases) {
+    const c = original;
+    const ids = [...new Set(c.requirementIds)].filter(id => known.has(id));
+    if (ids.length !== new Set(c.requirementIds).size) changes.push(`${c.id}: bỏ mã yêu cầu không tồn tại trong hợp đồng.`);
+    if (!ids.length) { changes.push(`${c.id}: không còn yêu cầu hợp lệ nào nên ca bị bỏ; yêu cầu liên quan sẽ được phủ bằng ca tự sinh.`); continue; }
+    c.requirementIds = ids;
+    if (usedCaseIds.has(c.id)) { const id = nextCaseId(); changes.push(`Mã ca ${c.id} bị trùng; ca sau được đổi thành ${id}.`); c.id = id; }
+    usedCaseIds.add(c.id);
+    if (c.method === 'manual' && ids.some(id => !known.get(id)!.manual)) { c.method = 'automated'; changes.push(`${c.id}: yêu cầu không đánh dấu thủ công nên ca được đặt là tự động.`); }
+    if (options.schema2) {
+      const own = c.oracle?.references.filter(r => ids.includes(r.requirementId)) ?? [];
+      if (!c.oracle || !own.length) { c.oracle = oracleFor(ids, c.oracle?.explanation); changes.push(`${c.id}: thiếu căn cứ hợp lệ nên dùng toàn văn điều khoản của ca.`); }
+      else if (own.length !== c.oracle.references.length) { c.oracle = { ...c.oracle, references: own }; changes.push(`${c.id}: bỏ căn cứ thuộc yêu cầu ngoài ca.`); }
+    }
+    if (options.reasoning && c.method === 'automated') {
+      if (!c.steps?.length) {
+        c.steps = [{ id: 'S-1', before: 'Trạng thái ban đầu của ca', after: 'Trạng thái sau thao tác của ca', requirementIds: ids, action: c.actions, expected: c.expected }];
+        changes.push(`${c.id}: chưa có bước nên bước S-1 được lập từ thao tác và kết quả mong đợi của ca.`);
+      }
+      const valid = new Set<string>(), steps = c.steps;
+      const bad = steps.some(s => !s.id || !/^S-[A-Za-z0-9_-]+$/.test(s.id) || valid.has(s.id) || !valid.add(s.id));
+      if (bad) { steps.forEach((s, i) => { s.id = `S-${i + 1}`; }); changes.push(`${c.id}: mã bước thiếu hoặc trùng nên được đánh lại S-1…S-${steps.length}.`); }
+    }
+    if (c.priority === 'high' && !c.required) { c.required = true; changes.push(`${c.id}: ca rủi ro cao được đặt là bắt buộc.`); }
+    kept.push(c);
+  }
+  plan.cases = kept;
+
+  for (const req of contract.requirements.filter(r => r.required && !r.manual)) {
+    if (plan.cases.some(c => c.required && c.method === 'automated' && c.requirementIds.includes(req.id))) continue;
+    const id = nextCaseId(); usedCaseIds.add(id);
+    plan.cases.push({
+      id, requirementIds: [req.id], group: 'happy', risk: `Yêu cầu ${req.id} chưa có ca kiểm thử tự động bắt buộc`, priority: 'high', required: true, method: 'automated',
+      preconditions: 'Theo mô tả của yêu cầu.', actions: 'Thực hiện hành vi mà yêu cầu mô tả.', expected: clip(req.text),
+      ...(options.schema2 ? { oracle: oracleFor([req.id]) } : {}),
+      ...(options.reasoning ? { steps: [{ id: 'S-1', before: 'Trạng thái ban đầu theo yêu cầu', after: 'Trạng thái sau thao tác theo yêu cầu', requirementIds: [req.id], action: 'Thực hiện hành vi mà yêu cầu mô tả.', expected: clip(req.text) }] } : {}),
+    });
+    changes.push(`${req.id}: chưa có ca tự động bắt buộc nên ca ${id} được tự sinh từ nguyên văn yêu cầu.`);
+  }
+
+  if (plan.questions.length) {
+    assumptions.push(...plan.questions.map(q => `Câu hỏi Author chưa được trả lời (Author tự giả định, hãy xác nhận): ${q}`));
+    changes.push(`${plan.questions.length} câu hỏi chưa giải quyết được chuyển thành giả định trong hợp đồng để bạn xác nhận.`);
+    plan.questions = [];
+  }
+  return { plan, changes, assumptions };
+}

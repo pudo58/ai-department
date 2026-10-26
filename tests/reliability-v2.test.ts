@@ -90,16 +90,20 @@ describe('oracle policy v2', () => {
     const changed = reviseContract(v2, { ...v2, requirements: [{ ...c.requirements[0]!, text: 'Different public requirement' }] });
     expect(changed.version).toBe(c.version + 1); expect(testPlanFindings(changed).advisories.join(' ')).toContain('Trích dẫn');
   });
-  it('blocks schema-v1 downgrade at the approval boundary for a new run', async () => {
+  it('upgrades a schema-v1 plan from the Author to a v2 plan instead of stopping at approval', async () => {
     const e = setup({ reply: x => x.prompt.includes('Author lập kế hoạch') ? fence(contract().testPlan) : undefined });
     const run = e.create({ mode: 'verify' }); e.orchestrator.startRun(run.id); await e.orchestrator.idle();
-    expect(() => e.orchestrator.approveContract(run.id, { contractHash: e.orchestrator.detail(run.id).contractReview.contractHash, acknowledgeWarnings: true })).toThrow('v2');
+    const d = e.orchestrator.detail(run.id);
+    expect(d.run.contract.testPlan!.schemaVersion).toBe(2);
+    expect(d.run.contract.testPlan!.cases.every(c => !!c.oracle)).toBe(true);
+    expect(d.contractReview.problems).toEqual([]);
     expect(e.runtime.calls).not.toContain('agent:developer:A');
   });
   it('retains invalid Author output and field errors without buying another planning call on resume', async () => {
     const e = setup({ reply: x => x.prompt.includes('Author lập kế hoạch') ? fence({ schemaVersion: 2, cases: 'invalid' }) : undefined });
     const run = e.create({ mode: 'verify' }); e.orchestrator.startRun(run.id); await e.orchestrator.idle();
     expect(e.orchestrator.detail(run.id).artifacts.find(a => a.title === 'Test plan validation error')?.content).toContain('cases');
+    const stored = e.store.runs.get(run.id)!; stored.status = 'paused'; e.store.runs.put(stored);
     const calls = e.runtime.calls.length; e.orchestrator.resumeRun(run.id); await e.orchestrator.idle(); expect(e.runtime.calls).toHaveLength(calls);
   });
 });

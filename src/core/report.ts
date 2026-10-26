@@ -106,6 +106,9 @@ export function buildReport(input: ReportInput): AcceptanceReport {
     } catch { /* An unreadable audit record is not evidence that a check passed. */ }
   }
 
+  for (const a of artifacts.filter(a => a.title === 'Pipeline fallback' && a.valid)) {
+    try { const f = JSON.parse(a.content) as { stage: string; message: string; level?: 'warn' | 'info' }; (f.level === 'info' ? info : warn)(`Tự xử lý ở bước "${f.stage}" thay vì dừng: ${f.message}`); } catch { /* An unreadable note is not evidence either way. */ }
+  }
   if (!quality.enabled) info('Chưa áp dụng kiểm thử sâu cho run này.');
   else {
     for (const x of quality.manifestAdvisories ?? []) warn(`Manifest: ${x}`);

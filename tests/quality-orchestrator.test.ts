@@ -86,9 +86,12 @@ describe('Verify quality policy v2', () => {
   it('does not loop on invalid planning output or exceed the existing budget', async () => {
     const e = setup({ reply: x => x.role === 'author' ? 'not json' : undefined });
     const run = e.create({ mode: 'verify' }); e.orchestrator.startRun(run.id); await e.orchestrator.idle();
-    expect(e.orchestrator.detail(run.id).run.status).toBe('blocked');
+    // Unreadable Author output no longer dead-ends: the contract gets a minimal plan and waits for approval.
+    expect(e.orchestrator.detail(run.id).run.status).toBe('awaiting_approval');
+    expect(e.orchestrator.detail(run.id).contractReview.problems).toEqual([]);
     const count = e.runtime.calls.filter(c => c.startsWith('agent:')).length;
-    e.orchestrator.startRun(run.id); await e.orchestrator.idle();
+    const stored = e.store.runs.get(run.id)!; stored.status = 'paused'; e.store.runs.put(stored);
+    e.orchestrator.resumeRun(run.id); await e.orchestrator.idle();
     expect(e.runtime.calls.filter(c => c.startsWith('agent:')).length).toBe(count);
     const tiny = environment(), r = tiny.create({ mode: 'verify', budgetUsd: 0.001 });
     tiny.orchestrator.startRun(r.id); await tiny.orchestrator.idle();

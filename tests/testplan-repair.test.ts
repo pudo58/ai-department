@@ -90,11 +90,12 @@ describe('Author plan correction', () => {
     expect(calls).toBe(2);
     expect(repairPrompt).toContain('C-1: Căn cứ R-17 không thuộc ca.');
     expect(repairPrompt).toContain('R-17: thiếu ca tự động bắt buộc.');
-    expect(d.contractReview.problems).toHaveLength(1);
-    expect(d.contractReview.problems[0]).toContain('câu hỏi chưa giải quyết');
-    expect(d.run.contract.testPlan!.questions).toEqual(['What outcome applies to the unspecified operation?']);
-    expect(() => e.orchestrator.approveContract(run.id, { contractHash: d.contractReview.contractHash, acknowledgeWarnings: true })).toThrow(/câu hỏi/);
-    expect(renderToStaticMarkup(createElement(ContractPanel, { detail: d }))).toContain('Kế hoạch cần bạn xem và sửa');
+    // The question is never dropped, but it no longer blocks: it becomes an assumption the person must acknowledge.
+    expect(d.contractReview.problems).toEqual([]);
+    expect(d.run.contract.testPlan!.questions).toEqual([]);
+    expect(d.run.contract.assumptions.join(' ')).toContain('What outcome applies to the unspecified operation?');
+    expect(d.contractReview.warnings.map(w => w.code)).toContain('assumptions_present');
+    expect(() => e.orchestrator.approveContract(run.id, { contractHash: d.contractReview.contractHash })).toThrow(/cảnh báo/);
     expect(d.attempts.some(a => a.role === 'developer')).toBe(false);
   });
 
@@ -110,7 +111,8 @@ describe('Author plan correction', () => {
     const stored = e.store.runs.get(run.id)!; stored.status = 'paused'; e.store.runs.put(stored);
     const restarted = new Orchestrator(e.store, () => e.runtime); await restarted.recover(); restarted.startRun(run.id); await restarted.idle();
     expect(restarted.detail(run.id).attempts).toHaveLength(2);
-    expect(restarted.detail(run.id).contractReview.problems[0]).toContain('câu hỏi');
+    expect(restarted.detail(run.id).contractReview.problems).toEqual([]);
+    expect(restarted.detail(run.id).run.contract.assumptions.join(' ')).toContain('Required outcome is not specified.');
   });
 
   it.each(['drop_question', 'drop_case', 'downgrade', 'manual', 'drop_link'] as const)('rejects a correction that weakens the plan: %s', async change => {
@@ -134,7 +136,8 @@ describe('Author plan correction', () => {
     expect(d.planReview).toMatchObject({ reason: 'repair_rejected', repairAccepted: false, outcome: 'needs_review' });
     expect(d.run.contract.testPlan!.cases).toHaveLength(2);
     expect(d.run.contract.testPlan!.cases[1]).toMatchObject({ method: 'automated', required: true, priority: 'high' });
-    expect(d.run.contract.testPlan!.questions).toEqual(['Still unresolved.']);
+    expect(d.run.contract.testPlan!.questions).toEqual([]);
+    expect(d.run.contract.assumptions).toContain('Câu hỏi Author chưa được trả lời (Author tự giả định, hãy xác nhận): Still unresolved.');
     expect(d.planReview!.remainingProblems.some(p => /Không được|không được/.test(p))).toBe(true);
   });
 
@@ -146,10 +149,15 @@ describe('Author plan correction', () => {
     } });
     const run = e.create({ mode: 'verify', budgetUsd: 10 }); e.orchestrator.startRun(run.id); await e.orchestrator.idle();
     expect(calls).toBe(2);
-    expect(e.orchestrator.detail(run.id).run.status).toBe(succeeds ? 'awaiting_approval' : 'blocked');
+    expect(e.orchestrator.detail(run.id).run.status).toBe('awaiting_approval');
     if (!succeeds) {
-      const restarted = new Orchestrator(e.store, () => e.runtime); await restarted.recover(); restarted.startRun(run.id); await restarted.idle();
+      // No readable plan from the Author: the contract still reaches approval with a minimal plan built from its requirements.
+      expect(e.orchestrator.detail(run.id).planReview).toMatchObject({ outcome: 'invalid_output' });
+      expect(e.orchestrator.detail(run.id).contractReview.problems).toEqual([]);
+      expect(e.orchestrator.detail(run.id).run.contract.testPlan!.cases.length).toBeGreaterThan(0);
+      const restarted = new Orchestrator(e.store, () => e.runtime); await restarted.recover(); await restarted.idle();
       expect(calls).toBe(2);
+      expect(restarted.detail(run.id).run.status).toBe('awaiting_approval');
     }
   });
 
@@ -160,8 +168,8 @@ describe('Author plan correction', () => {
       return qualityReply(x);
     } });
     const run = e.create({ mode: 'verify', budgetUsd: 10 }); e.orchestrator.startRun(run.id); await e.orchestrator.idle();
-    expect(e.orchestrator.detail(run.id).run.status).toBe('blocked');
-    expect(e.orchestrator.detail(run.id).planReview!.remainingProblems.join(' ')).toContain('Không được tự bỏ câu hỏi');
+    expect(e.orchestrator.detail(run.id).run.status).toBe('awaiting_approval');
+    expect(e.orchestrator.detail(run.id).run.contract.assumptions.join(' ')).toContain('Real unresolved question.');
   });
 
   it('does not expand the prepare budget for a correction and keeps the first draft editable', async () => {
@@ -190,7 +198,8 @@ describe('Author plan correction', () => {
     expect(calls).toBe(2);
     const d = e.orchestrator.detail(run.id);
     expect(d.run.status).toBe('awaiting_approval');
-    expect(d.contractReview.problems.join(' ')).toContain('R-99');
+    expect(d.contractReview.problems).toEqual([]);
+    expect(d.planReview!.normalizations?.join(' ')).toContain('thiếu căn cứ hợp lệ');
     expect(d.attempts.some(a => a.role === 'developer')).toBe(false);
   });
 
@@ -212,7 +221,9 @@ describe('Author plan correction', () => {
     expect(e.orchestrator.detail(run.id).artifacts.filter(a => a.title === 'Test plan repair attempt')).toHaveLength(1);
     const restarted = new Orchestrator(e.store, () => e.runtime); await restarted.recover(); restarted.startRun(run.id); await restarted.idle();
     expect(calls).toBe(2);
-    expect(restarted.detail(run.id).run.blocker).toContain('không tự gọi lại AI');
+    expect(restarted.detail(run.id).run.status).toBe('awaiting_approval');
+    expect(restarted.detail(run.id).run.contract.testPlan).toBeDefined();
+    expect(restarted.detail(run.id).contractReview.problems).toEqual([]);
   });
 
   it('invalidates descriptive review metadata when the user edits the contract; old hash cannot approve', async () => {

@@ -51,7 +51,8 @@ describe('risk plan contract validation', () => {
     plan.cases[1]!.group = 'state';
     plan.notApplicable = plan.notApplicable.filter(n => n.group !== 'state');
     plan.notApplicable.push({ group: 'boundary', reason: 'Fixture focuses its required case on state transitions.' });
-    expect(validateTestPlan(c, true).join(' ')).toContain('chuỗi ít nhất hai bước');
+    expect(validateTestPlan(c, true)).toEqual([]);
+    expect(testPlanFindings(c, true).advisories.join(' ')).toContain('chuỗi ít nhất hai bước');
     plan.cases[1]!.steps = [
       { action: 'claim job', expected: 'one lease is returned' },
       { action: 'reopen queue and claim again', expected: 'the same job is unavailable while its lease is valid' },

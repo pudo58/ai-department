@@ -94,9 +94,17 @@ it.each(['success','source','sourceRepair','invalid','weaken','interrupted'] as 
    if(mode==='invalid')expect(d.quality.manifestAdvisories?.join(' ')).toContain('C-1.S-3');else expect(d.quality.manifestAdvisories??[]).toEqual([]);
    expect(d.run.status,d.run.blocker??'').toBe('awaiting_acceptance');expect(d.quality.cases.every(c=>c.status==='passed')).toBe(true);expect(d.checks.at(-1)?.counts).toEqual({passed:1,failed:0,skipped:0});expect(d.artifacts.find(a=>a.title==='Test manifest')?.checkpoint).toBeTruthy();expect(calls.filter(c=>c==='developer:implement')).toHaveLength(1);
   }else{
-   expect(['blocked','failed']).toContain(d.run.status);expect(d.attempts.some(a=>a.role==='developer')).toBe(false);expect(existsSync(path.join(runtime.workspacePath(d.run,'A'),file))).toBe(false);expect(d.quality.manifestHash).toBeNull();
-   // A new orchestrator simulates resume after restart: persisted marker is the sole allowance.
-   const restarted=new Orchestrator(store,()=>runtime);restarted.resumeRun(run.id);await restarted.idle();expect(writes).toBe(2);expect(restarted.detail(run.id).run.blocker).toContain('Đã dùng lượt sửa');
+   let after=d;
+   if(mode==='interrupted'){
+    // The provider died after the marker was written: no second correction is bought, and resume uses the first draft as it was written.
+    expect(['blocked','failed']).toContain(d.run.status);expect(d.attempts.some(a=>a.role==='developer')).toBe(false);
+    const restarted=new Orchestrator(store,()=>runtime);restarted.resumeRun(run.id);await restarted.idle();expect(writes).toBe(2);after=restarted.detail(run.id);
+   }
+   // A correction that cannot be accepted does not end the run: the tests as first written are locked from their titles, with the gap reported.
+   expect(after.attempts.some(a=>a.role==='developer')).toBe(true);expect(after.quality.manifestHash).not.toBeNull();
+   expect(after.quality.manifestAdvisories?.join(' ')).toContain('suy ra từ tên test');
+   expect(readFileSync(path.join(runtime.workspacePath(after.run,'A'),file),'utf8')).not.toContain("toBe('X')");
+   expect(after.artifacts.some(a=>a.title==='Pipeline fallback')).toBe(true);
   }
  }finally{store.close();rmSync(source,{recursive:true,force:true});rmSync(dataDir,{recursive:true,force:true});}
 },45000);

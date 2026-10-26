@@ -197,9 +197,10 @@ describe('resume diagnosis and Verifier boundaries',()=>{
   }
   it('diagnoses existing assertions before Developer even when retry resets the round counter',async()=>{
     const e=await failedCheck(),before=e.runtime.calls.filter(c=>c==='agent:developer:A').length;
-    e.orchestrator.resumeRun(e.run.id);await e.orchestrator.idle();expect(e.runtime.calls.filter(c=>c==='agent:developer:A').length).toBe(before);
-    expect(e.orchestrator.detail(e.run.id).run.blocker).toContain('Cần làm rõ');
-    e.orchestrator.resumeRun(e.run.id);await e.orchestrator.idle();expect(e.runtime.calls.filter(c=>c==='agent:developer:A').length).toBe(before);
+    e.orchestrator.resumeRun(e.run.id);await e.orchestrator.idle();
+    // An unsure Author does not stop the run: the locked tests stay authoritative and the Developer goes on, with the doubt in the report.
+    expect(e.runtime.calls.filter(c=>c==='agent:developer:A').length).toBeGreaterThan(before);
+    expect(e.store.artifacts.list(e.run.id).filter(a=>a.title==='Pipeline fallback').map(a=>a.content).join(' ')).toContain('chưa chắc');
     expect(e.store.artifacts.list(e.run.id).filter(a=>a.title==='Author test diagnosis attempt')).toHaveLength(1);
   });
   it.each(['environment','report_error','test_missing','test_skipped','identity_ambiguous'])('does not call agents to conceal %s evidence errors',async kind=>{
