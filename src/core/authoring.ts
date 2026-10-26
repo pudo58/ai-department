@@ -28,13 +28,25 @@ export function authorTestProblems(file: string, source: string): string[] {
   return problems;
 }
 
-/** Token normalization preserves literals; comments and whitespace never stand in for an assertion. */
-export function assertionTokens(expression: string): string {
+/**
+ * Tokens of a snippet, compared by what they mean rather than how they are written: comments, whitespace, semicolons,
+ * trailing commas and the choice of quote character do not matter; every literal's value, every identifier and operator does.
+ */
+export function assertionTokenList(expression: string): string[] {
   const scanner = ts.createScanner(ts.ScriptTarget.Latest, true, ts.LanguageVariant.Standard, expression.trim().replace(/^await\s+/, '').replace(/;\s*$/, ''));
   const tokens: string[] = [];
-  for (let token = scanner.scan(); token !== ts.SyntaxKind.EndOfFileToken; token = scanner.scan()) tokens.push(scanner.getTokenText());
-  return tokens.join('\0');
+  for (let token = scanner.scan(); token !== ts.SyntaxKind.EndOfFileToken; token = scanner.scan()) {
+    if (token === ts.SyntaxKind.SemicolonToken) continue;
+    if (token === ts.SyntaxKind.StringLiteral || token === ts.SyntaxKind.NoSubstitutionTemplateLiteral) { tokens.push(`s:${scanner.getTokenValue()}`); continue; }
+    if ([ts.SyntaxKind.CloseParenToken, ts.SyntaxKind.CloseBracketToken, ts.SyntaxKind.CloseBraceToken].includes(token) && tokens.at(-1) === ',') tokens.pop();
+    tokens.push(scanner.getTokenText());
+  }
+  return tokens;
 }
+export const assertionTokens = (expression: string): string => assertionTokenList(expression).join('\0');
+
+/** Same members, in any order: the order a manifest lists requirement ids in carries no meaning. */
+export const sameMembers = (a: readonly string[], b: readonly string[]): boolean => new Set(a).size === new Set(b).size && [...new Set(a)].every(x => b.includes(x));
 
 /** A formatting correction may add observations, but cannot rewrite setup or remove old assertions. */
 export function authorRepairSourceProblems(file: string, before: string, after: string): string[] {
@@ -50,10 +62,14 @@ export function authorRepairSourceProblems(file: string, before: string, after: 
     visit(tree);
     let stripped = source;
     for (const s of [...spans].reverse()) stripped = stripped.slice(0, s.start) + stripped.slice(s.end);
-    return { body: assertionTokens(stripped), assertions: spans.map(s => s.tokens) };
+    return { body: assertionTokenList(stripped), assertions: spans.map(s => s.tokens) };
   };
   const a = inspect(before), b = inspect(after), problems: string[] = [];
-  if (a.body !== b.body) problems.push(`${file}: lượt sửa manifest không được đổi setup, thao tác, danh tính test hoặc assertion lồng trong biểu thức.`);
+  const diverge = a.body.findIndex((token, i) => token !== b.body[i]);
+  if (a.body.length !== b.body.length || diverge >= 0) {
+    const at = diverge >= 0 ? diverge : Math.min(a.body.length, b.body.length), show = (t: string[]) => t.slice(Math.max(0, at - 2), at + 4).join(' ') || '(hết file)';
+    problems.push(`${file}: lượt sửa manifest không được đổi setup, thao tác, danh tính test hoặc assertion lồng trong biểu thức (khác nhau ở: "${show(a.body)}" → "${show(b.body)}"). Định dạng, dấu chấm phẩy, kiểu nháy và comment được phép đổi.`);
+  }
   const remaining = [...b.assertions];
   for (const old of a.assertions) { const i = remaining.indexOf(old); if (i < 0) problems.push(`${file}: không được xóa hoặc đổi assertion đã viết trong lượt sửa manifest.`); else remaining.splice(i, 1); }
   return [...new Set(problems)];
@@ -69,9 +85,9 @@ export function assertionInventory(file: string, source: string): { path: string
   visit(tree); return result;
 }
 
-export function auditAssertionSource(file: string, source: string, entries: ManifestEntry[]): { problems: string[]; audit: AssertionAudit } {
-  const problems: string[] = [];
-  if (!/\.[cm]?[jt]sx?$/.test(file)) return {problems,audit:{path:file,status:'unsupported',assertions:0,message:'Chỉ đối chiếu khai báo bước; chưa có adapter cú pháp assertion cho ngôn ngữ này.'}};
+export function auditAssertionSource(file: string, source: string, entries: ManifestEntry[]): { problems: string[]; advisories: string[]; audit: AssertionAudit } {
+  const problems: string[] = [], advisories: string[] = [];
+  if (!/\.[cm]?[jt]sx?$/.test(file)) return {problems,advisories,audit:{path:file,status:'unsupported',assertions:0,message:'Chỉ đối chiếu khai báo bước; chưa có adapter cú pháp assertion cho ngôn ngữ này.'}};
   const tree=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,/tsx$/.test(file)?ts.ScriptKind.TSX:ts.ScriptKind.TS);
   const assertions:{expression:string;line:number;start:number}[]=[];
   const root=(node:ts.Expression):string|undefined=>ts.isIdentifier(node)?node.text:ts.isCallExpression(node)?root(node.expression):ts.isPropertyAccessExpression(node)?root(node.expression):undefined;
@@ -82,21 +98,25 @@ export function auditAssertionSource(file: string, source: string, entries: Mani
   };
   visit(tree);
   const covered=new Set<number>();
-  for(const entry of entries)for(const binding of entry.assertions??[]){
-    const matches=assertions.filter(a=>a.expression===assertionTokens(binding.expression)&&(binding.line===undefined||binding.line===a.line));
-    if(matches.length!==1)problems.push(`${entry.caseId}.${binding.stepId}: expression không khớp duy nhất một assertion thực trong ${file}; thêm line khi trùng.`);
-    else covered.add(matches[0]!.start);
+  // Bindings that name a line are resolved first; the rest take identical assertions in source order. Two assertions with
+  // the same tokens are interchangeable, so which one carries which binding is not a fact the Author has to supply.
+  const bindings=entries.flatMap(entry=>(entry.assertions??[]).map(binding=>({entry,binding}))).sort((a,b)=>Number(b.binding.line!==undefined)-Number(a.binding.line!==undefined));
+  for(const {entry,binding} of bindings){
+    const tokens=assertionTokens(binding.expression),same=assertions.filter(a=>a.expression===tokens);
+    const pick=binding.line!==undefined?same.find(a=>a.line===binding.line):same.find(a=>!covered.has(a.start))??same[0];
+    if(!pick)problems.push(`${entry.caseId}.${binding.stepId}: expression không khớp assertion nào trong ${file}${same.length?` ở dòng ${binding.line}`:''}.`);
+    else covered.add(pick.start);
   }
-  for(const assertion of assertions)if(!covered.has(assertion.start))problems.push(`${file}:${assertion.line}: assertion chưa liên kết với bước đã duyệt.`);
-  return {problems,audit:{path:file,status:assertions.length?'checked':'unsupported',assertions:assertions.length,message:assertions.length?'Đã so khớp cú pháp expect/assert và khai báo bước; không chứng minh ngữ nghĩa hoặc đường thực thi.':'Chưa nhận diện expect/assert; không tuyên bố đã soát mọi assertion của framework này.'}};
+  for(const assertion of assertions)if(!covered.has(assertion.start))advisories.push(`${file}:${assertion.line}: assertion chưa liên kết với bước đã duyệt (không được tính là bằng chứng cho bước nào).`);
+  return {problems,advisories,audit:{path:file,status:assertions.length?'checked':'unsupported',assertions:assertions.length,message:assertions.length?'Đã so khớp cú pháp expect/assert và khai báo bước; không chứng minh ngữ nghĩa hoặc đường thực thi.':'Chưa nhận diện expect/assert; không tuyên bố đã soát mọi assertion của framework này.'}};
 }
 
-export async function auditManifestAssertions(contract:TaskContract,entries:ManifestEntry[],workspace?:string,paths=entries.map(e=>e.path)):Promise<{problems:string[];audits:AssertionAudit[]}>{
-  const problems:string[]=[],audits:AssertionAudit[]=[];
-  if(contract.testPlan?.reasoningVersion!==1)return {problems,audits};
+export async function auditManifestAssertions(contract:TaskContract,entries:ManifestEntry[],workspace?:string,paths=entries.map(e=>e.path)):Promise<{problems:string[];advisories:string[];audits:AssertionAudit[]}>{
+  const problems:string[]=[],advisories:string[]=[],audits:AssertionAudit[]=[];
+  if(contract.testPlan?.reasoningVersion!==1)return {problems,advisories,audits};
   for(const file of new Set(paths)){
     if(!workspace){audits.push({path:file,status:'unsupported',assertions:0,message:'Runtime không cung cấp source để đối chiếu; chỉ có khai báo liên kết.'});continue;}
-    try{const result=auditAssertionSource(file,await readFile(path.join(workspace,file),'utf8'),entries.filter(e=>e.path===file));problems.push(...result.problems);audits.push(result.audit);}catch(error){problems.push(`${file}: chưa đọc được source assertion: ${(error as Error).message}`);}
+    try{const result=auditAssertionSource(file,await readFile(path.join(workspace,file),'utf8'),entries.filter(e=>e.path===file));problems.push(...result.problems);advisories.push(...result.advisories);audits.push(result.audit);}catch(error){problems.push(`${file}: chưa đọc được source assertion: ${(error as Error).message}`);}
   }
-  return {problems,audits};
+  return {problems,advisories,audits};
 }

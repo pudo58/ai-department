@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { identityId, normalizeTestId, testTitle } from '../src/core/testids.js';
 import { parseTestReport, summarizeCheck } from '../src/core/checks.js';
 import { hashContract, reviseContract } from '../src/core/contract.js';
-import { validateTestPlan, IdentitySchema } from '../src/core/testplan.js';
+import { validateTestPlan, testPlanFindings, IdentitySchema } from '../src/core/testplan.js';
 import { unsafeTestPatch } from '../src/core/recovery.js';
 import { profile, setupV2 as setup } from './helpers.js';
 import { contract, currentPlan, fence, qualityReply, qualityReport, qualityGreen } from './quality-fixtures.js';
@@ -79,7 +79,8 @@ describe('oracle policy v2', () => {
     if (kind === 'quote') test.oracle!.references[0]!.quote = 'cancel must throw ALREADY_TERMINAL';
     if (kind === 'explanation') test.oracle!.explanation = ' ';
     if (kind === 'questions') c.testPlan.questions.push('Cancel repeated outcome?');
-    expect(validateTestPlan(c).length).toBeGreaterThan(0);
+    // A quotation that is not in the clause is advisory (the person sees it); a missing or foreign basis blocks.
+    expect(kind === 'quote' ? testPlanFindings(c).advisories.length : validateTestPlan(c).length).toBeGreaterThan(0);
   });
   it('invalidates quotes and approval on requirement edits, without modifying legacy content', () => {
     const c = contract(), before = JSON.stringify(c), hash = hashContract(c);
@@ -87,7 +88,7 @@ describe('oracle policy v2', () => {
     const v2 = { ...c, testPlan: currentPlan(c.testPlan!, c) };
     expect(validateTestPlan(v2)).toEqual([]);
     const changed = reviseContract(v2, { ...v2, requirements: [{ ...c.requirements[0]!, text: 'Different public requirement' }] });
-    expect(changed.version).toBe(c.version + 1); expect(validateTestPlan(changed).join(' ')).toContain('Trích dẫn');
+    expect(changed.version).toBe(c.version + 1); expect(testPlanFindings(changed).advisories.join(' ')).toContain('Trích dẫn');
   });
   it('blocks schema-v1 downgrade at the approval boundary for a new run', async () => {
     const e = setup({ reply: x => x.prompt.includes('Author lập kế hoạch') ? fence(contract().testPlan) : undefined });

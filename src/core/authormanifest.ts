@@ -12,7 +12,7 @@ export async function resolveAuthorManifest(contract:TaskContract,output:string,
   return parseAuthorManifest(contract,output,structured);
 }
 
-// Only the new output protocol may refer to an expected result instead of copying it.
+// Only the new output protocol may refer to an expected result instead of copying it (a copy is replaced by the approved text).
 // Stored manifests and historical output keep their strict, explicit expected field.
 export const ReferencedManifestSchema = z.object({
   bindingProtocol: z.literal(1), contractHash: z.string().regex(/^[a-f0-9]{64}$/),
@@ -32,8 +32,8 @@ export function parseAuthorManifest(contract: TaskContract, output: string, stru
       entries = parsed.entries.map(e => ({ ...e, testId: identityId(e.identity), assertions: e.assertions.map(binding => {
         const step = contract.testPlan!.cases.find(c => c.id === e.caseId)?.steps?.find(s => s.id === binding.stepId);
         if (!step) throw new Error(`${e.caseId}.${binding.stepId}: không có bước đã duyệt để tham chiếu.`);
-        // An explicitly wrong expected must still fail validateManifest; never silently fix it.
-        return { ...binding, expected: binding.expected ?? step.expected };
+        // The binding is identified by stepId; a copy of the expected text is bookkeeping and the approved step is the source.
+        return { ...binding, expected: step.expected };
       }) }));
     } else entries = parseOutput(StructuredManifestSchema, output).entries.map(e => ({ ...e, testId: identityId(e.identity) }));
   } else entries = parseOutput(ManifestSchema, output).entries;

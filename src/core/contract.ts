@@ -1,4 +1,4 @@
-import { validateTestPlan } from './testplan.js';
+import { testPlanFindings, validateTestPlan } from './testplan.js';
 import { createHash } from 'node:crypto';
 import type { ContractReview, TaskContract } from '../shared/types.js';
 
@@ -35,6 +35,10 @@ export function reviewContract(contract: TaskContract): ContractReview {
   if (!contract.requirements.some((r) => r.kind === 'forbidden')) warnings.push({ code: 'missing_forbidden', message: 'Chưa có tiêu chí về hành vi không được xảy ra.' });
   if (!contract.acceptanceExamples.some((text) => text.trim())) warnings.push({ code: 'missing_examples', message: 'Chưa có ví dụ nghiệm thu cụ thể.' });
   if (contract.assumptions.some((text) => text.trim())) warnings.push({ code: 'assumptions_present', message: 'Hợp đồng có giả định cần bạn xác nhận.' });
+  // Form-only findings in the test plan: the person approves knowing about them, rather than being locked out by them.
+  const advisories = testPlanFindings(contract).advisories;
+  advisories.slice(0, 12).forEach((message) => warnings.push({ code: 'plan_advisory', message: `Kế hoạch ca: ${message}` }));
+  if (advisories.length > 12) warnings.push({ code: 'plan_advisory', message: `Kế hoạch ca còn ${advisories.length - 12} lưu ý về hình thức nữa.` });
   return { contractHash: hashContract(contract), contractVersion: contract.version, warnings, problems: validateContract(contract) };
 }
 

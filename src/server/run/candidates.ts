@@ -1,5 +1,5 @@
 import { deepQuality } from '../../core/qualityevidence.js';
-import { normalizeTestId, validateManifest } from '../../core/testplan.js';
+import { normalizeTestId, manifestFindings } from '../../core/testplan.js';
 import { hashContract } from '../../core/contract.js';
 import type { TestManifest } from '../../shared/quality.js';
 import type { Independence, Slot, Stage } from '../../shared/types.js';
@@ -22,7 +22,7 @@ import { testRepairConfigHash } from '../../core/recovery.js';
 import type { AuthorDraft } from '../../shared/execution.js';
 import { routeCheckFailure } from '../../core/checkrouting.js';
 import { authorTestProblems, auditManifestAssertions } from '../../core/authoring.js';
-import { authorRepairSourceProblems, assertionInventory } from '../../core/authoring.js';
+import { authorRepairSourceProblems, assertionInventory, sameMembers } from '../../core/authoring.js';
 import { parseAuthorManifest, resolveAuthorManifest, AUTHOR_MANIFEST_REPAIR_TITLE } from '../../core/authormanifest.js';
 import { SourceBindingSchema } from '../../core/sourcebindings.js';
 import { readFile } from 'node:fs/promises';
@@ -220,11 +220,14 @@ export class CandidateBuilder {
       try {
         const structured = (run.qualityPolicyVersion??0) >= 2;
         const normalized = await resolveAuthorManifest(run.contract,authorOutput,structured,runtime.workspacePath?.(run,'A'),changes.files);
-        const problems = validateManifest(run.contract, normalized, run.configSnapshot.checks, changes.files);
+        const found = manifestFindings(run.contract, normalized, run.configSnapshot.checks, changes.files), problems = [...found.blocking];
         const audit=await auditManifestAssertions(run.contract,normalized,runtime.workspacePath?.(run,'A'),changes.files);
         problems.push(...audit.problems);
+        const advisories = [...new Set([...found.advisories, ...audit.advisories])];
+        // Binding gaps are not worth blocking on, but the one correction round exists to close them while it is still free to use.
+        if (run.qualityPolicyVersion === 3) problems.push(...advisories);
         if (problems.length) throw new Error(problems.join(' '));
-        manifest = { schemaVersion: structured ? 2 : 1, source: 'author', contractHash: hashContract(run.contract), contractVersion: run.contract.version, slot: 'A', entries: normalized, ...(run.contract.testPlan?.reasoningVersion===1?{assertionAudit:audit.audits}:{}) };
+        manifest = { schemaVersion: structured ? 2 : 1, source: 'author', contractHash: hashContract(run.contract), contractVersion: run.contract.version, slot: 'A', entries: normalized, ...(run.contract.testPlan?.reasoningVersion===1?{assertionAudit:audit.audits}:{}), ...(advisories.length ? { advisories } : {}) };
       } catch (error) {
         const draft:AuthorDraft={schemaVersion:1,attemptId:authorAttemptId,checkpoint:run.checkpoint??run.baseSha!,contractHash:hashContract(run.contract),contractVersion:run.contract.version,configHash:testRepairConfigHash(run),slot:'A',output:authorOutput,patch:changes.patch,paths:changes.files,problems:[(error as Error).message]};
         this.s.artifact(runId,{kind:'report',title:AUTHOR_DRAFT_TITLE,content:JSON.stringify(draft),checkpoint:run.checkpoint,attemptId:authorAttemptId});
@@ -285,13 +288,20 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
       // Metadata correction cannot silently reassign a previously declared test to another identity/recipe.
       try{
         const old=parseAuthorManifest(run.contract,draft.output,true);
-        for(const e of old)if(!entries.some(n=>n.caseId===e.caseId&&n.path===e.path&&n.recipeId===e.recipeId&&n.testId===e.testId&&JSON.stringify(n.requirementIds)===JSON.stringify(e.requirementIds)))problems.push(`${e.caseId}: lượt sửa không được đổi danh tính/recipe/liên kết test đã khai báo.`);
+        for(const e of old){
+          const same=entries.filter(n=>n.caseId===e.caseId&&n.path===e.path);
+          if(!same.length)problems.push(`${e.caseId}: lượt sửa làm mất test đã khai báo trong ${e.path}.`);
+          else if(!same.some(n=>n.testId===e.testId))problems.push(`${e.caseId}: lượt sửa đổi tên/danh tính test (${e.testId} → ${same.map(n=>n.testId).join(', ')}).`);
+          else if(!same.some(n=>n.testId===e.testId&&n.recipeId===e.recipeId))problems.push(`${e.caseId}: lượt sửa đổi recipe của test đã khai báo (${e.recipeId}).`);
+          else if(!same.some(n=>n.testId===e.testId&&sameMembers(n.requirementIds,e.requirementIds)))problems.push(`${e.caseId}: lượt sửa đổi tập yêu cầu liên kết của test (${e.requirementIds.join(', ')}).`);
+        }
       }catch{/* Source AST guard still preserves actual test names and setup in a schema-invalid draft. */}
-      problems.push(...validateManifest(run.contract,entries,run.configSnapshot.checks,changes.files));
+      const found=manifestFindings(run.contract,entries,run.configSnapshot.checks,changes.files);problems.push(...found.blocking);
       const audit=await auditManifestAssertions(run.contract,entries,workspace,changes.files);problems.push(...audit.problems);
       if(problems.length)throw new Error(problems.join(' '));
+      const advisories=[...new Set([...found.advisories,...audit.advisories])];
       const checkpoint=await runtime.commit(run,'A',`${run.title}: corrected Author manifest`);
-      const manifest:TestManifest={schemaVersion:2,source:'author',contractHash:hashContract(run.contract),contractVersion:run.contract.version,slot:'A',entries,assertionAudit:audit.audits};
+      const manifest:TestManifest={schemaVersion:2,source:'author',contractHash:hashContract(run.contract),contractVersion:run.contract.version,slot:'A',entries,assertionAudit:audit.audits,...(advisories.length?{advisories}:{})};
       this.s.artifact(runId,{kind:'acceptance',title:'Test manifest',content:JSON.stringify(manifest),checkpoint,attemptId:result.attempt.id});
       this.s.artifact(runId,{kind:'diff',title:'Diff Author',content:changes.patch,checkpoint,attemptId:result.attempt.id});
       this.s.mutate(runId,r=>{r.checkpoint=checkpoint;});
@@ -325,7 +335,7 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
       entries=await resolveAuthorManifest(run.contract,draft.output,structured,runtime.workspacePath?.(run,'A'),draft.paths);
     } catch(error) { if(applied)await runtime.revert(run,'A');throw new Blocked(`Draft vẫn chưa hợp lệ: ${(error as Error).message}`); }
     const normalized=entries.map(e=>({...e,path:e.path.replace(/\\/g,'/'),testId:normalizeTestId(e.testId)}));
-    const problems=validateManifest(run.contract,normalized,run.configSnapshot.checks,draft.paths);
+    const found=manifestFindings(run.contract,normalized,run.configSnapshot.checks,draft.paths),problems=[...found.blocking];
     if(problems.length){if(applied)await runtime.revert(run,'A');throw new Blocked(`Draft vẫn chưa hợp lệ: ${problems.join(' ')}`);}
     try{
       // An Author's first draft precedes the first checkpoint; Git still has the frozen base HEAD.
@@ -335,7 +345,8 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
       const audit=await auditManifestAssertions(run.contract,normalized,runtime.workspacePath?.(run,'A'),draft.paths);
       if(audit.problems.length)throw new Error(audit.problems.join(' '));
       const checkpoint=await runtime.commit(run,'A',`${run.title}: recovered Author draft`);
-      const manifest:TestManifest={schemaVersion:structured?2:1,source:'author',contractHash:hashContract(run.contract),contractVersion:run.contract.version,slot:'A',entries:normalized,...(run.contract.testPlan?.reasoningVersion===1?{assertionAudit:audit.audits}:{})};
+      const advisories=[...new Set([...found.advisories,...audit.advisories])];
+      const manifest:TestManifest={schemaVersion:structured?2:1,source:'author',contractHash:hashContract(run.contract),contractVersion:run.contract.version,slot:'A',entries:normalized,...(run.contract.testPlan?.reasoningVersion===1?{assertionAudit:audit.audits}:{}),...(advisories.length?{advisories}:{})};
       this.s.artifact(runId,{kind:'acceptance',title:'Test manifest',content:JSON.stringify(manifest),checkpoint});
       this.s.artifact(runId,{kind:'diff',title:'Diff Author recovered',content:changes.patch,checkpoint});
       this.s.mutate(runId,r=>{r.checkpoint=checkpoint;});this.scope.lockAcceptance(runId,draft.paths,checkpoint,'Acceptance suite (Author)',true);

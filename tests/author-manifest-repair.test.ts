@@ -5,19 +5,19 @@ import {LocalRuntime} from '../src/runtime/local.js';import type {AgentExecution
 import {Orchestrator} from '../src/server/orchestrator.js';import {Store} from '../src/server/store.js';
 import {initialContract,hashContract} from '../src/core/contract.js';
 import {parseAuthorManifest,authorManifestScaffold,AUTHOR_MANIFEST_REPAIR_TITLE} from '../src/core/authormanifest.js';
-import {authorRepairSourceProblems,assertionInventory} from '../src/core/authoring.js';
+import {authorRepairSourceProblems,assertionInventory,sameMembers} from '../src/core/authoring.js';
 import {validateManifest} from '../src/core/testplan.js';
 import {compileSourceBindings} from '../src/core/sourcebindings.js';
 import {reasoningPlan,reasoningEntries} from './reasoning-fixtures.js';import {profile} from './helpers.js';import {fence} from './quality-fixtures.js';
 
-it('resolves only explicit current-contract references and preserves legacy manifests and wrong expected values',()=>{
+it('resolves only explicit current-contract references and preserves legacy manifests and takes the approved text over a copied expected value',()=>{
  const contract={...initialContract('Claim each ready job once.'),testPlan:reasoningPlan(initialContract('Claim each ready job once.'))};
  const old=reasoningEntries(contract.testPlan),raw=JSON.stringify({entries:old}),before=JSON.stringify(contract);
  expect(parseAuthorManifest(contract,raw,true)).toEqual(old);
  const output={bindingProtocol:1,contractHash:hashContract(contract),entries:old.map(e=>({...e,assertions:e.assertions!.map(({expected,...a})=>a)}))};
  expect(parseAuthorManifest(contract,fence(output),true)).toEqual(old);
  const parsed=parseAuthorManifest(contract,JSON.stringify({...output,entries:old.map(e=>({...e,assertions:e.assertions!.map(a=>({...a,expected:'wrong'}))}))}),true);
- expect(validateManifest(contract,parsed,[{id:'test',reportPath:'r.json'}],[old[0]!.path]).join()).toContain('không khớp');
+ expect(parsed).toEqual(old);expect(validateManifest(contract,parsed,[{id:'test',reportPath:'r.json'}],[old[0]!.path])).toEqual([]);
  expect(()=>parseAuthorManifest(contract,JSON.stringify({...output,contractHash:'0'.repeat(64)}),true)).toThrow(/hợp đồng/);
  expect(()=>parseAuthorManifest(contract,JSON.stringify({...output,entries:output.entries.map(e=>({...e,assertions:[{stepId:'S-99',expression:'expect(true).toBe(true)'}]}))}),true)).toThrow(/không có bước/);
  expect(()=>parseAuthorManifest(contract,JSON.stringify({...output,bindingProtocol:2}),true)).toThrow();
@@ -33,6 +33,21 @@ it('retains actual assertions, setup and identity; only permits extra assertion 
  expect(inventory.map(a=>a.line)).toEqual([1,2]);
 });
 
+it('lets a correction reformat what it kept, but still rejects a changed value, and says where',()=>{
+ const before="test('id',()=>{const q=createQueue();expect(q.claim()).toBe('A');expect(q.claim()).toBe('B');});";
+ const tidy=`test("id", () => {
+  const q = createQueue()
+  // @aidept-step S-1
+  expect(q.claim()).toBe("A")
+  expect(q.claim()).toBe(\`B\`);
+  expect(q.claim(),).toBeNull();
+});`;
+ expect(authorRepairSourceProblems('tests/q.js',before,tidy)).toEqual([]);
+ const changed=authorRepairSourceProblems('tests/q.js',before,before.replace('createQueue()','createQueue(1)'));
+ expect(changed.join()).toContain('khác nhau ở');expect(changed.join()).toContain('createQueue');
+ expect(authorRepairSourceProblems('tests/q.js',before,before.replace("toBe('A')","toBe('a')")).length).toBeGreaterThan(0);
+ expect(sameMembers(['R-1','R-2'],['R-2','R-1'])).toBe(true);expect(sameMembers(['R-1'],['R-1','R-2'])).toBe(false);expect(sameMembers(['R-1','R-1'],['R-1','R-2'])).toBe(false);
+});
 it('compiles only explicit case/step annotations and exact static source identities, including shared helper assertions',()=>{
  const contract={...initialContract('Claim each ready job once.'),testPlan:reasoningPlan(initialContract('Claim each ready job once.'))};
  const source=`function check(){\n// @aidept-bind C-1/S-3\nexpect(q.claim()).toBe('C');\n}\ndescribe('suite > delimiter',()=>{\n// @aidept-case C-1\ntest('[R-1][C-1] all jobs',()=>{\n// @aidept-step S-1\nexpect(q.claim()).toBe('A');\n// @aidept-step S-2\nexpect(q.claim()).toBe('B');\ncheck();\n});\n});`;
@@ -74,7 +89,9 @@ it.each(['success','source','sourceRepair','invalid','weaken','interrupted'] as 
  try{
   orch.startRun(run.id);await orch.idle();const hash=orch.detail(run.id).contractReview.contractHash;orch.approveContract(run.id,{contractHash:hash,acknowledgeWarnings:true});await orch.idle();const d=orch.detail(run.id);
   expect(writes).toBe(mode==='source'?1:2);expect(hashContract(d.run.contract)).toBe(hash);expect(readFileSync(path.join(source,'src/queue.mjs'),'utf8')).toContain('return null');
-  if(['success','source','sourceRepair'].includes(mode)){
+  if(['success','source','sourceRepair','invalid'].includes(mode)){
+   // A step still unbound after the one correction is a warning for the person at acceptance, not a reason to stop the run.
+   if(mode==='invalid')expect(d.quality.manifestAdvisories?.join(' ')).toContain('C-1.S-3');else expect(d.quality.manifestAdvisories??[]).toEqual([]);
    expect(d.run.status,d.run.blocker??'').toBe('awaiting_acceptance');expect(d.quality.cases.every(c=>c.status==='passed')).toBe(true);expect(d.checks.at(-1)?.counts).toEqual({passed:1,failed:0,skipped:0});expect(d.artifacts.find(a=>a.title==='Test manifest')?.checkpoint).toBeTruthy();expect(calls.filter(c=>c==='developer:implement')).toHaveLength(1);
   }else{
    expect(['blocked','failed']).toContain(d.run.status);expect(d.attempts.some(a=>a.role==='developer')).toBe(false);expect(existsSync(path.join(runtime.workspacePath(d.run,'A'),file))).toBe(false);expect(d.quality.manifestHash).toBeNull();

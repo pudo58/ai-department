@@ -22,6 +22,10 @@ export interface TestPlanReview {
   outcome: 'valid' | 'needs_review' | 'invalid_output';
   reason?: 'questions_only' | 'budget_exhausted' | 'repair_rejected';
   initialProblems: string[]; remainingProblems: string[];
+  /** Form-only findings that do not block approval; shown with the contract warnings. */
+  remainingAdvisories?: string[];
+  /** Lossless spelling fixes the server applied to the Author's output before validating it. */
+  normalizations?: string[];
 }
 export interface AssertionBinding { stepId: string; expected: string; expression: string; line?: number }
 export interface AssertionAudit { path: string; status: 'checked' | 'unsupported'; assertions: number; message: string }
@@ -31,6 +35,8 @@ export interface TestManifest {
   entries: ManifestEntry[]; observed?: { recipeId: string; testIds: string[] }[];
   revision?: { previousHash: string; proposalId: string };
   assertionAudit?: AssertionAudit[];
+  /** Binding gaps that weaken the evidence without making the manifest unusable; acknowledged at acceptance. */
+  advisories?: string[];
 }
 export interface CaseEvidence {
   caseId: string; requirementIds: string[]; required: boolean; method: TestCase['method'];
@@ -52,6 +58,6 @@ export interface MutationResult {
   files: string[]; message: string; workspace?: string;
 }
 export interface QualityDetail {
-  enabled: boolean; plan?: TestPlan; manifestHash: string | null; manifestProblems: string[]; cases: CaseEvidence[];
+  enabled: boolean; plan?: TestPlan; manifestHash: string | null; manifestProblems: string[]; manifestAdvisories?: string[]; planAdvisories?: string[]; cases: CaseEvidence[];
   capability: MutationCapability; mutation: MutationResult | null; testMs: number;
 }

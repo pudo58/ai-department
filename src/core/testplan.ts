@@ -72,7 +72,8 @@ export function planRepairProblems(before: TestPlan | undefined, questions: read
 const TestPlanReviewSchema = z.object({ schemaVersion: z.literal(1), source: z.literal('server'), contractHash: text, contractVersion: z.number().int(),
   attemptIds: z.array(text), firstPassValid: z.boolean(), repairAttempted: z.boolean(), repairAccepted: z.boolean(),
   outcome: z.enum(['valid', 'needs_review', 'invalid_output']), reason: z.enum(['questions_only', 'budget_exhausted', 'repair_rejected']).optional(),
-  initialProblems: z.array(z.string()), remainingProblems: z.array(z.string()) });
+  initialProblems: z.array(z.string()), remainingProblems: z.array(z.string()),
+  remainingAdvisories: z.array(z.string()).optional(), normalizations: z.array(z.string()).optional() });
 export function readTestPlanReview(contract: TaskContract, artifacts: readonly Artifact[], contractHash: string): TestPlanReview | undefined {
   const a = artifacts.filter(a => a.valid && a.title === 'Test plan review' && a.contractVersion === contract.version).at(-1);
   if (!a) return;
@@ -93,6 +94,7 @@ export const StoredManifestSchema = ManifestSchema.extend({
   observed: z.array(z.object({ recipeId: text, testIds: z.array(text).max(10000) })).max(20).optional(),
   revision: z.object({ previousHash: z.string().regex(/^[a-f0-9]{64}$/), proposalId: text }).optional(),
   assertionAudit: z.array(z.object({ path: text, status: z.enum(['checked', 'unsupported']), assertions: z.number().int().nonnegative(), message: text })).optional(),
+  advisories: z.array(z.string()).optional(),
 });
 
 export function validateOracle(contract: TaskContract, requirementIds: readonly string[], oracle?: Oracle): string[] {
@@ -111,55 +113,66 @@ export function testPlanOutputGuide(version: 1 | 2, reasoning = false): string {
       ...(version === 2 ? { oracle: { references: [{ requirementId: 'R-1', quote: 'trích nguyên văn điều khoản R-1' }], explanation: 'Giải thích căn cứ của expected, từng bước và invariant.' } } : {}) }], notApplicable: [], questions: [] });
 }
 
-/** Pure validation shared by contract approval and plan generation; never edits legacy contracts. */
-export function validateTestPlan(contract: TaskContract, required = false, reasoningRequired = false): string[] {
-  if (!contract.testPlan) return required ? ['Verify cần kế hoạch ca kiểm thử trước khi duyệt.'] : [];
+export interface Findings { blocking: string[]; advisories: string[] }
+
+/**
+ * Blocking findings are what a person cannot sensibly approve past: no usable plan, a requirement without an automatic
+ * case, an unanswered question, a link to something that does not exist. Advisories describe form (a missing before/after
+ * state, a group left unmentioned, an invariant not written down); they are shown at approval and must be acknowledged,
+ * but they do not stop a plan whose business content is usable.
+ */
+export function testPlanFindings(contract: TaskContract, required = false, reasoningRequired = false): Findings {
+  const blocking: string[] = [], advisories: string[] = [];
+  if (!contract.testPlan) return { blocking: required ? ['Verify cần kế hoạch ca kiểm thử trước khi duyệt.'] : [], advisories };
   const parsed = TestPlanSchema.safeParse(contract.testPlan);
-  if (!parsed.success) return parsed.error.issues.map((i) => `Kế hoạch ca ${i.path.join('.')}: ${i.message}`);
-  const p = parsed.data, problems: string[] = [], seen = new Set<string>();
-  if (reasoningRequired && p.reasoningVersion !== 1) problems.push('Chính sách v3 cần reasoningVersion=1 và căn cứ từng bước.');
+  if (!parsed.success) return { blocking: parsed.error.issues.map((i) => `Kế hoạch ca ${i.path.join('.')}: ${i.message}`), advisories };
+  const p = parsed.data, seen = new Set<string>();
+  if (reasoningRequired && p.reasoningVersion !== 1) blocking.push('Chính sách v3 cần reasoningVersion=1 và căn cứ từng bước.');
   for (const c of p.cases) {
-    if (seen.has(c.id)) problems.push(`Mã ca ${c.id} bị trùng.`);
+    if (seen.has(c.id)) blocking.push(`Mã ca ${c.id} bị trùng.`);
     seen.add(c.id);
-    if(p.reasoningVersion!==1&&c.steps?.length===1)problems.push(`${c.id}: kế hoạch cũ có steps cần ít nhất hai bước.`);
-    if (new Set(c.requirementIds).size !== c.requirementIds.length) problems.push(`${c.id}: mã yêu cầu bị trùng.`);
-    if (p.schemaVersion === 2) problems.push(...validateOracle(contract, c.requirementIds, c.oracle).map(p => `${c.id}: ${p}`));
+    if (p.reasoningVersion !== 1 && c.steps?.length === 1) advisories.push(`${c.id}: kế hoạch cũ có steps cần ít nhất hai bước.`);
+    if (new Set(c.requirementIds).size !== c.requirementIds.length) advisories.push(`${c.id}: mã yêu cầu bị trùng.`);
+    if (p.schemaVersion === 2) for (const problem of validateOracle(contract, c.requirementIds, c.oracle)) (/không có trong điều khoản/.test(problem) ? advisories : blocking).push(`${c.id}: ${problem}`);
     if (p.reasoningVersion === 1 && c.method === 'automated') {
-      if (!c.steps?.length) problems.push(`${c.id}: thiếu bước có trạng thái trước/sau.`);
+      if (!c.steps?.length) blocking.push(`${c.id}: thiếu bước có trạng thái trước/sau.`);
       const stepIds = new Set<string>();
       for (const [index, step] of (c.steps ?? []).entries()) {
         const field = `${c.id}.steps.${index}`;
-        if (!step.id || !/^S-[A-Za-z0-9_-]+$/.test(step.id) || stepIds.has(step.id)) problems.push(`${field}: mã bước S-x thiếu hoặc trùng.`);
+        if (!step.id || !/^S-[A-Za-z0-9_-]+$/.test(step.id) || stepIds.has(step.id)) blocking.push(`${field}: mã bước S-x thiếu hoặc trùng.`);
         if (step.id) stepIds.add(step.id);
-        if (!step.before?.trim() || !step.after?.trim()) problems.push(`${field}: thiếu trạng thái trước/sau.`);
-        if (!step.requirementIds?.length || step.requirementIds.some(id => !c.requirementIds.includes(id) || !c.oracle?.references.some(r => r.requirementId === id))) problems.push(`${field}: thiếu điều khoản trong căn cứ đã duyệt.`);
+        if (!step.before?.trim() || !step.after?.trim()) advisories.push(`${field}: thiếu trạng thái trước/sau.`);
+        if (!step.requirementIds?.length || step.requirementIds.some(id => !c.requirementIds.includes(id) || !c.oracle?.references.some(r => r.requirementId === id))) advisories.push(`${field}: thiếu điều khoản trong căn cứ đã duyệt.`);
       }
     }
     for (const id of c.requirementIds) {
       const req = contract.requirements.find((r) => r.id === id);
-      if (!req) problems.push(`${c.id}: yêu cầu ${id} không tồn tại.`);
-      else if (c.method === 'manual' && !req.manual) problems.push(`${c.id}: chuyển ca sang thủ công cần đánh dấu yêu cầu ${id} là thủ công trong hợp đồng.`);
+      if (!req) blocking.push(`${c.id}: yêu cầu ${id} không tồn tại.`);
+      else if (c.method === 'manual' && !req.manual) blocking.push(`${c.id}: chuyển ca sang thủ công cần đánh dấu yêu cầu ${id} là thủ công trong hợp đồng.`);
     }
-    if (c.priority === 'high' && !c.required) problems.push(`${c.id}: ca rủi ro cao phải bắt buộc.`);
+    if (c.priority === 'high' && !c.required) blocking.push(`${c.id}: ca rủi ro cao phải bắt buộc.`);
     if ((p.schemaVersion === 2 || p.statefulModelVersion === 1) && c.required && c.method === 'automated' && ['state', 'concurrency', 'consistency'].includes(c.group)) {
-      if (!c.steps || c.steps.length < 2) problems.push(`${c.id}: ca ${RISK_LABELS[c.group]} bắt buộc phải mô tả chuỗi ít nhất hai bước.`);
-      if (!c.invariants?.length) problems.push(`${c.id}: ca ${RISK_LABELS[c.group]} bắt buộc phải nêu bất biến cần giữ sau từng bước.`);
+      if (!c.steps || c.steps.length < 2) blocking.push(`${c.id}: ca ${RISK_LABELS[c.group]} bắt buộc phải mô tả chuỗi ít nhất hai bước.`);
+      if (!c.invariants?.length) advisories.push(`${c.id}: ca ${RISK_LABELS[c.group]} bắt buộc phải nêu bất biến cần giữ sau từng bước.`);
     }
   }
   for (const req of contract.requirements.filter((r) => r.required && !r.manual)) {
-    if (!p.cases.some((c) => c.required && c.method === 'automated' && c.requirementIds.includes(req.id))) problems.push(`${req.id}: thiếu ca tự động bắt buộc.`);
+    if (!p.cases.some((c) => c.required && c.method === 'automated' && c.requirementIds.includes(req.id))) blocking.push(`${req.id}: thiếu ca tự động bắt buộc.`);
   }
   for (const group of RISK_GROUPS) {
     const covered = p.cases.some((c) => c.group === group), na = p.notApplicable.filter((n) => n.group === group);
-    if (!covered && !na.length) problems.push(`Chưa xét nhóm ${RISK_LABELS[group]} hoặc nêu lý do không áp dụng.`);
-    if (na.length > 1 || (covered && na.length)) problems.push(`Nhóm ${RISK_LABELS[group]} khai báo mâu thuẫn hoặc trùng.`);
+    if (!covered && !na.length) advisories.push(`Chưa xét nhóm ${RISK_LABELS[group]} hoặc nêu lý do không áp dụng.`);
+    if (na.length > 1 || (covered && na.length)) advisories.push(`Nhóm ${RISK_LABELS[group]} khai báo mâu thuẫn hoặc trùng.`);
   }
-  if (p.questions.length) problems.push(UNRESOLVED_PLAN_QUESTIONS);
-  return problems;
+  if (p.questions.length) blocking.push(UNRESOLVED_PLAN_QUESTIONS);
+  return { blocking, advisories };
 }
 
-export function validateManifest(contract: TaskContract, entries: ManifestEntry[], recipes: readonly { id: string; reportPath?: string }[], files: readonly string[]): string[] {
-  const problems: string[] = [], seen = new Set<string>();
+/** Pure validation shared by contract approval and plan generation; never edits legacy contracts. Blocking findings only. */
+export const validateTestPlan = (contract: TaskContract, required = false, reasoningRequired = false): string[] => testPlanFindings(contract, required, reasoningRequired).blocking;
+
+export function manifestFindings(contract: TaskContract, entries: ManifestEntry[], recipes: readonly { id: string; reportPath?: string }[], files: readonly string[]): Findings {
+  const problems: string[] = [], advisories: string[] = [], seen = new Set<string>();
   for (const e of entries) {
     const c = contract.testPlan?.cases.find((c) => c.id === e.caseId);
     if (!c || c.method !== 'automated') problems.push(`${e.caseId}: ca tự động không tồn tại.`);
@@ -186,6 +199,9 @@ export function validateManifest(contract: TaskContract, entries: ManifestEntry[
     seen.add(key);
   }
   for (const c of contract.testPlan?.cases ?? []) if (c.required && c.method === 'automated' && !entries.some((e) => e.caseId === c.id)) problems.push(`${c.id}: thiếu test dự kiến cho ca bắt buộc.`);
-  if (contract.testPlan?.reasoningVersion === 1) for (const c of contract.testPlan.cases.filter(c=>c.required&&c.method==='automated')) for (const step of c.steps ?? []) if (!entries.some(e=>e.caseId===c.id&&e.assertions?.some(a=>a.stepId===step.id))) problems.push(`${c.id}.${step.id}: bước bắt buộc chưa có assertion khai báo.`);
-  return problems;
+  if (contract.testPlan?.reasoningVersion === 1) for (const c of contract.testPlan.cases.filter(c=>c.required&&c.method==='automated')) for (const step of c.steps ?? []) if (!entries.some(e=>e.caseId===c.id&&e.assertions?.some(a=>a.stepId===step.id))) advisories.push(`${c.id}.${step.id}: bước bắt buộc chưa có assertion khai báo; kiểm tra bước này bằng tay hoặc bổ sung assertion.`);
+  return { blocking: problems, advisories };
 }
+
+/** Blocking findings only; see manifestFindings for the advisories. */
+export const validateManifest = (contract: TaskContract, entries: ManifestEntry[], recipes: readonly { id: string; reportPath?: string }[], files: readonly string[]): string[] => manifestFindings(contract, entries, recipes, files).blocking;

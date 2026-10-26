@@ -1,5 +1,6 @@
 import { deepQuality } from '../../core/qualityevidence.js';
-import { AuthorTestPlanSchema, planRepairProblems, UNRESOLVED_PLAN_QUESTIONS, validateTestPlan } from '../../core/testplan.js';
+import { planRepairProblems, UNRESOLVED_PLAN_QUESTIONS, testPlanFindings } from '../../core/testplan.js';
+import { parseTestPlanOutput } from '../../core/planfix.js';
 import { canonicalJson, hashContract } from '../../core/contract.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
 import { Blocked } from './support.js';
@@ -70,7 +71,7 @@ export class Planning {
     const run = this.s.run(runId), contractHash = hashContract(run.contract);
     this.s.artifact(runId, { kind: 'report', title: 'Test plan attempt', content: contractHash, checkpoint: null });
     let output = '', plan: TestPlan | undefined, original: TestPlan | undefined, questions: string[] = [];
-    let initialProblems: string[] = [], problems: string[] = [], reason: TestPlanReview['reason'];
+    let initialProblems: string[] = [], problems: string[] = [], reason: TestPlanReview['reason'], normalizations: string[] = [], advisories: string[] = [];
     const attemptIds: string[] = [];
     let repairAttempted = false, selectedAttemptId: string | undefined;
     for (let round = 0; round < 2; round++) {
@@ -85,17 +86,19 @@ export class Planning {
         // Even a schema-invalid JSON draft may contain a real unanswered question. A correction cannot silently drop it.
         try { const raw = extractJsonBlock(output) as { questions?: unknown }; questions = Array.isArray(raw?.questions) ? raw.questions.filter((q): q is string => typeof q === 'string' && !!q.trim()).map(q => q.trim()) : []; } catch { /* No parseable question list. */ }
       }
-      let parsed: TestPlan | undefined;
+      let parsed: TestPlan | undefined, roundChanges: string[] = [], roundAdvisories: string[] = [];
       try {
-        parsed = parseOutput(AuthorTestPlanSchema, output);
-        problems = validateTestPlan({ ...run.contract, testPlan: parsed }, true,run.qualityPolicyVersion===3);
+        const read = parseTestPlanOutput(output, run.contract);
+        parsed = read.plan; roundChanges = read.changes;
+        const findings = testPlanFindings({ ...run.contract, testPlan: parsed }, true, run.qualityPolicyVersion === 3);
+        problems = findings.blocking; roundAdvisories = findings.advisories;
         if ((run.qualityPolicyVersion??0) >= 2 && parsed.schemaVersion !== 2) problems.push('Chính sách v2+ cần kế hoạch ca có căn cứ v2.');
       } catch (error) { problems = [(error as Error).message]; }
       const safeguards = round === 1 && parsed ? planRepairProblems(original, questions, parsed, run.contract.requirements.map(r => r.id)) : [];
       if (round === 1 && (!parsed || safeguards.length)) {
         // Keep the original draft available to edit when the repair weakens it or cannot be parsed.
         problems = [...initialProblems, ...problems, ...safeguards]; reason = 'repair_rejected';
-      } else { plan = parsed; selectedAttemptId = attemptId; }
+      } else { plan = parsed; selectedAttemptId = attemptId; normalizations = roundChanges; advisories = roundAdvisories; }
       if (round === 0) { original = parsed; initialProblems = [...problems]; }
       if (!problems.length) break;
       this.s.artifact(runId, { kind: 'report', title: 'Test plan validation error', attemptId,
@@ -118,8 +121,9 @@ export class Planning {
     const current = this.s.run(runId).contract;
     const review: TestPlanReview = { schemaVersion: 1, source: 'server', contractHash: hashContract(current), contractVersion: current.version,
       attemptIds, firstPassValid: !initialProblems.length, repairAttempted, repairAccepted: repairAttempted && !problems.length,
-      outcome: !plan ? 'invalid_output' : problems.length ? 'needs_review' : 'valid', reason, initialProblems, remainingProblems: [...new Set(problems)] };
+      outcome: !plan ? 'invalid_output' : problems.length ? 'needs_review' : 'valid', reason, initialProblems, remainingProblems: [...new Set(problems)], remainingAdvisories: [...new Set(advisories)], normalizations };
     this.s.artifact(runId, { kind: 'report', title: 'Test plan review', content: JSON.stringify(review), checkpoint: null });
+    if (normalizations.length) this.s.log(runId, 'testplan.normalized', `Server chuẩn hoá ${normalizations.length} chỗ trong kế hoạch ca (không đổi nội dung nghiệp vụ): ${normalizations.slice(0, 6).join(' ')}${normalizations.length > 6 ? ' …' : ''}`);
     this.s.log(runId, 'testplan.review', problems.length ? `Kế hoạch ca cần người dùng xử lý: ${review.remainingProblems.join(' ')}` : 'Kế hoạch ca hợp lệ theo validator; chờ người dùng duyệt.', review);
     if (!plan) throw new Blocked(`Không đọc được kế hoạch ca: ${review.remainingProblems.join(' ')}. Sửa Hợp đồng trước khi duyệt; không tự cấp thêm lượt AI.`);
   }

@@ -1,7 +1,7 @@
 import type { Artifact, CheckResult, Run } from '../shared/types.js';
 import type { QualityDetail, TestManifest, MutationResult, MutationCapability } from '../shared/quality.js';
 import { canonicalJson, hashContract, sha256 } from './contract.js';
-import { normalizeTestId, validateManifest, validateTestPlan, StoredManifestSchema } from './testplan.js';
+import { normalizeTestId, manifestFindings, testPlanFindings, StoredManifestSchema } from './testplan.js';
 
 export const recipeHash = (run: Run): string => sha256(canonicalJson({ checks: run.configSnapshot.checks, mutationRoot: run.configSnapshot.mutationRoot, executionMode: run.configSnapshot.executionMode, runnerImage: run.configSnapshot.runnerImage }));
 export const deepQuality = (run: Run): boolean => run.mode === 'verify' && !!run.qualityPolicyVersion;
@@ -41,7 +41,10 @@ export function readMutation(run: Run, artifacts: readonly Artifact[]): Mutation
 export function qualityDetail(run: Run, checks: readonly CheckResult[], artifacts: readonly Artifact[]): QualityDetail {
   const enabled = deepQuality(run), found = readManifest(run, artifacts), live = latestChecks(run, checks);
   const m = found?.manifest;
-  const problems = enabled ? [...validateTestPlan(run.contract, true,run.qualityPolicyVersion===3), ...((run.qualityPolicyVersion??0) >= 2 && run.contract.testPlan?.schemaVersion !== 2 ? ['Chính sách v2+ cần kế hoạch có căn cứ v2.'] : []), ...(!m || m.source !== 'author' ? ['Thiếu manifest test do Author khóa trước Developer.'] : validateManifest(run.contract, m.entries, run.configSnapshot.checks, m.entries.map((e) => e.path)))] : [];
+  const plan = enabled ? testPlanFindings(run.contract, true, run.qualityPolicyVersion === 3) : { blocking: [], advisories: [] };
+  const mf = m && m.source === 'author' ? manifestFindings(run.contract, m.entries, run.configSnapshot.checks, m.entries.map((e) => e.path)) : { blocking: [], advisories: [] };
+  const problems = enabled ? [...plan.blocking, ...((run.qualityPolicyVersion??0) >= 2 && run.contract.testPlan?.schemaVersion !== 2 ? ['Chính sách v2+ cần kế hoạch có căn cứ v2.'] : []), ...(!m || m.source !== 'author' ? ['Thiếu manifest test do Author khóa trước Developer.'] : mf.blocking)] : [];
+  const manifestAdvisories = [...new Set([...(m?.advisories ?? []), ...mf.advisories])];
   const mutation = readMutation(run, artifacts);
   let capability: MutationCapability = mutation?.capability ?? { status: 'unsupported', reason: 'Chưa nhận diện khả năng mutation trên checkpoint này.' };
   if (!mutation) {
@@ -49,7 +52,7 @@ export function qualityDetail(run: Run, checks: readonly CheckResult[], artifact
     try { if (a) { const stored = JSON.parse(a.content); if (stored.configHash === recipeHash(run)) capability = stored.capability; } } catch { /* unknown */ }
   }
   return {
-    enabled, plan: run.contract.testPlan, manifestHash: found?.hash ?? null, manifestProblems: problems, capability, mutation,
+    enabled, plan: run.contract.testPlan, manifestHash: found?.hash ?? null, manifestProblems: problems, manifestAdvisories, planAdvisories: plan.advisories, capability, mutation,
     testMs: live.reduce((n, c) => n + c.attempts.reduce((n, a) => n + a.durationMs, 0), 0),
     cases: enabled ? (run.contract.testPlan?.cases ?? []).map((c) => {
       const entries = m?.entries.filter((e) => e.caseId === c.id) ?? [], reasons: string[] = [];

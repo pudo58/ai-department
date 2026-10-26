@@ -108,6 +108,8 @@ export function buildReport(input: ReportInput): AcceptanceReport {
 
   if (!quality.enabled) info('Chưa áp dụng kiểm thử sâu cho run này.');
   else {
+    for (const x of quality.manifestAdvisories ?? []) warn(`Manifest: ${x}`);
+    for (const x of quality.planAdvisories ?? []) info(`Kế hoạch ca (đã xác nhận lúc duyệt): ${x}`);
     for (const c of quality.cases.filter(c => c.method === 'manual')) warn(`${c.caseId}: cần kiểm tra thủ công.`);
     for (const c of quality.cases.filter(c => !c.required && c.method === 'automated' && c.status !== 'passed')) warn(`${c.caseId}: ca bổ sung chưa được kiểm tra đạt.`);
     if (quality.capability.status !== 'available') warn(`Mutation: ${quality.capability.reason}${quality.capability.install ? ` ${quality.capability.install}` : ''}`);
@@ -255,7 +257,9 @@ export function renderReportMarkdown(r: AcceptanceReport): string {
   if(r.planReview) {
     const p = r.planReview;
     out.push('', '## Soát kế hoạch ca', '', `Hợp lệ lượt đầu: ${p.firstPassValid ? 'có' : 'không'}; lượt Author: ${p.attemptIds.length}; đã sửa: ${p.repairAttempted ? 'có' : 'không'}; sửa hợp lệ: ${p.repairAccepted ? 'có' : 'không'}; kết quả: ${p.outcome}.`,
-      'Validator chỉ kiểm tra cấu trúc và liên kết, không chứng minh đầy đủ nghiệp vụ.', ...p.remainingProblems.map(x => `- ${x}`));
+      'Validator chỉ kiểm tra cấu trúc và liên kết, không chứng minh đầy đủ nghiệp vụ.', ...p.remainingProblems.map(x => `- ${x}`),
+      ...(p.remainingAdvisories?.length ? ['', 'Lưu ý về hình thức (không chặn duyệt):', ...p.remainingAdvisories.map(x => `- ${x}`)] : []),
+      ...(p.normalizations?.length ? ['', 'Server đã chuẩn hoá (không đổi nội dung nghiệp vụ):', ...p.normalizations.map(x => `- ${x}`)] : []));
   }
   if(r.environment)out.push('',`Môi trường: ${r.environment.status}; runtime ${r.environment.runtime}.`,r.environment.limitation,...r.environment.checks.map(c=>`- ${c.recipeId}: ${c.status} — ${c.message}`));
   return out.join('\n');

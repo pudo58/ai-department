@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { hashContract, initialContract, reviseContract, sha256 } from '../src/core/contract.js';
-import { normalizeTestId, validateTestPlan, validateManifest, extractCaseIds } from '../src/core/testplan.js';
+import { normalizeTestId, validateTestPlan, testPlanFindings, validateManifest, extractCaseIds } from '../src/core/testplan.js';
 import { latestChecks, qualityDetail, recipeHash } from '../src/core/qualityevidence.js';
 import { buildMatrix } from '../src/core/completion.js';
 import { summarizeCheck } from '../src/core/checks.js';
@@ -36,7 +36,10 @@ describe('risk plan contract validation', () => {
     if (kind === 'question') p.questions = ['Quy tắc nào?'];
     if (kind === 'badShape') p.cases[0]!.expected = '';
     if (kind === 'duplicateR') p.cases[0]!.requirementIds = ['R-1', 'R-1'];
-    expect(validateTestPlan(c, true).length).toBeGreaterThan(0);
+    const found = testPlanFindings(c, true);
+    // Form-only gaps are advisories (shown and acknowledged at approval); everything else still blocks.
+    expect((['missingGroup', 'duplicateNA', 'conflictingNA', 'duplicateR'].includes(kind) ? found.advisories : found.blocking).length).toBeGreaterThan(0);
+    expect(validateTestPlan(c, true).length > 0).toBe(!['missingGroup', 'duplicateNA', 'conflictingNA', 'duplicateR'].includes(kind));
   });
   it('allows explicit manual cases only for manual requirements', () => {
     const c = contract(); c.requirements[0]!.manual = true; c.testPlan!.cases.forEach(c => { c.method = 'manual'; });
@@ -53,9 +56,10 @@ describe('risk plan contract validation', () => {
       { action: 'claim job', expected: 'one lease is returned' },
       { action: 'reopen queue and claim again', expected: 'the same job is unavailable while its lease is valid' },
     ];
-    expect(validateTestPlan(c, true).join(' ')).toContain('bất biến cần giữ');
-    plan.cases[1]!.invariants = ['at most one active lease exists for this job'];
     expect(validateTestPlan(c, true)).toEqual([]);
+    expect(testPlanFindings(c, true).advisories.join(' ')).toContain('bất biến cần giữ');
+    plan.cases[1]!.invariants = ['at most one active lease exists for this job'];
+    expect(testPlanFindings(c, true)).toEqual({ blocking: [], advisories: [] });
   });
   it('keeps old plans without a stateful model marker valid and hash-compatible', () => {
     const c = contract(), before = JSON.stringify(c.testPlan);

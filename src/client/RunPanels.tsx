@@ -114,7 +114,7 @@ export function ContractPanel({ detail, busy = false, onApprove }: { detail: Run
       <h2>Soát hợp đồng trước khi chạy</h2>
       <p className="muted small">Đối chiếu với yêu cầu gốc trước khi duyệt. Kiểm tra này chỉ chỉ ra cấu trúc còn thiếu; không chứng minh hợp đồng đúng hoặc đầy đủ về nghiệp vụ.</p>
       {problems.length > 0 && <div className="banner error" role="alert"><ul>{problems.map((message) => <li key={message}>{message}</li>)}</ul></div>}
-      {review.warnings.length > 0 ? <ul className="warnlist">{review.warnings.map((warning) => <li className="warn" key={warning.code}><span>{warning.message}</span></li>)}</ul> : <p className="muted small">Không có cảnh báo cấu trúc.</p>}
+      {review.warnings.length > 0 ? <ul className="warnlist">{review.warnings.map((warning, index) => <li className="warn" key={`${warning.code}:${index}`}><span>{warning.message}</span></li>)}</ul> : <p className="muted small">Không có cảnh báo cấu trúc.</p>}
       {run.status === 'awaiting_approval' && onApprove ? <div className="stack" style={{ marginTop: 12 }}>
         {review.warnings.length > 0 && <label className="ack"><input type="checkbox" checked={ack} disabled={busy} onChange={(e) => setAcknowledged(e.target.checked ? reviewKey : '')}/>Tôi đã đọc các cảnh báo và đồng ý dùng hợp đồng này</label>}
         <div><button className="button primary" disabled={busy || problems.length > 0 || (review.warnings.length > 0 && !ack)} onClick={() => void onApprove({ contractHash: review.contractHash, acknowledgeWarnings: ack })}>Duyệt hợp đồng v{review.contractVersion}</button></div>

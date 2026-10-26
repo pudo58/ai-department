@@ -48,7 +48,7 @@ export interface ProjectProfile {
 }
 export interface Requirement { id: string; text: string; required: boolean; manual: boolean; kind?: 'expected' | 'forbidden' }
 export interface TaskContract { version: number; requirements: Requirement[]; acceptanceExamples: string[]; interfaces: string[]; assumptions: string[]; scope: string[]; testPlan?: TestPlan; approvedHash?: string; approvedAt?: string }
-export type ContractWarningCode = 'missing_expected' | 'missing_forbidden' | 'missing_examples' | 'assumptions_present';
+export type ContractWarningCode = 'missing_expected' | 'missing_forbidden' | 'missing_examples' | 'assumptions_present' | 'plan_advisory';
 export interface ContractReview {
   contractHash: string; contractVersion: number; problems: string[];
   warnings: { code: ContractWarningCode; message: string }[];
