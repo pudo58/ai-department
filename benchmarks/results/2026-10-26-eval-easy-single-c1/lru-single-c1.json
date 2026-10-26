@@ -1,0 +1,50 @@
+{
+  "task": "lru",
+  "arm": "single",
+  "tag": "c1",
+  "runId": "run_f9ef01fa",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "taskHash": "5e214f8ed55c80e1251921f075c23afed807c184f6f87a7bbb797ea7e8ac0905",
+  "startedAt": "2026-10-26T06:52:59.737Z",
+  "interventions": [
+    {
+      "type": "contract_approved_unchanged",
+      "hash": "3185146a98f97c685dde375e0d8a9d11487fb820a380e83d0c9b871e571c4486",
+      "warnings": 1,
+      "at": "2026-10-26T06:53:24.973Z"
+    }
+  ],
+  "endedAt": "2026-10-26T06:55:10.572Z",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "automaticMs": 127232,
+  "reachedDeveloper": true,
+  "readiness": "ready",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 0.5351382,
+  "estimatedCost": true,
+  "attempts": 3,
+  "roles": [
+    "planner:prepare:completed",
+    "developer:implement:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "missing_evidence",
+      "count": 1
+    }
+  ]
+}
