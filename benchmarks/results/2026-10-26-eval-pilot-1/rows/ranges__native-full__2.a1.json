@@ -1,0 +1,35 @@
+{
+  "assignmentId": "ranges:native-full:2",
+  "arm": "native-full",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "a8826a2482cce433815f6f10104c70259372e9b1b8dc44e3c7cc4fb1110e85d4",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T07:59:10.409Z",
+  "mode": "native",
+  "status": "finished",
+  "blocker": null,
+  "automaticMs": 64539,
+  "grader": {
+    "passed": 24,
+    "total": 24,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "readiness": null,
+  "falseReady": null,
+  "degraded": null,
+  "costUsd": 0.13665539999999998,
+  "estimatedCost": true,
+  "tokens": {
+    "inputTokens": 168382,
+    "cachedTokens": 147328,
+    "outputTokens": 1953,
+    "costUsd": null
+  },
+  "subagentsUsed": false,
+  "deviations": [],
+  "endedAt": "2026-10-26T08:00:17.919Z"
+}

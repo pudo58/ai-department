@@ -1,0 +1,55 @@
+{
+  "assignmentId": "pulsegraph:harness-single:1",
+  "arm": "harness-single",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "e8d9f7cfb2d247f98421d52fd51fdeb80328c8b4dc0bb1be3adef4565f71637f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T08:23:11.481Z",
+  "runId": "run_b8cd34d8",
+  "mode": "single",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "automaticMs": 192279,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 43,
+    "total": 44,
+    "failed": [
+      "snapshot and restore keeps leases and the retry schedule working after restore"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": true,
+  "costUsd": 1.1163018,
+  "estimatedCost": true,
+  "attempts": 4,
+  "roles": [
+    "planner:prepare:completed",
+    "developer:implement:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "missing_evidence",
+      "count": 1
+    },
+    {
+      "reason": "check_failure",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T08:26:28.114Z"
+}

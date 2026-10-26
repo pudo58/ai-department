@@ -1,0 +1,59 @@
+{
+  "assignmentId": "runner:harness-team:1",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "fa3034e634b3f1c2b916ed6e41e08b1851bc8bc31189103923c94f2cdd06810a",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T08:59:42.329Z",
+  "runId": "run_04dad8a6",
+  "mode": "verify",
+  "status": "blocked",
+  "blocker": "1 finding blocker/major chưa xử lý.",
+  "limitReached": false,
+  "automaticMs": 391457,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 1
+  },
+  "grader": {
+    "passed": 28,
+    "total": 28,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.4479056000000001,
+  "estimatedCost": true,
+  "attempts": 8,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 1
+    },
+    {
+      "reason": "invalid_output",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T09:06:18.891Z"
+}

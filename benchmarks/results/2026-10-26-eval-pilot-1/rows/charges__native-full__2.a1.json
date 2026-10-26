@@ -1,0 +1,41 @@
+{
+  "assignmentId": "charges:native-full:2",
+  "arm": "native-full",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "f81b2ffc26fb50b69e8d77506f8b1146fb7e68770a4b6b10fd6ab5187549aed3",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T08:11:44.150Z",
+  "mode": "native",
+  "status": "finished",
+  "blocker": null,
+  "automaticMs": 67205,
+  "grader": {
+    "passed": 22,
+    "total": 27,
+    "failed": [
+      "idempotency by key keeps a key live until exactly t + ttl, then treats it as a new charge",
+      "idempotency by key allows a different payload for an expired key and then replays the new record",
+      "idempotency by key does not extend a key by replaying it",
+      "idempotency by key never consumes a key by a failure: insufficient funds",
+      "idempotency by key lets a failed key be reused with a different account and amount"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "readiness": null,
+  "falseReady": null,
+  "degraded": null,
+  "costUsd": 0.1750326,
+  "estimatedCost": true,
+  "tokens": {
+    "inputTokens": 200395,
+    "cachedTokens": 176512,
+    "outputTokens": 3362,
+    "costUsd": null
+  },
+  "subagentsUsed": false,
+  "deviations": [],
+  "endedAt": "2026-10-26T08:12:53.901Z"
+}

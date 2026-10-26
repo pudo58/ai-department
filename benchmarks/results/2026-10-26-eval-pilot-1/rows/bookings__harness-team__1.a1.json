@@ -1,0 +1,59 @@
+{
+  "assignmentId": "bookings:harness-team:1",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "9446e33e9a8c9cf5dcc8be98a0c095112c76e6cdda50acb336ed7c5aa937d98f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T08:30:53.906Z",
+  "runId": "run_0c0f72b7",
+  "mode": "verify",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\nTest \"[R-6][R-9][R-10][C-8] expires holds at expiresAt and frees the slot\" fail: Error: IN_THE_PAST\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-bookings__harness-team__1-a1\\workspaces\\run_0c0f72b7-A\\src\\bookings.js:2:17)\n    at Object.hold (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-bookings__harness-team__1-a1\\workspaces\\run_0c0f72b7-A\\src\\book\nTest \"[R-7][R-8][R-9][C-11] views omit expiresAt outside held state\" fail: Error: TOO_LATE\n    at fail (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-bookings__harness-team__1-a1\\workspaces\\run_0c0f72b7-A\\src\\bookings.js:2:17)\n    at Object.cancel (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-bookings__harness-team__1-a1\\workspaces\\run_0c0f72b7-A\\src\\booki\nJSON report written to C:/Users/tholv/Desktop/ai_department/.data/eval-pilot-bookings__harness-team__1-a1/workspaces/run_0c0f72b7-A/.aidept-report.json\n\n",
+  "limitReached": false,
+  "automaticMs": 587904,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 2
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 2.0703443999999998,
+  "estimatedCost": true,
+  "attempts": 8,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 2
+    },
+    {
+      "reason": "invalid_output",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T08:40:46.665Z"
+}

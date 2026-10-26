@@ -2,7 +2,7 @@
 //   node scripts/eval-pilot.mjs build  [--out benchmarks/eval/pilot-1.manifest.json] [--seed 20261026]
 //   npm run eval -- register benchmarks/eval/pilot-1.manifest.json          (locks it; nothing runs before this)
 //   node scripts/eval-pilot.mjs run    benchmarks/eval/pilot-1.manifest.json [--only <taskId>] [--arm <arm>] [--limit N]
-//   node scripts/eval-pilot.mjs report benchmarks/eval/pilot-1.manifest.json
+//   node scripts/eval-pilot.mjs report benchmarks/eval/pilot-1.manifest.json [--amended]
 import { execFileSync } from 'node:child_process';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -76,8 +76,15 @@ if (command === 'run') {
   console.log(JSON.stringify({ event: 'done', ran: done }));
 } else if (command === 'report') {
   const rows = [], missing = [], infra = [];
+  // --amended: use the post-hoc regrade (eval-regrade.mjs). The as-run results stay on disk and are the registered ones.
+  const amended = rest.includes('--amended') ? new Map((await read(path.join(rowsDir, 'amended.json'))).results.map((r) => [r.assignmentId, r.amended])) : null;
   for (const a of manifest.assignments) {
-    const final = await finalRow(a.id);
+    let final = await finalRow(a.id);
+    const regrade = final && amended?.get(a.id);
+    if (regrade) {
+      const pass = regrade.total > 0 && regrade.passed === regrade.total;
+      final = { ...final, grader: { ...final.grader, passed: regrade.passed, total: regrade.total, failed: regrade.failed ?? [] }, graderPass: pass, ...(final.falseReady === null || final.falseReady === undefined ? {} : { falseReady: final.status === 'awaiting_acceptance' && !pass }) };
+    }
     infra.push(...(await rowsFor(a.id)).filter((r) => r.error).map((r) => a.id));
     if (final) rows.push(final); else missing.push(a.id);
   }

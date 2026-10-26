@@ -1,0 +1,900 @@
+{
+  "verified": {
+    "pulsegraph": {
+      "ok": true,
+      "problems": []
+    }
+  },
+  "results": [
+    {
+      "assignmentId": "lru:native-full:1",
+      "task": "lru",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "charges:harness-single:1",
+      "task": "charges",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "bookings:native-full:2",
+      "task": "bookings",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "versions:native-full:2",
+      "task": "versions",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "ranges:native-full:1",
+      "task": "ranges",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "slugify:native-full:1",
+      "task": "slugify",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "runner:native-full:1",
+      "task": "runner",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "lru:native-full:2",
+      "task": "lru",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "slugify:harness-team:2",
+      "task": "slugify",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "pulsegraph:harness-team:2",
+      "task": "pulsegraph",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 43,
+        "total": 44,
+        "failed": [
+          "leases, renewal and expiry requires the matching worker and token for renew, complete and fail"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 44,
+        "total": 44,
+        "failed": []
+      },
+      "changed": true
+    },
+    {
+      "assignmentId": "versions:harness-single:1",
+      "task": "versions",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "bookings:native-full:1",
+      "task": "bookings",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "bookings:harness-single:1",
+      "task": "bookings",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "slugify:harness-team:1",
+      "task": "slugify",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "ranges:native-full:2",
+      "task": "ranges",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "slugify:native-full:2",
+      "task": "slugify",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "runner:harness-single:2",
+      "task": "runner",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "lru:harness-single:1",
+      "task": "lru",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "charges:native-full:1",
+      "task": "charges",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "lru:harness-team:2",
+      "task": "lru",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "charges:native-full:2",
+      "task": "charges",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 22,
+        "total": 27,
+        "failed": [
+          "idempotency by key keeps a key live until exactly t + ttl, then treats it as a new charge",
+          "idempotency by key allows a different payload for an expired key and then replays the new record",
+          "idempotency by key does not extend a key by replaying it",
+          "idempotency by key never consumes a key by a failure: insufficient funds",
+          "idempotency by key lets a failed key be reused with a different account and amount"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 22,
+        "total": 27,
+        "failed": [
+          "idempotency by key keeps a key live until exactly t + ttl, then treats it as a new charge",
+          "idempotency by key allows a different payload for an expired key and then replays the new record",
+          "idempotency by key does not extend a key by replaying it",
+          "idempotency by key never consumes a key by a failure: insufficient funds",
+          "idempotency by key lets a failed key be reused with a different account and amount"
+        ],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "bookings:harness-single:2",
+      "task": "bookings",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "pulsegraph:harness-team:1",
+      "task": "pulsegraph",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 43,
+        "total": 44,
+        "failed": [
+          "input validation rejects self, duplicate and unknown dependencies with the specified codes"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 44,
+        "total": 44,
+        "failed": []
+      },
+      "changed": true
+    },
+    {
+      "assignmentId": "lru:harness-single:2",
+      "task": "lru",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "pulsegraph:harness-single:1",
+      "task": "pulsegraph",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 43,
+        "total": 44,
+        "failed": [
+          "snapshot and restore keeps leases and the retry schedule working after restore"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 43,
+        "total": 44,
+        "failed": [
+          "snapshot and restore keeps leases and the retry schedule working after restore"
+        ]
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "versions:native-full:1",
+      "task": "versions",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 19,
+        "total": 21,
+        "failed": [
+          "parseVersion accepts one leading v or V",
+          "compareVersions ignores build metadata and a leading v"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 19,
+        "total": 21,
+        "failed": [
+          "parseVersion accepts one leading v or V",
+          "compareVersions ignores build metadata and a leading v"
+        ],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "runner:native-full:2",
+      "task": "runner",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "pulsegraph:native-full:2",
+      "task": "pulsegraph",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 43,
+        "total": 44,
+        "failed": [
+          "input validation rejects self, duplicate and unknown dependencies with the specified codes"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 44,
+        "total": 44,
+        "failed": []
+      },
+      "changed": true
+    },
+    {
+      "assignmentId": "versions:harness-single:2",
+      "task": "versions",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "bookings:harness-team:1",
+      "task": "bookings",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "charges:harness-single:2",
+      "task": "charges",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "pulsegraph:native-full:1",
+      "task": "pulsegraph",
+      "arm": "native-full",
+      "asRun": {
+        "passed": 44,
+        "total": 44,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 44,
+        "total": 44,
+        "failed": []
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "lru:harness-team:1",
+      "task": "lru",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "charges:harness-team:1",
+      "task": "charges",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "ranges:harness-single:2",
+      "task": "ranges",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "ranges:harness-team:2",
+      "task": "ranges",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "runner:harness-team:1",
+      "task": "runner",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "versions:harness-team:2",
+      "task": "versions",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "runner:harness-single:1",
+      "task": "runner",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 28,
+        "total": 28,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "versions:harness-team:1",
+      "task": "versions",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 21,
+        "total": 21,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "ranges:harness-team:1",
+      "task": "ranges",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "ranges:harness-single:1",
+      "task": "ranges",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 24,
+        "total": 24,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "runner:harness-team:2",
+      "task": "runner",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 27,
+        "total": 28,
+        "failed": [
+          "fair scheduling lets the next task of a key that just finished go before a younger task of another key"
+        ],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 28,
+        "failed": [
+          "fair scheduling lets the next task of a key that just finished go before a younger task of another key"
+        ],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "pulsegraph:harness-single:2",
+      "task": "pulsegraph",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 44,
+        "total": 44,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 44,
+        "total": 44,
+        "failed": []
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "charges:harness-team:2",
+      "task": "charges",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 27,
+        "total": 27,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "slugify:harness-single:2",
+      "task": "slugify",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "bookings:harness-team:2",
+      "task": "bookings",
+      "arm": "harness-team",
+      "asRun": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 23,
+        "total": 23,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    },
+    {
+      "assignmentId": "slugify:harness-single:1",
+      "task": "slugify",
+      "arm": "harness-single",
+      "asRun": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "amended": {
+        "passed": 17,
+        "total": 17,
+        "failed": [],
+        "loadError": false
+      },
+      "changed": false
+    }
+  ]
+}

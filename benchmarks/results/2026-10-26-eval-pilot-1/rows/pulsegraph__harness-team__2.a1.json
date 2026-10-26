@@ -1,0 +1,62 @@
+{
+  "assignmentId": "pulsegraph:harness-team:2",
+  "arm": "harness-team",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "e8d9f7cfb2d247f98421d52fd51fdeb80328c8b4dc0bb1be3adef4565f71637f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T07:40:23.715Z",
+  "runId": "run_0062ccd9",
+  "mode": "verify",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\nTest \"[R-3][R-7][C-6] releases dependencies and propagates blocking\" fail: TypeError: Cannot read properties of null (reading 'token')\n    at C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-pulsegraph__harness-team__2-a1\\workspaces\\run_0062ccd9-A\\tests\\acceptance.test.js:131:112\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at file://\nTest \"[R-8][R-5][C-8] expires leases in deadline and submission order\" fail: AssertionError: expected { id: 'a', dependsOn: [], …(6) } to match object { status: 'dead', …(1) }\n(6 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///C:/Users/tholv/Desktop/ai_department/node_modules/.pnpm/@vitest+expect@3.2.4/node_modules/@vitest/expect/dist/index.js:1155\nTest \"[R-6][R-7][R-8] retries lease expiry before blocking dependents\" fail: Error: LEASE_LOST\n    at error (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-pulsegraph__harness-team__2-a1\\workspaces\\run_0062ccd9-A\\src\\scheduler.js:5:18)\n    at requireLease (C:\\Users\\tholv\\Desktop\\ai_department\\.data\\eval-pilot-pulsegraph__harness-team__2-a1\\workspaces\\run_0062ccd9-A\\sr\nJSON report written to C:/Users/tholv/Desktop/ai_department/.data/eval-pilot-pulsegraph__harness-team__2-a1/workspaces/run_0062ccd9-A/.aidept-report.json\n\n",
+  "limitReached": false,
+  "automaticMs": 494110,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Chẩn đoán test"
+    ],
+    "items": 2
+  },
+  "grader": {
+    "passed": 43,
+    "total": 44,
+    "failed": [
+      "leases, renewal and expiry requires the matching worker and token for renew, complete and fail"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": false,
+  "costUsd": 2.1929298,
+  "estimatedCost": true,
+  "attempts": 9,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "author:repair:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 2
+    },
+    {
+      "reason": "check_failure",
+      "count": 2
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T07:48:42.277Z"
+}

@@ -1,0 +1,48 @@
+{
+  "assignmentId": "lru:harness-single:1",
+  "arm": "harness-single",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "dfc0a32606361a4b4c81e730ebb7f1e3ed69d9f7fb66e1191fe8baeae3fef842",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T08:04:30.512Z",
+  "runId": "run_a9f60f06",
+  "mode": "single",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "automaticMs": 164607,
+  "reachedDeveloper": true,
+  "readiness": "ready",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 0.5557614,
+  "estimatedCost": true,
+  "attempts": 3,
+  "roles": [
+    "planner:prepare:completed",
+    "developer:implement:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "missing_evidence",
+      "count": 1
+    }
+  ],
+  "deviations": [
+    "contract_approved_unchanged"
+  ],
+  "endedAt": "2026-10-26T08:07:19.558Z"
+}

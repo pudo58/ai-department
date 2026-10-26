@@ -1,0 +1,37 @@
+{
+  "assignmentId": "pulsegraph:native-full:2",
+  "arm": "native-full",
+  "attempt": 1,
+  "manifestHash": "96c6c6826c2d8b997abe294b34d94e2a547fedee885fe6883be60b6725fa9c87",
+  "taskHash": "e8d9f7cfb2d247f98421d52fd51fdeb80328c8b4dc0bb1be3adef4565f71637f",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startedAt": "2026-10-26T08:28:17.220Z",
+  "mode": "native",
+  "status": "finished",
+  "blocker": null,
+  "automaticMs": 49962,
+  "grader": {
+    "passed": 43,
+    "total": 44,
+    "failed": [
+      "input validation rejects self, duplicate and unknown dependencies with the specified codes"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "readiness": null,
+  "falseReady": null,
+  "degraded": null,
+  "costUsd": 0.17483520000000002,
+  "estimatedCost": true,
+  "tokens": {
+    "inputTokens": 178981,
+    "cachedTokens": 155264,
+    "outputTokens": 3807,
+    "costUsd": null
+  },
+  "subagentsUsed": false,
+  "deviations": [],
+  "endedAt": "2026-10-26T08:29:09.220Z"
+}

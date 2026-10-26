@@ -48,7 +48,9 @@ export async function gradeSource(task, sourceRoot, { timeoutMs = 120_000 } = {}
   try {
     await cp(path.join(sourceRoot, 'src'), path.join(scratch, 'src'), { recursive: true });
     await mkdir(path.join(scratch, 'tests'), { recursive: true });
-    await cp(path.join(task.dir, 'grader', task.graderFile), path.join(scratch, 'tests', task.graderFile));
+    // `graderPath` lets a post-hoc amendment be graded without touching the registered pack.
+    const graderSource = task.graderPath ?? path.join(task.dir, 'grader', task.graderFile);
+    await cp(graderSource, path.join(scratch, 'tests', 'grade.test.js'));
     await writeFile(path.join(scratch, 'package.json'), '{"name":"grader","private":true,"type":"module"}');
     await writeFile(path.join(scratch, 'vitest.config.js'), `export default {test:{include:['tests/**/*.test.js'],maxWorkers:1,testTimeout:10000}};\n`);
     await symlink(path.join(repoRoot, 'node_modules'), path.join(scratch, 'node_modules'), 'junction');
