@@ -1,0 +1,11 @@
+{
+ "id": "one-separator-per-char",
+ "description": "Every character becomes its own separator",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": "/[^a-z0-9]+/g",
+   "replace": "/[^a-z0-9]/g"
+  }
+ ]
+}

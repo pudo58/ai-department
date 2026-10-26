@@ -1,0 +1,11 @@
+{
+ "id": "evict-too-early",
+ "description": "Eviction starts at the capacity",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "map.size > capacity",
+   "replace": "map.size >= capacity"
+  }
+ ]
+}

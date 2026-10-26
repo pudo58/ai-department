@@ -1,0 +1,11 @@
+{
+ "id": "peek-refreshes",
+ "description": "peek refreshes recency",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "peek: (key) => map.get(key),",
+   "replace": "peek: (key) => cache.get(key),"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "size-writable",
+ "description": "Assigning to size changes the cache",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "get size() { return map.size; },",
+   "replace": "get size() { return map.size; }, set size(v) { map.clear(); },"
+  }
+ ]
+}

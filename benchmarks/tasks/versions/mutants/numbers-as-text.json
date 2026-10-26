@@ -1,0 +1,11 @@
+{
+ "id": "numbers-as-text",
+ "description": "Major/minor/patch compare as strings",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "if (a[key] !== b[key]) return a[key] < b[key] ? -1 : 1;",
+   "replace": "if (a[key] !== b[key]) return String(a[key]) < String(b[key]) ? -1 : 1;"
+  }
+ ]
+}

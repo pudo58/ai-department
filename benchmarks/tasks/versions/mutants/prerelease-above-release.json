@@ -1,0 +1,11 @@
+{
+ "id": "prerelease-above-release",
+ "description": "A prerelease ranks above the release",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "if (a.prerelease.length === 0) return 1;\n  if (b.prerelease.length === 0) return -1;",
+   "replace": "if (a.prerelease.length === 0) return -1;\n  if (b.prerelease.length === 0) return 1;"
+  }
+ ]
+}

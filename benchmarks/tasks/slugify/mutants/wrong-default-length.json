@@ -1,0 +1,11 @@
+{
+ "id": "wrong-default-length",
+ "description": "Default maxLength is 100",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": "maxLength = 80",
+   "replace": "maxLength = 100"
+  }
+ ]
+}

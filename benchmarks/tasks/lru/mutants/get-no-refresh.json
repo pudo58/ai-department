@@ -1,0 +1,11 @@
+{
+ "id": "get-no-refresh",
+ "description": "get does not refresh recency",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "      map.delete(key);\n      map.set(key, value);\n      return value;",
+   "replace": "      return value;"
+  }
+ ]
+}

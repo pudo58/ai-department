@@ -1,0 +1,24 @@
+{
+ "id": "ranges",
+ "title": "Ranges — merge and query closed integer ranges",
+ "stratum": "easy",
+ "signals": [
+  "intervals",
+  "boundary",
+  "immutability"
+ ],
+ "codeFile": "src/ranges.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "single",
+ "minMutants": 8,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

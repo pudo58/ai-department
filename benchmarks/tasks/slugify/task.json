@@ -1,0 +1,24 @@
+{
+ "id": "slugify",
+ "title": "Slugify — turn text into a URL-safe slug",
+ "stratum": "easy",
+ "signals": [
+  "string",
+  "unicode",
+  "boundary"
+ ],
+ "codeFile": "src/slugify.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "single",
+ "minMutants": 8,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

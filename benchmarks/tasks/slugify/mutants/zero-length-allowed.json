@@ -1,0 +1,11 @@
+{
+ "id": "zero-length-allowed",
+ "description": "maxLength 0 is accepted",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": " || maxLength <= 0",
+   "replace": ""
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "gap-end-off-by-one",
+ "description": "A gap includes the first covered integer",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "out.push([cursor, start - 1]);",
+   "replace": "out.push([cursor, start]);"
+  }
+ ]
+}

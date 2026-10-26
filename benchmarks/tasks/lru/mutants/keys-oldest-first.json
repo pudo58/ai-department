@@ -1,0 +1,11 @@
+{
+ "id": "keys-oldest-first",
+ "description": "keys lists the oldest first",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "[...map.keys()].reverse()",
+   "replace": "[...map.keys()]"
+  }
+ ]
+}

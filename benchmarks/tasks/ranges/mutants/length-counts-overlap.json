@@ -1,0 +1,11 @@
+{
+ "id": "length-counts-overlap",
+ "description": "totalLength counts overlaps twice",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "mergeRanges(list).reduce",
+   "replace": "list.reduce"
+  }
+ ]
+}

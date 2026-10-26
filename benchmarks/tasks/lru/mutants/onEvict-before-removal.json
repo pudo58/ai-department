@@ -1,0 +1,11 @@
+{
+ "id": "onEvict-before-removal",
+ "description": "onEvict runs before the entry is removed",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "        map.delete(oldestKey);\n        if (onEvict) onEvict(oldestKey, oldestValue);",
+   "replace": "        if (onEvict) onEvict(oldestKey, oldestValue);\n        map.delete(oldestKey);"
+  }
+ ]
+}

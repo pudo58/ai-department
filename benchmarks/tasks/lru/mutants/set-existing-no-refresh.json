@@ -1,0 +1,11 @@
+{
+ "id": "set-existing-no-refresh",
+ "description": "Replacing a value keeps its old position",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "      if (map.has(key)) map.delete(key);\n",
+   "replace": ""
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "undefined-means-missing",
+ "description": "A stored undefined counts as absent",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "has: (key) => map.has(key),",
+   "replace": "has: (key) => map.get(key) !== undefined,"
+  }
+ ]
+}

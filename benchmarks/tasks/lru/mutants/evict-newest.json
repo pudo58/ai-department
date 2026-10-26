@@ -1,0 +1,11 @@
+{
+ "id": "evict-newest",
+ "description": "The newest entry is evicted",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "map.entries().next().value",
+   "replace": "[...map.entries()].pop()"
+  }
+ ]
+}

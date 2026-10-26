@@ -1,0 +1,11 @@
+{
+ "id": "reversed-range-allowed",
+ "description": "start > end is accepted",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": " || range[0] > range[1]",
+   "replace": ""
+  }
+ ]
+}

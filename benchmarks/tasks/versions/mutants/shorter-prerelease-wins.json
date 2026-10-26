@@ -1,0 +1,11 @@
+{
+ "id": "shorter-prerelease-wins",
+ "description": "The shorter prerelease ranks higher",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "return a.prerelease.length < b.prerelease.length ? -1 : a.prerelease.length > b.prerelease.length ? 1 : 0;",
+   "replace": "return a.prerelease.length < b.prerelease.length ? 1 : a.prerelease.length > b.prerelease.length ? -1 : 0;"
+  }
+ ]
+}

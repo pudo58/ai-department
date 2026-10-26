@@ -1,0 +1,11 @@
+{
+ "id": "onEvict-on-delete",
+ "description": "delete calls onEvict",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "delete: (key) => map.delete(key),",
+   "replace": "delete: (key) => { const v = map.get(key); const had = map.delete(key); if (had && onEvict) onEvict(key, v); return had; },"
+  }
+ ]
+}

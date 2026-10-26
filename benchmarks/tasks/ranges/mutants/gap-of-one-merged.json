@@ -1,0 +1,11 @@
+{
+ "id": "gap-of-one-merged",
+ "description": "Ranges with a one-integer gap are merged",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "range[0] <= last[1] + 1",
+   "replace": "range[0] <= last[1] + 2"
+  }
+ ]
+}

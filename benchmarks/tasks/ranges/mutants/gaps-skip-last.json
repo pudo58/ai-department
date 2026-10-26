@@ -1,0 +1,11 @@
+{
+ "id": "gaps-skip-last",
+ "description": "The final gap needs a strict inequality",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "if (cursor <= to) out.push([cursor, to]);",
+   "replace": "if (cursor < to) out.push([cursor, to]);"
+  }
+ ]
+}

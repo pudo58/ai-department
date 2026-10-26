@@ -1,0 +1,11 @@
+{
+ "id": "no-trim-after-cut",
+ "description": "A separator may be left at the end after the cut",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": "return trimEdges(slug.slice(0, maxLength));",
+   "replace": "return slug.slice(0, maxLength);"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "keep-marks",
+ "description": "Diacritics are not removed",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": ".replace(/\\p{Mn}/gu, '')",
+   "replace": ""
+  }
+ ]
+}

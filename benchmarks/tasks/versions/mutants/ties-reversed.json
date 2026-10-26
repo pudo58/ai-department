@@ -1,0 +1,11 @@
+{
+ "id": "ties-reversed",
+ "description": "Equal versions are reordered by the sort",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "x.index - y.index",
+   "replace": "y.index - x.index"
+  }
+ ]
+}

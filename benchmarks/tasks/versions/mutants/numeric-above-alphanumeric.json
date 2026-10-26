@@ -1,0 +1,11 @@
+{
+ "id": "numeric-above-alphanumeric",
+ "description": "Numeric identifiers rank above alphanumeric ones",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "if (aNumber) return -1;\n  if (bNumber) return 1;",
+   "replace": "if (aNumber) return 1;\n  if (bNumber) return -1;"
+  }
+ ]
+}

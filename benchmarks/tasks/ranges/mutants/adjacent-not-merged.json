@@ -1,0 +1,11 @@
+{
+ "id": "adjacent-not-merged",
+ "description": "Adjacent ranges stay separate",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "range[0] <= last[1] + 1",
+   "replace": "range[0] <= last[1]"
+  }
+ ]
+}

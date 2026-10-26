@@ -1,0 +1,11 @@
+{
+ "id": "length-open-end",
+ "description": "totalLength excludes the end",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "(end - start + 1)",
+   "replace": "(end - start)"
+  }
+ ]
+}

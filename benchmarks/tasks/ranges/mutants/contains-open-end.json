@@ -1,0 +1,11 @@
+{
+ "id": "contains-open-end",
+ "description": "contains excludes the end",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "start <= n && n <= end",
+   "replace": "start <= n && n < end"
+  }
+ ]
+}

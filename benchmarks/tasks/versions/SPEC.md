@@ -1,0 +1,11 @@
+# Versions — parse, compare and sort semantic versions
+
+Implement `src/versions.js` exporting `parseVersion(text)`, `compareVersions(a, b)`, `sortVersions(list)` and `maxVersion(list)`. All are pure functions.
+
+1. A version is `MAJOR.MINOR.PATCH`, optionally preceded by a single `v` or `V`, optionally followed by `-PRERELEASE` and then `+BUILD`. `MAJOR`, `MINOR` and `PATCH` are non-negative decimal integers without leading zeros (`0` is fine, `01` is not). `PRERELEASE` and `BUILD` are dot-separated, nonempty identifiers made of ASCII letters, digits and hyphens; a purely numeric prerelease identifier must not have leading zeros. Surrounding whitespace is not allowed.
+2. `parseVersion(text)` returns `{ major, minor, patch, prerelease, build }`. `major`, `minor` and `patch` are numbers. `prerelease` and `build` are arrays of identifiers; in `prerelease` a purely numeric identifier is a number and every other identifier is a string. `build` identifiers are always strings. Both arrays are empty when absent. A text that is not a version, or is not a string, makes it throw an `Error` whose `code` is `INVALID_VERSION`.
+3. `compareVersions(a, b)` takes two version strings and returns `-1`, `0` or `1` by semantic-version precedence. Compare `major`, then `minor`, then `patch` numerically. A version with a prerelease has lower precedence than the same version without one. Two prereleases are compared identifier by identifier from the left: numeric identifiers are compared as numbers; alphanumeric identifiers are compared as strings in ASCII order (`B` before `a`); a numeric identifier is lower than an alphanumeric one; if all the shared identifiers are equal, the version with more identifiers is higher. `BUILD` is ignored, and so is a leading `v`. An invalid version throws `INVALID_VERSION`.
+4. `sortVersions(list)` returns a new array of the same strings in ascending precedence. Versions with equal precedence keep their order from `list` (the sort is stable). It does not change `list`, and the returned items are the original strings, unchanged.
+5. `maxVersion(list)` returns the original string with the highest precedence, the first of them if several are equal, or `null` for an empty list. An invalid entry throws `INVALID_VERSION`.
+
+Keep the source compact, use the public API in tests, and do not add behavior beyond this contract.

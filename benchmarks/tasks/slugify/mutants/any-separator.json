@@ -1,0 +1,11 @@
+{
+ "id": "any-separator",
+ "description": "Any separator is accepted",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": " || (separator !== '-' && separator !== '_')",
+   "replace": ""
+  }
+ ]
+}

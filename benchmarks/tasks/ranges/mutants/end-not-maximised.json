@@ -1,0 +1,11 @@
+{
+ "id": "end-not-maximised",
+ "description": "A contained range shrinks the merged end",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "last[1] = Math.max(last[1], range[1])",
+   "replace": "last[1] = range[1]"
+  }
+ ]
+}

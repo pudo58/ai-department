@@ -1,0 +1,11 @@
+{
+ "id": "no-lowercase",
+ "description": "Text is not lower-cased",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": ".toLowerCase()",
+   "replace": ""
+  }
+ ]
+}

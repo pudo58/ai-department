@@ -1,0 +1,11 @@
+{
+ "id": "replace-evicts",
+ "description": "Replacing a value reports an eviction",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "      if (map.has(key)) map.delete(key);\n",
+   "replace": "      if (map.has(key)) { const old = map.get(key); map.delete(key); if (onEvict) onEvict(key, old); }\n"
+  }
+ ]
+}

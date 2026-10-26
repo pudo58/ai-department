@@ -1,0 +1,11 @@
+{
+ "id": "list-items-unchecked",
+ "description": "Items of the list are not validated",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "  for (const range of list) checkRange(range);\n",
+   "replace": ""
+  }
+ ]
+}

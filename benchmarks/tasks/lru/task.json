@@ -1,0 +1,24 @@
+{
+ "id": "lru",
+ "title": "LruCache — a bounded least-recently-used cache",
+ "stratum": "easy",
+ "signals": [
+  "cache",
+  "ordering",
+  "callback"
+ ],
+ "codeFile": "src/lru.js",
+ "graderFile": "grade.test.js",
+ "initialTeamMode": "single",
+ "minMutants": 8,
+ "budgetUsd": 6,
+ "protectedPaths": [
+  "SPEC.md",
+  "tests/scaffold.test.js"
+ ],
+ "modules": [
+  "src/**",
+  "tests/**",
+  "README.md"
+ ]
+}

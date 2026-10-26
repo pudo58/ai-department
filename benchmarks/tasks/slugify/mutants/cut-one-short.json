@@ -1,0 +1,11 @@
+{
+ "id": "cut-one-short",
+ "description": "The cut is one character too short",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": "return trimEdges(slug.slice(0, maxLength));",
+   "replace": "return trimEdges(slug.slice(0, maxLength - 1));"
+  }
+ ]
+}

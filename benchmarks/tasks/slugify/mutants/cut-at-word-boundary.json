@@ -1,0 +1,11 @@
+{
+ "id": "cut-at-word-boundary",
+ "description": "The cut looks for a word boundary",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": "return trimEdges(slug.slice(0, maxLength));",
+   "replace": "{ const cut = slug.slice(0, maxLength + 1); const i = cut.lastIndexOf(separator); return trimEdges(i > 0 ? cut.slice(0, i) : cut.slice(0, maxLength)); }"
+  }
+ ]
+}

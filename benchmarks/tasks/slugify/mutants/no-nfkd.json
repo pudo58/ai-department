@@ -1,0 +1,11 @@
+{
+ "id": "no-nfkd",
+ "description": "Compatibility forms are not decomposed",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": "normalize('NFKD')",
+   "replace": "normalize('NFC')"
+  }
+ ]
+}

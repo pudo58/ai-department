@@ -1,0 +1,11 @@
+{
+ "id": "capacity-unchecked",
+ "description": "A zero capacity is accepted",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": " || capacity <= 0",
+   "replace": ""
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "has-refreshes",
+ "description": "has refreshes recency",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "has: (key) => map.has(key),",
+   "replace": "has: (key) => { const present = map.has(key); if (present) cache.get(key); return present; },"
+  }
+ ]
+}

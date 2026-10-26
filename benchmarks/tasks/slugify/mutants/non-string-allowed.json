@@ -1,0 +1,11 @@
+{
+ "id": "non-string-allowed",
+ "description": "Non-string input is coerced",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": "typeof input !== 'string' || ",
+   "replace": ""
+  }
+ ]
+}

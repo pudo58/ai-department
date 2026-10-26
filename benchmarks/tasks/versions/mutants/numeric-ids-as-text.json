@@ -1,0 +1,11 @@
+{
+ "id": "numeric-ids-as-text",
+ "description": "Numeric prerelease identifiers stay strings",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "(/^\\d+$/.test(id) ? Number(id) : id)",
+   "replace": "id"
+  }
+ ]
+}

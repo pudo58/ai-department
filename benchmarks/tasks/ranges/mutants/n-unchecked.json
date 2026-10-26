@@ -1,0 +1,11 @@
+{
+ "id": "n-unchecked",
+ "description": "contains accepts any n",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "  if (!Number.isSafeInteger(n)) throw fail('n');\n",
+   "replace": ""
+  }
+ ]
+}

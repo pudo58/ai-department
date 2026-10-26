@@ -1,0 +1,11 @@
+{
+ "id": "whitespace-allowed",
+ "description": "Surrounding whitespace is accepted",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "PATTERN.exec(text)",
+   "replace": "PATTERN.exec(text.trim())"
+  }
+ ]
+}

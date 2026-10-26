@@ -1,0 +1,11 @@
+{
+ "id": "no-v-prefix",
+ "description": "A leading v is refused",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "`^[vV]?${NUMBER}",
+   "replace": "`^${NUMBER}"
+  }
+ ]
+}

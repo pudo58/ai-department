@@ -1,0 +1,11 @@
+{
+ "id": "max-takes-last",
+ "description": "maxVersion returns the last of equal maxima",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "comparePrepared(parsed, bestParsed) > 0",
+   "replace": "comparePrepared(parsed, bestParsed) >= 0"
+  }
+ ]
+}

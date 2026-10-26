@@ -15,6 +15,21 @@ Mục tiêu: có số liệu đủ sức trả lời, không phải một vài l
 | `grader/` | test ẩn, chỉ chạy sau khi run kết thúc, ngoài workspace của agent |
 | `mutants/*.json` | lỗi cấy vào reference (`find` → `replace`); mỗi mutant phải làm grader fail ít nhất một test |
 
+## Các task hiện có (8, đủ 4 dễ và 4 khó cho M0b)
+
+| Task | Tầng | Trọng tâm | Test grader | Mutant |
+|---|---|---|---|---|
+| `slugify` | dễ | chuẩn hóa Unicode, dấu phân cách, cắt độ dài | 17 | 13 |
+| `versions` | dễ | semver: so sánh, tiền phát hành, sắp xếp ổn định | 21 | 12 |
+| `lru` | dễ | thứ tự gần đây, `onEvict`, getter chỉ đọc | 23 | 15 |
+| `ranges` | dễ | khoảng đóng, kề nhau, bất biến đầu vào | 24 | 15 |
+| `pulsegraph` | khó | phụ thuộc, lease, backoff, snapshot | 44 | 16 |
+| `charges` | khó | idempotency, ttl, chạy đồng thời | 27 | 14 |
+| `bookings` | khó | khoảng nửa mở, hết hạn/hủy đúng mốc | 23 | 16 |
+| `runner` | khó | giới hạn đồng thời, FIFO theo key, hủy | 28 | 15 |
+
+Tầng là dự đoán trước khi chạy, không phải kết quả đo. Bốn task dễ chưa được đối chiếu với lời giải do model viết; phải chấm thử một vài lời giải như vậy (và xem lại mọi test fail) trước khi khóa hash.
+
 Quy tắc viết grader: chỉ khẳng định điều SPEC quy định. Không khẳng định giá trị bắt đầu của bộ đếm, giá trị trả về không được nêu, thời điểm retry khi lease hết hạn hoặc thứ tự lỗi khi nhiều lỗi cùng lúc. Các grader trước đây từng áp đặt những chi tiết như vậy và làm sai điểm.
 
 Kiểm tra một task trước khi dùng:

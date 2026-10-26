@@ -1,0 +1,11 @@
+{
+ "id": "bounds-unchecked",
+ "description": "gaps does not validate its bounds",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "  checkRange(bounds);\n",
+   "replace": ""
+  }
+ ]
+}

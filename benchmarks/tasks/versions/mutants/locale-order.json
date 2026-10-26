@@ -1,0 +1,11 @@
+{
+ "id": "locale-order",
+ "description": "Alphanumeric identifiers compare by locale",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "  return a < b ? -1 : a > b ? 1 : 0;\n}\n\nfunction comparePrepared",
+   "replace": "  return a.localeCompare(b);\n}\n\nfunction comparePrepared"
+  }
+ ]
+}

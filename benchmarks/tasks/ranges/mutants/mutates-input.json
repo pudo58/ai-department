@@ -1,0 +1,11 @@
+{
+ "id": "mutates-input",
+ "description": "Merging changes the input ranges",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": "list.map(([start, end]) => [start, end])",
+   "replace": "list.map((r) => r)"
+  }
+ ]
+}

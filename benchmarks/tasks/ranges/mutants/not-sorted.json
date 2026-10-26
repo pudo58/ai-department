@@ -1,0 +1,11 @@
+{
+ "id": "not-sorted",
+ "description": "The input is not sorted first",
+ "file": "src/ranges.js",
+ "edits": [
+  {
+   "find": ".sort((a, b) => a[0] - b[0] || a[1] - b[1])",
+   "replace": ""
+  }
+ ]
+}

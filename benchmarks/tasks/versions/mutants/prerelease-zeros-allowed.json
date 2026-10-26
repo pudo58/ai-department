@@ -1,0 +1,11 @@
+{
+ "id": "prerelease-zeros-allowed",
+ "description": "Leading zeros are accepted in numeric prerelease identifiers",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "  if (prerelease.some((id) => /^\\d+$/.test(id) && id.length > 1 && id.startsWith('0'))) throw fail(text);\n",
+   "replace": ""
+  }
+ ]
+}

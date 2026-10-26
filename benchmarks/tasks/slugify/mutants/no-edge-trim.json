@@ -1,0 +1,11 @@
+{
+ "id": "no-edge-trim",
+ "description": "Edge separators are kept",
+ "file": "src/slugify.js",
+ "edits": [
+  {
+   "find": "const slug = trimEdges(joined);",
+   "replace": "const slug = joined;"
+  }
+ ]
+}

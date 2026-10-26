@@ -1,0 +1,11 @@
+{
+ "id": "set-not-chainable",
+ "description": "set returns nothing",
+ "file": "src/lru.js",
+ "edits": [
+  {
+   "find": "      return cache;\n    },\n    get(key)",
+   "replace": "      return undefined;\n    },\n    get(key)"
+  }
+ ]
+}

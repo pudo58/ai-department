@@ -1,0 +1,11 @@
+{
+ "id": "leading-zeros-allowed",
+ "description": "Leading zeros are accepted in the numbers",
+ "file": "src/versions.js",
+ "edits": [
+  {
+   "find": "'(0|[1-9]\\\\d*)'",
+   "replace": "'(\\\\d+)'"
+  }
+ ]
+}
