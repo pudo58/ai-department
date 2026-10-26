@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {initialContract,hashContract} from '../src/core/contract.js';
-import {validateTestPlan,testPlanFindings,validateManifest,manifestFindings,TestPlanSchema,planRepairProblems} from '../src/core/testplan.js';
+import {validateTestPlan,testPlanFindings,validateManifest,manifestFindings,TestPlanSchema,planRepairProblems,planRepairNotes,casesNamedBy} from '../src/core/testplan.js';
 import {auditAssertionSource} from '../src/core/authoring.js';
 import {DiagnosisSchema,diagnosisProblems} from '../src/core/diagnosis.js';
 import {setup} from './helpers.js';
@@ -22,5 +22,25 @@ describe('structured diagnosis gates',()=>{
  const diagnosis=()=>DiagnosisSchema.parse({decision:'implementation',reason:'A code branch drops a ready job',evidence:'report',caseIds:['C-1'],assessment:{target:'source',testConformsToContract:true,expected:'C',actual:'null',location:'src/queue.js:10',failingTestIds:['failed-id'],oracle:{references:[{requirementId:'R-1',quote:'Claim each ready job once.'}],explanation:'R-1 requires C'}},assertionChanges:[]});
  it('permits a grounded implementation diagnosis and rejects the PulseGraph enum/assessment contradiction',()=>{const run=sample(),d=diagnosis();expect(diagnosisProblems(run,d,['C-1'],['failed-id'],['tests/queue.test.js'],[])).toEqual([]);d.assessment!.target='test';d.assessment!.testConformsToContract=false;d.assessment!.location='tests/queue.test.js:9';expect(diagnosisProblems(run,d,['C-1'],['failed-id'],['tests/queue.test.js'],[]).join()).toContain('mâu thuẫn');});
  it('rejects missing structure, stale test IDs, wrong quotes and edits during a source diagnosis',()=>{const run=sample(),d=diagnosis();d.assessment!.failingTestIds=['old-id'];d.assessment!.oracle.references[0]!.quote='Not in requirement';const p=diagnosisProblems(run,d,['C-1'],['failed-id'],['tests/queue.test.js'],['src/queue.js']).join();expect(p).toContain('hiện hành');expect(p).toContain('Trích dẫn');expect(p).toContain('không được');delete d.assessment;expect(diagnosisProblems(run,d,['C-1'],[],[],[]).join()).toContain('assessment');});
+ it('accepts the readable test title, a quotation from the original requirement, and a clause outside the case when one belongs to it',()=>{
+  const run=sample(),d=diagnosis(),failed=['@json:'+JSON.stringify(['tests/queue.test.js',['suite','[R-1][C-1] claims once']])];
+  run.originalRequirement='Original: Claim each ready job once, in order.';
+  d.assessment!.failingTestIds=['suite [R-1][C-1]  claims once'];
+  d.assessment!.oracle.references=[{requirementId:'R-1',quote:'CLAIM each ready   job once.'},{requirementId:'R-1',quote:'Claim each ready job once, in order.'}];
+  expect(diagnosisProblems(run,d,['C-1'],failed,['tests/queue.test.js'],[])).toEqual([]);
+  d.assessment!.failingTestIds=['suite something else'];
+  expect(diagnosisProblems(run,d,['C-1'],failed,['tests/queue.test.js'],[]).join()).toContain('không thất bại');
+  d.assessment!.failingTestIds=[failed[0]!];d.assessment!.oracle.references[1]!.quote='Never in the text at all';
+  expect(diagnosisProblems(run,d,['C-1'],failed,['tests/queue.test.js'],[]).join()).toContain('Trích dẫn');
+ });
+ it('lets a repair rework the steps of the case it was told about, and only that case',()=>{
+  const p=contract().testPlan,next=structuredClone(p);next.cases[0]!.steps![0]!.expected='A, then the lease is held';
+  expect(planRepairProblems(p,[],next,undefined,new Set(['C-1']))).toEqual([]);
+  expect(planRepairProblems(p,[],next,undefined,new Set(['C-2'])).join()).toContain('kỳ vọng nghiệp vụ');
+  expect(planRepairNotes(p,next,new Set(['C-1'])).join()).toContain('C-1.S-1');
+  const gone=structuredClone(p);gone.cases[0]!.steps!.pop();
+  expect(planRepairProblems(p,[],gone,undefined,new Set(['C-1'])).join()).toContain('không được bỏ bước');
+  expect([...casesNamedBy(['C-15: thiếu bước','C-3.steps.0: x','Chưa xét nhóm','C-3.S-1: y'])].sort()).toEqual(['C-15','C-3']);
+ });
  it('does not reinterpret free text or upgrade old v2 diagnosis records',()=>{const run=sample();run.qualityPolicyVersion=2;const d=diagnosis();delete d.assessment;expect(diagnosisProblems(run,d,[],[],[],[])).toEqual([]);});
 });

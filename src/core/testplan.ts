@@ -5,6 +5,7 @@ import type { Artifact, TaskContract } from '../shared/types.js';
 import { RISK_GROUPS, RISK_LABELS, TEST_PRIORITIES, type ManifestEntry, type Oracle, type TestPlan, type TestPlanReview } from '../shared/quality.js';
 import { isSafeRelative } from './scope.js';
 import { isTestPath } from './testpath.js';
+import { snapQuote } from './quote.js';
 
 const text = z.string().trim().min(1).max(8000);
 const literalText = z.string().min(1).max(8000).refine(s => !!s.trim(), 'Không được trống.');
@@ -37,7 +38,7 @@ export const AuthorTestPlanSchema = TestPlanSchema.extend({
 export const UNRESOLVED_PLAN_QUESTIONS = 'Kế hoạch còn câu hỏi chưa giải quyết; hãy trả lời vào hợp đồng hoặc ghi giả định đã xác nhận rồi xóa câu hỏi.';
 
 /** A formatting repair cannot make ambiguity or mandatory coverage disappear. All plans still require human approval. */
-export function planRepairProblems(before: TestPlan | undefined, questions: readonly string[], after: TestPlan, validRequirementIds?: readonly string[]): string[] {
+export function planRepairProblems(before: TestPlan | undefined, questions: readonly string[], after: TestPlan, validRequirementIds?: readonly string[], repairedCases: ReadonlySet<string> = new Set()): string[] {
   const problems: string[] = [];
   const used = new Set<TestPlan['cases'][number]>();
   for (const q of questions) if (!after.questions.includes(q)) problems.push(`Không được tự bỏ câu hỏi chưa giải quyết: ${q}`);
@@ -60,12 +61,29 @@ export function planRepairProblems(before: TestPlan | undefined, questions: read
       if(after.reasoningVersion!==1)problems.push(`${old.id}: không được bỏ reasoningVersion trong lượt sửa.`);
       for(const step of old.steps??[]){
         const nextStep=step.id?next.steps?.find(s=>s.id===step.id):next.steps?.find(s=>s.action===step.action&&s.expected===step.expected);
-        if(!nextStep||nextStep.action!==step.action||nextStep.expected!==step.expected)problems.push(`${old.id}.${step.id??'?'}: không được bỏ bước hoặc thay kỳ vọng nghiệp vụ trong lượt sửa định dạng.`);
+        if(!nextStep)problems.push(`${old.id}.${step.id??'?'}: không được bỏ bước đã khai báo trong lượt sửa.`);
+        // The case the validator named is the one the Author was asked to rework, so its step wording may change (and is reported); any other case may not.
+        else if((nextStep.action!==step.action||nextStep.expected!==step.expected)&&!repairedCases.has(old.id))problems.push(`${old.id}.${step.id??'?'}: không được thay kỳ vọng nghiệp vụ trong lượt sửa định dạng.`);
       }
       for(const invariant of old.invariants??[])if(!next.invariants?.includes(invariant))problems.push(`${old.id}: không được bỏ bất biến trong lượt sửa.`);
     }
   }
   return problems;
+}
+
+/** Which cases a list of validator problems names ("C-15: …", "C-15.steps.0: …"). */
+export const casesNamedBy = (problems: readonly string[]): Set<string> => new Set(problems.flatMap(p => /^(C-[A-Za-z0-9_-]+?)[.:]/.exec(p)?.[1] ?? []));
+
+/** Step wording a repair rewrote in a case it was asked to rework: allowed, but shown to the person approving the plan. */
+export function planRepairNotes(before: TestPlan | undefined, after: TestPlan, repairedCases: ReadonlySet<string>): string[] {
+  const clip = (t: string) => (t.length > 140 ? `${t.slice(0, 140)}…` : t);
+  return (before?.cases ?? []).filter(c => repairedCases.has(c.id)).flatMap(old => {
+    const next = after.cases.find(c => c.id === old.id);
+    return (old.steps ?? []).flatMap(step => {
+      const now = next?.steps?.find(s => s.id === step.id);
+      return now && now.expected !== step.expected ? [`${old.id}.${step.id}: Author viết lại kỳ vọng khi sửa ca này. Trước: "${clip(step.expected)}" → Sau: "${clip(now.expected)}".`] : [];
+    });
+  });
 }
 
 /** Metadata is descriptive only; it never grants approval or upgrades an old contract. */
@@ -97,13 +115,22 @@ export const StoredManifestSchema = ManifestSchema.extend({
   advisories: z.array(z.string()).optional(),
 });
 
-export function validateOracle(contract: TaskContract, requirementIds: readonly string[], oracle?: Oracle): string[] {
+export interface OracleOptions {
+  /** Also accept a quotation found in the user's original requirement; the contract paraphrases it, so the words may only live there. */
+  originalRequirement?: string;
+  /** Accept a clause outside the case's own requirements as long as one reference is inside it (used for diagnoses). */
+  anyClause?: boolean;
+}
+export function validateOracle(contract: TaskContract, requirementIds: readonly string[], oracle?: Oracle, options: OracleOptions = {}): string[] {
   if (!oracle || !OracleSchema.safeParse(oracle).success) return ['Thiếu căn cứ hợp đồng (oracle) hoặc phần giải thích.'];
-  return oracle.references.flatMap(ref => {
+  const quoted = (req: { text: string }, quote: string) => snapQuote(quote, req.text) !== undefined || (!!options.originalRequirement && snapQuote(quote, options.originalRequirement) !== undefined);
+  const problems = oracle.references.flatMap(ref => {
     const req = contract.requirements.find(r => r.id === ref.requirementId);
-    return !req || !requirementIds.includes(ref.requirementId) ? [`Căn cứ ${ref.requirementId} không thuộc ca.`]
-      : !req.text.includes(ref.quote) ? [`Trích dẫn ${ref.requirementId} không có trong điều khoản hiện tại.`] : [];
+    return !req || (!options.anyClause && !requirementIds.includes(ref.requirementId)) ? [`Căn cứ ${ref.requirementId} không thuộc ca.`]
+      : !quoted(req, ref.quote) ? [`Trích dẫn ${ref.requirementId} không có trong điều khoản hiện tại.`] : [];
   });
+  if (options.anyClause && !problems.length && !oracle.references.some(ref => requirementIds.includes(ref.requirementId))) problems.push('Căn cứ không gắn với yêu cầu của ca thất bại nào.');
+  return problems;
 }
 
 /** Examples and enum guidance are generated from the same constants as validation. */

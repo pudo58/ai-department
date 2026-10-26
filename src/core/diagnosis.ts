@@ -3,12 +3,21 @@ import type { Run } from '../shared/types.js';
 import { OracleSchema, validateOracle } from './testplan.js';
 import { isSafeRelative,classifyPath } from './scope.js';
 import { isTestPath } from './testpath.js';
+import { testTitle } from './testids.js';
 
 const text=z.string().trim().min(1).max(8000);
 export const DiagnosisSchema=z.object({decision:z.enum(['implementation','test_setup','test_assertion','ambiguous']),reason:text,evidence:text,caseIds:z.array(text).max(100).default([]),
   assessment:z.object({target:z.enum(['source','test','unknown']),testConformsToContract:z.boolean().nullable(),expected:text,actual:text,location:text,failingTestIds:z.array(text).min(1).max(100),oracle:OracleSchema}).optional(),
   assertionChanges:z.array(z.object({caseId:text,before:text,after:text,oracle:OracleSchema})).max(100).optional()});
 export type Diagnosis=z.infer<typeof DiagnosisSchema>;
+
+const fold = (v: string): string => v.replace(/\s+/g, ' ').trim();
+/** A failing test may be named by its runner id or by the readable title the runner prints; both mean the same test. */
+export function resolveFailingTest(given: string, failedTestIds: readonly string[]): string | undefined {
+  if (failedTestIds.includes(given)) return given;
+  const matches = failedTestIds.filter(id => fold(testTitle(id)) === fold(given));
+  return matches.length === 1 ? matches[0] : undefined;
+}
 
 /** Structural checks only: never infer a decision by looking for keywords in free text. */
 export function diagnosisProblems(run:Run,d:Diagnosis,caseIds:readonly string[],failedTestIds:readonly string[],testPaths:readonly string[],changedPaths:readonly string[]):string[]{
@@ -17,9 +26,9 @@ export function diagnosisProblems(run:Run,d:Diagnosis,caseIds:readonly string[],
   if(!d.caseIds.length||d.caseIds.some(id=>!caseIds.includes(id)))errors.push('caseIds phải chỉ rõ các ca thực sự thất bại.');
   if(!a)return [...errors,'Thiếu assessment có expected/actual, điều khoản, test lỗi và đích sửa.'];
   if(a.expected===a.actual)errors.push('Expected và actual giống nhau; chưa chỉ ra sai khác.');
-  if(a.failingTestIds.some(id=>!failedTestIds.includes(id)))errors.push('assessment tham chiếu test không thất bại trong report hiện hành.');
+  if(a.failingTestIds.some(id=>resolveFailingTest(id,failedTestIds)===undefined))errors.push('assessment tham chiếu test không thất bại trong report hiện hành.');
   const reqs=[...new Set(run.contract.testPlan?.cases.filter(c=>d.caseIds.includes(c.id)).flatMap(c=>c.requirementIds)??[])];
-  errors.push(...validateOracle(run.contract,reqs,a.oracle));
+  errors.push(...validateOracle(run.contract,reqs,a.oracle,{originalRequirement:run.originalRequirement,anyClause:true}));
   const location=a.location.replace(/:\d+(?:-\d+)?$/,'').replace(/\\/g,'/');
   if(!isSafeRelative(location))errors.push('location phải là đường dẫn tương đối, có thể kèm số dòng.');
   if(d.decision==='implementation'){

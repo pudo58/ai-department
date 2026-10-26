@@ -1,5 +1,5 @@
 import { deepQuality } from '../../core/qualityevidence.js';
-import { planRepairProblems, UNRESOLVED_PLAN_QUESTIONS, testPlanFindings } from '../../core/testplan.js';
+import { planRepairProblems, planRepairNotes, casesNamedBy, UNRESOLVED_PLAN_QUESTIONS, testPlanFindings } from '../../core/testplan.js';
 import { parseTestPlanOutput } from '../../core/planfix.js';
 import { canonicalJson, hashContract } from '../../core/contract.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
@@ -94,11 +94,11 @@ export class Planning {
         problems = findings.blocking; roundAdvisories = findings.advisories;
         if ((run.qualityPolicyVersion??0) >= 2 && parsed.schemaVersion !== 2) problems.push('Chính sách v2+ cần kế hoạch ca có căn cứ v2.');
       } catch (error) { problems = [(error as Error).message]; }
-      const safeguards = round === 1 && parsed ? planRepairProblems(original, questions, parsed, run.contract.requirements.map(r => r.id)) : [];
+      const safeguards = round === 1 && parsed ? planRepairProblems(original, questions, parsed, run.contract.requirements.map(r => r.id), casesNamedBy(initialProblems)) : [];
       if (round === 1 && (!parsed || safeguards.length)) {
         // Keep the original draft available to edit when the repair weakens it or cannot be parsed.
         problems = [...initialProblems, ...problems, ...safeguards]; reason = 'repair_rejected';
-      } else { plan = parsed; selectedAttemptId = attemptId; normalizations = roundChanges; advisories = roundAdvisories; }
+      } else { plan = parsed; selectedAttemptId = attemptId; normalizations = roundChanges; advisories = [...roundAdvisories, ...(round === 1 ? planRepairNotes(original, parsed!, casesNamedBy(initialProblems)) : [])]; }
       if (round === 0) { original = parsed; initialProblems = [...problems]; }
       if (!problems.length) break;
       this.s.artifact(runId, { kind: 'report', title: 'Test plan validation error', attemptId,
