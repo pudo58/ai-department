@@ -1,0 +1,64 @@
+{
+  "task": "charges",
+  "arm": "department",
+  "tag": "e2",
+  "runId": "run_9eb380c6",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "taskHash": "137ddbac41fd769c0b31571c439db0d65d0a74ed10272aa9ba5322a439d385c6",
+  "startedAt": "2026-10-26T05:55:12.615Z",
+  "interventions": [
+    {
+      "type": "contract_approved_unchanged",
+      "hash": "9b1451298a5d8b09c07a501270c5226e7d02a4a974648e10f9e53ecfc5d9fada",
+      "warnings": 5,
+      "at": "2026-10-26T05:56:44.548Z"
+    }
+  ],
+  "endedAt": "2026-10-26T06:00:03.375Z",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "automaticMs": 287271,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [
+      "Sửa test của Author"
+    ],
+    "items": 1
+  },
+  "grader": {
+    "passed": 27,
+    "total": 27,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.0655652,
+  "estimatedCost": true,
+  "attempts": 7,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "author:repair:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 1
+    },
+    {
+      "reason": "invalid_output",
+      "count": 1
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    }
+  ]
+}

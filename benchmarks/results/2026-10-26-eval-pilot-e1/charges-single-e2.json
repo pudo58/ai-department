@@ -1,0 +1,55 @@
+{
+  "task": "charges",
+  "arm": "single",
+  "tag": "e2",
+  "runId": "run_a5afcc81",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "taskHash": "137ddbac41fd769c0b31571c439db0d65d0a74ed10272aa9ba5322a439d385c6",
+  "startedAt": "2026-10-26T05:51:09.540Z",
+  "interventions": [
+    {
+      "type": "contract_approved_unchanged",
+      "hash": "984b6fa61cd78a718a09c3ff36b5396cd1961a6de0e7ebaf59c97aae9492f043",
+      "warnings": 1,
+      "at": "2026-10-26T05:51:42.878Z"
+    }
+  ],
+  "endedAt": "2026-10-26T05:55:09.104Z",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\n\nJSON report written to C:/Users/tholv/Desktop/ai_department/.data/eval-charges-single-e2/workspaces/run_a5afcc81-A/.aidept-report.json\n\n",
+  "automaticMs": 235510,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 27,
+    "total": 27,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.4131572,
+  "estimatedCost": true,
+  "attempts": 4,
+  "roles": [
+    "planner:prepare:completed",
+    "developer:implement:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "missing_evidence",
+      "count": 1
+    },
+    {
+      "reason": "check_failure",
+      "count": 2
+    }
+  ]
+}

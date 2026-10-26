@@ -1,0 +1,68 @@
+{
+  "task": "runner",
+  "arm": "department",
+  "tag": "e1",
+  "runId": "run_24f44492",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "taskHash": "bb5706daa68cc6bbcf871cc40efc406daf9eee8af07b6191983829575ef99325",
+  "startedAt": "2026-10-26T06:10:19.873Z",
+  "interventions": [
+    {
+      "type": "contract_approved_unchanged",
+      "hash": "e0d128b035e08a8342eb82ec8559363f34eb0c15a637047786863931c1392ce7",
+      "warnings": 13,
+      "at": "2026-10-26T06:12:04.553Z"
+    }
+  ],
+  "endedAt": "2026-10-26T06:20:42.421Z",
+  "status": "blocked",
+  "blocker": "1 finding blocker/major chưa xử lý.",
+  "automaticMs": 617013,
+  "reachedDeveloper": true,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [
+      "Sửa test của Author"
+    ],
+    "items": 1
+  },
+  "grader": {
+    "passed": 27,
+    "total": 28,
+    "failed": [
+      "fair scheduling lets the next task of a key that just finished go before a younger task of another key"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": false,
+  "costUsd": 0.9821958,
+  "estimatedCost": true,
+  "attempts": 6,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "developer:implement:completed",
+    "author:repair:completed",
+    "verifier:verify:completed"
+  ],
+  "retries": [
+    {
+      "reason": "check_failure",
+      "count": 1
+    },
+    {
+      "reason": "test_error",
+      "count": 1
+    }
+  ],
+  "graderAtRunTime": {
+    "passed": 27,
+    "total": 27,
+    "failed": [],
+    "loadError": false
+  },
+  "regradedNote": "Graded again after the runner grader gained one test (see REPORT.md)."
+}

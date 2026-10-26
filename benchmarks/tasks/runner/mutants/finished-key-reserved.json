@@ -1,0 +1,11 @@
+{
+ "id": "finished-key-reserved",
+ "description": "The key of a task that just finished stays reserved while the next task is chosen",
+ "file": "src/runner.js",
+ "edits": [
+  {
+   "find": "      running -= 1;\n      runningKeys.delete(task.key);\n      pump();\n      settle(value);",
+   "replace": "      running -= 1;\n      pump();\n      runningKeys.delete(task.key);\n      pump();\n      settle(value);"
+  }
+ ]
+}

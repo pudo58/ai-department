@@ -1,0 +1,55 @@
+{
+  "task": "bookings",
+  "arm": "single",
+  "tag": "e1",
+  "runId": "run_c5093313",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "taskHash": "b1bc86d50f6997e4cdf72086eff5741dbb32de8605cd96a049862ece758df6f0",
+  "startedAt": "2026-10-26T06:00:17.517Z",
+  "interventions": [
+    {
+      "type": "contract_approved_unchanged",
+      "hash": "6fee67ca512425645eb49b1ee53d56b18b3134af68528546d11bdaf13ea5588e",
+      "warnings": 1,
+      "at": "2026-10-26T06:00:37.706Z"
+    }
+  ],
+  "endedAt": "2026-10-26T06:02:59.757Z",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "automaticMs": 158734,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "grader": {
+    "passed": 23,
+    "total": 23,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.079739,
+  "estimatedCost": true,
+  "attempts": 4,
+  "roles": [
+    "planner:prepare:completed",
+    "developer:implement:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "missing_evidence",
+      "count": 1
+    },
+    {
+      "reason": "check_failure",
+      "count": 1
+    }
+  ]
+}

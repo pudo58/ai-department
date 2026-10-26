@@ -142,6 +142,16 @@ describe('fair scheduling', () => {
     expect(log).toEqual(['a1', 'b1', 'c1']);
     expect(r.stats()).toEqual({ running: 2, queued: 1 });
   });
+  it('lets the next task of a key that just finished go before a younger task of another key', async () => {
+    const r = createRunner({ concurrency: 2 });
+    const log = [];
+    const a1 = job(log, 'a1'), b1 = job(log, 'b1'), a2 = job(log, 'a2'), c1 = job(log, 'c1');
+    const pa = r.run('a', a1.fn); r.run('b', b1.fn); r.run('a', a2.fn); r.run('c', c1.fn);
+    expect(log).toEqual(['a1', 'b1']);
+    a1.resolve(1); await pa;
+    expect(log).toEqual(['a1', 'b1', 'a2']);
+    expect(r.stats()).toEqual({ running: 2, queued: 1 });
+  });
   it('starts the oldest queued task first when several are startable', async () => {
     const r = createRunner({ concurrency: 1 });
     const log = [];
