@@ -7,6 +7,34 @@ function killTree(child: ChildProcess): void {
   } else { try { if (child.pid) process.kill(-child.pid, 'SIGTERM'); else child.kill(); } catch { child.kill(); } }
 }
 
+/**
+ * Names that carry a credential: API keys, tokens, secrets, passwords, private keys, SSH agent sockets. Matched as whole
+ * words between underscores, so TOKENIZERS_PARALLELISM and KEYBOARD are left alone while NPM_TOKEN, AWS_SECRET_ACCESS_KEY
+ * and SSH_AUTH_SOCK are not.
+ */
+const SECRET_NAME = /(^|_)(API_?KEY|APIKEY|SECRET|TOKEN|PASSWORD|PASSWD|PASSPHRASE|PRIVATE_KEY|ACCESS_KEY|CREDENTIALS?|AUTH|AUTH_?TOKEN)(_|$)/i;
+/** The agent providers' own credentials and settings: only the agent CLIs themselves need these. */
+const PROVIDER_NAME = /^(ANTHROPIC|OPENAI|CODEX|CLAUDE|CLAUDE_CODE|GEMINI|GOOGLE_(GENERATIVE_AI|API)|AZURE_OPENAI|OPENROUTER|MISTRAL|COHERE|GROQ|AGY|ANTIGRAVITY)(_|$)/i;
+
+/**
+ * This process's environment without credentials, for running a repository's own commands. Checks, previews and
+ * probes execute code an agent wrote (a test can print or send any variable), so they must not inherit the keys of
+ * the agents or the person's tokens. `provider` removes only the agent providers' variables (a setup command may
+ * legitimately need NPM_TOKEN for a private registry); `all` removes everything that looks like a credential.
+ * AIDEPT_PASS_ENV="NAME1,NAME2" lets named variables through when a project's checks really need them.
+ */
+export function scrubbedEnv(mode: 'all' | 'provider', base: NodeJS.ProcessEnv = process.env): Record<string, string> {
+  const pass = new Set((base.AIDEPT_PASS_ENV ?? '').split(/[,\s]+/).filter(Boolean).map((n) => n.toUpperCase()));
+  const out: Record<string, string> = {};
+  for (const [name, value] of Object.entries(base)) {
+    if (value === undefined) continue;
+    const secret = PROVIDER_NAME.test(name) || (mode === 'all' && SECRET_NAME.test(name));
+    if (secret && !pass.has(name.toUpperCase())) continue;
+    out[name] = value;
+  }
+  return out;
+}
+
 export interface ProcessResult { exitCode: number | null; stdout: string; stderr: string; durationMs: number; timedOut: boolean }
 export interface ProcessOptions {
   cwd?: string;
@@ -20,6 +48,8 @@ export interface ProcessOptions {
   env?: Record<string, string>;
   /** Use only env rather than inheriting provider credentials or NODE_OPTIONS. */
   replaceEnv?: boolean;
+  /** Inherit this process's environment minus credentials (see scrubbedEnv). Use it for any command that runs repository code. */
+  scrubSecrets?: 'all' | 'provider';
 }
 
 /** Host callers pass a fixed executable and argv. Repository commands belong in Docker. */
@@ -31,7 +61,7 @@ export async function executeFile(executable: string, args: string[], options: P
     const child = spawn(executable, args, {
       shell: false, windowsHide: true, detached: process.platform !== 'win32', cwd: options.cwd,
       stdio: ['pipe', 'pipe', 'pipe'],
-      env: { ...(options.replaceEnv?{}:process.env), ...options.env, GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'never' },
+      env: { ...(options.replaceEnv ? {} : options.scrubSecrets ? scrubbedEnv(options.scrubSecrets) : process.env), ...options.env, GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'never' },
     });
     let stdout = '', stderr = '', bytes = 0, timedOut = false, overflow = false;
     const limit = options.maxOutputBytes ?? 16 * 1024 * 1024;

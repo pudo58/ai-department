@@ -357,6 +357,12 @@ AIDEPT_LIVE_E2E=1 npx vitest run tests/live.e2e.test.ts          # chạy thật
 
 Lệnh check/setup chạy không qua shell: trên Windows dùng `["npm", ...]`, `["npx", ...]` hoặc `["node", ...]` (không dùng file .cmd/pnpm trực tiếp). Cần `[windows] sandbox = "elevated"` đã được thiết lập bởi Codex trên máy; runtime truyền lại cấu hình này vì `--ignore-user-config` sẽ bỏ nó và Codex rơi về read-only.
 
+**Những gì vẫn được giữ lại dù không có cô lập (chế độ Local):**
+- **Khóa API không lọt vào code của repo.** Check, preview, kiểm tra môi trường và mutation chạy với biến môi trường đã bỏ mọi biến trông như credential (`*_API_KEY`, `*_TOKEN`, `*_SECRET`, `*_PASSWORD`, `*_CREDENTIALS`, `SSH_AUTH_SOCK`…, khớp theo từ nguyên vẹn nên `TOKENIZERS_PARALLELISM` không bị ảnh hưởng) cùng biến của các nhà cung cấp AI (`OPENAI_*`, `ANTHROPIC_*`, `GEMINI_*`…). Lệnh setup chỉ bỏ biến của nhà cung cấp AI, vì có thể cần `NPM_TOKEN` cho registry riêng. Một test do agent viết vì vậy không đọc được khóa của agent hay token của bạn. Project nào thật sự cần một biến, đặt `AIDEPT_PASS_ENV="TEN1,TEN2"` khi khởi động AI Department. Agent CLI vẫn nhận credential của chính nó.
+- **Không agent nào được để lại hook hay khóa cấu hình git.** Sau mỗi lượt của Codex, Claude Code hay Antigravity, `.git/config` và `.git/hooks` được so với trước lượt; nếu khác (một hook hay `diff.external`/`filter.*` sẽ chạy code ở lệnh git kế tiếp) thì khôi phục, hoàn tác thay đổi chưa commit và hủy lượt đó.
+- **Preview luôn được dừng trước khi bản sao làm việc bị dùng.** Orchestrator báo cho nơi phục vụ preview ngay trước mỗi lượt agent, check hay giao kết quả, thay vì đoán theo URL của request.
+- **Yêu cầu "sửa finding" hoặc "chạy lại check" được lưu cùng run** (`pendingAction`): server khởi động lại giữa chừng thì Chạy tiếp vẫn làm đúng việc đó, và nó bị xóa khi bước kết thúc hay khi bạn bấm Dừng.
+
 ## Chạy thật trong Docker (cần attestation)
 
 Chạy với Codex/Claude bị chặn cho đến khi operator tạo `.data/attestations/<projectId>.json`.

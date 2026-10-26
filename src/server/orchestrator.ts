@@ -45,8 +45,6 @@ export interface OrchestratorOptions { agentSlots?: number; now?: () => Date; /*
 export class Orchestrator {
   private readonly queue: SerialQueue;
   private readonly aborts = new Map<string, AbortController>();
-  private readonly repairRequests = new Set<string>();
-  private readonly recheckRequests = new Set<string>();
   private readonly now: () => Date;
   private readonly s: RunServices;
   private readonly scope: ScopePolicy;
@@ -186,7 +184,7 @@ export class Orchestrator {
     const run = this.s.run(runId);
     this.aborts.get(runId)?.abort();
     this.queue.dequeue(runId);
-    if (run.status === 'queued') this.s.mutate(runId, (r) => { r.status = 'paused'; r.blocker = 'Đã dừng bởi người dùng.'; });
+    if (run.status === 'queued') this.s.mutate(runId, (r) => { r.status = 'paused'; r.blocker = 'Đã dừng bởi người dùng.'; delete r.pendingAction; });
     for (const attempt of this.store.attempts.list(runId).filter((a) => a.status === 'running')) void this.runtimeFor(run).stop(attempt.id);
     this.s.log(runId, 'run.stop', 'Người dùng yêu cầu dừng.');
     return this.s.run(runId);
@@ -223,7 +221,7 @@ export class Orchestrator {
   private forget(runId: string): void {
     this.queue.dequeue(runId);
     for (const key of [...this.s.sessions.keys()]) if (key.startsWith(`${runId}:`)) this.s.sessions.delete(key);
-    this.s.baseFileCache.delete(runId); this.repairRequests.delete(runId); this.recheckRequests.delete(runId);
+    this.s.baseFileCache.delete(runId);
   }
 
   approveContract(runId: string, input: ContractApprovalInput): Run {
@@ -342,8 +340,7 @@ export class Orchestrator {
     if (!['blocked', 'awaiting_acceptance'].includes(run.status)) throw new HttpError(409, 'Chỉ sửa finding khi run đang chờ người dùng.');
     const targets = this.store.findings.list(runId).filter((f) => f.confirmed && f.status === 'open' && f.contractVersion === run.contract.version);
     if (!targets.length) throw new HttpError(409, 'Chưa có finding nào được xác nhận.');
-    this.s.mutate(runId, (r) => { r.status = 'queued'; r.blocker = null; });
-    this.repairRequests.add(runId);
+    this.s.mutate(runId, (r) => { r.status = 'queued'; r.blocker = null; r.pendingAction = 'repair'; });
     this.queue.enqueue(runId);
     return this.s.run(runId);
   }
@@ -365,7 +362,7 @@ export class Orchestrator {
       this.s.mutate(runId, (r) => { r.configSnapshot = structuredClone(project); });
       this.s.log(runId, 'config.refreshed', `Dùng cấu hình mới nhất của project (v${project.version}): check ${project.checks.map((c) => c.command.join(' ')).join(' ; ')}`);
     }
-    this.recheckRequests.add(runId);
+    this.s.mutate(runId, (r) => { r.pendingAction = 'recheck'; });
     return this.enqueue(runId);
   }
 
@@ -392,7 +389,11 @@ export class Orchestrator {
     return this.s.run(runId);
   }
 
+  /** Registers who serves a run's working copy by hand; it is told before every turn, check and delivery so it can let go. */
+  onWorkspaceBusy(handler: (runId: string) => void): void { this.s.onWorkspaceBusy = handler; }
+
   private async drive(runId: string): Promise<void> {
+    this.s.workspaceBusy(runId);
     const controller = new AbortController();
     this.aborts.set(runId, controller);
     const span=this.s.startSpan(runId,'run','Điều phối run');
@@ -414,13 +415,13 @@ export class Orchestrator {
         try{await this.candidates.revalidateAuthorDraft(runId);}finally{this.s.mutate(runId,r=>{delete r.authorDraftRequest;});}
       }
       else if (this.s.run(runId).testRepairApproval) {
-        this.recheckRequests.delete(runId); this.repairRequests.delete(runId);
+        this.s.mutate(runId, (r) => { delete r.pendingAction; });
         await this.recovery.applyApproved(runId);
         await this.recheckPhase(runId, controller.signal, false);
         this.s.mutate(runId, r => { delete r.testRepairApproval; });
       }
-      else if (this.recheckRequests.delete(runId)) await this.recheckPhase(runId, controller.signal);
-      else if (this.repairRequests.delete(runId)) await this.verification.repairPhase(runId, controller.signal);
+      else if (this.s.run(runId).pendingAction === 'recheck') await this.recheckPhase(runId, controller.signal);
+      else if (this.s.run(runId).pendingAction === 'repair') await this.verification.repairPhase(runId, controller.signal);
       else if (!isApproved(this.s.run(runId).contract)) await this.planning.planPhase(runId, controller.signal);
       else await this.buildPhase(runId, controller.signal);
     } catch (error) {
@@ -429,6 +430,9 @@ export class Orchestrator {
       this.s.endSpan(runId,span,controller.signal.aborted?'interrupted':['blocked','failed'].includes(this.s.run(runId).status)?'failed':'completed');
       this.aborts.delete(runId);
       const run = this.store.runs.get(runId);
+      // Reached on every normal exit (finished, blocked, stopped by the person) but not when the server dies mid-turn, so an
+      // interrupted request is still there to be carried out when the run is resumed.
+      if (run?.pendingAction) this.s.mutate(runId, (r) => { delete r.pendingAction; });
       if (run && run.status === 'running') this.s.mutate(runId, (r) => { r.status = 'paused'; r.blocker = 'Giai đoạn kết thúc mà không có trạng thái rõ ràng.'; });
     }
   }

@@ -71,6 +71,12 @@ export interface Delivery extends DeliveryTarget {
 export interface Run {
   executionSpans?: import('./execution.js').ExecutionSpan[];
   preflightRequest?: boolean;
+  /**
+   * What the next drive of this run must do instead of the default step: re-run the checks on the checkpoint, or repair
+   * confirmed findings. Stored with the run, so a request made just before a restart is still carried out on resume;
+   * cleared when that drive ends (finished, blocked or stopped by the person).
+   */
+  pendingAction?: 'recheck' | 'repair';
   preflightReturnStatus?: RunStatus;
   authorDraftRequest?: { attemptId: string; draftHash: string };
   id: string; projectId: string; title: string; originalRequirement: string; mode: Mode;

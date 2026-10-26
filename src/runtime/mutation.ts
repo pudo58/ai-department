@@ -54,7 +54,7 @@ export async function runMutation(ws: GitWorkspaces, execution: MutationExecutio
     configHash: recipeHash(run), capability, startedAt: new Date(start).toISOString(), durationMs: 0, baseline: 'unknown', counts: emptyMutationCounts(), mutants: [], files: [], message: '' };
   const node = path.join(target, rel);
   const remaining = () => { const ms = deadline - Date.now(); if (ms <= 0) throw new Error('Mutation hết thời gian tổng.'); return ms; };
-  const runCommand: MutationExecutor = execute ?? (async (cwd, argv, timeoutMs, abort, events) => executeFile(argv[0]!, argv.slice(1), { cwd, timeoutMs, signal: abort,
+  const runCommand: MutationExecutor = execute ?? (async (cwd, argv, timeoutMs, abort, events) => executeFile(argv[0]!, argv.slice(1), { cwd, timeoutMs, signal: abort, scrubSecrets: 'all',
     onStdout: c => events?.({ type: 'log', message: redactSecrets(c), data: { source: 'mutation' } }), onStderr: c => events?.({ type: 'log', message: redactSecrets(c), data: { source: 'mutation' } }) }));
   try {
     await rm(target, { recursive: true, force: true });

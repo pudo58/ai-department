@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readInside } from '../core/stackdetect.js';
 import { resolveHostCommand } from '../runtime/hostcommand.js';
-import { redactSecrets } from '../runtime/process.js';
+import { redactSecrets, scrubbedEnv } from '../runtime/process.js';
 
 export interface PreviewState { runId: string; url: string; port: number; command: string[]; startedAt: string; stopsAt: string; log: string }
 
@@ -66,7 +66,7 @@ export class PreviewManager {
     const port = await freePort();
     const url = `http://127.0.0.1:${port}`;
     const [cmd, ...args] = command[0] === 'node' ? [process.execPath, ...command.slice(1)] : resolveHostCommand(command);
-    const child = spawn(cmd!, args, { cwd, env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', BROWSER: 'none' }, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true });
+    const child = spawn(cmd!, args, { cwd, env: { ...scrubbedEnv('all'), PORT: String(port), HOST: '127.0.0.1', BROWSER: 'none' }, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true });
     const now = Date.now();
     const state: PreviewState = { runId, url, port, command, startedAt: new Date(now).toISOString(), stopsAt: new Date(now + this.lifetimeMs).toISOString(), log: '' };
     const append = (d: Buffer) => { state.log = redactSecrets(`${state.log}${d.toString('utf8')}`).slice(-4000); };

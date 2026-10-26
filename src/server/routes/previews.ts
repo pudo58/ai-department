@@ -7,11 +7,8 @@ import type { RouteContext } from './context.js';
 export function registerPreviewRoutes({ app, store, orchestrator, previews, idOf }: RouteContext): void {
   app.get('/api/system/previews', async () => previews.list());
   app.addHook('onClose', async () => previews.stopAll());
-  // Anything that hands the working copy back to an agent, or delivers it, stops the preview first.
-  app.addHook('preHandler', async (request) => {
-    const m = /^\/api\/runs\/([^/]+)\/(start|resume|recheck|preflight|revalidate-author-output|repair|accept|escalate|approve-contract|approve-paths|contract)$/.exec(request.url.split('?')[0] ?? '');
-    if (request.method === 'POST' && m) previews.stop(m[1]!);
-  });
+  // The orchestrator tells the preview manager before any turn, check or delivery touches a working copy, so no URL list can fall out of date.
+  orchestrator.onWorkspaceBusy((runId) => { previews.stop(runId); });
   app.get('/api/runs/:id/preview', async (request) => ({ preview: previews.get(idOf(request)) ?? null }));
   app.post('/api/runs/:id/preview/start', async (request) => {
     const id = idOf(request);

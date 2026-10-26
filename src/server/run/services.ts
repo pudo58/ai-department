@@ -36,6 +36,14 @@ export class RunServices {
   readonly deliveryLocks = new Set<string>();
 
   isDelivering(id: string): boolean { return this.deliveryLocks.has(id) || this.run(id).delivery?.status === 'in_progress'; }
+  /**
+   * Called when a run is about to use its working copy (an agent turn, checks, delivery). Whoever serves that copy by
+   * hand (the preview server) registers here to let go of it first, so a preview never runs beside the work it would
+   * disturb: on Windows an open process holds files that git and test runners then cannot touch.
+   */
+  onWorkspaceBusy?: (runId: string) => void;
+  workspaceBusy(runId: string): void { try { this.onWorkspaceBusy?.(runId); } catch { /* releasing a preview must never fail a run */ } }
+
   assertNotDelivering(id: string): void {
     if (this.isDelivering(id)) throw new HttpError(409, 'Đang giao kết quả; chờ giao xong rồi thử lại thao tác này.');
   }

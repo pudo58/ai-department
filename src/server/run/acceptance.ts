@@ -38,6 +38,7 @@ export class Acceptance {
 
   async acceptRun(runId: string, options: { acknowledgeWarnings?: boolean } = {}): Promise<Run> {
     this.s.assertNotDelivering(runId);
+    this.s.workspaceBusy(runId);
     // Lock before the first await: report generation itself can yield to another acceptance or edit.
     this.s.deliveryLocks.add(runId);
     try { return await this.acceptLocked(runId, options); }

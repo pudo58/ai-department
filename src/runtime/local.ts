@@ -118,12 +118,12 @@ export class LocalRuntime implements Runtime {
     const log: ToolLog = (message, level = 'info') => onEvent?.({ type: 'log', message, data: { source: 'setup', level } });
     const { needs, homes } = await this.resolveTools(run, ws, log);
     if (needs.python) {
-      await bootstrapPython(ws, (exe, args, timeoutMs) => executeFile(exe, args, { cwd: ws, timeoutMs, env: this.toolchains.env(ws, homes), ...streamTo(onEvent, 'setup') }), log);
+      await bootstrapPython(ws, (exe, args, timeoutMs) => executeFile(exe, args, { cwd: ws, timeoutMs, env: this.toolchains.env(ws, homes), scrubSecrets: 'provider', ...streamTo(onEvent, 'setup') }), log);
     }
     const setup = run.configSnapshot.setupCommand;
     if (setup.length) {
       const [cmd, ...args] = resolveHostCommand(setup);
-      const out = await executeFile(cmd!, args, { cwd: ws, timeoutMs: run.configSnapshot.limits?.setupMs ?? DEFAULT_SETUP_MS, env: this.toolchains.env(ws, homes), ...streamTo(onEvent, 'setup') });
+      const out = await executeFile(cmd!, args, { cwd: ws, timeoutMs: run.configSnapshot.limits?.setupMs ?? DEFAULT_SETUP_MS, env: this.toolchains.env(ws, homes), scrubSecrets: 'provider', ...streamTo(onEvent, 'setup') });
       assertProcessSucceeded(out, 'setup command');
       await this.ws.assertCleanAfterSetup(ws);
     }
@@ -137,7 +137,7 @@ export class LocalRuntime implements Runtime {
     const env=this.toolchains.env(cwd,prepared?.homes);
     return probeEnvironment(run,cwd,this.name,async(command,timeoutMs)=>{
       const [exe,...args]=resolveHostCommand(command);
-      return executeFile(exe!,args,{cwd,env,signal,timeoutMs});
+      return executeFile(exe!,args,{cwd,env,signal,timeoutMs,scrubSecrets:'all'});
     },signal);
   }
 
@@ -145,9 +145,35 @@ export class LocalRuntime implements Runtime {
     const { run, attempt, role } = exec;
     const config = run.configSnapshot.roles[role as Role];
     const cwd = this.ws.dir(run, attempt.slot);
-    if (config.provider === 'claude') return this.runClaude(exec, cwd);
+    if (config.provider === 'claude') return this.guardGitMeta(exec, cwd, 'Claude Code', () => this.runClaude(exec, cwd));
     if (config.provider === 'antigravity') return this.runAntigravity(exec, cwd);
     if (config.provider !== 'codex') throw new RuntimeBlockedError(`Provider ${config.provider} chưa hỗ trợ chạy local.`);
+    return this.guardGitMeta(exec, cwd, 'Codex', () => this.runCodex(exec, cwd));
+  }
+
+  /**
+   * `.git/config` and `.git/hooks` must be exactly as they were before the turn, whichever agent ran. A hook runs at the
+   * next git command and a config key such as diff.external or a filter driver runs code when the harness diffs or stages,
+   * so a turn that touched either is void: both are restored and the uncommitted changes of the turn are rolled back.
+   * (Antigravity does the same inside its own turn, together with its permission files.)
+   */
+  private async guardGitMeta<T>(exec: AgentExecution, cwd: string, who: string, turn: () => Promise<T>): Promise<T> {
+    const before = await gitMeta(cwd);
+    let result: T | undefined, failure: unknown, failed = false;
+    try { result = await turn(); } catch (error) { failure = error; failed = true; }
+    // Checked even when the agent failed or was stopped: a hook left behind would outlive the attempt.
+    const tampered = await restoreGitMeta(cwd, before);
+    if (tampered.length) {
+      await this.ws.revert(exec.run, exec.attempt.slot);
+      throw new Error(`Lượt ${who} đã sửa ${tampered.join(', ')} trong bản sao làm việc; đã khôi phục. Lượt này bị huỷ và các thay đổi chưa commit đã được hoàn tác.`);
+    }
+    if (failed) throw failure;
+    return result as T;
+  }
+
+  private async runCodex(exec: AgentExecution, cwd: string): Promise<AgentResult> {
+    const { run, attempt, role } = exec;
+    const config = run.configSnapshot.roles[role as Role];
     const collector = new JsonlCollector({ provider: 'codex', previousCumulativeUsage: exec.previousUsage, onEvent: exec.onEvent });
     // buildCliCommand starts with the bare "codex"; the resolved prefix replaces it.
     const cmd = buildCliCommand({ provider: 'codex', model: config.model, effort: config.effort, sessionId: exec.sessionId, singleAgent: run.mode === 'single', readOnly: exec.readOnly, workdir: cwd,
@@ -307,7 +333,7 @@ export class LocalRuntime implements Runtime {
       }
       if (plan.note) exec.onEvent?.({ type: 'log', message: plan.note, data: { source, level: 'warn' } });
       const [cmd, ...args] = resolveHostCommand(plan.command);
-      const result = await executeFile(cmd!, args, { cwd, timeoutMs: recipe.timeoutMs, signal: exec.signal, maxOutputBytes: 64 * 1024 * 1024, env: await this.envFor(run, cwd), ...streamTo(exec.onEvent, source) });
+      const result = await executeFile(cmd!, args, { cwd, timeoutMs: recipe.timeoutMs, signal: exec.signal, maxOutputBytes: 64 * 1024 * 1024, env: await this.envFor(run, cwd), scrubSecrets: 'all', ...streamTo(exec.onEvent, source) });
       let report: unknown;
       if (recipe.reportPath) {
         report = await readReport(cwd, recipe.reportPath);

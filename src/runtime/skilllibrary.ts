@@ -129,7 +129,7 @@ export class SkillLibrary {
     if (res.status === 403 || res.status === 429) throw new Error('GitHub đang giới hạn số lần tải (rate limit); thử lại sau ít phút.');
     if (!res.ok || !res.body) throw new Error(`GitHub trả lỗi ${res.status}.`);
     const host = new URL(res.url || api).hostname;
-    if (!['api.github.com', 'codeload.github.com', 'github.com', '127.0.0.1', 'localhost'].includes(host)) throw new Error(`GitHub chuyển hướng tới máy lạ (${host}); dừng.`);
+    if (!['api.github.com', 'codeload.github.com', 'github.com'].includes(host)) throw new Error(`GitHub chuyển hướng tới máy lạ (${host}); dừng.`);
     if (Number(res.headers.get('content-length') ?? 0) > MAX_DOWNLOAD) throw new Error('Repo quá lớn để tải (trên 50 MB).');
     const chunks: Buffer[] = [];
     let size = 0;
