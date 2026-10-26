@@ -20,7 +20,12 @@ Cùng 8 task, cùng manifest đã đăng ký (assignment và hash gói task khô
 
 Chênh lệch tỉ lệ nghiệm thu của Department so với Single: −12,5 điểm (95% CI −25 → 0); so với native: −12,5 (CI −38 → +19). Mẫu còn rất nhỏ.
 
-Các ô Department chưa được nghiệm thu sau khi sửa (4/16): `bookings` lần 2 và `pulsegraph` lần 1 (test do Author viết sai, mã đúng; chẩn đoán vẫn không cứu được), `pulsegraph` lần 2 và `runner` lần 2 (mã sai thật, bị chặn đúng).
+Điểm "đạt grader" của hai dòng harness-team ở trên là điểm với grader PulseGraph đã điều chỉnh (15/16 lúc đăng ký, 14/16 sau khi sửa; chưa điều chỉnh là 13/16 cho cả hai).
+
+Các ô Department chưa được nghiệm thu sau khi sửa (4/16), theo lý do dừng ghi trong dữ liệu:
+- `bookings` lần 2: dừng vì check `test` thất bại ở test `[R-3][R-5][C-3]` do Author viết; mã đạt 23/23. Đây là nguyên nhân "test Author sai" còn lại.
+- `pulsegraph` lần 1: dừng vì "Developer không thay đổi file nào"; mã đạt 44/44 với grader đã điều chỉnh. Tôi chưa chứng minh được nguyên nhân gốc (test sai hay Developer bỏ lượt), nên không gán nhãn.
+- `pulsegraph` lần 2 (38/44) và `runner` lần 2 (27/28): mã sai thật và bị chặn bởi finding của Verifier, tức là chặn đúng.
 
 ## Điều phải nêu
 
