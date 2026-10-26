@@ -1,0 +1,9 @@
+{
+  "classification": "TEST_SCRIPT",
+  "case": "C01 concurrency",
+  "original": "Promise.allSettled(Array.from(..., () => reserve(...))) evaluates synchronous throws before allSettled receives the array.",
+  "correction": "Only wrap the Array.from mapper in async so both permitted synchronous and asynchronous implementations become promises. Inputs, assertions, case count and expected results are unchanged.",
+  "evidence": "Original Department score 32/33 was invalid: code throws OUT_OF_STOCK synchronously as explicitly permitted by SPEC. Original native score 33/33 benefited from async methods.",
+  "preservation": "Original grade.mjs and its preregistered hash remain unchanged. grade-compatible.mjs contains the disclosed correction; original outputs are retained separately.",
+  "application": "Run corrected evaluator on both original frozen candidate checkpoints, without code repair or feedback to either agent. Post-hoc null diagnostics remain outside this score."
+}

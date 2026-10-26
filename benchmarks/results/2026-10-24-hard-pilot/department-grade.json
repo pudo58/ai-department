@@ -1,0 +1,261 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-leasequeue-20261024\\department-result",
+  "total": 42,
+  "passed": 42,
+  "failed": 0,
+  "score": 10,
+  "results": [
+    {
+      "id": "B01",
+      "group": "basic",
+      "status": "passed",
+      "durationMs": 0.4528000000000034
+    },
+    {
+      "id": "B02",
+      "group": "basic",
+      "status": "passed",
+      "durationMs": 0.7989999999999995
+    },
+    {
+      "id": "V01",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.5989000000000004
+    },
+    {
+      "id": "V02",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.45190000000000197
+    },
+    {
+      "id": "V03",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.3149000000000015
+    },
+    {
+      "id": "V04",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.15460000000000207
+    },
+    {
+      "id": "I01",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.272199999999998
+    },
+    {
+      "id": "I02",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.7995999999999981
+    },
+    {
+      "id": "I03",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.3714999999999975
+    },
+    {
+      "id": "I04",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.8998999999999953
+    },
+    {
+      "id": "A01",
+      "group": "tenants",
+      "status": "passed",
+      "durationMs": 0.477099999999993
+    },
+    {
+      "id": "A02",
+      "group": "tenants",
+      "status": "passed",
+      "durationMs": 0.26489999999999725
+    },
+    {
+      "id": "S01",
+      "group": "scheduling",
+      "status": "passed",
+      "durationMs": 0.24020000000000152
+    },
+    {
+      "id": "S02",
+      "group": "scheduling",
+      "status": "passed",
+      "durationMs": 0.22759999999999536
+    },
+    {
+      "id": "S03",
+      "group": "scheduling",
+      "status": "passed",
+      "durationMs": 3.473799999999997
+    },
+    {
+      "id": "S04",
+      "group": "scheduling",
+      "status": "passed",
+      "durationMs": 0.15690000000000737
+    },
+    {
+      "id": "L01",
+      "group": "leases",
+      "status": "passed",
+      "durationMs": 0.2546000000000106
+    },
+    {
+      "id": "L02",
+      "group": "leases",
+      "status": "passed",
+      "durationMs": 0.17919999999999447
+    },
+    {
+      "id": "L03",
+      "group": "leases",
+      "status": "passed",
+      "durationMs": 0.1570999999999998
+    },
+    {
+      "id": "L04",
+      "group": "leases",
+      "status": "passed",
+      "durationMs": 0.15090000000000714
+    },
+    {
+      "id": "L05",
+      "group": "leases",
+      "status": "passed",
+      "durationMs": 0.2073999999999927
+    },
+    {
+      "id": "L06",
+      "group": "leases",
+      "status": "passed",
+      "durationMs": 0.6060000000000088
+    },
+    {
+      "id": "K01",
+      "group": "ack",
+      "status": "passed",
+      "durationMs": 0.2979999999999876
+    },
+    {
+      "id": "K02",
+      "group": "ack",
+      "status": "passed",
+      "durationMs": 0.16500000000000625
+    },
+    {
+      "id": "F01",
+      "group": "retry",
+      "status": "passed",
+      "durationMs": 0.3208000000000055
+    },
+    {
+      "id": "F02",
+      "group": "retry",
+      "status": "passed",
+      "durationMs": 0.23090000000000543
+    },
+    {
+      "id": "X01",
+      "group": "cancel",
+      "status": "passed",
+      "durationMs": 0.209699999999998
+    },
+    {
+      "id": "X02",
+      "group": "cancel",
+      "status": "passed",
+      "durationMs": 0.2400999999999982
+    },
+    {
+      "id": "X03",
+      "group": "cancel",
+      "status": "passed",
+      "durationMs": 0.13309999999999889
+    },
+    {
+      "id": "C01",
+      "group": "concurrency",
+      "status": "passed",
+      "durationMs": 17.836399999999998
+    },
+    {
+      "id": "C02",
+      "group": "concurrency",
+      "status": "passed",
+      "durationMs": 15.103200000000001
+    },
+    {
+      "id": "C03",
+      "group": "concurrency",
+      "status": "passed",
+      "durationMs": 15.49430000000001
+    },
+    {
+      "id": "C04",
+      "group": "concurrency",
+      "status": "passed",
+      "durationMs": 46.56230000000001
+    },
+    {
+      "id": "C05",
+      "group": "concurrency",
+      "status": "passed",
+      "durationMs": 218.46059999999997
+    },
+    {
+      "id": "E01",
+      "group": "storage",
+      "status": "passed",
+      "durationMs": 0.2347000000000321
+    },
+    {
+      "id": "E02",
+      "group": "storage",
+      "status": "passed",
+      "durationMs": 0.22690000000000055
+    },
+    {
+      "id": "E03",
+      "group": "storage",
+      "status": "passed",
+      "durationMs": 0.08690000000001419
+    },
+    {
+      "id": "E04",
+      "group": "storage",
+      "status": "passed",
+      "durationMs": 0.1179000000000201
+    },
+    {
+      "id": "P01",
+      "group": "persistence",
+      "status": "passed",
+      "durationMs": 0.25230000000004793
+    },
+    {
+      "id": "P02",
+      "group": "persistence",
+      "status": "passed",
+      "durationMs": 71.14159999999998
+    },
+    {
+      "id": "D01",
+      "group": "isolation",
+      "status": "passed",
+      "durationMs": 0.24780000000004065
+    },
+    {
+      "id": "D02",
+      "group": "isolation",
+      "status": "passed",
+      "durationMs": 0.19710000000003447
+    }
+  ]
+}

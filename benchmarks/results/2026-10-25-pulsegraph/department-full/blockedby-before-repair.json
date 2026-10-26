@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-25T08:27:05.557Z",
+  "source": "Verifier finding fnd_f8f7089a; supplementary probe, outside the original 75-item grader",
+  "results": [
+    {
+      "label": "department",
+      "steps": [
+        "submit A,B,C with C dependsOn [A,B]",
+        "cancel B",
+        "cancel A"
+      ],
+      "afterB": {
+        "id": "C",
+        "dependsOn": [
+          "A",
+          "B"
+        ],
+        "priority": 0,
+        "sequence": 2,
+        "status": "blocked",
+        "attempt": 0,
+        "availableAt": 0,
+        "blockedBy": "B"
+      },
+      "afterA": {
+        "id": "C",
+        "dependsOn": [
+          "A",
+          "B"
+        ],
+        "priority": 0,
+        "sequence": 2,
+        "status": "blocked",
+        "attempt": 0,
+        "availableAt": 0,
+        "blockedBy": "B"
+      },
+      "expected": {
+        "status": "blocked",
+        "blockedBy": "A"
+      },
+      "passed": false
+    },
+    {
+      "label": "single",
+      "steps": [
+        "submit A,B,C with C dependsOn [A,B]",
+        "cancel B",
+        "cancel A"
+      ],
+      "afterB": {
+        "id": "C",
+        "dependsOn": [
+          "A",
+          "B"
+        ],
+        "priority": 0,
+        "sequence": 2,
+        "status": "blocked",
+        "attempt": 0,
+        "availableAt": 0,
+        "blockedBy": "B"
+      },
+      "afterA": {
+        "id": "C",
+        "dependsOn": [
+          "A",
+          "B"
+        ],
+        "priority": 0,
+        "sequence": 2,
+        "status": "blocked",
+        "attempt": 0,
+        "availableAt": 0,
+        "blockedBy": "B"
+      },
+      "expected": {
+        "status": "blocked",
+        "blockedBy": "A"
+      },
+      "passed": false
+    },
+    {
+      "label": "reference",
+      "steps": [
+        "submit A,B,C with C dependsOn [A,B]",
+        "cancel B",
+        "cancel A"
+      ],
+      "afterB": {
+        "id": "C",
+        "dependsOn": [
+          "A",
+          "B"
+        ],
+        "priority": 0,
+        "sequence": 3,
+        "status": "blocked",
+        "attempt": 0,
+        "availableAt": 0,
+        "blockedBy": "B"
+      },
+      "afterA": {
+        "id": "C",
+        "dependsOn": [
+          "A",
+          "B"
+        ],
+        "priority": 0,
+        "sequence": 3,
+        "status": "blocked",
+        "attempt": 0,
+        "availableAt": 0,
+        "blockedBy": "B"
+      },
+      "expected": {
+        "status": "blocked",
+        "blockedBy": "A"
+      },
+      "passed": false
+    }
+  ]
+}

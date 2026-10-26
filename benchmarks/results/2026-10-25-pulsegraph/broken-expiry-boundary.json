@@ -1,0 +1,531 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\test-results\\2026-10-25-pulsegraph\\mutants\\broken-expiry-boundary.mjs",
+  "at": "2026-10-25T07:34:29.652Z",
+  "passed": 62,
+  "failed": 13,
+  "total": 75,
+  "byGroup": {
+    "public-api": {
+      "passed": 1,
+      "total": 1
+    },
+    "time": {
+      "passed": 5,
+      "total": 5
+    },
+    "validation": {
+      "passed": 10,
+      "total": 10
+    },
+    "states": {
+      "passed": 1,
+      "total": 1
+    },
+    "dependencies": {
+      "passed": 9,
+      "total": 10
+    },
+    "ordering": {
+      "passed": 3,
+      "total": 3
+    },
+    "lease": {
+      "passed": 8,
+      "total": 10
+    },
+    "aliasing": {
+      "passed": 4,
+      "total": 4
+    },
+    "retry": {
+      "passed": 5,
+      "total": 8
+    },
+    "cancel": {
+      "passed": 5,
+      "total": 5
+    },
+    "history": {
+      "passed": 1,
+      "total": 1
+    },
+    "snapshot": {
+      "passed": 4,
+      "total": 4
+    },
+    "ids": {
+      "passed": 1,
+      "total": 1
+    },
+    "stateful": {
+      "passed": 5,
+      "total": 12
+    }
+  },
+  "results": [
+    {
+      "id": "D01-empty-defaults",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.7444999999999986
+    },
+    {
+      "id": "D02-custom-options",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.0522999999999989
+    },
+    {
+      "id": "D03-invalid-options-INVALID_TIME--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.13319999999999865
+    },
+    {
+      "id": "D03-invalid-options-INVALID_TIME-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.01419999999999888
+    },
+    {
+      "id": "D03-invalid-options-INVALID_INPUT-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.014800000000001035
+    },
+    {
+      "id": "D03-invalid-options-INVALID_INPUT-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.00999999999999801
+    },
+    {
+      "id": "D04-submit-ready",
+      "group": "states",
+      "status": "PASSED",
+      "ms": 0.1833999999999989
+    },
+    {
+      "id": "D05-submit-waits-for-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.16979999999999862
+    },
+    {
+      "id": "D06-completion-readies-child",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.20609999999999928
+    },
+    {
+      "id": "D07-transitive-readiness",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.14320000000000022
+    },
+    {
+      "id": "D08-unknown-dependency-atomic",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.08910000000000196
+    },
+    {
+      "id": "D09-invalid-dependency-list",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.0730000000000004
+    },
+    {
+      "id": "D10-existing-job-id",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.0472999999999999
+    },
+    {
+      "id": "D11-invalid-job-scalars",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.06709999999999994
+    },
+    {
+      "id": "D12-priority-descending",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.06959999999999766
+    },
+    {
+      "id": "D13-fifo-within-priority",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.042200000000001125
+    },
+    {
+      "id": "D14-negative-priorities",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.04639999999999844
+    },
+    {
+      "id": "D15-claim-increments-token-and-attempt",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.023200000000002774
+    },
+    {
+      "id": "D16-global-fencing-token",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.06700000000000017
+    },
+    {
+      "id": "D17-renew-extends",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.10549999999999926
+    },
+    {
+      "id": "D18-renew-does-not-shorten",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.038699999999998624
+    },
+    {
+      "id": "D19-wrong-worker-loses-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.03979999999999961
+    },
+    {
+      "id": "D20-wrong-token-loses-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.04829999999999757
+    },
+    {
+      "id": "D21-boundary-expires-before-return",
+      "group": "lease",
+      "status": "FAILED",
+      "ms": 0.8051999999999992,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   expired: [],\n-   expired: [\n-     'a'\n-   ],\n    now: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:39:145\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:39:1"
+    },
+    {
+      "id": "D22-lease-remains-current-before-boundary",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.06700000000000017
+    },
+    {
+      "id": "D23-complete-detaches-result",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.6158000000000001
+    },
+    {
+      "id": "D24-success-unblocks-dependent",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.11560000000000059
+    },
+    {
+      "id": "D25-fail-retry-base-delay",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.11950000000000216
+    },
+    {
+      "id": "D26-exponential-retry-delay",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.06149999999999878
+    },
+    {
+      "id": "D27-attempt-limit-includes-first-claim",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.050200000000000244
+    },
+    {
+      "id": "D28-expiry-boundary-retries",
+      "group": "retry",
+      "status": "FAILED",
+      "ms": 0.26159999999999783,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   expired: [],\n-   expired: [\n-     'a'\n-   ],\n    now: 3\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:46:199\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:46:1"
+    },
+    {
+      "id": "D29-expiry-order-deadline-then-sequence",
+      "group": "retry",
+      "status": "FAILED",
+      "ms": 0.1875,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'b',\n-   'a'\n  ]\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:47:242\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:47:1"
+    },
+    {
+      "id": "D30-expiry-exhausts-to-dead",
+      "group": "retry",
+      "status": "FAILED",
+      "ms": 0.15380000000000038,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'leased' !== 'dead'\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:48:164\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:48:1"
+    },
+    {
+      "id": "D31-expiry-blocks-descendants",
+      "group": "dependencies",
+      "status": "FAILED",
+      "ms": 0.16369999999999862,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'waiting'\n- 'blocked'\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:49:199\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:49:1"
+    },
+    {
+      "id": "D32-failure-does-not-yet-block-child",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.0660000000000025
+    },
+    {
+      "id": "D33-exhausted-failure-blocks-transitively",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.07939999999999969
+    },
+    {
+      "id": "D34-blockedBy-uses-first-failed-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.07479999999999976
+    },
+    {
+      "id": "D35-cancel-ready-blocks-child",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.02979999999999805
+    },
+    {
+      "id": "D36-cancel-waiting-blocks-transitive",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.04100000000000037
+    },
+    {
+      "id": "D37-cancel-leased-invalidates-token",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.05829999999999913
+    },
+    {
+      "id": "D38-cancel-terminal-is-error",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.03890000000000171
+    },
+    {
+      "id": "D39-cancel-unknown-is-error",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.017600000000001614
+    },
+    {
+      "id": "D40-unknown-get-is-error",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.015900000000002024
+    },
+    {
+      "id": "D41-duplicate-id-after-cancel",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.03849999999999909
+    },
+    {
+      "id": "D42-invalid-time-does-not-mutate",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.047399999999999665
+    },
+    {
+      "id": "D43-same-time-advance-no-double-expiry",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.031500000000001194
+    },
+    {
+      "id": "D44-advance-without-expiry-updates-time",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.014700000000001268
+    },
+    {
+      "id": "D45-snapshot-restores-live-lease",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.14450000000000074
+    },
+    {
+      "id": "D46-restored-claim-token-never-repeats",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.07160000000000011
+    },
+    {
+      "id": "D47-restores-delayed-retry",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.09690000000000154
+    },
+    {
+      "id": "D48-original-and-restored-are-independent",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.045800000000003394
+    },
+    {
+      "id": "D49-snapshot-and-view-are-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.0373999999999981
+    },
+    {
+      "id": "D50-input-dependencies-are-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.03340000000000032
+    },
+    {
+      "id": "D51-get-result-is-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.056699999999999307
+    },
+    {
+      "id": "D52-special-string-IDs",
+      "group": "ids",
+      "status": "PASSED",
+      "ms": 0.034799999999997056
+    },
+    {
+      "id": "D53-expired-matching-lease-before-advance",
+      "group": "lease",
+      "status": "FAILED",
+      "ms": 0.11939999999999884,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'LEASE_EXPIRED'\n- 'LEASE_LOST'\n         ^\n\n    at expectCode (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:15:137)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:71:170\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:71:1"
+    },
+    {
+      "id": "D54-claim-never-overrides-live-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.027599999999999625
+    },
+    {
+      "id": "D55-retry-clears-active-lease-and-preserves-error",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.03499999999999659
+    },
+    {
+      "id": "D56-completion-clears-last-error",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.04910000000000281
+    },
+    {
+      "id": "D57-claim-does-not-expire-implicitly",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.023499999999998522
+    },
+    {
+      "id": "D58-submit-from-already-done-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.0409000000000006
+    },
+    {
+      "id": "D59-submit-from-dead-dependency-is-blocked",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.03979999999999961
+    },
+    {
+      "id": "D60-fail-rejects-empty-error",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.04649999999999466
+    },
+    {
+      "id": "T01-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 4.670500000000004,
+      "error": "AssertionError [ERR_ASSERTION]: seed=1 step=44 method=advance\n+ actual - expected\n\n  {\n    value: {\n+     expired: [],\n-     expired: [\n-       's1-24'\n-     ],\n      now: 4\n    }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:80\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    },
+    {
+      "id": "T02-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 8.885000000000005
+    },
+    {
+      "id": "T03-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.7672000000000025
+    },
+    {
+      "id": "T04-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 3.025500000000001,
+      "error": "AssertionError [ERR_ASSERTION]: seed=4 step=58 method=advance\n+ actual - expected\n\n  {\n    value: {\n+     expired: [],\n-     expired: [\n-       's4-36'\n-     ],\n      now: 12\n    }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:80\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    },
+    {
+      "id": "T05-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 4.2819999999999965
+    },
+    {
+      "id": "T06-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 2.696300000000001,
+      "error": "AssertionError [ERR_ASSERTION]: seed=6 step=49 method=advance\n+ actual - expected\n\n  {\n    value: {\n+     expired: [],\n-     expired: [\n-       's6-46'\n-     ],\n      now: 9\n    }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:80\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    },
+    {
+      "id": "T07-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 6.395399999999995
+    },
+    {
+      "id": "T08-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.978099999999998
+    },
+    {
+      "id": "T09-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 3.055099999999996,
+      "error": "AssertionError [ERR_ASSERTION]: seed=9 step=57 method=advance\n+ actual - expected\n\n  {\n    value: {\n+     expired: [],\n-     expired: [\n-       's9-27'\n-     ],\n      now: 5\n    }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:80\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    },
+    {
+      "id": "T10-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 1.7615999999999872,
+      "error": "AssertionError [ERR_ASSERTION]: seed=10 step=36 method=advance\n+ actual - expected\n\n  {\n    value: {\n+     expired: [],\n-     expired: [\n-       's10-23'\n-     ],\n      now: 3\n    }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:80\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    },
+    {
+      "id": "T11-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 1.9649,
+      "error": "AssertionError [ERR_ASSERTION]: seed=11 step=45 method=advance\n+ actual - expected\n\n  {\n    value: {\n+     expired: [],\n-     expired: [\n-       's11-25'\n-     ],\n      now: 7\n    }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:80\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    },
+    {
+      "id": "T12-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.531800000000004,
+      "error": "AssertionError [ERR_ASSERTION]: seed=12 step=15 method=advance\n+ actual - expected\n\n  {\n    value: {\n+     expired: [],\n-     expired: [\n-       's12-2'\n-     ],\n      now: 3\n    }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:80\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    }
+  ]
+}

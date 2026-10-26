@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T15:20:27.081Z",
+  "kind": "Post-run grader defect adjudication, not a new model trial or discarded failure",
+  "originalSpecHash": "db4b26f47ffc4c9d4019225e263e1ef68d97f9268f0a643549d50efe18e73893",
+  "originalGraderHash": "a21b669d8881f9c92c2f63268e648b372e2993dcb46833db3e506f891637bef3",
+  "caseId": "D05-invalid-restore-",
+  "input": "restorePatchBook([])",
+  "finding": "The frozen grader assumed arrays must throw INVALID. SPEC clause 8 requires INVALID for null/non-object outer arguments, and only defines correct restoration for implementation-produced snapshots. An Array is a non-null JavaScript object, is not a produced snapshot, and its response is otherwise unspecified. The grader did not establish a required INVALID response.",
+  "attribution": "Benchmark TEST_SCRIPT defect, not a demonstrated Single application defect.",
+  "alternativeReference": {
+    "passed": 94,
+    "total": 95,
+    "onlyFailure": "D05-invalid-restore-"
+  },
+  "decision": "Keep original SPEC/grader and every raw result unchanged. Exclude this single unsupported assertion from the spec-founded comparison for BOTH arms; retain it as unscored with observed output. Do not alter candidate code, feed this result to model or claim a 95/95 Single score.",
+  "arms": {
+    "department": {
+      "raw": {
+        "passed": 95,
+        "total": 95,
+        "failed": 0
+      },
+      "specFounded": {
+        "passed": 94,
+        "total": 94,
+        "failed": 0
+      },
+      "unscored": [
+        {
+          "id": "D05-invalid-restore-",
+          "group": "validation",
+          "status": "passed",
+          "durationMs": 0.004599999999996385
+        }
+      ]
+    },
+    "single": {
+      "raw": {
+        "passed": 94,
+        "total": 95,
+        "failed": 1
+      },
+      "specFounded": {
+        "passed": 94,
+        "total": 94,
+        "failed": 0
+      },
+      "unscored": [
+        {
+          "id": "D05-invalid-restore-",
+          "group": "validation",
+          "status": "failed",
+          "durationMs": 0.23629999999999995,
+          "error": "AssertionError [ERR_ASSERTION]: Expected Error\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:68)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:36"
+        }
+      ]
+    }
+  },
+  "acceptance": "Original frozen protocol required all grader assertions pass. Department was already accepted under it. Single remains awaiting_acceptance and is not delivered; this is an operator protocol hold, not a pipeline blocker or evidence of inferior program behavior."
+}

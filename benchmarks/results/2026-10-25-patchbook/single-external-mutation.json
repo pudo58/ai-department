@@ -1,0 +1,3065 @@
+{
+  "schemaVersion": 1,
+  "source": "stryker-vitest",
+  "status": "completed",
+  "checkpoint": "12141d1e162919d9601716742a1e437adc49b1df",
+  "slot": "A",
+  "contractVersion": 2,
+  "configHash": "291d95790ffac747cb283fede69bfeaed29bc2556a840ddb5037dd28d7a4a840",
+  "capability": {
+    "adapter": "stryker-vitest",
+    "root": ".",
+    "candidates": [
+      "."
+    ],
+    "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+    "status": "available",
+    "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+    "toolVersion": "9.6.1",
+    "vitestVersion": "3.2.4",
+    "configFile": "vitest.config.js"
+  },
+  "startedAt": "2026-10-25T15:15:54.694Z",
+  "durationMs": 82645,
+  "baseline": "passed",
+  "counts": {
+    "killed": 392,
+    "survived": 100,
+    "no_coverage": 10,
+    "timeout": 2,
+    "errors": 0,
+    "pending": 0
+  },
+  "mutants": [
+    {
+      "file": "src/patchbook.js",
+      "line": 19,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 19,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 75,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 75,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 110,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 110,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 127,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 127,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 1,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 4,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 4,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 4,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 4,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 4,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 4,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 6,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 7,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 8,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 8,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 8,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 8,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 8,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 8,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 9,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 9,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 9,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 9,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 9,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 9,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 9,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 9,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 12,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 12,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 12,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 13,
+      "status": "Survived",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "UpdateOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 15,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 15,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 15,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 15,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 15,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 18,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 19,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 19,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 19,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 20,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 20,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 20,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 21,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 22,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 22,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 22,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 29,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 30,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 31,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 31,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 31,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 31,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 31,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 31,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 31,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 32,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 32,
+      "status": "Timeout",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 32,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 32,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 32,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 32,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 32,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 33,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 33,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 33,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Survived",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 34,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 36,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 39,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 41,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 42,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 42,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 42,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 43,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 44,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 44,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 44,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 44,
+      "status": "Timeout",
+      "mutator": "UpdateOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 44,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "AssignmentOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 46,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 47,
+      "status": "Killed",
+      "mutator": "UpdateOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 48,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 48,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 48,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 48,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 48,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 50,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 50,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 57,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 58,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 58,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 58,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 58,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 58,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Survived",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Survived",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 60,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 61,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 61,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 65,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 65,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 65,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 65,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 65,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 65,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 65,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 65,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 66,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 67,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 67,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 67,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 67,
+      "status": "Killed",
+      "mutator": "UpdateOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 67,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 68,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 68,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 68,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 68,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 68,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 68,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 68,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 70,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 73,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 73,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 76,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 76,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 76,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 76,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 77,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 78,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 81,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 84,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 86,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 87,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 87,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 87,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 89,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 89,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 89,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 89,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 89,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 89,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 91,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 92,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 92,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 92,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 92,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 92,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 94,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 94,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 98,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Survived",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 99,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 101,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 101,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 101,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 101,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 101,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 104,
+      "status": "Survived",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 104,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 105,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 105,
+      "status": "Killed",
+      "mutator": "UnaryOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 105,
+      "status": "Killed",
+      "mutator": "UnaryOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 106,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 106,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 106,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 107,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 107,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 107,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 107,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 107,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 107,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 107,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 109,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 111,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 113,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 116,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 117,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 117,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 117,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 118,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 119,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 119,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 120,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 120,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 120,
+      "status": "Survived",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 120,
+      "status": "Survived",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 123,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 124,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 124,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 124,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 126,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 126,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 127,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 127,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 127,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Survived",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Survived",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 131,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 132,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 133,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 133,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 133,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 133,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 134,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 134,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 134,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 134,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 135,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 135,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 135,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 135,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 135,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 136,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 136,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 136,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 136,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 136,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 140,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 140,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Survived",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 141,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 142,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 142,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 148,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 149,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 149,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 150,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 152,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 152,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 152,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 152,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 153,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 153,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 153,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 154,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 154,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 154,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 154,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 154,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 154,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 155,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 155,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 158,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 158,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 158,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 158,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 158,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 161,
+      "status": "Killed",
+      "mutator": "UpdateOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 163,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 164,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 167,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 168,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 173,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 174,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 177,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 178,
+      "status": "Survived",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 1,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 2,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/patchbook.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    }
+  ],
+  "files": [
+    "src/patchbook.js"
+  ],
+  "message": "Đã kiểm tra các mutation trong phạm vi source đã chọn.",
+  "endedAt": "2026-10-25T15:17:17.339Z",
+  "externalToSinglePipeline": true
+}

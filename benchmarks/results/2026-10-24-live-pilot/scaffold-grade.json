@@ -1,0 +1,240 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-pilot-20261024\\base",
+  "total": 33,
+  "passed": 0,
+  "failed": 33,
+  "score": 0,
+  "results": [
+    {
+      "id": "H01",
+      "group": "happy",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.11439999999999984
+    },
+    {
+      "id": "H02",
+      "group": "happy",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.0365000000000002
+    },
+    {
+      "id": "V01",
+      "group": "invalid",
+      "status": "failed",
+      "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: NOT_IMPLEMENTED",
+      "durationMs": 0.5220999999999982
+    },
+    {
+      "id": "V02",
+      "group": "invalid",
+      "status": "failed",
+      "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: NOT_IMPLEMENTED",
+      "durationMs": 0.1086000000000027
+    },
+    {
+      "id": "V03",
+      "group": "invalid",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.04169999999999874
+    },
+    {
+      "id": "V04",
+      "group": "invalid",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.031099999999998573
+    },
+    {
+      "id": "V05",
+      "group": "invalid",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.021300000000000097
+    },
+    {
+      "id": "I01",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.023099999999999454
+    },
+    {
+      "id": "I02",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.022500000000000853
+    },
+    {
+      "id": "I03",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02809999999999846
+    },
+    {
+      "id": "I04",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.021399999999999864
+    },
+    {
+      "id": "I05",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.026499999999998636
+    },
+    {
+      "id": "I06",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.019999999999999574
+    },
+    {
+      "id": "I07",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.021000000000000796
+    },
+    {
+      "id": "I08",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.019999999999999574
+    },
+    {
+      "id": "A01",
+      "group": "authorization",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.019199999999997885
+    },
+    {
+      "id": "A02",
+      "group": "authorization",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.016099999999998005
+    },
+    {
+      "id": "A03",
+      "group": "authorization",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.029200000000003
+    },
+    {
+      "id": "S01",
+      "group": "state",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.020600000000001728
+    },
+    {
+      "id": "S02",
+      "group": "state",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.01729999999999876
+    },
+    {
+      "id": "S03",
+      "group": "state",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.017799999999997596
+    },
+    {
+      "id": "S04",
+      "group": "state",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.01769999999999783
+    },
+    {
+      "id": "T01",
+      "group": "expiry",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.01799999999999713
+    },
+    {
+      "id": "T02",
+      "group": "expiry",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.017900000000000915
+    },
+    {
+      "id": "T03",
+      "group": "expiry",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.018299999999999983
+    },
+    {
+      "id": "T04",
+      "group": "expiry",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.01839999999999975
+    },
+    {
+      "id": "T05",
+      "group": "expiry",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02359999999999829
+    },
+    {
+      "id": "C01",
+      "group": "concurrency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.03690000000000282
+    },
+    {
+      "id": "C02",
+      "group": "concurrency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02190000000000225
+    },
+    {
+      "id": "D01",
+      "group": "isolation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.03470000000000084
+    },
+    {
+      "id": "D02",
+      "group": "isolation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.019999999999999574
+    },
+    {
+      "id": "D03",
+      "group": "isolation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.017900000000000915
+    },
+    {
+      "id": "D04",
+      "group": "isolation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02230000000000132
+    }
+  ]
+}

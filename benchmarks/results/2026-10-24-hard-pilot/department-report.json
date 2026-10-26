@@ -1,0 +1,929 @@
+{
+  "quality": {
+    "enabled": true,
+    "plan": {
+      "schemaVersion": 1,
+      "cases": [
+        {
+          "id": "C-1",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "happy",
+          "risk": "Luồng vòng đời cơ bản sai: enqueue/claim/ack làm sai trạng thái, token, attempts hoặc để lộ trường nội bộ",
+          "priority": "high",
+          "preconditions": "Một openQueue với store trong bộ nhớ từ lib/stores.js, now có thể điều khiển được, leaseMs=1000",
+          "actions": "enqueue job có payload lồng nhau; claim bằng worker A; ack bằng đúng workerId và leaseToken; gọi list",
+          "expected": "enqueue trả status ready, attempts=0, workerId/leaseToken/leaseUntil/lastError=null, availableAt=now+delayMs; claim trả leased, attempts=1, workerId=A, token không rỗng, leaseUntil=now+leaseMs; ack trả done với workerId/leaseToken/leaseUntil null; payload giữ nguyên; job chỉ có đúng các trường đã nêu, không có trường receipt",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-2",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "happy",
+          "risk": "Thứ tự claim sai (priority, availableAt, thứ tự commit) hoặc claim job chưa đến hạn",
+          "priority": "high",
+          "preconditions": "Queue rỗng, now điều khiển được",
+          "actions": "enqueue theo thứ tự: A(priority 0), B(priority 5), C(priority 5, delayMs=0), D(priority 9, delayMs=500), E(priority 0, cùng thời điểm với A); claim liên tiếp ở now=0 rồi now=500 rồi khi hết job",
+          "expected": "Lần claim đầu trả B (priority cao nhất, cùng priority thì sớm hơn/commit trước); tiếp theo C; D không được trả khi now=0; khi now=500 D được trả trước A và E; A trước E theo thứ tự commit; khi không còn job đến hạn claim trả null (không ném lỗi)",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-3",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "happy",
+          "risk": "Fail/backoff sai công thức, sai ngưỡng dead, hoặc không xóa lease",
+          "priority": "high",
+          "preconditions": "backoffMs=100, maxAttempts=3, now điều khiển được",
+          "actions": "enqueue, claim, fail lần 1 ở now=1000; chờ đến đúng hạn và claim+fail lần 2 ở now=t2; claim+fail lần 3 ở now=t3; thêm một job có backoffMs=0 bằng openQueue riêng với maxAttempts=1 và fail ngay",
+          "expected": "Sau fail lần 1: ready, availableAt=1000+100*2^0=1100, lastError là chuỗi đã cung cấp, lease fields null; sau fail lần 2: availableAt=t2+200; sau lần 3 (attempts=3 >= maxAttempts): dead, không còn claim được; với backoffMs=0 và maxAttempts=1: dead ngay; fail với error rỗng hoặc chỉ khoảng trắng bị INVALID_INPUT và không đổi trạng thái",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-4",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "happy",
+          "risk": "Idempotency replay trả job cũ, trả trạng thái cũ, hoặc chấp nhận payload/priority/delayMs khác",
+          "priority": "high",
+          "preconditions": "Một job tenant T, key K, payload {a:1,b:[1,2]}, priority=3, delayMs=50 đã enqueue; job đã được ack thành done ở một lần chạy khác",
+          "actions": "enqueue lại (T,K) với payload {b:[1,2],a:1} cùng priority và delayMs; sau đó enqueue với payload {b:[2,1],a:1}, rồi priority=4, rồi delayMs=0; sau đó cancel một job ready khác và enqueue replay cho job đã cancelled",
+          "expected": "Replay đầu trả đúng cùng id và status done hiện tại (không tạo job mới, không đổi version); ba lần thay đổi trả IDEMPOTENCY_CONFLICT; replay trên job đã cancelled trả status cancelled hiện tại; key cùng giá trị ở tenant khác là job độc lập",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-5",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "state",
+          "risk": "Ack replay tạo mutation thừa hoặc chấp nhận token/worker sai trên done",
+          "priority": "high",
+          "preconditions": "Job đã claim bởi worker A với token t1 và ack thành done; đếm số lần gọi CAS của store wrapper",
+          "actions": "ack lại với A và t1; ack với worker B và t1; ack với A và token t2 sai; fail trên job done với A và t1",
+          "expected": "Ack lại với A/t1 trả cùng job done (cùng id, attempts, lastError, lease fields null) và không gọi CAS; ack với worker B hoặc token sai trả STALE_LEASE; fail trên done trả STALE_LEASE; không có trạng thái nào của job đổi",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-6",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "boundary",
+          "risk": "Validation cho phép giá trị sai, hoặc lỗi nhưng vẫn ghi store",
+          "priority": "high",
+          "preconditions": "Store trong bộ nhớ có đếm load/CAS; một queue hợp lệ đã có vài job",
+          "actions": "Thử từng đầu vào sai: options null/array/chuỗi; store thiếu load hoặc compareAndSwap; now không phải hàm; leaseMs=0, 1.5, 2**53; maxAttempts=-1; backoffMs=-1; method argument null, mảng, số, thiếu; tenantId/key/workerId/jobId/leaseToken là '' và '   '; priority=11, -11, 1.5; delayMs=-1; error ''; payload null, số, chuỗi, mảng có undefined, hàm, BigInt, NaN, Infinity, Date, object có chu trình, object lồng sâu có undefined",
+          "expected": "Mọi đầu vào sai đều reject với Error.code INVALID_INPUT; không có lệnh CAS nào và trạng thái list không đổi; leaseMs=1 và priority=10, -10 và delayMs=0 được chấp nhận",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-7",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "boundary",
+          "risk": "Va chạm tenant/key do ghép chuỗi hoặc prototype, hoặc chuẩn hóa khoảng trắng làm đổi định danh",
+          "priority": "high",
+          "preconditions": "Queue trong bộ nhớ",
+          "actions": "enqueue (tenant 'a', key 'b:c'), (tenant 'a:b', key 'c'), (tenant 'a', key 'b' + '\\u0000c'), (tenant '__proto__', key 'constructor'), (tenant 'constructor', key 'toString'), (tenant ' t1 ', key 'k') và (tenant 't1', key 'k'); list từng tenant",
+          "expected": "Mỗi cặp tạo job độc lập với id riêng (không ai bị replay nhầm); list tenant ' t1 ' và 't1' tách biệt; tenantId/key được giữ đúng từng byte gồm khoảng trắng đầu/cuối; không xảy ra lỗi prototype hay trả job của cặp khác",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-8",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "boundary",
+          "risk": "Lệch một mili giây tại mốc hết hạn lease",
+          "priority": "high",
+          "preconditions": "leaseMs=1000; job claim ở now=0 với token t1",
+          "actions": "ack với t1 ở now=999; sau đó claim lại job đó ở now=1000 bằng worker khác; ack với t1 ở now=1000",
+          "expected": "Ở now=999 ack thành công (job done). Ở vòng thứ hai, tại now=1000 lease đã hết hạn nên job được chuẩn hóa về ready hoặc dead trước khi xử lý; claim trả job với token mới khác t1; ack với t1 trả STALE_LEASE. Nếu now=1000 lần đầu thì ack với t1 phải trả STALE_LEASE",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-9",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "state",
+          "risk": "Chuẩn hóa hết hạn sai ngưỡng attempts, không xóa lease, hoặc tái claim không cấp token/attempts mới",
+          "priority": "high",
+          "preconditions": "leaseMs=100; maxAttempts=2; backoffMs=500 (để chứng minh expiry không dùng backoff)",
+          "actions": "enqueue job X và job Y; claim X ở now=0 (attempts=1), để hết hạn; list hoặc claim ở now=100; claim X lại ở now=100 (attempts=2), để hết hạn; list ở now=200; claim Y với maxAttempts=1 ở openQueue riêng và để hết hạn",
+          "expected": "Sau hết hạn lần 1: X ready, availableAt=100 (không cộng backoff), workerId/token/leaseUntil null; claim lại được ngay với attempts=2 và token mới khác token cũ; sau hết hạn lần 2 (attempts>=maxAttempts): X dead; Y với maxAttempts=1 chuyển thẳng dead",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-10",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "boundary",
+          "risk": "Mutation qua tham chiếu làm hỏng state; payload không được sao chép sâu",
+          "priority": "high",
+          "preconditions": "Queue trong bộ nhớ; payload lồng {x:{y:[1,{z:'a'}]}}",
+          "actions": "enqueue với payload; sau đó sửa payload gốc ở mọi tầng; sửa job trả về từ enqueue; sửa phần tử trong list; gọi get qua list lại; claim và ack rồi sửa job trả về",
+          "expected": "Mỗi lần đọc trả về bản sao độc lập, sửa đổi không đổi dữ liệu lưu; payload lưu giữ đúng cấu trúc lồng ban đầu; key order không ảnh hưởng replay (xem C-4)",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-11",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "authorization",
+          "risk": "Tenant B đọc hoặc thao tác được job của tenant A, hoặc lộ bản ghi qua thông báo lỗi",
+          "priority": "high",
+          "preconditions": "Tenant A có job ready J_A, job leased J_A2; tenant B có job leased đã hết hạn J_B và job ready J_B2",
+          "actions": "Tenant B gọi ack, fail, cancel với jobId J_A và với jobId không tồn tại; tenant A gọi cancel J_B; list cho cả hai tenant; so sánh thông báo lỗi và Error.code",
+          "expected": "Mọi thao tác cross-tenant và jobId không tồn tại đều trả NOT_FOUND với cùng code và cùng dạng thông báo, không chứa dữ liệu job khác; list chỉ trả đúng tenant; J_B vẫn ở trạng thái đã ghi trước đó sau thao tác của A (kiểm tra theo Q5)",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-12",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "authorization",
+          "risk": "Sở hữu job chỉ dựa vào workerId hoặc chấp nhận cặp (workerId, token) không khớp",
+          "priority": "high",
+          "preconditions": "Job leased bởi A với token t1 trong thời gian còn hiệu lực",
+          "actions": "Worker B ack/fail với t1; worker A ack/fail với token t2 lấy từ job khác; worker A ack với token rỗng/khoảng trắng; worker A ack với t1 đúng",
+          "expected": "B với t1 -> STALE_LEASE; A với token sai -> STALE_LEASE; token rỗng -> INVALID_INPUT; cặp đúng (A,t1) thành công; không có lần nào thay đổi job trước cặp đúng",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-13",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "concurrency",
+          "risk": "Hai queue object trên cùng store làm một job được claim hai lần hoặc trùng token",
+          "priority": "high",
+          "preconditions": "Store bất đồng bộ có độ trễ ngẫu nhiên trong load/CAS; 20 job ready cùng thời điểm; hai openQueue trên cùng store",
+          "actions": "Promise.all: 30 lần claim luân phiên giữa hai queue với workerId khác nhau; sau đó ack mọi job đã claim",
+          "expected": "Đúng 20 claim thành công, 10 claim còn lại trả null; mỗi jobId xuất hiện đúng một lần; tất cả token duy nhất; attempts=1 cho mọi job; sau ack không mất job nào",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-14",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "concurrency",
+          "risk": "Ghi trên state cũ (read-modify-write) hoặc coi CAS false là thành công",
+          "priority": "high",
+          "preconditions": "Store wrapper có thể ép CAS trả false k lần đầu; đếm số lần gọi CAS (xem Q1 về ngưỡng)",
+          "actions": "Với k=3: enqueue một job và gọi claim; với k vượt ngưỡng retry: gọi enqueue mới; giữa các lần false, ghi thêm từ queue thứ hai để state thật sự đổi",
+          "expected": "Với k=3, thao tác thành công sau khi load lại, trạng thái cuối gồm cả thay đổi của queue kia, không có lần ghi đè; khi vượt ngưỡng ghi theo Q1, thao tác ném CONFLICT và store không có thay đổi từ thao tác đó",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-15",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "concurrency",
+          "risk": "Mất enqueue hoặc ghi đè job done khi hai queue thao tác xen kẽ với độ trễ bất đồng bộ",
+          "priority": "high",
+          "preconditions": "Store có delay ngẫu nhiên trong load và CAS (ví dụ setTimeout ngắn có seed cố định); hai queue",
+          "actions": "Chạy song song 50 thao tác hỗn hợp: enqueue key mới, claim, ack, cancel, list; sau đó đối chiếu với log thành công",
+          "expected": "Mỗi enqueue thành công đều có trong list cuối cùng với đúng id; job đã done không bị đổi về ready hoặc leased; cancelled/done giữ nguyên; không thao tác nào trả kết quả dựa trên state đã lỗi thời; list cuối cùng khớp với log",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-16",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "dependency",
+          "risk": "Lỗi load làm hỏng queue về sau hoặc để lộ thay đổi dở",
+          "priority": "high",
+          "preconditions": "Store wrapper cho lỗi ở lần load thứ hai, sau đó hoạt động lại bình thường; đếm CAS",
+          "actions": "Gọi list thành công; gọi claim khi load throw; gọi list lại; gọi enqueue",
+          "expected": "Lỗi load được báo với Error.code STORAGE_ERROR; không có lệnh CAS nào trong lần lỗi; trạng thái trước không đổi; các thao tác hợp lệ sau đó thành công",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-17",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "dependency",
+          "risk": "CAS lỗi nhưng để lại thay đổi nhìn thấy được, hoặc tự retry, hoặc không phục hồi",
+          "priority": "high",
+          "preconditions": "Store wrapper cho CAS throw trước khi commit ở một lần, đếm số lần gọi CAS và load",
+          "actions": "enqueue job mới (CAS throw); list; enqueue lại cùng (tenant,key) với cùng tham số; reopen queue mới trên cùng store; sau đó claim",
+          "expected": "enqueue đầu ném STORAGE_ERROR, đúng một lần gọi CAS (không tự retry); list, replay và queue mới sau reopen đều không thấy job đó; lần replay tạo job mới đúng một lần (key không bị giữ); claim sau đó thành công",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-18",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "dependency",
+          "risk": "Store hỏng bị reset về trạng thái rỗng và ghi đè dữ liệu",
+          "priority": "high",
+          "preconditions": "Store wrapper trả state garbage ở lần load (xem Q2 về thời điểm báo lỗi): số, chuỗi, mảng, object thiếu schemaVersion, schemaVersion=2, undefined",
+          "actions": "Với từng state garbage: gọi openQueue và thao tác đầu tiên; đếm CAS",
+          "expected": "Mỗi trường hợp báo Error.code CORRUPT_STORE tại thời điểm đã thống nhất; không có CAS nào (không ghi đè); state trong store không đổi; với state null thì queue mới hoạt động bình thường",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-19",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "state",
+          "risk": "Chuyển trạng thái bất hợp lệ, đặc biệt cancel trên job đã hết hạn",
+          "priority": "high",
+          "preconditions": "Các job ở mỗi trạng thái: ready, leased, done, dead, cancelled; một job ready đã hết hạn lease có attempts<max; một job hết hạn ở lần cuối attempts>=max",
+          "actions": "cancel trên từng trạng thái; ack trên ready, dead, cancelled; fail trên ready, dead, cancelled; cancel trên job đã hết hạn (có attempts<max); cancel trên job hết hạn ở lần cuối",
+          "expected": "cancel ready -> cancelled; cancel lại cancelled -> cancelled (idempotent); cancel leased/done/dead -> INVALID_STATE; ack/fail trên ready/dead/cancelled -> STALE_LEASE và không đổi trạng thái; job đã hết hạn có attempts<max bị chuẩn hóa về ready rồi cancel được; job hết hạn lần cuối bị chuẩn hóa về dead rồi cancel trả INVALID_STATE",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-20",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "state",
+          "risk": "Worker cũ ghi đè sau khi job được giao lại, hoặc token được tái sử dụng",
+          "priority": "high",
+          "preconditions": "Worker A claim job với t1 ở now=0, leaseMs=100; hết hạn; worker B claim ở now=100 với t2",
+          "actions": "A ack với t1; A fail với t1; B ack với t2; thử ack lại với t1; so sánh token của mọi lần claim",
+          "expected": "A ack và A fail đều trả STALE_LEASE và job không đổi; B ack thành công -> done; ack lại với t1 trả STALE_LEASE, không phải done; t1 và t2 khác nhau và token không xuất hiện lại trong các lần claim tiếp theo",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-21",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "consistency",
+          "risk": "Trạng thái đã commit không còn sau khi process thoát hoặc khi mở lại queue, hoặc queue dùng cache cũ",
+          "priority": "high",
+          "preconditions": "Store file của lib/stores.js trong thư mục tạm; child process Node riêng dùng cùng đường dẫn",
+          "actions": "Child process 1: openQueue, enqueue ba job, claim một job, ack một job, thoát. Child process 2: openQueue, list, claim tiếp, thoát. Trong test: openQueue mới trên cùng file sau khi child thoát",
+          "expected": "Mọi thay đổi commit đều thấy đúng ở lần mở lại: job done, job leased với token và workerId giữ nguyên, job ready còn lại; claim trong child 2 không nhận lại job đã leased; không có version rollback; file store không chứa dữ liệu dở",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-22",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "consistency",
+          "risk": "Queue giữ tham chiếu đến state đã gửi cho CAS, làm thay đổi snapshot đã commit",
+          "priority": "high",
+          "preconditions": "Store wrapper ghi lại bản clone sâu của mọi state được truyền vào CAS, đồng thời giữ tham chiếu gốc",
+          "actions": "Chạy chuỗi thao tác có ghi (enqueue, claim, ack, fail, cancel, expiry) và so sánh tham chiếu gốc với bản clone sau thao tác; list và load trả về rồi sửa",
+          "expected": "Sau mỗi CAS, state được truyền đi không đổi (so với clone lúc gọi); snapshot trả về từ load là bản detached (sửa không ảnh hưởng lần đọc sau); không lần nào CAS nhận state đã bị sửa sau khi gửi",
+          "method": "automated",
+          "required": true
+        },
+        {
+          "id": "C-23",
+          "requirementIds": [
+            "R-1"
+          ],
+          "group": "consistency",
+          "risk": "List sắp theo ID từ vựng thay vì thứ tự commit, thiếu trạng thái, hoặc không chuẩn hóa hết hạn",
+          "priority": "normal",
+          "preconditions": "Job tạo ngẫu nhiên ID không theo thứ tự chữ; có job ở đủ 5 trạng thái; một lease hết hạn",
+          "actions": "enqueue theo thứ tự cố định, tạo đủ 5 trạng thái, để một lease hết hạn; gọi list",
+          "expected": "list trả đúng thứ tự commit (không theo id), gồm cả ready/leased/done/dead/cancelled; job hết hạn được chuẩn hóa trong kết quả (ready hoặc dead); mỗi phần tử đúng bộ trường đã nêu (không có receipt)",
+          "method": "automated",
+          "required": true
+        }
+      ],
+      "notApplicable": [],
+      "questions": []
+    },
+    "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211",
+    "manifestProblems": [],
+    "capability": {
+      "status": "unsupported",
+      "reason": "Chưa nhận diện khả năng mutation trên checkpoint này."
+    },
+    "mutation": null,
+    "testMs": 8647,
+    "cases": [
+      {
+        "caseId": "C-1",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-1] enqueue, claim and ack keep documented fields, lease values and nested payload"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-2",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-2] claim picks priority, then earliest availableAt, then commit order and skips jobs not yet due"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-3",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-3] fail applies exponential backoff, dead-letters at maxAttempts and rejects blank errors"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-4",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-4] idempotent enqueue replays original id and current state, rejects changed parameters, scopes keys per tenant"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-5",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-5] ack replay with original owner and token returns the done job without CAS; other pairs get STALE_LEASE"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-6",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-6] invalid options, arguments, identifiers and payloads fail with INVALID_INPUT without any CAS"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-7",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-7] tenant and key pairs do not collide through delimiters, prototype names or whitespace"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-8",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-8] lease expires exactly at leaseUntil; ack one millisecond earlier succeeds and stale token fails after expiry"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-9",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-9] expiry requeues without backoff while attempts remain and dead-letters at maxAttempts"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-10",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-10] returned jobs and enqueued payloads are defensive deep copies"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-11",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-11] cross-tenant and unknown job ids return identical NOT_FOUND and never touch the other tenant"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-12",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-12] lease ownership requires matching workerId and leaseToken"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-13",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-13] two queues on one delayed store never duplicate claims or tokens and lose no jobs"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-14",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-14] CAS false reloads and recomputes; eighth false result throws CONFLICT with no commit"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-15",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-15] interleaved enqueue, claim, ack, cancel and list across two queues keep every committed change"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-16",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-16] load failure throws STORAGE_ERROR without CAS, keeps state and lets later calls succeed"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-17",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-17] CAS failure before commit leaves no visible job, does not retry, and key is not reserved"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-18",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-18] garbage store state fails CORRUPT_STORE without overwrite; null state creates a new queue"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-19",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-19] status transitions reject invalid ack, fail and cancel; expired jobs normalize before cancel"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-20",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-20] reassigned job rejects the previous owner and never reuses a token"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-21",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-21] committed changes survive child process exit and reopen without stale claims or temp leftovers"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-22",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-22] states passed to CAS are not mutated later and load/list results are detached snapshots"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      },
+      {
+        "caseId": "C-23",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: tests/queue.acceptance.test.js::[R-1][C-23] list returns commit order with all five statuses and normalized expired leases, without receipts"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+        "slot": "A",
+        "contractVersion": 2,
+        "manifestHash": "65eff4885a04e9176073823c0a4c93df96809f7a0d1b809f99f249254ecfc211"
+      }
+    ]
+  },
+  "generatedAt": "2026-10-24T03:45:51.310Z",
+  "runId": "run_82c59831",
+  "title": "Pilot thực tế: LeaseQueue / Verify Haiku + Luna",
+  "requirement": "# LeaseQueue — durable multi-tenant work queue\n\nImplement JavaScript ESM module src/queue.js. Export openQueue({store, now = Date.now, leaseMs = 1000, maxAttempts = 3, backoffMs = 100}). Consumers await openQueue and all methods. Methods may be sync or async as long as await works. No additional dependency. Use supplied lib/stores.js for tests/demo, but production queue may only use the injected store contract, not import the adapter or access its internals.\n\nSTORE CONTRACT: await store.load() -> {version, state}; version is a nonnegative integer; state=null means brand-new queue. await store.compareAndSwap(expectedVersion, newState) -> boolean. True means state atomically committed and version incremented, false means another writer won, reload and recompute. State is JSON-serializable opaque object owned by the queue. load/CAS can throw (before committing); propagate as Error.code STORAGE_ERROR, preserve previous persisted state, and do not poison future calls. CAS false can be retried at most 8 times per operation; after 8 false results throw Error.code CONFLICT. Never treat false as success or overwrite stale state. store/load return detached snapshots. Do not mutate a snapshot after handing it to CAS.\n\nPUBLIC API:\n- enqueue({tenantId,key,payload,priority=0,delayMs=0}) -> Job\n- claim({tenantId,workerId}) -> Job or null\n- ack({tenantId,jobId,workerId,leaseToken}) -> Job\n- fail({tenantId,jobId,workerId,leaseToken,error}) -> Job\n- cancel({tenantId,jobId}) -> Job\n- list({tenantId}) -> Job[]\n\nJob fields: {id,tenantId,key,payload,priority,status,attempts,createdAt,availableAt,workerId,leaseToken,leaseUntil,lastError}. Status ready|leased|done|dead|cancelled. New job: attempts=0, createdAt=current time, availableAt=current time+delayMs; workerId/leaseToken/leaseUntil/lastError=null. IDs and tokens are nonempty strings; job IDs globally unique in one store, tokens unique for every claim (including reclaims) and never reused. Ordering is NOT based on lexical job IDs.\n\nVALIDATION: options must be a non-null object; store must expose functions load and compareAndSwap; now must be a function; leaseMs and maxAttempts positive safe integers, backoffMs nonnegative safe integer. Every method argument must be a non-null non-array object (reject absent/null/primitive). tenantId/key/workerId/jobId/leaseToken must be strings nonempty after trim; preserve exact bytes, including leading/trailing whitespace. Priority safe integer in [-10,10]; delayMs safe integer >=0; error nonempty string. Invalid input always Error.code INVALID_INPUT, no mutation. Payload must be non-null JSON object/array: recursively only JSON values, finite numbers, no undefined/functions/BigInt/cycles; preserve nested values. Return defensive deep copies. Inputs must not be retained by mutable reference.\n\nTENANT/IDEMPOTENCY: exact pair (tenantId,key), no delimiter/prototype collisions. Same pair with semantically equal JSON payload (object key order irrelevant; array order significant), same priority and same ORIGINAL delayMs returns original job ID and CURRENT state, even done/dead/cancelled. Different payload/priority/delayMs -> IDEMPOTENCY_CONFLICT. Error on storage must not reserve key. Same key in another tenant is independent. All method IDs are tenant-scoped: unknown job or other tenant's job -> NOT_FOUND, reveal no cross-tenant record; list returns only exact tenant.\n\nSCHEDULING: claim only ready jobs with availableAt <= now, choose highest priority, then smallest availableAt, then enqueue commit order. WorkerId alone does not grant ownership of any job. Claim atomically sets leased, attempts+=1, workerId from request, fresh token and leaseUntil=now+leaseMs. At most one active lease per job across concurrent calls or TWO queue objects sharing the same store. Empty/no due jobs -> null. Reopen must reload state from storage; never assume a cached in-memory snapshot is current.\n\nEXPIRATION: before each valid operation on a tenant, lazily normalize expired leases IN THAT TENANT only. now >= leaseUntil expires. If attempts >= maxAttempts -> dead, else ready with availableAt=now (no backoff for worker disappearance). Clear workerId/token/leaseUntil on expiry. Normalization persists atomically with the operation. Other tenants remain untouched. list and idempotent enqueue replay must also normalize. A lost/stale lease cannot ack/fail after expiry or after reassignment. Retrying after expiry may immediately claim the job again, increments attempts and gets a new token.\n\nACK/FAIL: for leased job, exact matching workerId AND leaseToken required; wrong/stale pair or non-leased state -> STALE_LEASE, do not finish/requeue the job. Repeating ack of done job with the ORIGINAL successful owner/token returns same done job without extra mutation; keep private receipt data for this replay while public done job clears workerId/token/leaseUntil. Wrong pair on done -> STALE_LEASE. ack dead/cancelled/ready -> STALE_LEASE.\nSuccessful ack -> done, clear public lease fields. fail valid lease -> if attempts >= maxAttempts, dead; otherwise ready, availableAt=now+backoffMs*2**(attempts-1). Both clear lease fields and set lastError to supplied error; ack replay rule does not apply to fail.\n\nCANCEL: only ready -> cancelled and idempotent on cancelled. Leased or done -> INVALID_STATE; dead -> INVALID_STATE. Cross tenant/unknown -> NOT_FOUND. Do not remove idempotency history. Expiration is processed first; expired job becoming ready can be cancelled, expired final attempt becoming dead cannot. No operation auto-executes user payload.\n\nPERSISTENCE/FAILURE: all successful state changes and expirations survive reopen. Two openQueue objects on one store cannot duplicate claims, lose enqueues, reuse tokens or overwrite completed jobs. CAS conflicts recompute against latest state; no stale read-modify-write. When load/CAS throws before commit, no uncommitted changes may leak into later list/reopen. After failure future valid operations can succeed. No auto-retry on thrown storage errors. Unknown/non-null garbage store state must fail CORRUPT_STORE rather than silently reset (at least reject primitives/arrays and invalid/missing schema marker). Store state must have schemaVersion:1 as the format marker; other layout is up to you. All reported errors are Error instances with stated code.\n\nPUBLIC ORDER: list sorted by creation/commit order, includes all statuses; no internal receipts are exposed as job fields. now() returns safe nonnegative ms and does not throw in scope; overflow and OS process contention outside this exercise. Provided file store uses atomic replace and one-process locking: test real reopen across process exit, but simultaneous independent OS writer processes are out of scope. The queue must still support shared-store contention between two independent queue objects with asynchronous delayed load/CAS.\n\nALLOWED CHANGES: src/queue.js, tests/**/*.test.js, README.md. Do not change SPEC.md, package/config/lockfiles, lib/stores.js, server.mjs. Do not spawn subagents, read sibling projects, external grading files or user data. Write real tests on public methods. Vitest 3.2.4 tools are preinstalled. Reporter JSON IDs are tests/FILE.test.js::full test name; tag R-x and C-x when using an approved Department contract. Do not force all methods synchronous. Run node node_modules/vitest/vitest.mjs run --configLoader runner. No additional business assumptions: use the above decisions. Leave unspecified internal IDs/layout flexible.",
+  "mode": "verify",
+  "provider": "codex",
+  "readiness": "not_ready",
+  "notReadyReasons": [
+    "Check \"test\" đang fail.",
+    "Yêu cầu chưa được xác minh: R-1.",
+    "C-1: ca bắt buộc thất bại.",
+    "C-2: ca bắt buộc thất bại.",
+    "C-3: ca bắt buộc thất bại.",
+    "C-4: ca bắt buộc thất bại.",
+    "C-5: ca bắt buộc thất bại.",
+    "C-6: ca bắt buộc thất bại.",
+    "C-7: ca bắt buộc thất bại.",
+    "C-8: ca bắt buộc thất bại.",
+    "C-9: ca bắt buộc thất bại.",
+    "C-10: ca bắt buộc thất bại.",
+    "C-11: ca bắt buộc thất bại.",
+    "C-12: ca bắt buộc thất bại.",
+    "C-13: ca bắt buộc thất bại.",
+    "C-14: ca bắt buộc thất bại.",
+    "C-15: ca bắt buộc thất bại.",
+    "C-16: ca bắt buộc thất bại.",
+    "C-17: ca bắt buộc thất bại.",
+    "C-18: ca bắt buộc thất bại.",
+    "C-19: ca bắt buộc thất bại.",
+    "C-20: ca bắt buộc thất bại.",
+    "C-21: ca bắt buộc thất bại.",
+    "C-22: ca bắt buộc thất bại.",
+    "C-23: ca bắt buộc thất bại."
+  ],
+  "checkpoint": "1b82e75cd3c36b8079066c4b9f776d78c791ec72",
+  "baseSha": "5c79a3254f31fc9f546385f880207e8aedac555e",
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "# LeaseQueue — durable multi-tenant work queue\n\nImplement JavaScript ESM module src/queue.js. Export openQueue({store, now = Date.now, leaseMs = 1000, maxAttempts = 3, backoffMs = 100}). Consumers await openQueue and all methods. Methods may be sync or async as long as await works. No additional dependency. Use supplied lib/stores.js for tests/demo, but production queue may only use the injected store contract, not import the adapter or access its internals.\n\nSTORE CONTRACT: await store.load() -> {version, state}; version is a nonnegative integer; state=null means brand-new queue. await store.compareAndSwap(expectedVersion, newState) -> boolean. True means state atomically committed and version incremented, false means another writer won, reload and recompute. State is JSON-serializable opaque object owned by the queue. load/CAS can throw (before committing); propagate as Error.code STORAGE_ERROR, preserve previous persisted state, and do not poison future calls. CAS false can be retried at most 8 times per operation; after 8 false results throw Error.code CONFLICT. Never treat false as success or overwrite stale state. store/load return detached snapshots. Do not mutate a snapshot after handing it to CAS.\n\nPUBLIC API:\n- enqueue({tenantId,key,payload,priority=0,delayMs=0}) -> Job\n- claim({tenantId,workerId}) -> Job or null\n- ack({tenantId,jobId,workerId,leaseToken}) -> Job\n- fail({tenantId,jobId,workerId,leaseToken,error}) -> Job\n- cancel({tenantId,jobId}) -> Job\n- list({tenantId}) -> Job[]\n\nJob fields: {id,tenantId,key,payload,priority,status,attempts,createdAt,availableAt,workerId,leaseToken,leaseUntil,lastError}. Status ready|leased|done|dead|cancelled. New job: attempts=0, createdAt=current time, availableAt=current time+delayMs; workerId/leaseToken/leaseUntil/lastError=null. IDs and tokens are nonempty strings; job IDs globally unique in one store, tokens unique for every claim (including reclaims) and never reused. Ordering is NOT based on lexical job IDs.\n\nVALIDATION: options must be a non-null object; store must expose functions load and compareAndSwap; now must be a function; leaseMs and maxAttempts positive safe integers, backoffMs nonnegative safe integer. Every method argument must be a non-null non-array object (reject absent/null/primitive). tenantId/key/workerId/jobId/leaseToken must be strings nonempty after trim; preserve exact bytes, including leading/trailing whitespace. Priority safe integer in [-10,10]; delayMs safe integer >=0; error nonempty string. Invalid input always Error.code INVALID_INPUT, no mutation. Payload must be non-null JSON object/array: recursively only JSON values, finite numbers, no undefined/functions/BigInt/cycles; preserve nested values. Return defensive deep copies. Inputs must not be retained by mutable reference.\n\nTENANT/IDEMPOTENCY: exact pair (tenantId,key), no delimiter/prototype collisions. Same pair with semantically equal JSON payload (object key order irrelevant; array order significant), same priority and same ORIGINAL delayMs returns original job ID and CURRENT state, even done/dead/cancelled. Different payload/priority/delayMs -> IDEMPOTENCY_CONFLICT. Error on storage must not reserve key. Same key in another tenant is independent. All method IDs are tenant-scoped: unknown job or other tenant's job -> NOT_FOUND, reveal no cross-tenant record; list returns only exact tenant.\n\nSCHEDULING: claim only ready jobs with availableAt <= now, choose highest priority, then smallest availableAt, then enqueue commit order. WorkerId alone does not grant ownership of any job. Claim atomically sets leased, attempts+=1, workerId from request, fresh token and leaseUntil=now+leaseMs. At most one active lease per job across concurrent calls or TWO queue objects sharing the same store. Empty/no due jobs -> null. Reopen must reload state from storage; never assume a cached in-memory snapshot is current.\n\nEXPIRATION: before each valid operation on a tenant, lazily normalize expired leases IN THAT TENANT only. now >= leaseUntil expires. If attempts >= maxAttempts -> dead, else ready with availableAt=now (no backoff for worker disappearance). Clear workerId/token/leaseUntil on expiry. Normalization persists atomically with the operation. Other tenants remain untouched. list and idempotent enqueue replay must also normalize. A lost/stale lease cannot ack/fail after expiry or after reassignment. Retrying after expiry may immediately claim the job again, increments attempts and gets a new token.\n\nACK/FAIL: for leased job, exact matching workerId AND leaseToken required; wrong/stale pair or non-leased state -> STALE_LEASE, do not finish/requeue the job. Repeating ack of done job with the ORIGINAL successful owner/token returns same done job without extra mutation; keep private receipt data for this replay while public done job clears workerId/token/leaseUntil. Wrong pair on done -> STALE_LEASE. ack dead/cancelled/ready -> STALE_LEASE.\nSuccessful ack -> done, clear public lease fields. fail valid lease -> if attempts >= maxAttempts, dead; otherwise ready, availableAt=now+backoffMs*2**(attempts-1). Both clear lease fields and set lastError to supplied error; ack replay rule does not apply to fail.\n\nCANCEL: only ready -> cancelled and idempotent on cancelled. Leased or done -> INVALID_STATE; dead -> INVALID_STATE. Cross tenant/unknown -> NOT_FOUND. Do not remove idempotency history. Expiration is processed first; expired job becoming ready can be cancelled, expired final attempt becoming dead cannot. No operation auto-executes user payload.\n\nPERSISTENCE/FAILURE: all successful state changes and expirations survive reopen. Two openQueue objects on one store cannot duplicate claims, lose enqueues, reuse tokens or overwrite completed jobs. CAS conflicts recompute against latest state; no stale read-modify-write. When load/CAS throws before commit, no uncommitted changes may leak into later list/reopen. After failure future valid operations can succeed. No auto-retry on thrown storage errors. Unknown/non-null garbage store state must fail CORRUPT_STORE rather than silently reset (at least reject primitives/arrays and invalid/missing schema marker). Store state must have schemaVersion:1 as the format marker; other layout is up to you. All reported errors are Error instances with stated code.\n\nPUBLIC ORDER: list sorted by creation/commit order, includes all statuses; no internal receipts are exposed as job fields. now() returns safe nonnegative ms and does not throw in scope; overflow and OS process contention outside this exercise. Provided file store uses atomic replace and one-process locking: test real reopen across process exit, but simultaneous independent OS writer processes are out of scope. The queue must still support shared-store contention between two independent queue objects with asynchronous delayed load/CAS.\n\nALLOWED CHANGES: src/queue.js, tests/**/*.test.js, README.md. Do not change SPEC.md, package/config/lockfiles, lib/stores.js, server.mjs. Do not spawn subagents, read sibling projects, external grading files or user data. Write real tests on public methods. Vitest 3.2.4 tools are preinstalled. Reporter JSON IDs are tests/FILE.test.js::full test name; tag R-x and C-x when using an approved Department contract. Do not force all methods synchronous. Run node node_modules/vitest/vitest.mjs run --configLoader runner. No additional business assumptions: use the above decisions. Leave unspecified internal IDs/layout flexible.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    }
+  ],
+  "assumptions": [
+    "CAS false: 8 false results total means CONFLICT, as SPEC explicitly states; no ninth attempt.",
+    "CORRUPT_STORE may be reported at openQueue or the first operation that loads state. Only state=null means brand new; undefined is not null. Test error around open plus first operation. Do not require eager loading.",
+    "Validate method arguments before any storage mutation. Tenant/id lookup precedes lease/state validation. Normalization applies before valid tenant operations; invalid input must not mutate.",
+    "Store contract guarantees a nonnegative integer version and a state field; malformed version/envelope is outside this task. Do not invent additional error-code requirements for those unsupported envelopes. Validate garbage state as specified.",
+    "Public store.load snapshots may be compared before/after for cross-tenant nonmutation, without inspecting a private queue layout. Public returned Job must expose exactly its documented fields, not private ack receipt data.",
+    "C-17 follows SPEC: failed write leaves job absent BEFORE a successful retry; after successful retry the job must be visible after reopen. The phrase about replay not seeing the job refers only to the failed uncommitted attempt, not to a later successful retry.",
+    "Additional out-of-scope note (ui): Đây là thư viện ESM không có giao diện; không có màn hình hay tương tác người dùng cần kiểm thử.",
+    "Additional out-of-scope note (performance): Hợp đồng không đưa ra ngưỡng thời gian hay tải; kiểm thử tải nằm ngoài nghiệm thu này.",
+    "Additional out-of-scope note (multi-process-writer): Hợp đồng ghi rõ nhiều tiến trình OS ghi độc lập đồng thời nằm ngoài phạm vi; chỉ kiểm thử reopen sau khi tiến trình thoát (C-21) và contention giữa hai queue object (C-13 đến C-15).",
+    "Additional out-of-scope note (clock-overflow): Hợp đồng ghi rõ tràn số và now() không ném lỗi nằm ngoài phạm vi.",
+    "Additional out-of-scope note (payload-execution): Hợp đồng nói không thao tác nào tự thực thi payload; điều này được kiểm qua C-6 (payload chỉ nhận JSON) và C-10 (payload giữ nguyên), không cần ca riêng."
+  ],
+  "changes": {
+    "available": true,
+    "files": [
+      {
+        "path": "src/queue.js",
+        "status": "modified",
+        "added": 170,
+        "removed": 1
+      },
+      {
+        "path": "tests/queue.acceptance.test.js",
+        "status": "added",
+        "added": 983,
+        "removed": 0
+      },
+      {
+        "path": "tests/queue.behavior.test.js",
+        "status": "added",
+        "added": 157,
+        "removed": 0
+      }
+    ],
+    "added": 1310,
+    "removed": 1,
+    "testFiles": [
+      "tests/queue.acceptance.test.js",
+      "tests/queue.behavior.test.js"
+    ],
+    "patch": "diff --git a/src/queue.js b/src/queue.js\nindex 18a0fc4..d4f0eb2 100644\n--- a/src/queue.js\n+++ b/src/queue.js\n@@ -1 +1,170 @@\n-export async function openQueue(options){throw new Error(\"NOT_IMPLEMENTED\");}\n+import { randomUUID } from 'node:crypto';\n+\n+const fail = (code, message = code) => Object.assign(new Error(message), { code });\n+const obj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);\n+const validName = (v) => typeof v === 'string' && v.trim().length > 0;\n+const clone = (v) => structuredClone(v);\n+\n+function jsonValue(value, seen = new Set()) {\n+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return true;\n+  if (typeof value === 'number') return Number.isFinite(value);\n+  if (typeof value !== 'object') return false;\n+  if (seen.has(value)) return false;\n+  seen.add(value);\n+  const ok = Array.isArray(value)\n+    ? value.every((item) => jsonValue(item, seen))\n+    : (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null) && Object.keys(value).every((key) => jsonValue(value[key], seen));\n+  seen.delete(value);\n+  return ok;\n+}\n+\n+function canonical(value) {\n+  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;\n+  if (value && typeof value === 'object') return `{${Object.keys(value).sort().map((k) => `${JSON.stringify(k)}:${canonical(value[k])}`).join(',')}}`;\n+  return JSON.stringify(value);\n+}\n+\n+function publicJob(job) {\n+  const { id, tenantId, key, payload, priority, status, attempts, createdAt, availableAt, workerId, leaseToken, leaseUntil, lastError } = job;\n+  return clone({ id, tenantId, key, payload, priority, status, attempts, createdAt, availableAt, workerId, leaseToken, leaseUntil, lastError });\n+}\n+\n+function validState(state) {\n+  if (!obj(state) || state.schemaVersion !== 1 || !Array.isArray(state.jobs) || !Array.isArray(state.keys) || !Array.isArray(state.tokens) || !Number.isSafeInteger(state.sequence) || state.sequence < 0) {\n+    throw fail('CORRUPT_STORE');\n+  }\n+}\n+\n+export async function openQueue(options) {\n+  if (!obj(options)) throw fail('INVALID_INPUT');\n+  const { store, now = Date.now, leaseMs = 1000, maxAttempts = 3, backoffMs = 100 } = options;\n+  if (!obj(store) || typeof store.load !== 'function' || typeof store.compareAndSwap !== 'function' || typeof now !== 'function' ||\n+      !Number.isSafeInteger(leaseMs) || leaseMs <= 0 || !Number.isSafeInteger(maxAttempts) || maxAttempts <= 0 ||\n+      !Number.isSafeInteger(backoffMs) || backoffMs < 0) throw fail('INVALID_INPUT');\n+\n+  const time = () => now();\n+  const validateArg = (arg) => { if (!obj(arg)) throw fail('INVALID_INPUT'); };\n+  const validateTenant = (arg) => { validateArg(arg); if (!validName(arg.tenantId)) throw fail('INVALID_INPUT'); };\n+\n+  // Each retry starts from the latest detached snapshot; only a frozen-by-convention fresh tree goes to CAS.\n+  async function transact(tenantId, action) {\n+    for (let attempt = 0; attempt < 8; attempt += 1) {\n+      let loaded;\n+      try { loaded = await store.load(); } catch (e) { throw fail('STORAGE_ERROR', e?.message); }\n+      let state;\n+      if (loaded.state === null) state = { schemaVersion: 1, sequence: 0, jobs: [], keys: [], tokens: [] };\n+      else {\n+        validState(loaded.state);\n+        try { state = clone(loaded.state); } catch { throw fail('CORRUPT_STORE'); }\n+      }\n+      const currentTime = time();\n+      let changed = false;\n+      for (const job of state.jobs) {\n+        if (job.tenantId === tenantId && job.status === 'leased' && currentTime >= job.leaseUntil) {\n+          job.status = job.attempts >= maxAttempts ? 'dead' : 'ready';\n+          if (job.status === 'ready') job.availableAt = currentTime;\n+          job.workerId = null; job.leaseToken = null; job.leaseUntil = null;\n+          changed = true;\n+        }\n+      }\n+      const outcome = action(state, currentTime);\n+      if (outcome.changed) changed = true;\n+      if (!changed) {\n+        if (outcome.error) throw outcome.error;\n+        return outcome.value;\n+      }\n+      try {\n+        const committed = await store.compareAndSwap(loaded.version, state);\n+        if (!committed) {\n+          // A small jitter prevents simultaneous queue objects from repeatedly colliding in lockstep.\n+          await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * (2 ** Math.min(attempt + 1, 6)) + 1)));\n+          continue;\n+        }\n+      } catch (e) { throw fail('STORAGE_ERROR', e?.message); }\n+      if (outcome.error) throw outcome.error;\n+      return outcome.value;\n+    }\n+    throw fail('CONFLICT');\n+  }\n+\n+  const find = (state, tenantId, id) => state.jobs.find((j) => j.tenantId === tenantId && j.id === id);\n+  const leaseError = () => fail('STALE_LEASE');\n+  return {\n+    async enqueue(arg) {\n+      validateTenant(arg);\n+      const { tenantId, key, payload, priority = 0, delayMs = 0 } = arg;\n+      if (!validName(key) || payload === null || typeof payload !== 'object' || !jsonValue(payload) || !Number.isSafeInteger(priority) || priority < -10 || priority > 10 || !Number.isSafeInteger(delayMs) || delayMs < 0) throw fail('INVALID_INPUT');\n+      const payloadCopy = clone(payload), signature = canonical(payloadCopy);\n+      return transact(tenantId, (state, currentTime) => {\n+        const prior = state.keys.find((k) => k.tenantId === tenantId && k.key === key);\n+        if (prior) {\n+          if (prior.signature !== signature || prior.priority !== priority || prior.delayMs !== delayMs) return { error: fail('IDEMPOTENCY_CONFLICT') };\n+          return { value: publicJob(find(state, tenantId, prior.id)) };\n+        }\n+        let id;\n+        do { id = randomUUID(); } while (state.jobs.some((existing) => existing.id === id));\n+        const job = { id, tenantId, key, payload: payloadCopy, priority, status: 'ready', attempts: 0, createdAt: currentTime,\n+          availableAt: currentTime + delayMs, workerId: null, leaseToken: null, leaseUntil: null, lastError: null, sequence: ++state.sequence };\n+        state.jobs.push(job);\n+        state.keys.push({ tenantId, key, id: job.id, signature, priority, delayMs });\n+        return { value: publicJob(job), changed: true };\n+      });\n+    },\n+    async claim(arg) {\n+      validateTenant(arg);\n+      if (!validName(arg.workerId)) throw fail('INVALID_INPUT');\n+      return transact(arg.tenantId, (state, currentTime) => {\n+        const job = state.jobs.filter((j) => j.tenantId === arg.tenantId && j.status === 'ready' && j.availableAt <= currentTime)\n+          .sort((a, b) => b.priority - a.priority || a.availableAt - b.availableAt || a.sequence - b.sequence)[0];\n+        if (!job) return { value: null };\n+        let token;\n+        do { token = randomUUID(); } while (state.tokens.includes(token));\n+        state.tokens.push(token);\n+        job.status = 'leased'; job.attempts += 1; job.workerId = arg.workerId; job.leaseToken = token; job.leaseUntil = currentTime + leaseMs;\n+        return { value: publicJob(job), changed: true };\n+      });\n+    },\n+    async ack(arg) {\n+      validateTenant(arg);\n+      if (!validName(arg.jobId) || !validName(arg.workerId) || !validName(arg.leaseToken)) throw fail('INVALID_INPUT');\n+      return transact(arg.tenantId, (state) => {\n+        const job = find(state, arg.tenantId, arg.jobId);\n+        if (!job) return { error: fail('NOT_FOUND') };\n+        if (job.status === 'done' && job.receiptWorker === arg.workerId && job.receiptToken === arg.leaseToken) return { value: publicJob(job) };\n+        if (job.status !== 'leased' || job.workerId !== arg.workerId || job.leaseToken !== arg.leaseToken) return { error: leaseError() };\n+        job.status = 'done'; job.receiptWorker = arg.workerId; job.receiptToken = arg.leaseToken;\n+        job.workerId = null; job.leaseToken = null; job.leaseUntil = null;\n+        return { value: publicJob(job), changed: true };\n+      });\n+    },\n+    async fail(arg) {\n+      validateTenant(arg);\n+      if (!validName(arg.jobId) || !validName(arg.workerId) || !validName(arg.leaseToken) || !validName(arg.error)) throw fail('INVALID_INPUT');\n+      return transact(arg.tenantId, (state, currentTime) => {\n+        const job = find(state, arg.tenantId, arg.jobId);\n+        if (!job) return { error: fail('NOT_FOUND') };\n+        if (job.status !== 'leased' || job.workerId !== arg.workerId || job.leaseToken !== arg.leaseToken) return { error: leaseError() };\n+        job.status = job.attempts >= maxAttempts ? 'dead' : 'ready';\n+        if (job.status === 'ready') job.availableAt = currentTime + backoffMs * (2 ** (job.attempts - 1));\n+        job.lastError = arg.error; job.workerId = null; job.leaseToken = null; job.leaseUntil = null;\n+        return { value: publicJob(job), changed: true };\n+      });\n+    },\n+    async cancel(arg) {\n+      validateTenant(arg);\n+      if (!validName(arg.jobId)) throw fail('INVALID_INPUT');\n+      return transact(arg.tenantId, (state) => {\n+        const job = find(state, arg.tenantId, arg.jobId);\n+        if (!job) return { error: fail('NOT_FOUND') };\n+        if (job.status === 'cancelled') return { value: publicJob(job) };\n+        if (job.status !== 'ready') return { error: fail('INVALID_STATE') };\n+        job.status = 'cancelled';\n+        return { value: publicJob(job), changed: true };\n+      });\n+    },\n+    async list(arg) {\n+      validateTenant(arg);\n+      return transact(arg.tenantId, (state) => ({ value: state.jobs.filter((j) => j.tenantId === arg.tenantId).sort((a, b) => a.sequence - b.sequence).map(publicJob) }));\n+    },\n+  };\n+}\ndiff --git a/tests/queue.acceptance.test.js b/tests/queue.acceptance.test.js\nnew file mode 100644\nindex 0000000..15f5233\n--- /dev/null\n+++ b/tests/queue.acceptance.test.js\n@@ -0,0 +1,983 @@\n+import {it, expect} from 'vitest';\n+import {execFile} from 'node:child_process';\n+import {mkdtemp, readdir, rm} from 'node:fs/promises';\n+import {tmpdir} from 'node:os';\n+import path from 'node:path';\n+import {promisify} from 'node:util';\n+import {openQueue} from '../src/queue.js';\n+import {createFileStore, createMemoryStore} from '../lib/stores.js';\n+\n+const execFileAsync = promisify(execFile);\n+const queueUrl = new URL('../src/queue.js', import.meta.url).href;\n+const storesUrl = new URL('../lib/stores.js', import.meta.url).href;\n+const JOB_KEYS = ['id', 'tenantId', 'key', 'payload', 'priority', 'status', 'attempts', 'createdAt', 'availableAt', 'workerId', 'leaseToken', 'leaseUntil', 'lastError'].sort();\n+\n+function makeClock(start = 0) {\n+  const clock = {t: start, now: () => clock.t};\n+  return clock;\n+}\n+\n+// Counts CAS calls, can fail the next load/CAS before it reaches the inner store, and can run a hook before each CAS.\n+function countingStore(inner) {\n+  const store = {\n+    casCalls: 0,\n+    failLoads: 0,\n+    failCas: 0,\n+    beforeCas: null,\n+    async load() {\n+      if (store.failLoads > 0) {\n+        store.failLoads -= 1;\n+        throw new Error('EIO load');\n+      }\n+      return inner.load();\n+    },\n+    async compareAndSwap(version, state) {\n+      store.casCalls += 1;\n+      if (store.beforeCas) await store.beforeCas();\n+      if (store.failCas > 0) {\n+        store.failCas -= 1;\n+        throw new Error('EIO cas');\n+      }\n+      return inner.compareAndSwap(version, state);\n+    },\n+  };\n+  return store;\n+}\n+\n+// Adds random async delay to every load and CAS. Seeded so runs are reproducible.\n+function delayedStore(inner, random) {\n+  const pause = () => new Promise((resolve) => setTimeout(resolve, Math.floor(random() * 3)));\n+  return {\n+    async load() {\n+      await pause();\n+      return inner.load();\n+    },\n+    async compareAndSwap(version, state) {\n+      await pause();\n+      return inner.compareAndSwap(version, state);\n+    },\n+  };\n+}\n+\n+function seededRandom(seed) {\n+  let state = seed >>> 0;\n+  return () => {\n+    state = (state + 0x6d2b79f5) >>> 0;\n+    let t = state;\n+    t = Math.imul(t ^ (t >>> 15), t | 1);\n+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);\n+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;\n+  };\n+}\n+\n+function garbageStore(state) {\n+  const store = {\n+    casCalls: 0,\n+    async load() {\n+      return {version: 0, state};\n+    },\n+    async compareAndSwap() {\n+      store.casCalls += 1;\n+      return false;\n+    },\n+  };\n+  return store;\n+}\n+\n+async function failureOf(action) {\n+  try {\n+    await action();\n+  } catch (error) {\n+    return error;\n+  }\n+  return null;\n+}\n+\n+async function expectFailure(action, code, label = code) {\n+  const error = await failureOf(action);\n+  expect(error, label).toBeInstanceOf(Error);\n+  expect(error?.code, label).toBe(code);\n+  return error;\n+}\n+\n+function scramble(value) {\n+  if (value !== null && typeof value === 'object') {\n+    for (const key of Object.keys(value)) {\n+      scramble(value[key]);\n+      delete value[key];\n+    }\n+  }\n+}\n+\n+async function runChild(body, now, file) {\n+  const script = `const {openQueue} = await import(${JSON.stringify(queueUrl)});\n+const {createFileStore} = await import(${JSON.stringify(storesUrl)});\n+const queue = await openQueue({store: createFileStore(process.env.LQ_FILE), now: () => ${now}, leaseMs: 100000});\n+${body}`;\n+  const {stdout} = await execFileAsync(process.execPath, ['--input-type=module', '-e', script], {env: {...process.env, LQ_FILE: file}});\n+  return JSON.parse(stdout);\n+}\n+\n+it('[R-1][C-1] enqueue, claim and ack keep documented fields, lease values and nested payload', async () => {\n+  const clock = makeClock(1000);\n+  const queue = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 1000});\n+  const payload = {customer: {id: 'c-1', tags: ['a', 'b'], meta: {score: 1.5, active: true, note: null}}, items: [{sku: 'x', qty: 2}]};\n+\n+  const enqueued = await queue.enqueue({tenantId: 't', key: 'order-1', payload});\n+  expect(Object.keys(enqueued).sort()).toEqual(JOB_KEYS);\n+  expect(enqueued).toMatchObject({tenantId: 't', key: 'order-1', priority: 0, status: 'ready', attempts: 0, createdAt: 1000, availableAt: 1000, workerId: null, leaseToken: null, leaseUntil: null, lastError: null});\n+  expect(enqueued.payload).toEqual(payload);\n+\n+  const delayed = await queue.enqueue({tenantId: 't', key: 'later', payload: {n: 2}, delayMs: 250});\n+  expect(delayed).toMatchObject({status: 'ready', availableAt: 1250});\n+\n+  const claimed = await queue.claim({tenantId: 't', workerId: 'A'});\n+  expect(claimed.id).toBe(enqueued.id);\n+  expect(claimed).toMatchObject({status: 'leased', attempts: 1, workerId: 'A', leaseUntil: 2000});\n+  expect(claimed.leaseToken.length).toBeGreaterThan(0);\n+  expect(claimed.payload).toEqual(payload);\n+\n+  const acked = await queue.ack({tenantId: 't', jobId: enqueued.id, workerId: 'A', leaseToken: claimed.leaseToken});\n+  expect(acked).toMatchObject({id: enqueued.id, status: 'done', attempts: 1, workerId: null, leaseToken: null, leaseUntil: null});\n+  expect(acked.payload).toEqual(payload);\n+\n+  const listed = await queue.list({tenantId: 't'});\n+  expect(listed.map((job) => job.id)).toEqual([enqueued.id, delayed.id]);\n+  expect(listed[0]).toEqual(acked);\n+  expect(listed[1]).toEqual(delayed);\n+  for (const job of listed) expect(Object.keys(job).sort()).toEqual(JOB_KEYS);\n+});\n+\n+it('[R-1][C-2] claim picks priority, then earliest availableAt, then commit order and skips jobs not yet due', async () => {\n+  const clock = makeClock(0);\n+  const enqueueAll = async (queue) => {\n+    await queue.enqueue({tenantId: 't', key: 'a', payload: {}, priority: 0});\n+    await queue.enqueue({tenantId: 't', key: 'b', payload: {}, priority: 5});\n+    await queue.enqueue({tenantId: 't', key: 'c', payload: {}, priority: 5, delayMs: 0});\n+    await queue.enqueue({tenantId: 't', key: 'd', payload: {}, priority: 9, delayMs: 500});\n+    await queue.enqueue({tenantId: 't', key: 'e', payload: {}, priority: 0});\n+  };\n+  const claimKey = async (queue) => {\n+    const job = await queue.claim({tenantId: 't', workerId: 'w'});\n+    return job === null ? null : job.key;\n+  };\n+\n+  const atZero = await openQueue({store: createMemoryStore(), now: clock.now});\n+  await enqueueAll(atZero);\n+  const zeroClaims = [];\n+  for (let i = 0; i < 5; i += 1) zeroClaims.push(await claimKey(atZero));\n+  expect(zeroClaims).toEqual(['b', 'c', 'a', 'e', null]);\n+\n+  clock.t = 500;\n+  const atFiveHundred = await openQueue({store: createMemoryStore(), now: clock.now});\n+  await enqueueAll(atFiveHundred);\n+  const laterClaims = [];\n+  for (let i = 0; i < 6; i += 1) laterClaims.push(await claimKey(atFiveHundred));\n+  expect(laterClaims).toEqual(['d', 'b', 'c', 'a', 'e', null]);\n+});\n+\n+it('[R-1][C-3] fail applies exponential backoff, dead-letters at maxAttempts and rejects blank errors', async () => {\n+  const clock = makeClock(0);\n+  const queue = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 5000, maxAttempts: 3, backoffMs: 100});\n+  const job = await queue.enqueue({tenantId: 't', key: 'k', payload: {}});\n+\n+  clock.t = 1000;\n+  const first = await queue.claim({tenantId: 't', workerId: 'A'});\n+  await expectFailure(() => queue.fail({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: first.leaseToken, error: ''}), 'INVALID_INPUT', 'empty error');\n+  await expectFailure(() => queue.fail({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: first.leaseToken, error: '   '}), 'INVALID_INPUT', 'blank error');\n+  expect(await queue.list({tenantId: 't'})).toEqual([first]);\n+\n+  const failed1 = await queue.fail({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: first.leaseToken, error: 'boom-1'});\n+  expect(failed1).toMatchObject({status: 'ready', attempts: 1, availableAt: 1100, workerId: null, leaseToken: null, leaseUntil: null, lastError: 'boom-1'});\n+\n+  clock.t = 1099;\n+  expect(await queue.claim({tenantId: 't', workerId: 'B'})).toBeNull();\n+\n+  clock.t = 1100;\n+  const second = await queue.claim({tenantId: 't', workerId: 'B'});\n+  expect(second).toMatchObject({id: job.id, attempts: 2, workerId: 'B'});\n+  expect(second.leaseToken).not.toBe(first.leaseToken);\n+  const failed2 = await queue.fail({tenantId: 't', jobId: job.id, workerId: 'B', leaseToken: second.leaseToken, error: 'boom-2'});\n+  expect(failed2).toMatchObject({status: 'ready', attempts: 2, availableAt: 1300, leaseToken: null, lastError: 'boom-2'});\n+\n+  clock.t = 1300;\n+  const third = await queue.claim({tenantId: 't', workerId: 'C'});\n+  expect(third).toMatchObject({id: job.id, attempts: 3, workerId: 'C'});\n+  const failed3 = await queue.fail({tenantId: 't', jobId: job.id, workerId: 'C', leaseToken: third.leaseToken, error: 'boom-3'});\n+  expect(failed3).toMatchObject({status: 'dead', attempts: 3, workerId: null, leaseToken: null, lastError: 'boom-3'});\n+\n+  clock.t = 1_000_000;\n+  expect(await queue.claim({tenantId: 't', workerId: 'D'})).toBeNull();\n+\n+  const quick = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 5000, maxAttempts: 1, backoffMs: 0});\n+  await quick.enqueue({tenantId: 't', key: 'once', payload: {}});\n+  const quickClaim = await quick.claim({tenantId: 't', workerId: 'Q'});\n+  const quickFailed = await quick.fail({tenantId: 't', jobId: quickClaim.id, workerId: 'Q', leaseToken: quickClaim.leaseToken, error: 'once'});\n+  expect(quickFailed).toMatchObject({status: 'dead', attempts: 1, lastError: 'once'});\n+});\n+\n+it('[R-1][C-4] idempotent enqueue replays original id and current state, rejects changed parameters, scopes keys per tenant', async () => {\n+  const clock = makeClock(0);\n+  const store = createMemoryStore();\n+  const first = await openQueue({store, now: clock.now, leaseMs: 1000});\n+  const original = await first.enqueue({tenantId: 't', key: 'K', payload: {a: 1, b: [1, 2]}, priority: 3, delayMs: 50});\n+\n+  clock.t = 50;\n+  const claimed = await first.claim({tenantId: 't', workerId: 'w'});\n+  await first.ack({tenantId: 't', jobId: original.id, workerId: 'w', leaseToken: claimed.leaseToken});\n+\n+  const reopened = await openQueue({store, now: clock.now, leaseMs: 1000});\n+  const versionBefore = store.inspect().version;\n+  const replay = await reopened.enqueue({tenantId: 't', key: 'K', payload: {b: [1, 2], a: 1}, priority: 3, delayMs: 50});\n+  expect(replay.id).toBe(original.id);\n+  expect(replay.status).toBe('done');\n+  expect(store.inspect().version).toBe(versionBefore);\n+\n+  await expectFailure(() => reopened.enqueue({tenantId: 't', key: 'K', payload: {b: [2, 1], a: 1}, priority: 3, delayMs: 50}), 'IDEMPOTENCY_CONFLICT', 'array order changed');\n+  await expectFailure(() => reopened.enqueue({tenantId: 't', key: 'K', payload: {a: 1, b: [1, 2]}, priority: 4, delayMs: 50}), 'IDEMPOTENCY_CONFLICT', 'priority changed');\n+  await expectFailure(() => reopened.enqueue({tenantId: 't', key: 'K', payload: {a: 1, b: [1, 2]}, priority: 3, delayMs: 0}), 'IDEMPOTENCY_CONFLICT', 'delayMs changed');\n+\n+  const other = await reopened.enqueue({tenantId: 't', key: 'K2', payload: {x: 1}, priority: 0, delayMs: 0});\n+  const cancelled = await reopened.cancel({tenantId: 't', jobId: other.id});\n+  expect(cancelled.status).toBe('cancelled');\n+  const replayCancelled = await reopened.enqueue({tenantId: 't', key: 'K2', payload: {x: 1}, priority: 0, delayMs: 0});\n+  expect(replayCancelled).toMatchObject({id: other.id, status: 'cancelled'});\n+\n+  const otherTenant = await reopened.enqueue({tenantId: 'u', key: 'K', payload: {a: 1, b: [1, 2]}, priority: 3, delayMs: 50});\n+  expect(otherTenant.id).not.toBe(original.id);\n+  expect(otherTenant.tenantId).toBe('u');\n+  expect((await reopened.list({tenantId: 't'})).map((job) => job.id)).toEqual([original.id, other.id]);\n+});\n+\n+it('[R-1][C-5] ack replay with original owner and token returns the done job without CAS; other pairs get STALE_LEASE', async () => {\n+  const clock = makeClock(0);\n+  const store = countingStore(createMemoryStore());\n+  const queue = await openQueue({store, now: clock.now, leaseMs: 1000});\n+  const job = await queue.enqueue({tenantId: 't', key: 'k', payload: {}});\n+  const claimed = await queue.claim({tenantId: 't', workerId: 'A'});\n+  const done = await queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: claimed.leaseToken});\n+  const before = await queue.list({tenantId: 't'});\n+\n+  const casBefore = store.casCalls;\n+  const replay = await queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: claimed.leaseToken});\n+  expect(replay).toEqual(done);\n+  expect(store.casCalls).toBe(casBefore);\n+\n+  await expectFailure(() => queue.ack({tenantId: 't', jobId: job.id, workerId: 'B', leaseToken: claimed.leaseToken}), 'STALE_LEASE', 'other worker');\n+  await expectFailure(() => queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: 'not-the-token'}), 'STALE_LEASE', 'other token');\n+  await expectFailure(() => queue.fail({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: claimed.leaseToken, error: 'late'}), 'STALE_LEASE', 'fail on done');\n+  expect(await queue.list({tenantId: 't'})).toEqual(before);\n+});\n+\n+it('[R-1][C-6] invalid options, arguments, identifiers and payloads fail with INVALID_INPUT without any CAS', async () => {\n+  const clock = makeClock(0);\n+  const store = countingStore(createMemoryStore());\n+  const queue = await openQueue({store, now: clock.now});\n+  const job = await queue.enqueue({tenantId: 't', key: 'valid', payload: {ok: true}});\n+  const listBefore = await queue.list({tenantId: 't'});\n+  store.casCalls = 0;\n+\n+  const badOptions = [\n+    ['options absent', undefined],\n+    ['options null', null],\n+    ['options array', []],\n+    ['options string', 'queue'],\n+    ['store absent', {}],\n+    ['store without load', {store: {compareAndSwap() {}}}],\n+    ['store without compareAndSwap', {store: {load() {}}}],\n+    ['now not a function', {store, now: 5}],\n+    ['leaseMs zero', {store, leaseMs: 0}],\n+    ['leaseMs fraction', {store, leaseMs: 1.5}],\n+    ['leaseMs beyond safe integer', {store, leaseMs: 2 ** 53}],\n+    ['maxAttempts negative', {store, maxAttempts: -1}],\n+    ['maxAttempts zero', {store, maxAttempts: 0}],\n+    ['backoffMs negative', {store, backoffMs: -1}],\n+    ['backoffMs fraction', {store, backoffMs: 1.5}],\n+  ];\n+  for (const [label, options] of badOptions) {\n+    await expectFailure(() => openQueue(options), 'INVALID_INPUT', label);\n+  }\n+\n+  const badArguments = [['null', null], ['array', []], ['number', 5], ['absent', undefined]];\n+  for (const [label, argument] of badArguments) {\n+    await expectFailure(() => queue.enqueue(argument), 'INVALID_INPUT', `enqueue ${label}`);\n+    await expectFailure(() => queue.claim(argument), 'INVALID_INPUT', `claim ${label}`);\n+    await expectFailure(() => queue.ack(argument), 'INVALID_INPUT', `ack ${label}`);\n+    await expectFailure(() => queue.fail(argument), 'INVALID_INPUT', `fail ${label}`);\n+    await expectFailure(() => queue.cancel(argument), 'INVALID_INPUT', `cancel ${label}`);\n+    await expectFailure(() => queue.list(argument), 'INVALID_INPUT', `list ${label}`);\n+  }\n+\n+  const validArgs = {\n+    enqueue: {tenantId: 't', key: 'k', payload: {}, priority: 0, delayMs: 0},\n+    claim: {tenantId: 't', workerId: 'w'},\n+    ack: {tenantId: 't', jobId: job.id, workerId: 'w', leaseToken: 'token'},\n+    fail: {tenantId: 't', jobId: job.id, workerId: 'w', leaseToken: 'token', error: 'e'},\n+    cancel: {tenantId: 't', jobId: job.id},\n+    list: {tenantId: 't'},\n+  };\n+  const badFields = [\n+    ['enqueue', 'tenantId', ''], ['enqueue', 'tenantId', '   '], ['enqueue', 'tenantId', 5],\n+    ['enqueue', 'key', ''], ['enqueue', 'key', '   '], ['enqueue', 'key', null],\n+    ['claim', 'tenantId', ''], ['claim', 'tenantId', '   '], ['claim', 'workerId', ''], ['claim', 'workerId', '   '],\n+    ['ack', 'jobId', ''], ['ack', 'jobId', '   '], ['ack', 'workerId', ''], ['ack', 'workerId', '   '], ['ack', 'leaseToken', ''], ['ack', 'leaseToken', '   '],\n+    ['fail', 'jobId', ''], ['fail', 'workerId', ''], ['fail', 'leaseToken', '   '], ['fail', 'error', ''], ['fail', 'error', '   '], ['fail', 'error', 5],\n+    ['cancel', 'jobId', ''], ['cancel', 'jobId', '   '], ['cancel', 'tenantId', ''],\n+    ['list', 'tenantId', ''], ['list', 'tenantId', '   '],\n+  ];\n+  for (const [method, field, value] of badFields) {\n+    await expectFailure(() => queue[method]({...validArgs[method], [field]: value}), 'INVALID_INPUT', `${method}.${field} ${JSON.stringify(value)}`);\n+  }\n+\n+  const badEnqueueValues = [\n+    ['priority 11', {priority: 11}], ['priority -11', {priority: -11}], ['priority 1.5', {priority: 1.5}],\n+    ['delayMs -1', {delayMs: -1}], ['delayMs 1.5', {delayMs: 1.5}],\n+  ];\n+  for (const [label, overrides] of badEnqueueValues) {\n+    await expectFailure(() => queue.enqueue({...validArgs.enqueue, ...overrides}), 'INVALID_INPUT', label);\n+  }\n+\n+  const cyclic = {};\n+  cyclic.self = cyclic;\n+  const badPayloads = [\n+    ['null', null], ['number', 5], ['string', 'text'], ['absent', undefined],\n+    ['array with undefined', [1, undefined]], ['nested undefined', {a: {b: {c: undefined}}}],\n+    ['function', {fn: () => 1}], ['bigint', {n: 1n}], ['NaN', {n: NaN}], ['Infinity', {n: Infinity}],\n+    ['Date', {at: new Date(0)}], ['cycle', cyclic],\n+  ];\n+  for (const [label, payload] of badPayloads) {\n+    await expectFailure(() => queue.enqueue({...validArgs.enqueue, key: `bad-${label}`, payload}), 'INVALID_INPUT', `payload ${label}`);\n+  }\n+\n+  expect(store.casCalls).toBe(0);\n+  expect(await queue.list({tenantId: 't'})).toEqual(listBefore);\n+\n+  const minimal = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 1});\n+  const high = await minimal.enqueue({tenantId: 't', key: 'high', payload: {}, priority: 10, delayMs: 0});\n+  const low = await minimal.enqueue({tenantId: 't', key: 'low', payload: {}, priority: -10, delayMs: 0});\n+  expect(high.priority).toBe(10);\n+  expect(low.priority).toBe(-10);\n+});\n+\n+it('[R-1][C-7] tenant and key pairs do not collide through delimiters, prototype names or whitespace', async () => {\n+  const clock = makeClock(0);\n+  const queue = await openQueue({store: createMemoryStore(), now: clock.now});\n+  const pairs = [\n+    {tenantId: 'a', key: 'b:c'},\n+    {tenantId: 'a:b', key: 'c'},\n+    {tenantId: 'a', key: 'b\\u0000c'},\n+    {tenantId: '__proto__', key: 'constructor'},\n+    {tenantId: 'constructor', key: 'toString'},\n+    {tenantId: ' t1 ', key: 'k'},\n+    {tenantId: 't1', key: 'k'},\n+  ];\n+  const created = [];\n+  for (const pair of pairs) created.push(await queue.enqueue({...pair, payload: {pair: pair.key}}));\n+\n+  expect(new Set(created.map((job) => job.id)).size).toBe(pairs.length);\n+  for (const [index, pair] of pairs.entries()) {\n+    expect(created[index]).toMatchObject({tenantId: pair.tenantId, key: pair.key});\n+    const replay = await queue.enqueue({...pair, payload: {pair: pair.key}});\n+    expect(replay.id).toBe(created[index].id);\n+  }\n+\n+  const idsOf = async (tenantId) => (await queue.list({tenantId})).map((job) => job.id);\n+  expect(await idsOf('a')).toEqual([created[0].id, created[2].id]);\n+  expect(await idsOf('a:b')).toEqual([created[1].id]);\n+  expect(await idsOf('__proto__')).toEqual([created[3].id]);\n+  expect(await idsOf('constructor')).toEqual([created[4].id]);\n+  expect(await idsOf(' t1 ')).toEqual([created[5].id]);\n+  expect(await idsOf('t1')).toEqual([created[6].id]);\n+});\n+\n+it('[R-1][C-8] lease expires exactly at leaseUntil; ack one millisecond earlier succeeds and stale token fails after expiry', async () => {\n+  const clockX = makeClock(0);\n+  const queueX = await openQueue({store: createMemoryStore(), now: clockX.now, leaseMs: 1000});\n+  const x = await queueX.enqueue({tenantId: 't', key: 'x', payload: {}});\n+  const xClaim = await queueX.claim({tenantId: 't', workerId: 'A'});\n+  clockX.t = 999;\n+  const xDone = await queueX.ack({tenantId: 't', jobId: x.id, workerId: 'A', leaseToken: xClaim.leaseToken});\n+  expect(xDone.status).toBe('done');\n+\n+  const clockY = makeClock(0);\n+  const queueY = await openQueue({store: createMemoryStore(), now: clockY.now, leaseMs: 1000});\n+  const y = await queueY.enqueue({tenantId: 't', key: 'y', payload: {}});\n+  const yClaim = await queueY.claim({tenantId: 't', workerId: 'A'});\n+  clockY.t = 1000;\n+  await expectFailure(() => queueY.ack({tenantId: 't', jobId: y.id, workerId: 'A', leaseToken: yClaim.leaseToken}), 'STALE_LEASE', 'ack at leaseUntil');\n+  const reclaimed = await queueY.claim({tenantId: 't', workerId: 'B'});\n+  expect(reclaimed).toMatchObject({id: y.id, status: 'leased', attempts: 2, workerId: 'B'});\n+  expect(reclaimed.leaseToken).not.toBe(yClaim.leaseToken);\n+  await expectFailure(() => queueY.ack({tenantId: 't', jobId: y.id, workerId: 'A', leaseToken: yClaim.leaseToken}), 'STALE_LEASE', 'old token after reassignment');\n+});\n+\n+it('[R-1][C-9] expiry requeues without backoff while attempts remain and dead-letters at maxAttempts', async () => {\n+  const clock = makeClock(0);\n+  const queue = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 100, maxAttempts: 2, backoffMs: 500});\n+  const x = await queue.enqueue({tenantId: 't', key: 'x', payload: {}});\n+  const firstClaim = await queue.claim({tenantId: 't', workerId: 'A'});\n+  expect(firstClaim.attempts).toBe(1);\n+\n+  clock.t = 100;\n+  const [normalized] = await queue.list({tenantId: 't'});\n+  expect(normalized).toMatchObject({id: x.id, status: 'ready', attempts: 1, availableAt: 100, workerId: null, leaseToken: null, leaseUntil: null});\n+\n+  const secondClaim = await queue.claim({tenantId: 't', workerId: 'B'});\n+  expect(secondClaim).toMatchObject({id: x.id, status: 'leased', attempts: 2, workerId: 'B'});\n+  expect(secondClaim.leaseToken).not.toBe(firstClaim.leaseToken);\n+\n+  clock.t = 200;\n+  const [dead] = await queue.list({tenantId: 't'});\n+  expect(dead).toMatchObject({id: x.id, status: 'dead', attempts: 2, workerId: null, leaseToken: null});\n+  expect(await queue.claim({tenantId: 't', workerId: 'C'})).toBeNull();\n+\n+  const singleAttempt = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 100, maxAttempts: 1, backoffMs: 500});\n+  const y = await singleAttempt.enqueue({tenantId: 't', key: 'y', payload: {}});\n+  await singleAttempt.claim({tenantId: 't', workerId: 'A'});\n+  clock.t = 300;\n+  const [yDead] = await singleAttempt.list({tenantId: 't'});\n+  expect(yDead).toMatchObject({id: y.id, status: 'dead', attempts: 1});\n+});\n+\n+it('[R-1][C-10] returned jobs and enqueued payloads are defensive deep copies', async () => {\n+  const clock = makeClock(0);\n+  const queue = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 1000});\n+  const payload = {x: {y: [1, {z: 'a'}]}};\n+  const expected = {x: {y: [1, {z: 'a'}]}};\n+  const job = await queue.enqueue({tenantId: 't', key: 'k', payload});\n+\n+  payload.x.y[1].z = 'changed';\n+  payload.x.y.push(9);\n+  payload.x.extra = true;\n+  expect(job.payload).toEqual(expected);\n+\n+  job.payload.x.y[0] = 99;\n+  job.status = 'done';\n+  const listed = await queue.list({tenantId: 't'});\n+  expect(listed[0]).toMatchObject({status: 'ready', payload: expected});\n+\n+  listed[0].payload.x.y[1].z = 'mutated-list';\n+  listed[0].status = 'cancelled';\n+  expect((await queue.list({tenantId: 't'}))[0]).toMatchObject({status: 'ready', payload: expected});\n+\n+  const claimed = await queue.claim({tenantId: 't', workerId: 'A'});\n+  claimed.payload.x.y[1].z = 'claimed-mutation';\n+  claimed.workerId = 'hacked';\n+  const acked = await queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: claimed.leaseToken});\n+  acked.payload.x = null;\n+  expect(await queue.list({tenantId: 't'})).toEqual([{...acked, payload: expected}]);\n+  expect((await queue.list({tenantId: 't'}))[0]).toMatchObject({status: 'done', workerId: null, leaseToken: null, payload: expected});\n+});\n+\n+it('[R-1][C-11] cross-tenant and unknown job ids return identical NOT_FOUND and never touch the other tenant', async () => {\n+  const clock = makeClock(0);\n+  const store = createMemoryStore();\n+  const queue = await openQueue({store, now: clock.now, leaseMs: 1000});\n+  const jobA2 = await queue.enqueue({tenantId: 'A', key: 'a-leased', payload: {secret: 'SECRET-A'}});\n+  const jobA = await queue.enqueue({tenantId: 'A', key: 'a-ready', payload: {secret: 'SECRET-A'}});\n+  const jobB = await queue.enqueue({tenantId: 'B', key: 'b-leased', payload: {}});\n+  const jobB2 = await queue.enqueue({tenantId: 'B', key: 'b-ready', payload: {}});\n+  const tokenB = (await queue.claim({tenantId: 'B', workerId: 'wb'})).leaseToken;\n+  clock.t = 4500;\n+  const tokenA2 = (await queue.claim({tenantId: 'A', workerId: 'wa'})).leaseToken;\n+  clock.t = 5000;\n+\n+  const snapshotBefore = JSON.stringify((await store.load()).state);\n+  const aCrossTenant = [\n+    () => queue.ack({tenantId: 'A', jobId: jobB.id, workerId: 'wb', leaseToken: tokenB}),\n+    () => queue.fail({tenantId: 'A', jobId: jobB.id, workerId: 'wb', leaseToken: tokenB, error: 'x'}),\n+    () => queue.cancel({tenantId: 'A', jobId: jobB.id}),\n+    () => queue.cancel({tenantId: 'A', jobId: jobB2.id}),\n+  ];\n+  for (const action of aCrossTenant) await expectFailure(action, 'NOT_FOUND', 'tenant A on tenant B job');\n+  expect(JSON.stringify((await store.load()).state)).toBe(snapshotBefore);\n+\n+  const operations = {\n+    ack: (id) => queue.ack({tenantId: 'B', jobId: id, workerId: 'wb', leaseToken: tokenB}),\n+    fail: (id) => queue.fail({tenantId: 'B', jobId: id, workerId: 'wb', leaseToken: tokenB, error: 'x'}),\n+    cancel: (id) => queue.cancel({tenantId: 'B', jobId: id}),\n+  };\n+  const normalise = (message, id) => message.split(id).join('<id>');\n+  for (const [name, operation] of Object.entries(operations)) {\n+    for (const foreignId of [jobA.id, jobA2.id]) {\n+      const foreign = await failureOf(() => operation(foreignId));\n+      const unknown = await failureOf(() => operation('missing-job-id'));\n+      expect(foreign, `${name} foreign`).toBeInstanceOf(Error);\n+      expect(unknown, `${name} unknown`).toBeInstanceOf(Error);\n+      expect(foreign.code, name).toBe('NOT_FOUND');\n+      expect(unknown.code, name).toBe('NOT_FOUND');\n+      expect(normalise(foreign.message, foreignId), name).toBe(normalise(unknown.message, 'missing-job-id'));\n+      expect(foreign.message).not.toContain('SECRET-A');\n+      expect(foreign.message).not.toContain('a-ready');\n+    }\n+  }\n+\n+  expect((await queue.list({tenantId: 'A'})).map((job) => job.id)).toEqual([jobA2.id, jobA.id]);\n+  expect((await queue.list({tenantId: 'B'})).map((job) => job.id)).toEqual([jobB.id, jobB2.id]);\n+  expect((await queue.list({tenantId: 'A'})).find((job) => job.id === jobA2.id).status).toBe('leased');\n+});\n+\n+it('[R-1][C-12] lease ownership requires matching workerId and leaseToken', async () => {\n+  const clock = makeClock(0);\n+  const queue = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 1000});\n+  const job = await queue.enqueue({tenantId: 't', key: 'j', payload: {}});\n+  const other = await queue.enqueue({tenantId: 't', key: 'j2', payload: {}});\n+  const claimedJob = await queue.claim({tenantId: 't', workerId: 'A'});\n+  const claimedOther = await queue.claim({tenantId: 't', workerId: 'C'});\n+  expect(claimedJob.id).toBe(job.id);\n+  expect(claimedOther.id).toBe(other.id);\n+  const tokenJob = claimedJob.leaseToken;\n+  const tokenOther = claimedOther.leaseToken;\n+  expect(tokenOther).not.toBe(tokenJob);\n+\n+  await expectFailure(() => queue.ack({tenantId: 't', jobId: job.id, workerId: 'B', leaseToken: tokenJob}), 'STALE_LEASE', 'B with A token');\n+  await expectFailure(() => queue.fail({tenantId: 't', jobId: job.id, workerId: 'B', leaseToken: tokenJob, error: 'x'}), 'STALE_LEASE', 'B fail with A token');\n+  await expectFailure(() => queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: tokenOther}), 'STALE_LEASE', 'A with other job token');\n+  await expectFailure(() => queue.fail({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: tokenOther, error: 'x'}), 'STALE_LEASE', 'A fail with other job token');\n+  await expectFailure(() => queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: ''}), 'INVALID_INPUT', 'empty token');\n+  await expectFailure(() => queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: '   '}), 'INVALID_INPUT', 'blank token');\n+\n+  const listed = await queue.list({tenantId: 't'});\n+  expect(listed.find((item) => item.id === job.id)).toMatchObject({status: 'leased', workerId: 'A', leaseToken: tokenJob});\n+  expect(listed.find((item) => item.id === other.id)).toMatchObject({status: 'leased', workerId: 'C', leaseToken: tokenOther});\n+\n+  const done = await queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: tokenJob});\n+  expect(done.status).toBe('done');\n+});\n+\n+it('[R-1][C-13] two queues on one delayed store never duplicate claims or tokens and lose no jobs', async () => {\n+  const clock = makeClock(0);\n+  const mem = createMemoryStore();\n+  const setup = await openQueue({store: mem, now: clock.now});\n+  for (let i = 0; i < 20; i += 1) await setup.enqueue({tenantId: 't', key: `job-${i}`, payload: {i}});\n+\n+  const store = delayedStore(mem, seededRandom(13));\n+  const first = await openQueue({store, now: clock.now});\n+  const second = await openQueue({store, now: clock.now});\n+  const claimStream = async (queue, worker) => {\n+    const results = [];\n+    for (let i = 0; i < 15; i += 1) results.push(await queue.claim({tenantId: 't', workerId: `${worker}-${i}`}));\n+    return results;\n+  };\n+  const [left, right] = await Promise.all([claimStream(first, 'left'), claimStream(second, 'right')]);\n+  const claims = [...left, ...right];\n+  const granted = claims.filter((job) => job !== null);\n+\n+  expect(claims.filter((job) => job === null)).toHaveLength(10);\n+  expect(granted).toHaveLength(20);\n+  expect(new Set(granted.map((job) => job.id)).size).toBe(20);\n+  expect(new Set(granted.map((job) => job.leaseToken)).size).toBe(20);\n+  expect(granted.every((job) => job.status === 'leased' && job.attempts === 1)).toBe(true);\n+\n+  const ackStream = async (queue, jobs) => {\n+    for (const job of jobs) {\n+      await queue.ack({tenantId: 't', jobId: job.id, workerId: job.workerId, leaseToken: job.leaseToken});\n+    }\n+  };\n+  await Promise.all([ackStream(first, granted.slice(0, 10)), ackStream(second, granted.slice(10))]);\n+\n+  const finalList = await setup.list({tenantId: 't'});\n+  expect(finalList).toHaveLength(20);\n+  expect(finalList.every((job) => job.status === 'done')).toBe(true);\n+  expect(new Set(finalList.map((job) => job.id))).toEqual(new Set(granted.map((job) => job.id)));\n+});\n+\n+it('[R-1][C-14] CAS false reloads and recomputes; eighth false result throws CONFLICT with no commit', async () => {\n+  const clock = makeClock(0);\n+  const mem = createMemoryStore();\n+  const store = countingStore(mem);\n+  const queue = await openQueue({store, now: clock.now});\n+  const writer = await openQueue({store: mem, now: clock.now});\n+\n+  let interleavings = 0;\n+  let counter = 0;\n+  store.beforeCas = async () => {\n+    if (interleavings > 0) {\n+      interleavings -= 1;\n+      counter += 1;\n+      await writer.enqueue({tenantId: 't', key: `other-${counter}`, payload: {counter}});\n+    }\n+  };\n+\n+  interleavings = 3;\n+  store.casCalls = 0;\n+  const mine = await queue.enqueue({tenantId: 't', key: 'mine', payload: {from: 'queue'}});\n+  expect(store.casCalls).toBe(4);\n+  let listed = await writer.list({tenantId: 't'});\n+  expect(listed.map((job) => job.key)).toEqual(['other-1', 'other-2', 'other-3', 'mine']);\n+  expect(listed[3]).toEqual(mine);\n+\n+  interleavings = 8;\n+  store.casCalls = 0;\n+  await expectFailure(() => queue.enqueue({tenantId: 't', key: 'lost', payload: {}}), 'CONFLICT');\n+  expect(store.casCalls).toBe(8);\n+  listed = await writer.list({tenantId: 't'});\n+  expect(listed.map((job) => job.key)).not.toContain('lost');\n+  expect(listed).toHaveLength(12);\n+\n+  const later = await queue.enqueue({tenantId: 't', key: 'later', payload: {}});\n+  expect((await writer.list({tenantId: 't'})).map((job) => job.id)).toContain(later.id);\n+});\n+\n+it('[R-1][C-15] interleaved enqueue, claim, ack, cancel and list across two queues keep every committed change', async () => {\n+  const clock = makeClock(0);\n+  const mem = createMemoryStore();\n+  const store = delayedStore(mem, seededRandom(15));\n+  const queues = [\n+    await openQueue({store, now: clock.now, leaseMs: 100000}),\n+    await openQueue({store, now: clock.now, leaseMs: 100000}),\n+  ];\n+  const enqueued = [];\n+  const claimed = new Map();\n+  const acked = new Set();\n+  const cancelled = new Set();\n+\n+  const runStream = async (s) => {\n+    const queue = queues[s];\n+    const worker = `w${s}`;\n+    const own = [];\n+    const pending = [];\n+    for (let cycle = 0; cycle < 5; cycle += 1) {\n+      const job = await queue.enqueue({tenantId: 't', key: `s${s}-${cycle}`, payload: {s, cycle}});\n+      own.push(job);\n+      enqueued.push(job);\n+\n+      const got = await queue.claim({tenantId: 't', workerId: worker});\n+      if (got !== null) {\n+        claimed.set(got.id, got);\n+        pending.push(got);\n+      }\n+\n+      const toAck = pending.shift();\n+      if (toAck !== undefined) {\n+        const done = await queue.ack({tenantId: 't', jobId: toAck.id, workerId: worker, leaseToken: toAck.leaseToken});\n+        expect(done.status).toBe('done');\n+        acked.add(done.id);\n+      }\n+\n+      const cancelError = await failureOf(() => queue.cancel({tenantId: 't', jobId: job.id}));\n+      if (cancelError === null) cancelled.add(job.id);\n+      else expect(cancelError.code).toBe('INVALID_STATE');\n+\n+      const listedIds = new Set((await queue.list({tenantId: 't'})).map((item) => item.id));\n+      for (const item of own) expect(listedIds.has(item.id)).toBe(true);\n+    }\n+  };\n+  await Promise.all([runStream(0), runStream(1)]);\n+\n+  const final = await queues[0].list({tenantId: 't'});\n+  expect(final.map((job) => job.id).sort()).toEqual(enqueued.map((job) => job.id).sort());\n+  expect(new Set([...claimed.values()].map((job) => job.leaseToken)).size).toBe(claimed.size);\n+  for (const job of final) {\n+    const expected = acked.has(job.id) ? 'done' : cancelled.has(job.id) ? 'cancelled' : claimed.has(job.id) ? 'leased' : 'ready';\n+    expect(job.status, job.key).toBe(expected);\n+    if (expected === 'leased') {\n+      expect(job.workerId, job.key).toBe(claimed.get(job.id).workerId);\n+      expect(job.leaseToken, job.key).toBe(claimed.get(job.id).leaseToken);\n+    }\n+  }\n+});\n+\n+it('[R-1][C-16] load failure throws STORAGE_ERROR without CAS, keeps state and lets later calls succeed', async () => {\n+  const clock = makeClock(0);\n+  const store = countingStore(createMemoryStore());\n+  const queue = await openQueue({store, now: clock.now});\n+  const job = await queue.enqueue({tenantId: 't', key: 'k', payload: {v: 1}});\n+  const before = await queue.list({tenantId: 't'});\n+\n+  store.failLoads = 1;\n+  store.casCalls = 0;\n+  await expectFailure(() => queue.claim({tenantId: 't', workerId: 'w'}), 'STORAGE_ERROR');\n+  expect(store.casCalls).toBe(0);\n+  expect(await queue.list({tenantId: 't'})).toEqual(before);\n+\n+  const claimed = await queue.claim({tenantId: 't', workerId: 'w'});\n+  expect(claimed).toMatchObject({id: job.id, status: 'leased', attempts: 1, workerId: 'w'});\n+  const acked = await queue.ack({tenantId: 't', jobId: job.id, workerId: 'w', leaseToken: claimed.leaseToken});\n+  expect(acked.status).toBe('done');\n+});\n+\n+it('[R-1][C-17] CAS failure before commit leaves no visible job, does not retry, and key is not reserved', async () => {\n+  const clock = makeClock(0);\n+  const mem = createMemoryStore();\n+  const store = countingStore(mem);\n+  const queue = await openQueue({store, now: clock.now});\n+  const beforeFailure = mem.inspect();\n+\n+  store.failCas = 1;\n+  store.casCalls = 0;\n+  await expectFailure(() => queue.enqueue({tenantId: 't', key: 'k', payload: {v: 1}}), 'STORAGE_ERROR');\n+  expect(store.casCalls).toBe(1);\n+  expect(mem.inspect()).toEqual(beforeFailure);\n+  expect(await queue.list({tenantId: 't'})).toEqual([]);\n+\n+  const reopenedBefore = await openQueue({store: mem, now: clock.now});\n+  expect(await reopenedBefore.list({tenantId: 't'})).toEqual([]);\n+\n+  const retry = await queue.enqueue({tenantId: 't', key: 'k', payload: {v: 1}});\n+  expect(store.casCalls).toBe(2);\n+  expect(retry).toMatchObject({tenantId: 't', key: 'k', status: 'ready'});\n+\n+  const reopened = await openQueue({store: mem, now: clock.now});\n+  expect((await reopened.list({tenantId: 't'})).map((job) => job.id)).toEqual([retry.id]);\n+  const claimed = await reopened.claim({tenantId: 't', workerId: 'w'});\n+  expect(claimed).toMatchObject({id: retry.id, attempts: 1, status: 'leased'});\n+});\n+\n+it('[R-1][C-18] garbage store state fails CORRUPT_STORE without overwrite; null state creates a new queue', async () => {\n+  const clock = makeClock(0);\n+  const garbage = [\n+    ['number', 42],\n+    ['string', 'junk'],\n+    ['array', []],\n+    ['object without schemaVersion', {}],\n+    ['schemaVersion 2', {schemaVersion: 2}],\n+    ['undefined', undefined],\n+    ['false', false],\n+  ];\n+  for (const [label, state] of garbage) {\n+    const before = JSON.stringify(state);\n+    const store = garbageStore(state);\n+    await expectFailure(async () => {\n+      const queue = await openQueue({store, now: clock.now});\n+      await queue.enqueue({tenantId: 't', key: 'k', payload: {}});\n+    }, 'CORRUPT_STORE', label);\n+    expect(store.casCalls, label).toBe(0);\n+    expect(JSON.stringify(state), label).toBe(before);\n+  }\n+\n+  const fresh = await openQueue({store: createMemoryStore(), now: clock.now});\n+  const created = await fresh.enqueue({tenantId: 't', key: 'k', payload: {}});\n+  expect(created).toMatchObject({status: 'ready', attempts: 0});\n+  expect(await fresh.list({tenantId: 't'})).toEqual([created]);\n+});\n+\n+it('[R-1][C-19] status transitions reject invalid ack, fail and cancel; expired jobs normalize before cancel', async () => {\n+  const clockA = makeClock(0);\n+  const queueA = await openQueue({store: createMemoryStore(), now: clockA.now, leaseMs: 1000, maxAttempts: 2, backoffMs: 0});\n+  const enqueue = (queue, key) => queue.enqueue({tenantId: 't', key, payload: {key}});\n+  const claim = (queue) => queue.claim({tenantId: 't', workerId: 'w'});\n+\n+  const done = await enqueue(queueA, 'done');\n+  const doneClaim = await claim(queueA);\n+  await queueA.ack({tenantId: 't', jobId: done.id, workerId: 'w', leaseToken: doneClaim.leaseToken});\n+\n+  const dead = await enqueue(queueA, 'dead');\n+  const deadClaim1 = await claim(queueA);\n+  const deadReady = await queueA.fail({tenantId: 't', jobId: dead.id, workerId: 'w', leaseToken: deadClaim1.leaseToken, error: 'first'});\n+  expect(deadReady.status).toBe('ready');\n+  const deadClaim2 = await claim(queueA);\n+  await queueA.fail({tenantId: 't', jobId: dead.id, workerId: 'w', leaseToken: deadClaim2.leaseToken, error: 'second'});\n+\n+  const cancelled = await enqueue(queueA, 'cancelled');\n+  await queueA.cancel({tenantId: 't', jobId: cancelled.id});\n+\n+  const leased = await enqueue(queueA, 'leased');\n+  await claim(queueA);\n+\n+  const pending = await enqueue(queueA, 'pending');\n+\n+  const before = await queueA.list({tenantId: 't'});\n+  await expectFailure(() => queueA.ack({tenantId: 't', jobId: pending.id, workerId: 'w', leaseToken: 'any'}), 'STALE_LEASE', 'ack ready');\n+  await expectFailure(() => queueA.fail({tenantId: 't', jobId: pending.id, workerId: 'w', leaseToken: 'any', error: 'e'}), 'STALE_LEASE', 'fail ready');\n+  await expectFailure(() => queueA.ack({tenantId: 't', jobId: dead.id, workerId: 'w', leaseToken: 'any'}), 'STALE_LEASE', 'ack dead');\n+  await expectFailure(() => queueA.fail({tenantId: 't', jobId: dead.id, workerId: 'w', leaseToken: 'any', error: 'e'}), 'STALE_LEASE', 'fail dead');\n+  await expectFailure(() => queueA.ack({tenantId: 't', jobId: cancelled.id, workerId: 'w', leaseToken: 'any'}), 'STALE_LEASE', 'ack cancelled');\n+  await expectFailure(() => queueA.fail({tenantId: 't', jobId: cancelled.id, workerId: 'w', leaseToken: 'any', error: 'e'}), 'STALE_LEASE', 'fail cancelled');\n+  await expectFailure(() => queueA.cancel({tenantId: 't', jobId: leased.id}), 'INVALID_STATE', 'cancel leased');\n+  await expectFailure(() => queueA.cancel({tenantId: 't', jobId: done.id}), 'INVALID_STATE', 'cancel done');\n+  await expectFailure(() => queueA.cancel({tenantId: 't', jobId: dead.id}), 'INVALID_STATE', 'cancel dead');\n+  expect(await queueA.list({tenantId: 't'})).toEqual(before);\n+\n+  const cancelledPending = await queueA.cancel({tenantId: 't', jobId: pending.id});\n+  expect(cancelledPending.status).toBe('cancelled');\n+  const cancelledAgain = await queueA.cancel({tenantId: 't', jobId: pending.id});\n+  expect(cancelledAgain.status).toBe('cancelled');\n+\n+  const statusByKey = Object.fromEntries((await queueA.list({tenantId: 't'})).map((job) => [job.key, job.status]));\n+  expect(statusByKey).toEqual({done: 'done', dead: 'dead', cancelled: 'cancelled', leased: 'leased', pending: 'cancelled'});\n+\n+  const clockB = makeClock(0);\n+  const queueB = await openQueue({store: createMemoryStore(), now: clockB.now, leaseMs: 100, maxAttempts: 2, backoffMs: 0});\n+  const p = await enqueue(queueB, 'p');\n+  const q = await enqueue(queueB, 'q');\n+  const pClaim = await claim(queueB);\n+  expect(pClaim.id).toBe(p.id);\n+  const qClaim = await claim(queueB);\n+  expect(qClaim.id).toBe(q.id);\n+\n+  clockB.t = 100;\n+  const cancelledP = await queueB.cancel({tenantId: 't', jobId: p.id});\n+  expect(cancelledP.status).toBe('cancelled');\n+  const [qAfterExpiry] = (await queueB.list({tenantId: 't'})).filter((job) => job.id === q.id);\n+  expect(qAfterExpiry).toMatchObject({status: 'ready', attempts: 1, workerId: null});\n+\n+  const qReclaim = await claim(queueB);\n+  expect(qReclaim).toMatchObject({id: q.id, attempts: 2, status: 'leased', leaseUntil: 200});\n+\n+  clockB.t = 200;\n+  await expectFailure(() => queueB.cancel({tenantId: 't', jobId: q.id}), 'INVALID_STATE', 'cancel expired final attempt');\n+  const [qDead] = (await queueB.list({tenantId: 't'})).filter((job) => job.id === q.id);\n+  expect(qDead.status).toBe('dead');\n+});\n+\n+it('[R-1][C-20] reassigned job rejects the previous owner and never reuses a token', async () => {\n+  const clock = makeClock(0);\n+  const queue = await openQueue({store: createMemoryStore(), now: clock.now, leaseMs: 100});\n+  const job = await queue.enqueue({tenantId: 't', key: 'j', payload: {}});\n+  const firstClaim = await queue.claim({tenantId: 't', workerId: 'A'});\n+  const t1 = firstClaim.leaseToken;\n+\n+  clock.t = 100;\n+  const secondClaim = await queue.claim({tenantId: 't', workerId: 'B'});\n+  expect(secondClaim).toMatchObject({id: job.id, attempts: 2, workerId: 'B', status: 'leased'});\n+  const t2 = secondClaim.leaseToken;\n+  expect(t2).not.toBe(t1);\n+\n+  await expectFailure(() => queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: t1}), 'STALE_LEASE', 'A ack');\n+  await expectFailure(() => queue.fail({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: t1, error: 'late'}), 'STALE_LEASE', 'A fail');\n+  expect(await queue.list({tenantId: 't'})).toEqual([secondClaim]);\n+\n+  const done = await queue.ack({tenantId: 't', jobId: job.id, workerId: 'B', leaseToken: t2});\n+  expect(done.status).toBe('done');\n+  await expectFailure(() => queue.ack({tenantId: 't', jobId: job.id, workerId: 'A', leaseToken: t1}), 'STALE_LEASE', 'A ack replay after done');\n+\n+  const next = await queue.enqueue({tenantId: 't', key: 'next', payload: {}});\n+  const nextClaim = await queue.claim({tenantId: 't', workerId: 'C'});\n+  expect(nextClaim.id).toBe(next.id);\n+  expect(nextClaim.leaseToken).not.toBe(t1);\n+  expect(nextClaim.leaseToken).not.toBe(t2);\n+});\n+\n+it('[R-1][C-21] committed changes survive child process exit and reopen without stale claims or temp leftovers', async () => {\n+  const dir = await mkdtemp(path.join(tmpdir(), 'leasequeue-'));\n+  const file = path.join(dir, 'queue-data.json');\n+  try {\n+    const writer = await runChild(`const ids = [];\n+for (const key of ['a', 'b', 'c']) ids.push((await queue.enqueue({tenantId: 't', key, payload: {key, nested: {list: [1, {x: 'y'}]}}})).id);\n+const first = await queue.claim({tenantId: 't', workerId: 'child-1'});\n+const acked = await queue.ack({tenantId: 't', jobId: first.id, workerId: 'child-1', leaseToken: first.leaseToken});\n+const second = await queue.claim({tenantId: 't', workerId: 'child-1'});\n+process.stdout.write(JSON.stringify({ids, first, acked, second}));`, 0, file);\n+    const versionAfterWriter = (await createFileStore(file).load()).version;\n+\n+    const reader = await runChild(`const listed = await queue.list({tenantId: 't'});\n+const claimed = await queue.claim({tenantId: 't', workerId: 'child-2'});\n+process.stdout.write(JSON.stringify({listed, claimed}));`, 10, file);\n+    const versionAfterReader = (await createFileStore(file).load()).version;\n+\n+    expect(versionAfterWriter).toBeGreaterThan(0);\n+    expect(versionAfterReader).toBeGreaterThan(versionAfterWriter);\n+\n+    const {ids, first, acked, second} = writer;\n+    expect(acked).toMatchObject({id: first.id, status: 'done', workerId: null, leaseToken: null});\n+    expect(second).toMatchObject({status: 'leased', workerId: 'child-1'});\n+    const third = ids.find((id) => id !== first.id && id !== second.id);\n+    expect(reader.listed.map((job) => job.id)).toEqual(ids);\n+    expect(reader.listed.find((job) => job.id === first.id).status).toBe('done');\n+    expect(reader.listed.find((job) => job.id === second.id).status).toBe('leased');\n+    expect(reader.claimed).toMatchObject({id: third, status: 'leased', workerId: 'child-2', attempts: 1});\n+\n+    const parent = await openQueue({store: createFileStore(file), now: () => 20, leaseMs: 100000});\n+    const finalList = await parent.list({tenantId: 't'});\n+    expect(finalList.find((job) => job.id === first.id)).toMatchObject({status: 'done', workerId: null, leaseToken: null});\n+    expect(finalList.find((job) => job.id === second.id)).toMatchObject({status: 'leased', workerId: 'child-1', leaseToken: second.leaseToken});\n+    expect(finalList.find((job) => job.id === third)).toMatchObject({status: 'leased', workerId: 'child-2', leaseToken: reader.claimed.leaseToken});\n+    expect(await parent.claim({tenantId: 't', workerId: 'parent'})).toBeNull();\n+\n+    expect(await readdir(dir)).toEqual(['queue-data.json']);\n+  } finally {\n+    await rm(dir, {recursive: true, force: true});\n+  }\n+});\n+\n+it('[R-1][C-22] states passed to CAS are not mutated later and load/list results are detached snapshots', async () => {\n+  const clock = makeClock(0);\n+  const mem = createMemoryStore();\n+  const sent = [];\n+  const store = {\n+    load: () => mem.load(),\n+    compareAndSwap: async (version, state) => {\n+      sent.push({state, copy: structuredClone(state)});\n+      return mem.compareAndSwap(version, state);\n+    },\n+  };\n+  const assertUnmutated = () => {\n+    for (const {state, copy} of sent) expect(state).toEqual(copy);\n+  };\n+  const step = async (action) => {\n+    const result = await action();\n+    assertUnmutated();\n+    return result;\n+  };\n+\n+  const queue = await openQueue({store, now: clock.now, leaseMs: 100, maxAttempts: 3, backoffMs: 10});\n+  const j1 = await step(() => queue.enqueue({tenantId: 't', key: 'j1', payload: {n: {deep: [1, 2]}}}));\n+  const j2 = await step(() => queue.enqueue({tenantId: 't', key: 'j2', payload: {m: [{k: 'v'}]}}));\n+  const j3 = await step(() => queue.enqueue({tenantId: 't', key: 'j3', payload: {}}));\n+\n+  const c1 = await step(() => queue.claim({tenantId: 't', workerId: 'A'}));\n+  expect(c1.id).toBe(j1.id);\n+  await step(() => queue.fail({tenantId: 't', jobId: j1.id, workerId: 'A', leaseToken: c1.leaseToken, error: 'boom'}));\n+\n+  clock.t = 10;\n+  const c2 = await step(() => queue.claim({tenantId: 't', workerId: 'B'}));\n+  expect(c2.id).toBe(j2.id);\n+  await step(() => queue.ack({tenantId: 't', jobId: c2.id, workerId: 'B', leaseToken: c2.leaseToken}));\n+  await step(() => queue.cancel({tenantId: 't', jobId: j3.id}));\n+\n+  clock.t = 20;\n+  const c3 = await step(() => queue.claim({tenantId: 't', workerId: 'C'}));\n+  expect(c3.id).toBe(j1.id);\n+\n+  clock.t = 200;\n+  const listed = await step(() => queue.list({tenantId: 't'}));\n+  expect(listed.map((job) => job.status)).toEqual(['ready', 'done', 'cancelled']);\n+\n+  const snapshot = await store.load();\n+  scramble(snapshot.state);\n+  snapshot.version = 999;\n+  const relisted = await step(() => queue.list({tenantId: 't'}));\n+  expect(relisted).toEqual(listed);\n+\n+  relisted[0].payload.n.deep.push(3);\n+  relisted[0].status = 'done';\n+  const third = await step(() => queue.list({tenantId: 't'}));\n+  expect(third).toEqual(listed);\n+});\n+\n+it('[R-1][C-23] list returns commit order with all five statuses and normalized expired leases, without receipts', async () => {\n+  const clock = makeClock(0);\n+  const mem = createMemoryStore();\n+  const q1 = await openQueue({store: mem, now: clock.now, leaseMs: 100, maxAttempts: 2, backoffMs: 0});\n+  const q2 = await openQueue({store: mem, now: clock.now, leaseMs: 1000, maxAttempts: 2, backoffMs: 0});\n+  const worker = {tenantId: 't', workerId: 'w'};\n+\n+  const done = await q1.enqueue({tenantId: 't', key: 'done', payload: {n: 1}});\n+  const doneClaim = await q1.claim(worker);\n+  await q1.ack({tenantId: 't', jobId: done.id, workerId: 'w', leaseToken: doneClaim.leaseToken});\n+\n+  const dead = await q1.enqueue({tenantId: 't', key: 'dead', payload: {n: 2}});\n+  const deadClaim1 = await q1.claim(worker);\n+  await q1.fail({tenantId: 't', jobId: dead.id, workerId: 'w', leaseToken: deadClaim1.leaseToken, error: 'first'});\n+  const deadClaim2 = await q1.claim(worker);\n+  await q1.fail({tenantId: 't', jobId: dead.id, workerId: 'w', leaseToken: deadClaim2.leaseToken, error: 'second'});\n+\n+  const expired = await q1.enqueue({tenantId: 't', key: 'expired', payload: {n: 3}});\n+  const expiredClaim = await q1.claim(worker);\n+  expect(expiredClaim.id).toBe(expired.id);\n+\n+  const cancelled = await q1.enqueue({tenantId: 't', key: 'cancelled', payload: {n: 4}});\n+  await q1.cancel({tenantId: 't', jobId: cancelled.id});\n+\n+  const leased = await q2.enqueue({tenantId: 't', key: 'leased', payload: {n: 5}});\n+  const leasedClaim = await q2.claim(worker);\n+  expect(leasedClaim.id).toBe(leased.id);\n+\n+  clock.t = 100;\n+  const listed = await q2.list({tenantId: 't'});\n+  expect(listed.map((job) => job.id)).toEqual([done.id, dead.id, expired.id, cancelled.id, leased.id]);\n+  expect(listed.map((job) => job.status)).toEqual(['done', 'dead', 'ready', 'cancelled', 'leased']);\n+  for (const job of listed) expect(Object.keys(job).sort()).toEqual(JOB_KEYS);\n+  expect(listed[2]).toMatchObject({attempts: 1, availableAt: 100, workerId: null, leaseToken: null, leaseUntil: null});\n+});\ndiff --git a/tests/queue.behavior.test.js b/tests/queue.behavior.test.js\nnew file mode 100644\nindex 0000000..77882cf\n--- /dev/null\n+++ b/tests/queue.behavior.test.js\n@@ -0,0 +1,157 @@\n+import {it, expect} from 'vitest';\n+import {openQueue} from '../src/queue.js';\n+import {createMemoryStore} from '../lib/stores.js';\n+\n+const errorCode = async (promise, code) => {\n+  try { await promise; throw new Error('expected rejection'); }\n+  catch (error) { expect(error).toBeInstanceOf(Error); expect(error.code).toBe(code); }\n+};\n+const setup = async (options = {}) => {\n+  let t = 0;\n+  const store = options.store ?? createMemoryStore();\n+  const queue = await openQueue({store, now: () => t, ...options});\n+  return {queue, store, setTime: (n) => { t = n; }};\n+};\n+\n+it('[R-1] replay keeps the original enqueue delay after time advances', async () => {\n+  const {queue, setTime} = await setup();\n+  const first = await queue.enqueue({tenantId: 't', key: 'k', payload: [], delayMs: 50});\n+  setTime(50);\n+  expect(await queue.enqueue({tenantId: 't', key: 'k', payload: [], delayMs: 50})).toEqual(first);\n+});\n+\n+it('[R-1] changed replay arguments conflict without replacing the original job', async () => {\n+  const {queue} = await setup();\n+  const first = await queue.enqueue({tenantId: 't', key: 'k', payload: {a: 1}});\n+  await errorCode(queue.enqueue({tenantId: 't', key: 'k', payload: {a: 2}}), 'IDEMPOTENCY_CONFLICT');\n+  expect(await queue.list({tenantId: 't'})).toEqual([first]);\n+});\n+\n+it('[R-1] JSON object key order is immaterial while array order is material', async () => {\n+  const {queue} = await setup();\n+  const a = await queue.enqueue({tenantId: 't', key: 'k', payload: {x: 1, y: [1, 2]}});\n+  expect((await queue.enqueue({tenantId: 't', key: 'k', payload: {y: [1, 2], x: 1}})).id).toBe(a.id);\n+  await errorCode(queue.enqueue({tenantId: 't', key: 'k', payload: {x: 1, y: [2, 1]}}), 'IDEMPOTENCY_CONFLICT');\n+});\n+\n+it('[R-1] delayed work is unavailable until its exact due time', async () => {\n+  const {queue, setTime} = await setup();\n+  const j = await queue.enqueue({tenantId: 't', key: 'later', payload: {}, delayMs: 5});\n+  expect(j.availableAt).toBe(5);\n+  expect(await queue.claim({tenantId: 't', workerId: 'w'})).toBeNull();\n+  setTime(5);\n+  expect((await queue.claim({tenantId: 't', workerId: 'w'})).id).toBe(j.id);\n+});\n+\n+it('[R-1] priority breaks ties before commit order', async () => {\n+  const {queue} = await setup();\n+  const a = await queue.enqueue({tenantId: 't', key: 'a', payload: {}});\n+  const b = await queue.enqueue({tenantId: 't', key: 'b', payload: {}, priority: 1});\n+  expect((await queue.claim({tenantId: 't', workerId: 'w'})).id).toBe(b.id);\n+  expect((await queue.claim({tenantId: 't', workerId: 'w'})).id).toBe(a.id);\n+});\n+\n+it('[R-1] cancel is idempotent and retains the idempotency key', async () => {\n+  const {queue} = await setup();\n+  const j = await queue.enqueue({tenantId: 't', key: 'k', payload: {}});\n+  expect((await queue.cancel({tenantId: 't', jobId: j.id})).status).toBe('cancelled');\n+  expect((await queue.cancel({tenantId: 't', jobId: j.id})).status).toBe('cancelled');\n+  expect((await queue.enqueue({tenantId: 't', key: 'k', payload: {}})).status).toBe('cancelled');\n+});\n+\n+it('[R-1] malformed method arguments are rejected before storage access', async () => {\n+  const store = {load: async () => { throw new Error('must not load'); }, compareAndSwap: async () => false};\n+  const {queue} = await setup({store});\n+  await errorCode(queue.list(null), 'INVALID_INPUT');\n+  await errorCode(queue.claim([]), 'INVALID_INPUT');\n+  await errorCode(queue.enqueue({tenantId: 't', key: 'k', payload: null}), 'INVALID_INPUT');\n+});\n+\n+it('[R-1] tenant names preserve surrounding whitespace as distinct identifiers', async () => {\n+  const {queue} = await setup();\n+  await queue.enqueue({tenantId: ' t ', key: 'k', payload: {}});\n+  await queue.enqueue({tenantId: 't', key: 'k', payload: {}});\n+  expect((await queue.list({tenantId: ' t '})).length).toBe(1);\n+  expect((await queue.list({tenantId: 't'})).length).toBe(1);\n+});\n+\n+it('[R-1] fail clears the lease and records the supplied error', async () => {\n+  const {queue} = await setup({backoffMs: 10});\n+  const j = await queue.enqueue({tenantId: 't', key: 'k', payload: {}});\n+  const c = await queue.claim({tenantId: 't', workerId: 'w'});\n+  const f = await queue.fail({tenantId: 't', jobId: j.id, workerId: 'w', leaseToken: c.leaseToken, error: 'oops'});\n+  expect(f).toMatchObject({status: 'ready', availableAt: 10, lastError: 'oops', workerId: null, leaseToken: null, leaseUntil: null});\n+});\n+\n+it('[R-1] expiry normalization applies only to the selected tenant', async () => {\n+  const {queue, setTime, store} = await setup({leaseMs: 10});\n+  const a = await queue.enqueue({tenantId: 'a', key: 'a', payload: {}});\n+  const b = await queue.enqueue({tenantId: 'b', key: 'b', payload: {}});\n+  await queue.claim({tenantId: 'a', workerId: 'w'});\n+  await queue.claim({tenantId: 'b', workerId: 'w'});\n+  setTime(10);\n+  await queue.list({tenantId: 'a'});\n+  const state = (await store.load()).state.jobs;\n+  expect(state.find((j) => j.id === a.id).status).toBe('ready');\n+  expect(state.find((j) => j.id === b.id).status).toBe('leased');\n+});\n+\n+it('[R-1] id lookup does not disclose jobs across tenants', async () => {\n+  const {queue} = await setup();\n+  const j = await queue.enqueue({tenantId: 'a', key: 'k', payload: {}});\n+  await errorCode(queue.cancel({tenantId: 'b', jobId: j.id}), 'NOT_FOUND');\n+  expect(await queue.list({tenantId: 'b'})).toEqual([]);\n+});\n+\n+it('[R-1] successful ack clears public lease ownership and retains private replay', async () => {\n+  const {queue} = await setup();\n+  const j = await queue.enqueue({tenantId: 't', key: 'k', payload: {}});\n+  const c = await queue.claim({tenantId: 't', workerId: 'w'});\n+  const args = {tenantId: 't', jobId: j.id, workerId: 'w', leaseToken: c.leaseToken};\n+  const done = await queue.ack(args);\n+  expect(done).toMatchObject({status: 'done', workerId: null, leaseToken: null, leaseUntil: null});\n+  expect(await queue.ack(args)).toEqual(done);\n+});\n+\n+it('[R-1] a stale owner cannot complete a reassigned lease', async () => {\n+  const {queue, setTime} = await setup({leaseMs: 10});\n+  const j = await queue.enqueue({tenantId: 't', key: 'k', payload: {}});\n+  const a = await queue.claim({tenantId: 't', workerId: 'a'});\n+  setTime(10);\n+  const b = await queue.claim({tenantId: 't', workerId: 'b'});\n+  await errorCode(queue.ack({tenantId: 't', jobId: j.id, workerId: 'a', leaseToken: a.leaseToken}), 'STALE_LEASE');\n+  expect(b.leaseToken).not.toBe(a.leaseToken);\n+});\n+\n+it('[R-1] tenant list follows creation order and includes terminal jobs', async () => {\n+  const {queue} = await setup();\n+  const a = await queue.enqueue({tenantId: 't', key: 'a', payload: {}});\n+  const b = await queue.enqueue({tenantId: 't', key: 'b', payload: {}});\n+  await queue.cancel({tenantId: 't', jobId: a.id});\n+  expect((await queue.list({tenantId: 't'})).map((j) => j.id)).toEqual([a.id, b.id]);\n+  expect((await queue.list({tenantId: 't'}))[0].status).toBe('cancelled');\n+});\n+\n+it('[R-1] constructor validates all numeric policy options', async () => {\n+  const store = createMemoryStore();\n+  for (const options of [{leaseMs: 0}, {maxAttempts: -1}, {backoffMs: -1}, {leaseMs: 1.5}]) {\n+    await errorCode(openQueue({store, ...options}), 'INVALID_INPUT');\n+  }\n+});\n+\n+it('[R-1] cyclic or non-finite payload values fail without creating a job', async () => {\n+  const {queue} = await setup();\n+  const cyclic = {}; cyclic.self = cyclic;\n+  await errorCode(queue.enqueue({tenantId: 't', key: 'bad', payload: cyclic}), 'INVALID_INPUT');\n+  await errorCode(queue.enqueue({tenantId: 't', key: 'bad2', payload: {n: Infinity}}), 'INVALID_INPUT');\n+  expect(await queue.list({tenantId: 't'})).toEqual([]);\n+});\n+\n+it('[R-1] separate tenants may use the same key independently', async () => {\n+  const {queue} = await setup();\n+  const a = await queue.enqueue({tenantId: 'a', key: 'same', payload: {v: 1}});\n+  const b = await queue.enqueue({tenantId: 'b', key: 'same', payload: {v: 2}});\n+  expect(a.id).not.toBe(b.id);\n+  expect((await queue.list({tenantId: 'a'}))[0].payload).toEqual({v: 1});\n+  expect((await queue.list({tenantId: 'b'}))[0].payload).toEqual({v: 2});\n+});\n"
+  },
+  "checks": [
+    {
+      "id": "test",
+      "command": "node node_modules/vitest/vitest.mjs run --configLoader runner --reporter=json --outputFile=.aidept-report.json",
+      "status": "failed",
+      "passed": 40,
+      "failed": 1,
+      "skipped": 0,
+      "skippedNames": [],
+      "durationMs": 4134,
+      "runs": 2,
+      "quarantined": false
+    }
+  ],
+  "verifier": {
+    "expected": true,
+    "ran": false,
+    "verdict": null,
+    "findings": []
+  },
+  "effort": {
+    "costUsd": 0.5663634,
+    "estimated": true,
+    "tokens": 3248232,
+    "aiMs": 808279,
+    "humanMs": 0,
+    "attempts": 4,
+    "repairs": 0
+  },
+  "scopeApprovals": [],
+  "skills": [],
+  "warnings": [
+    {
+      "level": "warn",
+      "text": "Mutation: Chưa nhận diện khả năng mutation trên checkpoint này."
+    },
+    {
+      "level": "warn",
+      "text": "Bản code này chưa có kết luận Verifier."
+    },
+    {
+      "level": "info",
+      "text": "Công cụ phân tích mã (knip, jscpd, dependency-cruiser) chưa chạy: chưa có đánh giá về mã chết, trùng lặp hay vi phạm ranh giới module."
+    }
+  ],
+  "delivery": {
+    "kind": "branch",
+    "target": "aidept/run_82c59831-A",
+    "branch": "aidept/run_82c59831-A",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-leasequeue-20261024\\department",
+    "delivered": false,
+    "status": "unconfirmed",
+    "commands": [
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-leasequeue-20261024\\department\" log --oneline HEAD..aidept/run_82c59831-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-leasequeue-20261024\\department\" diff HEAD..aidept/run_82c59831-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-leasequeue-20261024\\department\" merge aidept/run_82c59831-A"
+    ]
+  }
+}

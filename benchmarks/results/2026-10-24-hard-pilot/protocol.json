@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-leasequeue-20261024",
+  "baseSha": "5c79a3254f31fc9f546385f880207e8aedac555e",
+  "specHash": "ff5a272b2e514dcbd4970cf6d38d781d4d73ac9c6fde3c36ccf2081a8a65940f",
+  "evaluatorHash": "9c62ae8a4f8b04293d340f30d0d9c17ece371d0b024a625b6a24aa599855e40b",
+  "lockedAt": "2026-10-24T03:29:19.939Z",
+  "modelPair": {
+    "planner": "gpt-6-luna",
+    "developer": "gpt-6-luna",
+    "author": "claude-haiku-5-5",
+    "verifier": "claude-haiku-5-5",
+    "single": "gpt-6-luna"
+  },
+  "effort": "medium",
+  "timeLimitMs": 1200000,
+  "departmentBudgetUsd": 6,
+  "repetitions": 1,
+  "grade": "10 * external passed cases / total; report each failure and operator intervention separately",
+  "rules": [
+    "No source/test rescue edits by coordinator.",
+    "Do not rewrite Author plan to silently improve arm; questions may be answered from original SPEC with an intervention receipt.",
+    "Use same preinstalled Node/Vitest/Stryker and same configLoader runner.",
+    "No hidden-score feedback or extra repair calls after terminal workflow.",
+    "Native one agent; Department production Verify workflow.",
+    "USD not a fair cash comparison: subscriptions and app estimate differ.",
+    "Original candidates preserved; a single hard synthetic task does not establish general superiority."
+  ]
+}

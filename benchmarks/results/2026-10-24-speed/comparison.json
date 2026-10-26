@@ -1,0 +1,771 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-25T02:39:18.153Z",
+  "protocol": {
+    "schemaVersion": 1,
+    "lockedAt": "2026-10-24T15:11:00.738Z",
+    "baseSha": "66808f8f74a4392323d231d8114482ad547219b0",
+    "specHash": "6dd040cd71f1d9f3b26cd0223ad2f9fdc33bc06fedbe8c8bacebb6e6dfef55b4",
+    "graderHash": "696e8236e6cd271d718fc73a3cf678736bff78d3ee098de9888e4f7e6023fd1d",
+    "baselineSourceManifestHash": "5c93c1cf4bff5fa0136bc37051ad0a44775ed891584c8fd6c96dac60653803ad",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "repetitionsPerArm": 3,
+    "baseBudgetUsd": 6,
+    "effectiveBudgetUsd": 10.8,
+    "automatedLimitMs": 1800000,
+    "guidance": "SPEC.md is authoritative. No subagents or sibling-project access. Calls may be synchronous or asynchronous; await results. Do not require an unspecified error precedence, numeric-overflow behavior, or validation of reason/retryable types. Duplicate enqueue returns the current original job. Any unresolved business question remains unresolved; do not invent assertions.",
+    "setupHash": "3e4b4da126fff670741581ed31e11382d6e4c2f5b6af716b62805a74b79fe906",
+    "policy": "Sequential runs, no source/test/schema rescue, no retry; valid contract approvals recorded; test repair needs a reviewed decision file. Grader stays outside workspace."
+  },
+  "arms": {
+    "baseline": {
+      "runs": [
+        {
+          "arm": "baseline",
+          "index": 1,
+          "runId": "run_8583f26b",
+          "startedAt": "2026-10-24T15:11:01.052Z",
+          "interventions": [],
+          "endedAt": "2026-10-24T15:12:38.195Z",
+          "status": "blocked",
+          "blocker": "Không đọc được kế hoạch ca: Phản hồi sai định dạng: cases.0.steps: Too small: expected array to have >=2 items; cases.0.invariants: Too small: expected array to have >=1 items; cases.4.steps: Too small: expected array to have >=2 items; cases.4.invariants: Too small: expected array to have >=1 items; cases.5.steps: Too small: expected array to have >=2 items; cases.5.invariants: Too small: expected array to have >=1 items; cases.8.steps: Too small: expected array to have >=2 items; cases.8.invariants: Too small: expected array to have >=1 items; cases.9.steps: Too small: expected array to have >=2 items; cases.9.invariants: Too small: expected array to have >=1 items; cases.11.steps: Too small: expected array to have >=2 items; cases.11.invariants: Too small: expected array to have >=1 items; cases.18.steps: Too small: expected array to have >=2 items; cases.18.invariants: Too small: expected array to have >=1 items. Sửa Hợp đồng trước khi duyệt.",
+          "checkpoint": null,
+          "automatedMs": 96122,
+          "attempts": [
+            {
+              "id": "att_69f3cb6a",
+              "role": "planner",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:11:01.750Z",
+              "endedAt": "2026-10-24T15:11:19.832Z"
+            },
+            {
+              "id": "att_93bc1f47",
+              "role": "author",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:11:20.068Z",
+              "endedAt": "2026-10-24T15:12:37.063Z"
+            }
+          ],
+          "usage": [
+            {
+              "id": "use_ebc7dd73",
+              "attemptId": "att_69f3cb6a",
+              "sessionId": "01a16e77-1ba2-79d0-91f2-a661525be53f",
+              "inputTokens": 18172,
+              "cachedTokens": 11776,
+              "outputTokens": 1496,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:11:19.829Z"
+            },
+            {
+              "id": "use_6f6dc48b",
+              "attemptId": "att_93bc1f47",
+              "sessionId": "01a16e77-630c-7b31-92d2-76bcf4b26123",
+              "inputTokens": 38472,
+              "cachedTokens": 23552,
+              "outputTokens": 8597,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:12:37.061Z"
+            }
+          ],
+          "mutation": null,
+          "grade": null,
+          "execution": null,
+          "contractProblems": [
+            "Chính sách v2 cần kế hoạch ca có căn cứ v2.",
+            "Verify cần kế hoạch ca kiểm thử trước khi duyệt."
+          ],
+          "currentChecks": [],
+          "verifier": null,
+          "promptChars": null,
+          "roles": {
+            "planner": 1,
+            "author": 1
+          },
+          "inputTokens": 56644,
+          "cachedTokens": 35328,
+          "outputTokens": 10093,
+          "outcome": "invalid_plan"
+        },
+        {
+          "arm": "baseline",
+          "index": 2,
+          "runId": "run_ec19eae8",
+          "startedAt": "2026-10-24T15:12:38.461Z",
+          "interventions": [],
+          "endedAt": "2026-10-24T15:14:19.553Z",
+          "status": "blocked",
+          "blocker": "Không đọc được kế hoạch ca: Phản hồi sai định dạng: cases.0.steps: Too small: expected array to have >=2 items; cases.0.invariants: Too small: expected array to have >=1 items; cases.1.steps: Too small: expected array to have >=2 items; cases.1.invariants: Too small: expected array to have >=1 items; cases.2.steps: Too small: expected array to have >=2 items; cases.2.invariants: Too small: expected array to have >=1 items; cases.10.steps: Too small: expected array to have >=2 items; cases.10.invariants: Too small: expected array to have >=1 items; cases.11.steps: Too small: expected array to have >=2 items; cases.11.invariants: Too small: expected array to have >=1 items; cases.18.steps: Too small: expected array to have >=2 items; cases.18.invariants: Too small: expected array to have >=1 items; cases.21.steps: Too small: expected array to have >=2 items; cases.21.invariants: Too small: expected array to have >=1 items; notApplicable.0.group: Invalid option: expected one of \"happy\"|\"boundary\"|\"authorization\"|\"concurrency\"|\"dependency\"|\"state\"|\"consistency\". Sửa Hợp đồng trước khi duyệt.",
+          "checkpoint": null,
+          "automatedMs": 100078,
+          "attempts": [
+            {
+              "id": "att_bdf2ba9a",
+              "role": "planner",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:12:39.150Z",
+              "endedAt": "2026-10-24T15:13:05.252Z"
+            },
+            {
+              "id": "att_116a3d56",
+              "role": "author",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:13:05.468Z",
+              "endedAt": "2026-10-24T15:14:18.399Z"
+            }
+          ],
+          "usage": [
+            {
+              "id": "use_e218d716",
+              "attemptId": "att_bdf2ba9a",
+              "sessionId": "01a16e78-982b-78e3-a25d-bf80e22b03f0",
+              "inputTokens": 37349,
+              "cachedTokens": 29824,
+              "outputTokens": 2227,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:13:05.250Z"
+            },
+            {
+              "id": "use_0be1e8a4",
+              "attemptId": "att_116a3d56",
+              "sessionId": "01a16e78-feb7-7543-a913-d95fe0d51878",
+              "inputTokens": 39137,
+              "cachedTokens": 30720,
+              "outputTokens": 9298,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:14:18.396Z"
+            }
+          ],
+          "mutation": null,
+          "grade": null,
+          "execution": null,
+          "contractProblems": [
+            "Chính sách v2 cần kế hoạch ca có căn cứ v2.",
+            "Verify cần kế hoạch ca kiểm thử trước khi duyệt."
+          ],
+          "currentChecks": [],
+          "verifier": null,
+          "promptChars": null,
+          "roles": {
+            "planner": 1,
+            "author": 1
+          },
+          "inputTokens": 76486,
+          "cachedTokens": 60544,
+          "outputTokens": 11525,
+          "outcome": "invalid_plan"
+        },
+        {
+          "arm": "baseline",
+          "index": 3,
+          "runId": "run_329c94c3",
+          "startedAt": "2026-10-24T15:14:19.816Z",
+          "interventions": [],
+          "endedAt": "2026-10-24T15:15:41.756Z",
+          "status": "blocked",
+          "blocker": "Không đọc được kế hoạch ca: Phản hồi sai định dạng: cases.0.steps: Too small: expected array to have >=2 items; cases.4.steps: Too small: expected array to have >=2 items; cases.6.steps: Too small: expected array to have >=2 items; cases.10.steps: Too small: expected array to have >=2 items; cases.11.steps: Too small: expected array to have >=2 items; cases.12.steps: Too small: expected array to have >=2 items. Sửa Hợp đồng trước khi duyệt.",
+          "checkpoint": null,
+          "automatedMs": 80917,
+          "attempts": [
+            {
+              "id": "att_69c760c3",
+              "role": "planner",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:14:20.513Z",
+              "endedAt": "2026-10-24T15:14:37.393Z"
+            },
+            {
+              "id": "att_aa19ef2f",
+              "role": "author",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:14:37.616Z",
+              "endedAt": "2026-10-24T15:15:40.864Z"
+            }
+          ],
+          "usage": [
+            {
+              "id": "use_9395b241",
+              "attemptId": "att_69c760c3",
+              "sessionId": "01a16e7a-23f6-7e42-923f-e0e39657ff3c",
+              "inputTokens": 17623,
+              "cachedTokens": 11776,
+              "outputTokens": 1608,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:14:37.391Z"
+            },
+            {
+              "id": "use_186a80ae",
+              "attemptId": "att_aa19ef2f",
+              "sessionId": "01a16e7a-66b2-7c81-bef5-56f2e4036516",
+              "inputTokens": 79247,
+              "cachedTokens": 70016,
+              "outputTokens": 6426,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:15:40.862Z"
+            }
+          ],
+          "mutation": null,
+          "grade": null,
+          "execution": null,
+          "contractProblems": [
+            "Chính sách v2 cần kế hoạch ca có căn cứ v2.",
+            "Verify cần kế hoạch ca kiểm thử trước khi duyệt."
+          ],
+          "currentChecks": [],
+          "verifier": null,
+          "promptChars": null,
+          "roles": {
+            "planner": 1,
+            "author": 1
+          },
+          "inputTokens": 96870,
+          "cachedTokens": 81792,
+          "outputTokens": 8034,
+          "outcome": "invalid_plan"
+        }
+      ],
+      "completed": 0,
+      "total": 3,
+      "candidates": 0,
+      "outcomes": {
+        "invalid_plan": 3
+      },
+      "medianAutomatedMsForCompleted": null,
+      "modelAttempts": 6,
+      "successfulAttempts": 6,
+      "inputTokens": 230000,
+      "cachedTokens": 177664,
+      "outputTokens": 29652
+    },
+    "optimized": {
+      "runs": [
+        {
+          "arm": "optimized",
+          "index": 1,
+          "runId": "run_9f925577",
+          "startedAt": "2026-10-24T15:27:24.782Z",
+          "interventions": [],
+          "endedAt": "2026-10-24T15:28:47.760Z",
+          "status": "blocked",
+          "blocker": "Không đọc được kế hoạch ca: Phản hồi sai định dạng: cases.7.priority: Invalid option: expected one of \"high\"|\"normal\"|\"low\". Sửa Hợp đồng trước khi duyệt.",
+          "checkpoint": null,
+          "automatedMs": 81959,
+          "attempts": [
+            {
+              "id": "att_8d3fdd97",
+              "role": "planner",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:27:27.434Z",
+              "endedAt": "2026-10-24T15:27:45.545Z"
+            },
+            {
+              "id": "att_97e641db",
+              "role": "author",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:27:45.782Z",
+              "endedAt": "2026-10-24T15:28:47.288Z"
+            }
+          ],
+          "usage": [
+            {
+              "id": "use_8657574b",
+              "attemptId": "att_8d3fdd97",
+              "sessionId": "01a16e86-260a-73e2-93a7-515d0dc72b71",
+              "inputTokens": 18164,
+              "cachedTokens": 11776,
+              "outputTokens": 1509,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:27:45.543Z"
+            },
+            {
+              "id": "use_0dfa760b",
+              "attemptId": "att_97e641db",
+              "sessionId": "01a16e86-6d7f-7d30-aa3b-ff9dcc49741b",
+              "inputTokens": 38795,
+              "cachedTokens": 30464,
+              "outputTokens": 7637,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:28:47.286Z"
+            }
+          ],
+          "mutation": null,
+          "grade": null,
+          "execution": {
+            "available": true,
+            "automaticMs": 82704,
+            "waitingMs": 277,
+            "agentQueueMs": 4,
+            "spans": [
+              {
+                "id": "14de488a-519a-482d-bed2-25bf666f736d",
+                "kind": "queue",
+                "label": "queued",
+                "startedAt": "2026-10-24T15:27:24.784Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:27:24.787Z"
+              },
+              {
+                "id": "593dbfaf-0534-4399-bb2f-48e1e2bd508d",
+                "kind": "run",
+                "label": "Điều phối run",
+                "startedAt": "2026-10-24T15:27:24.786Z",
+                "status": "failed",
+                "endedAt": "2026-10-24T15:28:47.490Z"
+              },
+              {
+                "id": "346223bc-0e1f-48c9-b2f3-8990ef35e983",
+                "kind": "setup",
+                "label": "Chuẩn bị bản sao/cài dependency",
+                "startedAt": "2026-10-24T15:27:24.794Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:27:25.469Z"
+              },
+              {
+                "id": "fe2a0033-38ca-4e62-8780-0715b275f63d",
+                "kind": "preflight",
+                "label": "Kiểm tra môi trường (tối đa 60 giây)",
+                "startedAt": "2026-10-24T15:27:25.483Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:27:27.422Z"
+              },
+              {
+                "attemptId": "att_8d3fdd97",
+                "role": "planner",
+                "id": "2622ae94-4055-4329-abb7-b5c80c497b88",
+                "kind": "agent_queue",
+                "label": "planner chờ slot",
+                "startedAt": "2026-10-24T15:27:27.442Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:27:27.444Z"
+              },
+              {
+                "attemptId": "att_8d3fdd97",
+                "role": "planner",
+                "id": "33a6060d-18fb-490c-8976-0b1b787ed6b6",
+                "kind": "agent",
+                "label": "planner (A)",
+                "startedAt": "2026-10-24T15:27:27.446Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:27:45.532Z"
+              },
+              {
+                "attemptId": "att_97e641db",
+                "role": "author",
+                "id": "ef7514b7-b74b-4cdd-a24f-e289fdb955d5",
+                "kind": "agent_queue",
+                "label": "author chờ slot",
+                "startedAt": "2026-10-24T15:27:45.790Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:27:45.792Z"
+              },
+              {
+                "attemptId": "att_97e641db",
+                "role": "author",
+                "id": "41e64a97-e3ff-4b21-b521-1a7c796c07c3",
+                "kind": "agent",
+                "label": "author (A)",
+                "startedAt": "2026-10-24T15:27:45.794Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:28:47.275Z"
+              },
+              {
+                "id": "96c68a87-06d6-4299-8c88-73022b0fc4ad",
+                "kind": "approval",
+                "label": "blocked",
+                "startedAt": "2026-10-24T15:28:47.484Z",
+                "status": "running"
+              }
+            ],
+            "attemptsByRole": {
+              "planner": 1,
+              "author": 1
+            },
+            "retries": []
+          },
+          "contractProblems": [
+            "Chính sách v2 cần kế hoạch ca có căn cứ v2.",
+            "Verify cần kế hoạch ca kiểm thử trước khi duyệt."
+          ],
+          "currentChecks": [],
+          "verifier": null,
+          "promptChars": 17705,
+          "roles": {
+            "planner": 1,
+            "author": 1
+          },
+          "inputTokens": 56959,
+          "cachedTokens": 42240,
+          "outputTokens": 9146,
+          "outcome": "invalid_plan"
+        },
+        {
+          "arm": "optimized",
+          "index": 2,
+          "runId": "run_9fbc7e31",
+          "startedAt": "2026-10-24T15:28:48.032Z",
+          "interventions": [],
+          "endedAt": "2026-10-24T15:30:23.166Z",
+          "status": "awaiting_approval",
+          "blocker": null,
+          "checkpoint": null,
+          "automatedMs": 94116,
+          "attempts": [
+            {
+              "id": "att_e0d35696",
+              "role": "planner",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:28:50.710Z",
+              "endedAt": "2026-10-24T15:29:13.401Z"
+            },
+            {
+              "id": "att_ab53dd17",
+              "role": "author",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "completed",
+              "startedAt": "2026-10-24T15:29:13.625Z",
+              "endedAt": "2026-10-24T15:30:22.920Z"
+            }
+          ],
+          "usage": [
+            {
+              "id": "use_6d736322",
+              "attemptId": "att_e0d35696",
+              "sessionId": "01a16e87-6ba1-73a0-a496-9bd90b930e54",
+              "inputTokens": 36272,
+              "cachedTokens": 29184,
+              "outputTokens": 2187,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:29:13.399Z"
+            },
+            {
+              "id": "use_533a02f1",
+              "attemptId": "att_ab53dd17",
+              "sessionId": "01a16e87-c4c4-7af2-9925-f1933edeafb1",
+              "inputTokens": 19213,
+              "cachedTokens": 11776,
+              "outputTokens": 9362,
+              "costUsd": null,
+              "source": "estimated",
+              "createdAt": "2026-10-24T15:30:22.918Z"
+            }
+          ],
+          "mutation": null,
+          "grade": null,
+          "execution": {
+            "available": true,
+            "automaticMs": 95104,
+            "waitingMs": 36,
+            "agentQueueMs": 4,
+            "spans": [
+              {
+                "id": "97123ecb-dc78-445f-810b-a2615fc9974b",
+                "kind": "queue",
+                "label": "queued",
+                "startedAt": "2026-10-24T15:28:48.033Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:28:48.037Z"
+              },
+              {
+                "id": "8dcd0da2-56ce-4471-a6b2-6628c1eef2bf",
+                "kind": "run",
+                "label": "Điều phối run",
+                "startedAt": "2026-10-24T15:28:48.035Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:30:23.139Z"
+              },
+              {
+                "id": "4a6e6af8-57f6-4ee2-9843-6f496f64cf95",
+                "kind": "setup",
+                "label": "Chuẩn bị bản sao/cài dependency",
+                "startedAt": "2026-10-24T15:28:48.045Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:28:48.733Z"
+              },
+              {
+                "id": "4612916b-585d-4203-b3ec-25ba07af0b7c",
+                "kind": "preflight",
+                "label": "Kiểm tra môi trường (tối đa 60 giây)",
+                "startedAt": "2026-10-24T15:28:48.748Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:28:50.701Z"
+              },
+              {
+                "attemptId": "att_e0d35696",
+                "role": "planner",
+                "id": "b7ba9a44-a82b-4f1d-af1d-a97ee38313d8",
+                "kind": "agent_queue",
+                "label": "planner chờ slot",
+                "startedAt": "2026-10-24T15:28:50.718Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:28:50.720Z"
+              },
+              {
+                "attemptId": "att_e0d35696",
+                "role": "planner",
+                "id": "aad2df38-cf32-4f9c-a58d-01722d7c6a78",
+                "kind": "agent",
+                "label": "planner (A)",
+                "startedAt": "2026-10-24T15:28:50.722Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:29:13.389Z"
+              },
+              {
+                "attemptId": "att_ab53dd17",
+                "role": "author",
+                "id": "bf4fc98d-da0c-4185-a1c5-893819ea8c35",
+                "kind": "agent_queue",
+                "label": "author chờ slot",
+                "startedAt": "2026-10-24T15:29:13.631Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:29:13.633Z"
+              },
+              {
+                "attemptId": "att_ab53dd17",
+                "role": "author",
+                "id": "8c6948b8-54cf-466e-bb27-1f109b1b2fea",
+                "kind": "agent",
+                "label": "author (A)",
+                "startedAt": "2026-10-24T15:29:13.636Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:30:22.906Z"
+              },
+              {
+                "id": "2923a9ea-7cf6-468d-a495-156196a5fc2d",
+                "kind": "approval",
+                "label": "awaiting_approval",
+                "startedAt": "2026-10-24T15:30:23.132Z",
+                "status": "running"
+              }
+            ],
+            "attemptsByRole": {
+              "planner": 1,
+              "author": 1
+            },
+            "retries": []
+          },
+          "contractProblems": [
+            "C-1: Căn cứ R-2 không thuộc ca.",
+            "C-1: Căn cứ R-6 không thuộc ca.",
+            "C-6: Trích dẫn R-4 không có trong điều khoản hiện tại.",
+            "C-7: Căn cứ R-6 không thuộc ca.",
+            "C-11: Căn cứ R-13 không thuộc ca.",
+            "C-13: Căn cứ R-7 không thuộc ca.",
+            "C-17: Trích dẫn R-11 không có trong điều khoản hiện tại.",
+            "C-19: Trích dẫn R-13 không có trong điều khoản hiện tại.",
+            "R-16: thiếu ca tự động bắt buộc.",
+            "Kế hoạch còn câu hỏi chưa giải quyết; hãy trả lời vào hợp đồng hoặc ghi giả định đã xác nhận rồi xóa câu hỏi."
+          ],
+          "currentChecks": [],
+          "verifier": null,
+          "promptChars": 18186,
+          "roles": {
+            "planner": 1,
+            "author": 1
+          },
+          "inputTokens": 55485,
+          "cachedTokens": 40960,
+          "outputTokens": 11549,
+          "outcome": "contract_needs_correction"
+        },
+        {
+          "arm": "optimized",
+          "index": 3,
+          "runId": "run_81eb8314",
+          "startedAt": "2026-10-24T15:30:23.429Z",
+          "interventions": [],
+          "endedAt": "2026-10-24T15:30:29.533Z",
+          "status": "blocked",
+          "blocker": "Có thể đã chạm quota: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at Oct 25th, 2026 3:01 AM.. Chờ rồi resume; không tự đổi provider.",
+          "checkpoint": null,
+          "automatedMs": 5081,
+          "attempts": [
+            {
+              "id": "att_ff51ed7b",
+              "role": "planner",
+              "stage": "prepare",
+              "model": "gpt-6-luna",
+              "status": "failed",
+              "startedAt": "2026-10-24T15:30:25.943Z",
+              "endedAt": "2026-10-24T15:30:29.517Z"
+            }
+          ],
+          "usage": [],
+          "mutation": null,
+          "grade": null,
+          "execution": {
+            "available": true,
+            "automaticMs": 6094,
+            "waitingMs": 14,
+            "agentQueueMs": 2,
+            "spans": [
+              {
+                "id": "2f53fa72-3eab-4b51-a108-9dfd9bb9c3ca",
+                "kind": "queue",
+                "label": "queued",
+                "startedAt": "2026-10-24T15:30:23.431Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:30:23.435Z"
+              },
+              {
+                "id": "09880236-f416-4eef-897b-f2f27ea30222",
+                "kind": "run",
+                "label": "Điều phối run",
+                "startedAt": "2026-10-24T15:30:23.433Z",
+                "status": "failed",
+                "endedAt": "2026-10-24T15:30:29.527Z"
+              },
+              {
+                "id": "ab047225-9a60-49da-ac4e-4b96d34cdc97",
+                "kind": "setup",
+                "label": "Chuẩn bị bản sao/cài dependency",
+                "startedAt": "2026-10-24T15:30:23.443Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:30:24.134Z"
+              },
+              {
+                "id": "5ea34b7a-b73f-4183-aa4a-8e6acb3bb883",
+                "kind": "preflight",
+                "label": "Kiểm tra môi trường (tối đa 60 giây)",
+                "startedAt": "2026-10-24T15:30:24.149Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:30:25.934Z"
+              },
+              {
+                "attemptId": "att_ff51ed7b",
+                "role": "planner",
+                "id": "ba4a336d-c46f-47e4-9fce-d875e260eaef",
+                "kind": "agent_queue",
+                "label": "planner chờ slot",
+                "startedAt": "2026-10-24T15:30:25.953Z",
+                "status": "completed",
+                "endedAt": "2026-10-24T15:30:25.955Z"
+              },
+              {
+                "attemptId": "att_ff51ed7b",
+                "role": "planner",
+                "id": "daf91566-0cd7-4afb-9bc1-9e157e150aea",
+                "kind": "agent",
+                "label": "planner (A)",
+                "startedAt": "2026-10-24T15:30:25.958Z",
+                "status": "failed",
+                "endedAt": "2026-10-24T15:30:29.511Z"
+              },
+              {
+                "id": "7ca18d48-2c16-4b67-a102-ba45c472391c",
+                "kind": "approval",
+                "label": "blocked",
+                "startedAt": "2026-10-24T15:30:29.522Z",
+                "status": "running"
+              }
+            ],
+            "attemptsByRole": {
+              "planner": 1
+            },
+            "retries": []
+          },
+          "contractProblems": [
+            "Chính sách v2 cần kế hoạch ca có căn cứ v2.",
+            "Verify cần kế hoạch ca kiểm thử trước khi duyệt."
+          ],
+          "currentChecks": [],
+          "verifier": null,
+          "promptChars": null,
+          "roles": {
+            "planner": 1
+          },
+          "inputTokens": 0,
+          "cachedTokens": 0,
+          "outputTokens": 0,
+          "outcome": "provider_blocked"
+        }
+      ],
+      "completed": 0,
+      "total": 3,
+      "candidates": 0,
+      "outcomes": {
+        "invalid_plan": 1,
+        "contract_needs_correction": 1,
+        "provider_blocked": 1
+      },
+      "medianAutomatedMsForCompleted": null,
+      "modelAttempts": 5,
+      "successfulAttempts": 4,
+      "inputTokens": 112444,
+      "cachedTokens": 83200,
+      "outputTokens": 20695
+    }
+  },
+  "speedComparable": false,
+  "medianSpeedupPercent": null,
+  "interpretation": "Cả hai nhóm chưa có run tới chờ nghiệm thu; không có candidate mới và không đủ cơ sở chấm chất lượng code hoặc tính phần trăm tăng tốc.",
+  "finalHandoffMatchesMeasuredSnapshot": false,
+  "postBenchmarkHardening": [
+    "Real Git/Vitest regression exposed initial draft recovery at null run.checkpoint; patch now binds to its saved base checkpoint.",
+    "Preflight resolves installed tools without npx downloads, preserves config arguments and invalidates a prior receipt after environment failure.",
+    "One repair routing helper rejects stale manifest/check evidence before Developer, including resumed runs.",
+    "A standalone environment action preserves a pending contract approval gate; failed provider attempts retain prompt receipts.",
+    "Priority enum and exact oracle references are explicit in the final prompt; no frozen run was retried to measure this update."
+  ],
+  "validation": {
+    "build": "passed_local",
+    "buildEvidence": "../execution-speed/build-result.json",
+    "testFiles": 28,
+    "tests": 393,
+    "passed": 393,
+    "failed": 0,
+    "skipped": 0,
+    "success": true,
+    "realModelCallsInFixtures": 0,
+    "outerWorkers": 2,
+    "priorRegression": {
+      "tests": 393,
+      "failed": 1,
+      "evidence": "../execution-speed/reliability-timeout-before-reproduction.json",
+      "cause": "Mutation monorepo fixture hit its fixed 27-second total limit under parallel load; isolated reproduction passed without changing timeout/assertions. Outer suite concurrency reduced from 4 to 2.",
+      "classification": "TIMEOUT; load contention suspected, medium confidence"
+    }
+  },
+  "originalBaselineFilesRemoved": [],
+  "localOnly": true,
+  "githubCi": "not_run",
+  "limitations": [
+    "Three attempts per arm on one task do not establish average reliability or production defect rates.",
+    "The optimized quota failure is included as provider_blocked; it is not evidence of faster execution or a code defect.",
+    "The awaiting_approval run has unresolved contract/oracle problems; its short runtime is not a successful completion.",
+    "Historical 43/43 ReplayGate candidates do not stand in for candidates missing from this six-run comparison.",
+    "No failed run was retried and no candidate source/test/schema was repaired by the benchmark controller.",
+    "Runs were sequential in baseline-then-optimized order; provider variability and cache effects were not randomized.",
+    "Token totals are observed CLI traffic, not billed cost; one failed attempt returned no usage.",
+    "Final handoff code contains post-benchmark hardening verified with fixtures, not new live comparisons."
+  ]
+}

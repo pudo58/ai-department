@@ -1,0 +1,2238 @@
+{
+  "protocol": {
+    "schemaVersion": 1,
+    "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-pilot-20261024",
+    "baseSha": "82844293d04203b84b1f1579b8980b51c1c19a62",
+    "specHash": "a8b5ecb9a7a053a3c5c4c29df5de221361191ea4723823666f60dc2e2ce83035",
+    "evaluatorHash": "a8d74b203e64503cedb5cdf9729cbaae0725474feb2d36c3b2431f5a0515027e",
+    "lockedAt": "2026-10-24T02:46:08.871Z",
+    "models": {
+      "planner": "gpt-6-luna",
+      "developer": "gpt-6-luna",
+      "author": "claude-haiku-5-5",
+      "verifier": "claude-haiku-5-5",
+      "single": "gpt-6-luna"
+    },
+    "reasoningEffort": "medium",
+    "timeLimitMs": 900000,
+    "departmentBudgetUsd": 6,
+    "repetitions": 1,
+    "nativeSingleAgent": true,
+    "score": "10 * external passed cases / total cases; workflow acceptance reported separately",
+    "notes": [
+      "Subscription CLI; cost is provider-reported or explicitly estimated, not a subscription invoice.",
+      "No evaluator feedback or human source fixes before scoring.",
+      "No claim of statistical superiority from one task.",
+      "Only business engine written by competing agents; identical HTTP/UI scaffold.",
+      "Mutation output excluded from blind correctness score."
+    ]
+  },
+  "evaluatorUnchanged": true,
+  "operatorPlanCorrections": 9,
+  "questionsResolved": 5,
+  "departmentAssisted": true,
+  "operatorWas": "This coordinating AI assistant; not a measured human participant",
+  "single": {
+    "grade": {
+      "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-pilot-20261024\\single",
+      "total": 33,
+      "passed": 33,
+      "failed": 0,
+      "score": 10,
+      "results": [
+        {
+          "id": "H01",
+          "group": "happy",
+          "status": "passed",
+          "durationMs": 0.3454000000000015
+        },
+        {
+          "id": "H02",
+          "group": "happy",
+          "status": "passed",
+          "durationMs": 0.033500000000000085
+        },
+        {
+          "id": "V01",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.32280000000000086
+        },
+        {
+          "id": "V02",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.09059999999999846
+        },
+        {
+          "id": "V03",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.2585999999999977
+        },
+        {
+          "id": "V04",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.17129999999999868
+        },
+        {
+          "id": "V05",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.11739999999999995
+        },
+        {
+          "id": "I01",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.04490000000000194
+        },
+        {
+          "id": "I02",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.055400000000002336
+        },
+        {
+          "id": "I03",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.04970000000000141
+        },
+        {
+          "id": "I04",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.03369999999999962
+        },
+        {
+          "id": "I05",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.0721000000000025
+        },
+        {
+          "id": "I06",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.02880000000000038
+        },
+        {
+          "id": "I07",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.025900000000000034
+        },
+        {
+          "id": "I08",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.027599999999999625
+        },
+        {
+          "id": "A01",
+          "group": "authorization",
+          "status": "passed",
+          "durationMs": 0.05039999999999978
+        },
+        {
+          "id": "A02",
+          "group": "authorization",
+          "status": "passed",
+          "durationMs": 0.03059999999999974
+        },
+        {
+          "id": "A03",
+          "group": "authorization",
+          "status": "passed",
+          "durationMs": 0.03500000000000014
+        },
+        {
+          "id": "S01",
+          "group": "state",
+          "status": "passed",
+          "durationMs": 0.027999999999998693
+        },
+        {
+          "id": "S02",
+          "group": "state",
+          "status": "passed",
+          "durationMs": 0.02149999999999963
+        },
+        {
+          "id": "S03",
+          "group": "state",
+          "status": "passed",
+          "durationMs": 0.03059999999999974
+        },
+        {
+          "id": "S04",
+          "group": "state",
+          "status": "passed",
+          "durationMs": 0.04279999999999973
+        },
+        {
+          "id": "T01",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.028999999999999915
+        },
+        {
+          "id": "T02",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.03989999999999938
+        },
+        {
+          "id": "T03",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.2215999999999987
+        },
+        {
+          "id": "T04",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.056699999999999307
+        },
+        {
+          "id": "T05",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.05940000000000012
+        },
+        {
+          "id": "C01",
+          "group": "concurrency",
+          "status": "passed",
+          "durationMs": 0.30590000000000117
+        },
+        {
+          "id": "C02",
+          "group": "concurrency",
+          "status": "passed",
+          "durationMs": 0.07959999999999923
+        },
+        {
+          "id": "D01",
+          "group": "isolation",
+          "status": "passed",
+          "durationMs": 0.048500000000000654
+        },
+        {
+          "id": "D02",
+          "group": "isolation",
+          "status": "passed",
+          "durationMs": 0.6087999999999987
+        },
+        {
+          "id": "D03",
+          "group": "isolation",
+          "status": "passed",
+          "durationMs": 0.07249999999999801
+        },
+        {
+          "id": "D04",
+          "group": "isolation",
+          "status": "passed",
+          "durationMs": 0.03999999999999915
+        }
+      ]
+    },
+    "model": "gpt-6-luna",
+    "wallMs": 64982,
+    "usage": {
+      "inputTokens": 290097,
+      "cachedTokens": 272384,
+      "outputTokens": 4301,
+      "costUsd": null
+    },
+    "checkpoint": "aa994f25ca6e5add8165f4072b9a736b44f9655f",
+    "selfCheck": {
+      "exitCode": 0,
+      "durationMs": 998,
+      "timedOut": false,
+      "total": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    "protectedChanges": []
+  },
+  "department": {
+    "grade": {
+      "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\workspaces\\run_c35ae023-A",
+      "total": 33,
+      "passed": 33,
+      "failed": 0,
+      "score": 10,
+      "results": [
+        {
+          "id": "H01",
+          "group": "happy",
+          "status": "passed",
+          "durationMs": 0.42350000000000065
+        },
+        {
+          "id": "H02",
+          "group": "happy",
+          "status": "passed",
+          "durationMs": 0.03640000000000043
+        },
+        {
+          "id": "V01",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.3809999999999967
+        },
+        {
+          "id": "V02",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.12849999999999895
+        },
+        {
+          "id": "V03",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.28319999999999723
+        },
+        {
+          "id": "V04",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.19690000000000296
+        },
+        {
+          "id": "V05",
+          "group": "invalid",
+          "status": "passed",
+          "durationMs": 0.14329999999999998
+        },
+        {
+          "id": "I01",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.051600000000000534
+        },
+        {
+          "id": "I02",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.04840000000000089
+        },
+        {
+          "id": "I03",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.0691999999999986
+        },
+        {
+          "id": "I04",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.039400000000000546
+        },
+        {
+          "id": "I05",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.11819999999999808
+        },
+        {
+          "id": "I06",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.03289999999999793
+        },
+        {
+          "id": "I07",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.02909999999999968
+        },
+        {
+          "id": "I08",
+          "group": "idempotency",
+          "status": "passed",
+          "durationMs": 0.027599999999999625
+        },
+        {
+          "id": "A01",
+          "group": "authorization",
+          "status": "passed",
+          "durationMs": 0.04690000000000083
+        },
+        {
+          "id": "A02",
+          "group": "authorization",
+          "status": "passed",
+          "durationMs": 0.03160000000000096
+        },
+        {
+          "id": "A03",
+          "group": "authorization",
+          "status": "passed",
+          "durationMs": 0.041499999999999204
+        },
+        {
+          "id": "S01",
+          "group": "state",
+          "status": "passed",
+          "durationMs": 0.02359999999999829
+        },
+        {
+          "id": "S02",
+          "group": "state",
+          "status": "passed",
+          "durationMs": 0.018599999999999284
+        },
+        {
+          "id": "S03",
+          "group": "state",
+          "status": "passed",
+          "durationMs": 0.0365000000000002
+        },
+        {
+          "id": "S04",
+          "group": "state",
+          "status": "passed",
+          "durationMs": 0.03340000000000032
+        },
+        {
+          "id": "T01",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.026099999999999568
+        },
+        {
+          "id": "T02",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.029599999999998516
+        },
+        {
+          "id": "T03",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.028900000000000148
+        },
+        {
+          "id": "T04",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.019200000000001438
+        },
+        {
+          "id": "T05",
+          "group": "expiry",
+          "status": "passed",
+          "durationMs": 0.03249999999999886
+        },
+        {
+          "id": "C01",
+          "group": "concurrency",
+          "status": "passed",
+          "durationMs": 0.1863000000000028
+        },
+        {
+          "id": "C02",
+          "group": "concurrency",
+          "status": "passed",
+          "durationMs": 0.06899999999999906
+        },
+        {
+          "id": "D01",
+          "group": "isolation",
+          "status": "passed",
+          "durationMs": 0.039400000000000546
+        },
+        {
+          "id": "D02",
+          "group": "isolation",
+          "status": "passed",
+          "durationMs": 0.023200000000002774
+        },
+        {
+          "id": "D03",
+          "group": "isolation",
+          "status": "passed",
+          "durationMs": 0.01899999999999835
+        },
+        {
+          "id": "D04",
+          "group": "isolation",
+          "status": "passed",
+          "durationMs": 0.022099999999998232
+        }
+      ]
+    },
+    "wallMs": 684906,
+    "agentMs": 561924,
+    "attempts": [
+      {
+        "role": "planner",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "startedAt": "2026-10-24T02:48:01.763Z",
+        "endedAt": "2026-10-24T02:48:24.404Z"
+      },
+      {
+        "role": "author",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T02:48:24.565Z",
+        "endedAt": "2026-10-24T02:49:27.798Z"
+      },
+      {
+        "role": "author",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T02:50:52.089Z",
+        "endedAt": "2026-10-24T02:56:24.979Z"
+      },
+      {
+        "role": "developer",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "startedAt": "2026-10-24T02:56:25.366Z",
+        "endedAt": "2026-10-24T02:58:07.441Z"
+      },
+      {
+        "role": "verifier",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T02:58:44.841Z",
+        "endedAt": "2026-10-24T02:59:25.926Z"
+      }
+    ],
+    "usage": {
+      "inputTokens": 3126546,
+      "cachedTokens": 2918421,
+      "outputTokens": 104885
+    },
+    "appBudget": {
+      "capUsd": 6,
+      "spentUsd": 0.4308246,
+      "estimated": true,
+      "phases": {
+        "prepare": {
+          "allocatedUsd": 1.2000000000000002,
+          "spentUsd": 0.0647772
+        },
+        "implement": {
+          "allocatedUsd": 2.4000000000000004,
+          "spentUsd": 0.3660474
+        },
+        "repair": {
+          "allocatedUsd": 0.6000000000000001,
+          "spentUsd": 0
+        },
+        "verify": {
+          "allocatedUsd": 1.7999999999999998,
+          "spentUsd": 0
+        }
+      }
+    },
+    "workflowStatus": "awaiting_acceptance",
+    "completion": {
+      "ready": true,
+      "reasons": []
+    },
+    "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+    "quality": {
+      "enabled": true,
+      "plan": {
+        "schemaVersion": 1,
+        "cases": [
+          {
+            "id": "C-1",
+            "requirementIds": [
+              "R-1",
+              "R-6"
+            ],
+            "group": "happy",
+            "risk": "normal",
+            "priority": "normal",
+            "preconditions": "Tạo instance với stock=3 và không truyền ttlMs; dùng now giả có thể đặt thời gian.",
+            "actions": "Reserve (u1,k1,2) với stock=3, sau đó reserve (u1,k2,1); kiểm tra snapshot và id riêng của hai bản ghi.",
+            "expected": "Reservation có id là chuỗi không rỗng, status 'held', quantity 2; available là 1; expiresAt bằng now() tại lúc reserve cộng 1000; reserve thứ hai với key khác và id khác id đầu tiên.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-2",
+            "requirementIds": [
+              "R-1"
+            ],
+            "group": "boundary",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Không có instance nào tồn tại trước ca này.",
+            "actions": "Gọi createInventory với stock và ttlMs lần lượt là: stock 0 (hợp lệ), Number.MAX_SAFE_INTEGER (hợp lệ), ttlMs 1 (hợp lệ); sau đó thử stock -1, 1.5, '3', NaN, Infinity, 2^53; ttlMs 0, -5, 0.5, '1000', NaN, null.",
+            "expected": "Các giá trị hợp lệ tạo instance thành công và snapshot().stock đúng bằng giá trị đã truyền; mọi giá trị không hợp lệ ném Error có code 'INVALID_INPUT'.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-3",
+            "requirementIds": [
+              "R-2"
+            ],
+            "group": "dependency",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Dùng vi.spyOn(Date,'now') và now giả có đếm số lần gọi; now trả giá trị đã biết.",
+            "actions": "Tạo instance với now giả và spy Date.now; reserve hai bản ghi riêng, confirm bản ghi thứ nhất, cancel bản ghi thứ hai, snapshot; kiểm tra constructor không phải Promise.",
+            "expected": "createInventory trả về object đồng bộ (không phải Promise); now giả được gọi ở các thao tác; Date.now không được gọi lần nào trong toàn bộ luồng; expiresAt phản ánh giá trị now giả tại lúc reserve.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-4",
+            "requirementIds": [
+              "R-3"
+            ],
+            "group": "happy",
+            "risk": "normal",
+            "priority": "normal",
+            "preconditions": "Instance stock=5 với now giả.",
+            "actions": "Gọi từng thao tác qua await trên các reservation độc lập, kiểm tra public shape; chấp nhận hàm trả object trực tiếp hoặc Promise.",
+            "expected": "await luôn cho reservation/snapshot đúng shape; không yêu cầu truy cập field trực tiếp trên Promise. Constructor vẫn đồng bộ; các method được phép async.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-5",
+            "requirementIds": [
+              "R-4"
+            ],
+            "group": "boundary",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả.",
+            "actions": "Thử chuỗi rỗng/whitespace thật (tab/newline), giá trị thiếu và sai kiểu cho userId/key/reservationId. Dùng đủ stock cho hai user ' u ' và 'u'. Confirm với đúng id đã trả về; thêm khoảng trắng vào id không tồn tại để thử tra cứu chính xác.",
+            "expected": "Input rỗng sau trim/sai kiểu báo INVALID_INPUT; user/key có khoảng trắng giữ nguyên và không gộp; confirm đúng id thành công; id được thêm khoảng trắng và không trùng bản ghi nào báo NOT_FOUND.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-6",
+            "requirementIds": [
+              "R-5"
+            ],
+            "group": "boundary",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả; ghi snapshot trước khi thử.",
+            "actions": "Thử từng quantity sai trên instance không đổi; với quantity 1 và 5 hợp lệ dùng các instance stock=5 độc lập để tránh cộng dồn vượt hàng.",
+            "expected": "Mọi giá trị không hợp lệ ném Error code 'INVALID_INPUT' và snapshot không đổi; '2' không được ép thành số 2; quantity 1 và 5 hợp lệ và giảm available đúng số đó.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-7",
+            "requirementIds": [
+              "R-7",
+              "R-11"
+            ],
+            "group": "state",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=2 với now giả. Reservation A của user 'a' giữ đủ 2 đơn vị.",
+            "actions": "Gọi reserve({userId:'b',key:'k',quantity:1}) và lưu snapshot trước/sau; sau đó A cancel; rồi gọi lại reserve({userId:'b',key:'k',quantity:1}).",
+            "expected": "Lần reserve đầu ném Error code 'OUT_OF_STOCK' và snapshot trước/sau giống hệt; sau khi A cancel, reserve cùng cặp (b,k) thành công, tạo reservation mới có id khác rỗng, và available bằng 1.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-8",
+            "requirementIds": [
+              "R-8"
+            ],
+            "group": "concurrency",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả.",
+            "actions": "Trên instance A stock=5, gọi đồng thời 20 reserve key khác nhau quantity 1..3 rồi kiểm tra bất biến và OUT_OF_STOCK. Trên instance B mới stock=5, gọi đồng thời 5 reserve cùng user/key/quantity=2.",
+            "expected": "A không bao giờ vượt stock, lỗi thiếu hàng có OUT_OF_STOCK; B trả cùng id cho mọi replay và available=3, một reservation duy nhất.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-9",
+            "requirementIds": [
+              "R-9"
+            ],
+            "group": "consistency",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả.",
+            "actions": "Nhánh A: reserve rồi replay, confirm rồi replay. Nhánh B dùng reservation/instance khác: reserve rồi cancel rồi replay. Cùng user/key/quantity trong mỗi nhánh; kiểm tra id và available.",
+            "expected": "Nhánh A trả cùng id và status confirmed sau confirm, trừ hàng đúng một lần. Nhánh B trả cùng id cancelled sau cancel và không giữ hàng lại; không cancel bản ghi đã confirmed.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-10",
+            "requirementIds": [
+              "R-10"
+            ],
+            "group": "state",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả. Reservation (u,k) quantity 2 đang held.",
+            "actions": "Trên các reservation riêng ở held, confirmed, cancelled và expired, replay cùng user/key khác quantity; so snapshot sau khi đã xử lý expiry. User khác cùng key là cặp độc lập, thử với đủ hàng.",
+            "expected": "Cùng cặp khác quantity luôn IDEMPOTENCY_CONFLICT và không đổi dữ liệu ngoài expiry đã quy định. User khác cùng key tạo bản ghi riêng khi đủ hàng.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-11",
+            "requirementIds": [
+              "R-23"
+            ],
+            "group": "consistency",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=10 với now giả.",
+            "actions": "Reserve với các cặp (userId,key): ('a:b','c') và ('a','b:c'); ('__proto__','constructor'); ('constructor','__proto__'); ('toString','hasOwnProperty'); ('a\\u0000b','c') và ('a','\\u0000bc'); kiểm tra lặp lại từng cặp và snapshot.",
+            "expected": "Mỗi cặp tạo reservation độc lập với id riêng (không cặp nào trả reservation của cặp khác); lặp lại từng cặp trả cùng id; available = 10 trừ tổng quantity; Object.prototype không bị thay đổi sau các thao tác.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-12",
+            "requirementIds": [
+              "R-12",
+              "R-13"
+            ],
+            "group": "state",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=3 với now giả và ttlMs=1000. Reservation (u,k) quantity 2 tạo ở now=T, expiresAt=T+1000.",
+            "actions": "Đặt now=T+999, gọi snapshot; đặt now=T+1000, gọi snapshot hai lần liên tiếp; gọi reserve(u,k,2) lặp; gọi reserve(u2,k2,3) ở now=T+1000; gọi reserve với cặp mới khi held đã hết hạn.",
+            "expected": "Ở T+999 status vẫn 'held', available 1; ở đúng T+1000 status là 'expired' và available là 3, hoàn trả đúng một lần dù snapshot lặp; reserve lặp cùng (u,k) trả reservation expired mà không trừ thêm; reserve (u2,k2,3) thành công vì hàng đã được trả trước thao tác.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-13",
+            "requirementIds": [
+              "R-13",
+              "R-15",
+              "R-17"
+            ],
+            "group": "state",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả, ttlMs=1000. Reservation H1 held, H2 confirmed tại T, H3 cancelled, H4 held tạo tại T.",
+            "actions": "Ở now=T+999: confirm H1 (thành công). Ở now=T+1000 hoặc sau đó: confirm H4 và cancel H4; cancel H1 đã confirmed; confirm H3 đã cancelled; confirm H2 ở now=T+10000 (sau hạn ban đầu của nó).",
+            "expected": "confirm H1 ở T+999 thành công; confirm H4 ở đúng T+1000 ném 'EXPIRED'; cancel H4 ở đó cũng ném 'EXPIRED' và H4 có status 'expired'; cancel H1 (confirmed) ném 'INVALID_STATE'; confirm H3 (cancelled) ném 'INVALID_STATE'; H2 vẫn confirmed ở T+10000 và không bị hoàn trả; snapshot không đổi sau mỗi lỗi ngoài thay đổi do hết hạn.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-14",
+            "requirementIds": [
+              "R-14"
+            ],
+            "group": "authorization",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả. Reservation H của user 'owner' held quantity 2.",
+            "actions": "owner confirm H; lưu snapshot; owner confirm H lần hai; so sánh bản ghi trả về; kiểm tra available.",
+            "expected": "Lần confirm đầu làm status thành 'confirmed' và available không đổi; lần confirm thứ hai trả bản ghi giống hệt lần đầu (cùng id, status, quantity, expiresAt); snapshot không đổi giữa các lần.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-15",
+            "requirementIds": [
+              "R-16"
+            ],
+            "group": "authorization",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả. Reservation H của user 'owner' held quantity 2 (available=3).",
+            "actions": "owner cancel H; ghi available; owner cancel H lần hai; cancel H lần ba; kiểm tra snapshot.",
+            "expected": "Lần cancel đầu đưa status thành 'cancelled' và available thành 5; hai lần cancel lặp trả thành công với bản ghi cancelled và available vẫn là 5 (không hoàn trả thêm).",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-16",
+            "requirementIds": [
+              "R-18"
+            ],
+            "group": "authorization",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả. Reservation H của 'owner' held quantity 2.",
+            "actions": "Gọi confirm và cancel H với userId 'other'; gọi confirm và cancel với reservationId không tồn tại; lưu snapshot trước và sau.",
+            "expected": "Confirm và cancel của 'other' ném 'FORBIDDEN'; reservation H giữ nguyên status 'held' và available 3; confirm/cancel với id không tồn tại ném 'NOT_FOUND'; snapshot không đổi sau mọi lỗi.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-17",
+            "requirementIds": [
+              "R-19"
+            ],
+            "group": "consistency",
+            "risk": "normal",
+            "priority": "normal",
+            "preconditions": "Instance stock=2 với now giả, tạo các điều kiện gây từng lỗi.",
+            "actions": "Kích hoạt từng lỗi: INVALID_INPUT (quantity 0), OUT_OF_STOCK, IDEMPOTENCY_CONFLICT, EXPIRED, INVALID_STATE, NOT_FOUND, FORBIDDEN; kiểm tra từng lỗi.",
+            "expected": "Mỗi lỗi là instance của Error và có property code đúng với mã tương ứng; không xuất hiện mã ngoài tập quy định.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-18",
+            "requirementIds": [
+              "R-20"
+            ],
+            "group": "consistency",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=5 với now giả, có ít nhất một reservation held và một confirmed.",
+            "actions": "Lấy reservation từ reserve, confirm, cancel và snapshot; sửa các trường (status, quantity, id), xóa và push vào snapshot().reservations, sửa stock và available trên object trả về; sau đó gọi snapshot và confirm/cancel tiếp.",
+            "expected": "Dữ liệu nội bộ không đổi: snapshot mới trả đúng status, quantity, available và số lượng reservation như trước khi sửa; confirm/cancel tiếp theo vẫn hoạt động theo trạng thái thật.",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-19",
+            "requirementIds": [
+              "R-21"
+            ],
+            "group": "consistency",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Instance stock=7 với now giả; một chuỗi thao tác cố định gồm reserve nhiều user/key/quantity, confirm, cancel, expire (đẩy now), và replay.",
+            "actions": "Sau mỗi thao tác, gọi snapshot và kiểm tra bất biến; kiểm tra reservations chứa cả held, confirmed, cancelled, expired.",
+            "expected": "Tại mỗi snapshot: available + tổng quantity của held và confirmed bằng stock; snapshot.stock luôn bằng 7; reservations chứa đầy đủ mọi reservation đã tạo kể cả cancelled và expired (so sánh theo tập id, không theo thứ tự).",
+            "method": "automated",
+            "required": true
+          },
+          {
+            "id": "C-20",
+            "requirementIds": [
+              "R-22"
+            ],
+            "group": "state",
+            "risk": "high",
+            "priority": "high",
+            "preconditions": "Hai instance A và B với stock=3 và now giả riêng biệt; A có reservation held quantity 2.",
+            "actions": "A và B stock=3 độc lập: A reserve rồi confirm một bản ghi; dùng bản ghi held khác để cancel hoặc expire. Quan sát B và thử ID của A trên B.",
+            "expected": "B stock/available vẫn 3, reservations rỗng; ID thuộc A không tồn tại ở B nên NOT_FOUND; các nhánh confirm/cancel/expiry trên A dùng trạng thái hợp lệ và không ảnh hưởng B.",
+            "method": "automated",
+            "required": true
+          }
+        ],
+        "notApplicable": [],
+        "questions": []
+      },
+      "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c",
+      "manifestProblems": [],
+      "capability": {
+        "adapter": "stryker-vitest",
+        "root": ".",
+        "candidates": [
+          "."
+        ],
+        "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+        "status": "available",
+        "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+        "toolVersion": "9.6.1",
+        "vitestVersion": "3.2.4",
+        "configFile": "vitest.config.js"
+      },
+      "mutation": {
+        "schemaVersion": 1,
+        "source": "stryker-vitest",
+        "status": "completed",
+        "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+        "slot": "A",
+        "contractVersion": 4,
+        "configHash": "4d1c745c19b097afd63a6496ee48c37a8a608dcbace5cb8a4bfcae7d41333eea",
+        "capability": {
+          "adapter": "stryker-vitest",
+          "root": ".",
+          "candidates": [
+            "."
+          ],
+          "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+          "status": "available",
+          "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+          "toolVersion": "9.6.1",
+          "vitestVersion": "3.2.4",
+          "configFile": "vitest.config.js"
+        },
+        "startedAt": "2026-10-24T02:58:09.520Z",
+        "durationMs": 35133,
+        "baseline": "passed",
+        "counts": {
+          "killed": 125,
+          "survived": 20,
+          "no_coverage": 0,
+          "timeout": 0,
+          "errors": 0,
+          "pending": 0
+        },
+        "mutants": [
+          {
+            "file": "src/inventory.js",
+            "line": 7,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 1,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "LogicalOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "MethodExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 8,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 9,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 13,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 9,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 14,
+            "status": "Killed",
+            "mutator": "ObjectLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 17,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "LogicalOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "LogicalOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "LogicalOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "BooleanLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 18,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 19,
+            "status": "Killed",
+            "mutator": "BooleanLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 19,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 19,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 19,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 19,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 20,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 29,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 20,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 31,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "LogicalOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 32,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 33,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 34,
+            "status": "Killed",
+            "mutator": "AssignmentOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 40,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 41,
+            "status": "Killed",
+            "mutator": "OptionalChaining"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 44,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 46,
+            "status": "Killed",
+            "mutator": "BooleanLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 46,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 46,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 46,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 53,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 55,
+            "status": "Killed",
+            "mutator": "BooleanLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 55,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 55,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 55,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 56,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 55,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 56,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 56,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 56,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 60,
+            "status": "Killed",
+            "mutator": "ObjectLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 56,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 61,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 63,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 64,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 65,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 65,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 65,
+            "status": "Killed",
+            "mutator": "LogicalOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 65,
+            "status": "Killed",
+            "mutator": "BooleanLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 65,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 65,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 65,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 65,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 66,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 70,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 66,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 70,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 70,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 71,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 71,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 71,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 71,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 72,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 76,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 72,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 76,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 76,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 76,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 76,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 78,
+            "status": "Killed",
+            "mutator": "AssignmentOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 76,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 79,
+            "status": "Killed",
+            "mutator": "ObjectLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 80,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 84,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 80,
+            "status": "Survived",
+            "mutator": "UpdateOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 85,
+            "status": "Killed",
+            "mutator": "ArithmeticOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 92,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 94,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 95,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 97,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 97,
+            "status": "Survived",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 97,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 98,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 98,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 97,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 98,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 98,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 98,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 98,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 99,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 99,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 99,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 99,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 99,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 100,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 99,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 104,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 106,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 107,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 109,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 109,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 109,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 109,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 110,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 110,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 110,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 110,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 110,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 110,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 111,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 111,
+            "status": "Killed",
+            "mutator": "ConditionalExpression"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 111,
+            "status": "Killed",
+            "mutator": "EqualityOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 111,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 111,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 112,
+            "status": "Killed",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 111,
+            "status": "Survived",
+            "mutator": "StringLiteral"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 113,
+            "status": "Killed",
+            "mutator": "AssignmentOperator"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 117,
+            "status": "Killed",
+            "mutator": "BlockStatement"
+          },
+          {
+            "file": "src/inventory.js",
+            "line": 119,
+            "status": "Killed",
+            "mutator": "ObjectLiteral"
+          }
+        ],
+        "files": [
+          "src/inventory.js"
+        ],
+        "message": "Đã kiểm tra các mutation trong phạm vi source đã chọn.",
+        "endedAt": "2026-10-24T02:58:44.653Z"
+      },
+      "testMs": 1545,
+      "cases": [
+        {
+          "caseId": "C-1",
+          "requirementIds": [
+            "R-1",
+            "R-6"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-1][R-6][C-1] reserve reduces available, sets expiresAt to now plus default ttl, and returns unique ids"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-2",
+          "requirementIds": [
+            "R-1"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-1][C-2] createInventory accepts valid stock and ttl values and rejects invalid ones with INVALID_INPUT"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-3",
+          "requirementIds": [
+            "R-2"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-2][C-3] createInventory is synchronous, uses the injected now, and never calls Date.now"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-4",
+          "requirementIds": [
+            "R-3"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-3][C-4] reserve, confirm, cancel and snapshot resolve to the public shape when awaited"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-5",
+          "requirementIds": [
+            "R-4"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-4][C-5] userId, key and reservationId are validated after trimming and string values are kept verbatim"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-6",
+          "requirementIds": [
+            "R-5"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-5][C-6] quantity must be a safe positive integer and is never coerced"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-7",
+          "requirementIds": [
+            "R-7",
+            "R-11"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-7][R-11][C-7] OUT_OF_STOCK changes nothing and the failed key is not saved, so it succeeds after release"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-8",
+          "requirementIds": [
+            "R-8"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-8][C-8] concurrent reserves never exceed stock and concurrent identical replays create one reservation"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-9",
+          "requirementIds": [
+            "R-9"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-9][C-9] replays of the same user, key and quantity return the same reservation without extra charges"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-10",
+          "requirementIds": [
+            "R-10"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-10][C-10] same user and key with a different quantity throws IDEMPOTENCY_CONFLICT in every status"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-11",
+          "requirementIds": [
+            "R-23"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-23][C-11] special strings and delimiter-like pairs stay independent identities and do not pollute Object.prototype"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-12",
+          "requirementIds": [
+            "R-12",
+            "R-13"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-12][R-13][C-12] held reservation expires exactly at expiresAt, refunds once, and replays return expired without charging"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-13",
+          "requirementIds": [
+            "R-13",
+            "R-15",
+            "R-17"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-13][R-15][R-17][C-13] confirm and cancel respect the expiry boundary and reject invalid status transitions"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-14",
+          "requirementIds": [
+            "R-14"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-14][C-14] only the owner can confirm; re-confirming returns the same record and leaves available unchanged"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-15",
+          "requirementIds": [
+            "R-16"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-16][C-15] only the owner can cancel; cancel releases stock once and repeated cancels release nothing more"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-16",
+          "requirementIds": [
+            "R-18"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-18][C-16] wrong owner gets FORBIDDEN and unknown ids get NOT_FOUND, without changing the reservation"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-17",
+          "requirementIds": [
+            "R-19"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-19][C-17] each specified failure is an Error whose code matches the failure"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-18",
+          "requirementIds": [
+            "R-20"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-20][C-18] mutating returned objects or snapshots does not change internal state"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-19",
+          "requirementIds": [
+            "R-21"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-21][C-19] across a fixed sequence of reserve, confirm, cancel, expiry and replay, available plus held and confirmed quantity equals stock"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        },
+        {
+          "caseId": "C-20",
+          "requirementIds": [
+            "R-22"
+          ],
+          "required": true,
+          "method": "automated",
+          "status": "passed",
+          "tests": [
+            "test: tests/inventory.acceptance.test.js::[R-22][C-20] separate inventory instances do not share stock, reservations, or lookups"
+          ],
+          "reasons": [],
+          "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+          "slot": "A",
+          "contractVersion": 4,
+          "manifestHash": "c9f9bea9322d3ada4b066b743230d5b77f62571bfd2508354f6b4a6b0c55f79c"
+        }
+      ]
+    },
+    "findings": [
+      {
+        "id": "fnd_54661fd7",
+        "runId": "run_c35ae023",
+        "category": "behavior",
+        "severity": "minor",
+        "code": "none",
+        "title": "reserve/confirm/cancel with no argument throw TypeError without code",
+        "location": "src/inventory.js: reserve({ userId, key, quantity } = {}), confirm and cancel similar",
+        "rule": "R-19; SPEC quy tắc 7: input thiếu hoặc sai kiểu phải throw INVALID_INPUT",
+        "precedent": "",
+        "evidence": "Probe: inv.reserve(null) throws TypeError 'Cannot destructure property userId...' with no code; inv.reserve() same. Tests cover only missing fields inside an object (R-4), not a null or missing argument.",
+        "suggestion": "Validate the argument is a non-null object and throw INVALID_INPUT otherwise; add a case to the R-4 test.",
+        "status": "open",
+        "confirmed": false,
+        "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+        "contractVersion": 4,
+        "createdAt": "2026-10-24T02:59:26.077Z"
+      },
+      {
+        "id": "fnd_fe1f943e",
+        "runId": "run_c35ae023",
+        "category": "design",
+        "severity": "minor",
+        "code": "none",
+        "title": "Test count exceeds project guidance of 12-20 cases",
+        "location": "tests/inventory.acceptance.test.js (20 tests), tests/inventory.behavior.test.js (15 tests)",
+        "rule": "Project guidance: prefer roughly 12-20 behavioral cases with multiple assertions",
+        "precedent": "",
+        "evidence": "Vitest output: acceptance 20 tests, behavior 15 tests, total 35 new cases across two files.",
+        "suggestion": "Optional: merge the behavior file's cases into the acceptance file, or drop overlapping cases such as R-9/R-10 duplicated across both files.",
+        "status": "open",
+        "confirmed": false,
+        "checkpoint": "d51806489ea3acab655fa31d6ab5a2df4d72ed29",
+        "contractVersion": 4,
+        "createdAt": "2026-10-24T02:59:26.079Z"
+      }
+    ]
+  },
+  "limitations": [
+    "One synthetic fully specified task, one repetition; no statistical superiority claim.",
+    "Department plan was corrected by this coordinating assistant before approval; native was unassisted.",
+    "Provisioning helper ignored EEXIST in Department; Author installed declared tools, unlike native prelinked dependencies.",
+    "USD shown by harness mixes estimated Codex cost and zeroed subscription Claude cost; not a fair cash-cost comparison.",
+    "Shared HTTP and HTML scaffold was written before both arms, not generated independently by either arm.",
+    "Frozen 33-case score is specific to this task, not a general model/product rating."
+  ],
+  "correctedEvaluatorHash": "22db6146fcdf6c5d7f8b9f994fb85a5b1c81dd40db3fa757e1f20664288db953",
+  "evaluatorCorrection": {
+    "classification": "TEST_SCRIPT",
+    "case": "C01 concurrency",
+    "original": "Promise.allSettled(Array.from(..., () => reserve(...))) evaluates synchronous throws before allSettled receives the array.",
+    "correction": "Only wrap the Array.from mapper in async so both permitted synchronous and asynchronous implementations become promises. Inputs, assertions, case count and expected results are unchanged.",
+    "evidence": "Original Department score 32/33 was invalid: code throws OUT_OF_STOCK synchronously as explicitly permitted by SPEC. Original native score 33/33 benefited from async methods.",
+    "preservation": "Original grade.mjs and its preregistered hash remain unchanged. grade-compatible.mjs contains the disclosed correction; original outputs are retained separately.",
+    "application": "Run corrected evaluator on both original frozen candidate checkpoints, without code repair or feedback to either agent. Post-hoc null diagnostics remain outside this score."
+  },
+  "exploratory": {
+    "single": {
+      "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-pilot-20261024\\single",
+      "classification": "Exploratory / post-hoc / source-guided; outside preregistered score",
+      "reason": "SPEC requires invalid configuration/input to throw Error.code INVALID_INPUT. Whole-argument null is distinct from null fields and was omitted from locked cases.",
+      "total": 4,
+      "passed": 0,
+      "results": [
+        {
+          "id": "X01",
+          "title": "null constructor options",
+          "status": "failed",
+          "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'stock' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        },
+        {
+          "id": "X02",
+          "title": "null reserve input",
+          "status": "failed",
+          "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        },
+        {
+          "id": "X03",
+          "title": "null confirm input",
+          "status": "failed",
+          "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        },
+        {
+          "id": "X04",
+          "title": "null cancel input",
+          "status": "failed",
+          "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        }
+      ]
+    },
+    "department": {
+      "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\workspaces\\run_c35ae023-A",
+      "classification": "Exploratory / post-hoc / source-guided; outside preregistered score",
+      "reason": "SPEC requires invalid configuration/input to throw Error.code INVALID_INPUT. Whole-argument null is distinct from null fields and was omitted from locked cases.",
+      "total": 4,
+      "passed": 0,
+      "results": [
+        {
+          "id": "X01",
+          "title": "null constructor options",
+          "status": "failed",
+          "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'stock' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        },
+        {
+          "id": "X02",
+          "title": "null reserve input",
+          "status": "failed",
+          "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        },
+        {
+          "id": "X03",
+          "title": "null confirm input",
+          "status": "failed",
+          "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        },
+        {
+          "id": "X04",
+          "title": "null cancel input",
+          "status": "failed",
+          "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        }
+      ]
+    },
+    "classification": "Post-hoc diagnostics, outside frozen score; four entrypoints of one null-validation defect family"
+  },
+  "cashBudgetComparability": "Not established: 15-minute time limits shared; $6 is app accounting ceiling for Department only, native has no equivalent provider-enforced dollar ceiling."
+}

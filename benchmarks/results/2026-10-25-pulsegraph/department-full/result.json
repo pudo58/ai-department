@@ -1,0 +1,24 @@
+{
+  "endedAt": "2026-10-25T08:31:52.597Z",
+  "assisted": true,
+  "runId": "run_dfd3d309",
+  "addedAutomaticMs": 359706,
+  "totalAutomaticMs": 474964,
+  "departmentStatus": "completed",
+  "departmentDelivery": {
+    "kind": "branch",
+    "target": "aidept/run_dfd3d309-A",
+    "status": "succeeded",
+    "checkpoint": "b54cfcc0c980063ba7d16c0423c529281fdd929d",
+    "contractVersion": 4,
+    "slot": "A",
+    "startedAt": "2026-10-25T08:30:52.985Z",
+    "endedAt": "2026-10-25T08:30:53.531Z",
+    "result": "Đã tạo branch aidept/run_dfd3d309-A trong repository gốc"
+  },
+  "singleStatus": "blocked",
+  "departmentAttempts": 11,
+  "singleAttempts": 3,
+  "departmentCostUsd": 1.9765542,
+  "singleCostUsd": 0.6996396
+}

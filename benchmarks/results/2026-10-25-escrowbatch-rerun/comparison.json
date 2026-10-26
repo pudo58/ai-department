@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-25T03:32:25.406Z",
+  "protocol": {
+    "schemaVersion": 1,
+    "lockedAt": "2026-10-25T03:27:33.114Z",
+    "task": "EscrowBatch",
+    "base": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-rerun-20261025\\base",
+    "baseSha": "5828ca3c7ac1af57f7a91851c51da75c40948c32",
+    "specHash": "20a3e06aba72b6a7bc65b04233ca620556f9f012ea7db4f316825feb526f15ac",
+    "graderHash": "829dd7c7d4930f078fdb09c33becfa06902be8a44d9ebe2ad30f04d1da40d34c",
+    "referenceHash": "f97656f16aee67752ac8473b1217d5101a4b2edf2866244c0bf8ee41aa31914a",
+    "sourceManifestHash": "89910dadf1b6b69c03d548a505f7ab98d0091327ef739729f99d1b0f48637ee2",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "arms": [
+      "department",
+      "single"
+    ],
+    "singleMeans": "AI Department Single mode: Planner plus one implementation/self-review agent, no independent Author or Verifier",
+    "effectiveCapUsd": 10.8,
+    "baseBudget": {
+      "department": 6,
+      "single": 10.8
+    },
+    "automatedLimitMs": 1800000,
+    "repetitions": 1,
+    "policy": "Sequential; same scaffold/spec/tools/effective budget. No model retry, source/test/schema rescue or hidden-grader feedback. Human contract and test-repair decisions recorded with hashes. Grade any implementation even when pipeline is blocked. No acceptance/delivery. Grader outside workspace; no sibling access. Current AI Department source snapshot; fresh database and workspaces; preserve earlier cohorts.",
+    "rerunOf": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\test-results\\2026-10-25-escrowbatch\\protocol.json"
+  },
+  "audit": {
+    "at": "2026-10-25T02:53:47.008Z",
+    "directedCases": 53,
+    "statefulTraces": 12,
+    "stepsPerTrace": 100,
+    "selfCheck": {
+      "passed": 65,
+      "total": 65
+    },
+    "brokenCAS": {
+      "failed": 19,
+      "caught": [
+        "D29-replay-precedes-CAS",
+        "D30-id-conflict-precedes-CAS",
+        "D31-key-order-independent-replay",
+        "D33-replay-does-not-resurrect-expired-hold",
+        "D34-request-detached",
+        "D35-result-detached",
+        "D38-restored-replay-and-closed-history",
+        "T01-100-step-trace",
+        "T02-100-step-trace",
+        "T03-100-step-trace",
+        "T04-100-step-trace",
+        "T05-100-step-trace",
+        "T06-100-step-trace",
+        "T07-100-step-trace",
+        "T08-100-step-trace",
+        "T09-100-step-trace",
+        "T10-100-step-trace",
+        "T11-100-step-trace",
+        "T12-100-step-trace"
+      ]
+    },
+    "brokenExpiry": {
+      "failed": 15,
+      "caught": [
+        "D13-expiry-exact-boundary",
+        "D16-time-without-expiry",
+        "D17-invalid-time--1",
+        "T01-100-step-trace",
+        "T02-100-step-trace",
+        "T03-100-step-trace",
+        "T04-100-step-trace",
+        "T05-100-step-trace",
+        "T06-100-step-trace",
+        "T07-100-step-trace",
+        "T08-100-step-trace",
+        "T09-100-step-trace",
+        "T10-100-step-trace",
+        "T11-100-step-trace",
+        "T12-100-step-trace"
+      ]
+    },
+    "scaffold": {
+      "passed": 0,
+      "total": 65
+    },
+    "scope": "Directed expectations reviewed against SPEC; executable model separately represented as arrays. Differential traces are not proof the oracle is bug-free. Test counts do not imply all business behavior is covered."
+  },
+  "summaries": [
+    {
+      "arm": "department",
+      "runId": "run_b8f61a83",
+      "status": "awaiting_approval",
+      "checkpoint": null,
+      "candidateProduced": false,
+      "automaticMs": 77355,
+      "waitingMs": 561,
+      "agentMs": null,
+      "attempts": 2,
+      "roles": {
+        "planner": 1,
+        "author": 1
+      },
+      "models": [
+        "gpt-6-luna"
+      ],
+      "inputTokens": 38890,
+      "cachedTokens": 23552,
+      "outputTokens": 10192,
+      "estimatedUsd": 0.2059596,
+      "interventions": [],
+      "blocker": null,
+      "contractProblems": [
+        "C-6: Căn cứ R-10 không thuộc ca.",
+        "C-20: Căn cứ R-3 không thuộc ca.",
+        "C-20: Căn cứ R-16 không thuộc ca.",
+        "R-17: thiếu ca tự động bắt buộc.",
+        "Kế hoạch còn câu hỏi chưa giải quyết; hãy trả lời vào hợp đồng hoặc ghi giả định đã xác nhận rồi xóa câu hỏi."
+      ],
+      "testPlanCases": 20,
+      "checks": [],
+      "mutation": null,
+      "grade": null
+    },
+    {
+      "arm": "single",
+      "runId": "run_5d63cb30",
+      "status": "blocked",
+      "checkpoint": "d561e1013044d55865e54b18e87fcc0d24e90a4c",
+      "candidateProduced": true,
+      "automaticMs": 162320,
+      "waitingMs": 17690,
+      "agentMs": null,
+      "attempts": 4,
+      "roles": {
+        "planner": 1,
+        "developer": 3
+      },
+      "models": [
+        "gpt-6-luna"
+      ],
+      "inputTokens": 1759494,
+      "cachedTokens": 1676288,
+      "outputTokens": 25434,
+      "estimatedUsd": 1.1340143999999999,
+      "interventions": [
+        {
+          "type": "contract_review",
+          "approve": true,
+          "contractHash": "6890d9d8e87d3cf4dacfc6147fdadfb25bdbe953b63a61c9a98a47399a5e49bc",
+          "acknowledgedWarnings": [
+            "assumptions_present"
+          ],
+          "reason": "Đã đối chiếu contract với SPEC đã khóa. Không sửa nội dung nghiệp vụ; chỉ xác nhận cảnh báo giả định theo protocol.",
+          "at": "2026-10-25T03:29:58.466Z"
+        }
+      ],
+      "blocker": "Checks đạt nhưng thiếu bằng chứng cho: R-1: createLedger(initialBalances, {now=0}={}) khởi tạo ledger với tài khoản và số dư ban đầu đã cho, thời gian now và revision 0. Tài khoản không thể được tạo hoặc xóa sau đó.\nR-2: inspect() trả về bản sao tách biệt gồm now, revision, accounts và holds. Accounts có dạng {id,balance,available}, holds chỉ gồm hold đang hoạt động với dạng {id,account,amount,expiresAt}; cả hai danh sách được sắp theo ID bằng phép so sánh chuỗi JavaScript. available bằng balance trừ tổng hold đang hoạt động của tài khoản.\nR-3: Tổng số dư được bảo toàn qua mọi thao tác thành công; reserve và release không đổi số dư, transfer và settle chỉ chuyển số dư giữa tài khoản.\nR-6: Với request ID mới, expectedRevision phải bằng revision hiện tại; nếu không, apply ném lỗi có code REVISION_CONFLICT.\nR-7: reserve yêu cầu amount và ttl là số nguyên dương an toàn; lỗi lần lượt có code INVALID_AMOUNT và INVALID_TTL. Tài khoản không tồn tại gây UNKNOWN_ACCOUNT, hold ID đã từng được dùng trong batch thành công gây HOLD_EXISTS, và available không đủ gây INSUFFICIENT_FUNDS. Hold mới hết hạn tại now+ttl, không đổi balance.\nR-9: transfer yêu cầu amount là số nguyên dương an toàn, hai tài khoản tồn tại và from.available đủ; lỗi amount dùng INVALID_AMOUNT, tài khoản thiếu dùng UNKNOWN_ACCOUNT, thiếu tiền dùng INSUFFICIENT_FUNDS. Cho phép from===to nhưng vẫn kiểm tra available trước thao tác.\nR-10: settle yêu cầu hold còn hoạt động, tài khoản đích tồn tại, amount là số nguyên dương an toàn và amount không vượt hold.amount; nếu vượt thì dùng AMOUNT_EXCEEDED. Thành công ghi nợ toàn bộ amount đã settle từ tài khoản giữ hold, ghi có cho đích, đóng toàn bộ hold và giải phóng phần chưa dùng. Đích có thể là tài khoản sở hữu hold.\nR-11: release đóng hold còn hoạt động mà không đổi số dư. Với settle hoặc release, hold chưa từng biết dùng HOLD_NOT_FOUND, hold đã hết hạn dùng HOLD_EXPIRED, hold đã settle hoặc release dùng HOLD_CLOSED. Thao tác thất bại không đóng hold.\nR-12: advance(t) chỉ chấp nhận t là số nguyên không âm và t>=now; nếu không, ném lỗi INVALID_TIME. Nó cập nhật now và làm hết hạn mọi hold đang hoạt động có expiresAt<=t. Revision tăng đúng một lần nếu có ít nhất một hold hết hạn, bất kể số lượng; nếu không có hold hết hạn thì chỉ đổi thời gian và revision giữ nguyên. Tiền hết hạn lập tức khả dụng.\nR-13: apply không tự advance thời gian; các hold chỉ hết hạn qua advance(t).\nR-16: Tên tài khoản và ID là chuỗi không rỗng; các tên đặc biệt như __proto__ được xử lý như ID thông thường, không gây thay đổi hành vi ngoài ý muốn.. Bổ sung test có thao tác và assertion kiểm chứng đúng hành vi, gắn mã yêu cầu tương ứng. Không chỉ thêm nhãn vào test không liên quan; không sửa hợp đồng hay test đã khóa.",
+      "contractProblems": [],
+      "testPlanCases": 0,
+      "checks": [
+        {
+          "recipeId": "test",
+          "status": "passed",
+          "counts": {
+            "passed": 3,
+            "failed": 0,
+            "skipped": 0
+          },
+          "checkpoint": "d561e1013044d55865e54b18e87fcc0d24e90a4c"
+        }
+      ],
+      "mutation": null,
+      "grade": {
+        "passed": 65,
+        "total": 65,
+        "score": 100,
+        "byGroup": {
+          "public-api": {
+            "passed": 2,
+            "total": 2
+          },
+          "time": {
+            "passed": 6,
+            "total": 6
+          },
+          "money": {
+            "passed": 3,
+            "total": 3
+          },
+          "holds": {
+            "passed": 5,
+            "total": 5
+          },
+          "boundary": {
+            "passed": 1,
+            "total": 1
+          },
+          "history": {
+            "passed": 6,
+            "total": 6
+          },
+          "errors": {
+            "passed": 1,
+            "total": 1
+          },
+          "atomicity": {
+            "passed": 5,
+            "total": 5
+          },
+          "validation": {
+            "passed": 10,
+            "total": 10
+          },
+          "revision": {
+            "passed": 2,
+            "total": 2
+          },
+          "idempotency": {
+            "passed": 5,
+            "total": 5
+          },
+          "aliasing": {
+            "passed": 4,
+            "total": 4
+          },
+          "snapshot": {
+            "passed": 3,
+            "total": 3
+          },
+          "stateful": {
+            "passed": 12,
+            "total": 12
+          }
+        },
+        "failures": []
+      },
+      "sourceLines": 150,
+      "sourceBytes": 6133,
+      "sourceHash": "6864d9efa0d8aed335e3df466ccfc0e5df53936317b81bd8ad139e807c72c536"
+    }
+  ],
+  "review": null,
+  "diagnosis": null,
+  "limitations": [
+    "One attempt per mode on one synthetic task; no population-level reliability or speed conclusion.",
+    "Single means application Single mode, with Planner and self review; not one raw CLI call.",
+    "Both modes share model family/provider and local host; independent role sessions do not prove independent model errors.",
+    "Dollar figures are application estimates for subscription usage, not measured API bills.",
+    "53 directed cases plus 12 fixed-seed stateful traces do not establish exhaustive correctness.",
+    "A missing candidate has no code score, not a fabricated 0/65.",
+    "No failed run was retried, no contract/test/source was repaired by benchmark operator, and external grader output was never fed to agents.",
+    "Local runtime uses CLI sandbox and scope enforcement; external grader remains outside workspace but is not hidden behind a container security boundary."
+  ]
+}

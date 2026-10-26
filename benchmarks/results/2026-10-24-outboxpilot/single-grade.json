@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-outboxpilot-20261024\\single",
+  "generatedAt": "2026-10-24T14:02:07.350Z",
+  "total": 43,
+  "passed": 28,
+  "failed": 15,
+  "score": 6.511627906976744,
+  "cases": [
+    {
+      "name": "schema and default row",
+      "passed": true
+    },
+    {
+      "name": "constructor validation",
+      "passed": false,
+      "error": "Error: INVALID_INPUT\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at invalid (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:9:28)\n    at createOutbox (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:53:123)\n    at make (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:11:30)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:22:152\n    at waitForActual (node:assert:632:21)\n    at strict.rejects (node:assert:769:31)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:22:140\n    at check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:15)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:22:7"
+    },
+    {
+      "name": "invalid enqueue does not reserve id",
+      "passed": false,
+      "error": "Error: INVALID_INPUT\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at invalid (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:9:28)\n    at copyJson (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:19:34)\n    at Object.enqueue (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:92:22)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:23:109\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:23:82\n    at check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:15)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:23:7"
+    },
+    {
+      "name": "invalid claim leaves queue untouched",
+      "passed": false,
+      "error": "Error: INVALID_INPUT\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at invalid (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:9:28)\n    at Object.claim (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:105:68)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:24:151\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:24:124\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:24:1"
+    },
+    {
+      "name": "input and output payloads are detached",
+      "passed": true
+    },
+    {
+      "name": "duplicate JSON object key order is irrelevant",
+      "passed": true
+    },
+    {
+      "name": "duplicate payload or priority conflict is atomic",
+      "passed": false,
+      "error": "Error: IDEMPOTENCY_CONFLICT\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.enqueue (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:97:91)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:27:185\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:27:151\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:27:1"
+    },
+    {
+      "name": "priority descending",
+      "passed": true
+    },
+    {
+      "name": "not-due job is skipped",
+      "passed": true
+    },
+    {
+      "name": "availableAt then enqueue order tie break",
+      "passed": false,
+      "error": "TypeError: Cannot read properties of null (reading 'eventId')\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:30:219\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:30:1"
+    },
+    {
+      "name": "concurrent claims lease distinct jobs and tokens",
+      "passed": true
+    },
+    {
+      "name": "lease metadata and attempt count",
+      "passed": true
+    },
+    {
+      "name": "acked item cannot be claimed again",
+      "passed": true
+    },
+    {
+      "name": "exact ack replay is idempotent",
+      "passed": true
+    },
+    {
+      "name": "wrong worker forbidden without mutation",
+      "passed": false,
+      "error": "Error: FORBIDDEN\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.ack (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:127:50)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:35:180\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:35:157\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:35:1"
+    },
+    {
+      "name": "stale token cannot ack",
+      "passed": false,
+      "error": "Error: STALE_LEASE\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.ack (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:128:54)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:36:165\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:36:140\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:36:1"
+    },
+    {
+      "name": "unknown event not found",
+      "passed": false,
+      "error": "Error: NOT_FOUND\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.ack (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:122:23)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:37:93\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:37:70\n    at check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:15)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:37:7"
+    },
+    {
+      "name": "lease valid immediately before expiry",
+      "passed": true
+    },
+    {
+      "name": "expiry boundary schedules retry",
+      "passed": true
+    },
+    {
+      "name": "sweep returns expired jobs in enqueue order",
+      "passed": true
+    },
+    {
+      "name": "last expired attempt becomes dead",
+      "passed": true
+    },
+    {
+      "name": "first failure uses base backoff",
+      "passed": true
+    },
+    {
+      "name": "retry backoff grows exponentially",
+      "passed": true
+    },
+    {
+      "name": "non-retryable failure dies immediately",
+      "passed": true
+    },
+    {
+      "name": "retryable failure on final attempt dies",
+      "passed": true
+    },
+    {
+      "name": "consumed lease cannot fail twice",
+      "passed": false,
+      "error": "Error: STALE_LEASE\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.fail (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:140:42)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:46:242\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:46:217\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:46:1"
+    },
+    {
+      "name": "cancel pending and replay",
+      "passed": true
+    },
+    {
+      "name": "cancel retry job",
+      "passed": true
+    },
+    {
+      "name": "cancel active lease is busy",
+      "passed": false,
+      "error": "Error: BUSY\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.cancel (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:154:42)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:49:155\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:49:137\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:49:1"
+    },
+    {
+      "name": "cancel acked job is invalid",
+      "passed": false,
+      "error": "Error: INVALID_STATE\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.cancel (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:155:69)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:50:232\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:50:205\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:50:1"
+    },
+    {
+      "name": "terminal states are never claimable",
+      "passed": true
+    },
+    {
+      "name": "idempotency survives terminal state",
+      "passed": true
+    },
+    {
+      "name": "instances are isolated",
+      "passed": true
+    },
+    {
+      "name": "snapshot lazily expires leases",
+      "passed": true
+    },
+    {
+      "name": "snapshot order remains enqueue order",
+      "passed": true
+    },
+    {
+      "name": "special exact identifiers are preserved",
+      "passed": true
+    },
+    {
+      "name": "invalid identifiers and numeric fields rejected",
+      "passed": false,
+      "error": "Error: INVALID_INPUT\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at invalid (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:9:28)\n    at Object.enqueue (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:91:152)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:57:285\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:57:258\n    at check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:15)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:57:7"
+    },
+    {
+      "name": "non-JSON payload rejected",
+      "passed": false,
+      "error": "Error: INVALID_INPUT\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at invalid (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:9:28)\n    at copyJson (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:19:34)\n    at Object.enqueue (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:92:22)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:58:173\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:58:146\n    at check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:15)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:58:7"
+    },
+    {
+      "name": "failed job does not consume another job",
+      "passed": true
+    },
+    {
+      "name": "attempts are monotone over retry and lease expiry",
+      "passed": true
+    },
+    {
+      "name": "wrong worker cannot fail active lease",
+      "passed": false,
+      "error": "Error: FORBIDDEN\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.fail (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:141:50)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:61:178\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:61:155\n    at async check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:9)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:61:1"
+    },
+    {
+      "name": "cancel unknown ID not found",
+      "passed": false,
+      "error": "Error: NOT_FOUND\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:4:13)\n    at Object.cancel (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single/src/outbox.js?grade=1792850527345:152:23)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:62:97\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:17:61)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:62:74\n    at check (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:14:15)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-outboxpilot/grade.mjs:62:7"
+    },
+    {
+      "name": "claim returns null when only future retry exists",
+      "passed": true
+    }
+  ]
+}

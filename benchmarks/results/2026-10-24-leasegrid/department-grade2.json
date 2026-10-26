@@ -1,0 +1,229 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\workspaces\\run_d4704842-A",
+  "total": 52,
+  "passed": 44,
+  "failed": 8,
+  "score": 8.46,
+  "results": [
+    {
+      "id": "CFG01",
+      "status": "passed"
+    },
+    {
+      "id": "CFG02",
+      "status": "passed"
+    },
+    {
+      "id": "CFG03",
+      "status": "failed",
+      "message": "Missing expected rejection: expected CONFIG_MISMATCH",
+      "code": "ERR_ASSERTION"
+    },
+    {
+      "id": "CFG04",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ01",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ02",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ03",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ04",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ05",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ06",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ07",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ08",
+      "status": "passed"
+    },
+    {
+      "id": "CL01",
+      "status": "passed"
+    },
+    {
+      "id": "CL02",
+      "status": "passed"
+    },
+    {
+      "id": "CL03",
+      "status": "passed"
+    },
+    {
+      "id": "CL04",
+      "status": "passed"
+    },
+    {
+      "id": "CL05",
+      "status": "passed"
+    },
+    {
+      "id": "CL06",
+      "status": "failed",
+      "message": "CONFIG_MISMATCH",
+      "code": "CONFIG_MISMATCH"
+    },
+    {
+      "id": "CL07",
+      "status": "passed"
+    },
+    {
+      "id": "CL08",
+      "status": "passed"
+    },
+    {
+      "id": "LS01",
+      "status": "passed"
+    },
+    {
+      "id": "LS02",
+      "status": "passed"
+    },
+    {
+      "id": "LS03",
+      "status": "passed"
+    },
+    {
+      "id": "LS04",
+      "status": "passed"
+    },
+    {
+      "id": "LS05",
+      "status": "passed"
+    },
+    {
+      "id": "LS06",
+      "status": "passed"
+    },
+    {
+      "id": "LS07",
+      "status": "passed"
+    },
+    {
+      "id": "LS08",
+      "status": "passed"
+    },
+    {
+      "id": "EX01",
+      "status": "passed"
+    },
+    {
+      "id": "EX02",
+      "status": "failed",
+      "message": "Cannot read properties of undefined (reading 'attempt')"
+    },
+    {
+      "id": "EX03",
+      "status": "failed",
+      "message": "Cannot read properties of undefined (reading 'lease')"
+    },
+    {
+      "id": "EX04",
+      "status": "failed",
+      "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'retry_wait'\n- 'dead'\n",
+      "code": "ERR_ASSERTION"
+    },
+    {
+      "id": "EX05",
+      "status": "failed",
+      "message": "Cannot read properties of undefined (reading 'lease')"
+    },
+    {
+      "id": "CA01",
+      "status": "passed"
+    },
+    {
+      "id": "CA02",
+      "status": "passed"
+    },
+    {
+      "id": "CA03",
+      "status": "passed"
+    },
+    {
+      "id": "CA04",
+      "status": "passed"
+    },
+    {
+      "id": "RD01",
+      "status": "passed"
+    },
+    {
+      "id": "RD02",
+      "status": "passed"
+    },
+    {
+      "id": "RD03",
+      "status": "passed"
+    },
+    {
+      "id": "RD04",
+      "status": "passed"
+    },
+    {
+      "id": "RD05",
+      "status": "passed"
+    },
+    {
+      "id": "CC01",
+      "status": "failed",
+      "message": "CONFIG_MISMATCH",
+      "code": "CONFIG_MISMATCH"
+    },
+    {
+      "id": "CC02",
+      "status": "passed"
+    },
+    {
+      "id": "CC03",
+      "status": "passed"
+    },
+    {
+      "id": "CC04",
+      "status": "passed"
+    },
+    {
+      "id": "CC05",
+      "status": "passed"
+    },
+    {
+      "id": "CC06",
+      "status": "passed"
+    },
+    {
+      "id": "DU01",
+      "status": "passed"
+    },
+    {
+      "id": "DU02",
+      "status": "passed"
+    },
+    {
+      "id": "DU03",
+      "status": "passed"
+    },
+    {
+      "id": "DU04",
+      "status": "failed",
+      "message": "Cannot read properties of undefined (reading 'lease')"
+    }
+  ]
+}

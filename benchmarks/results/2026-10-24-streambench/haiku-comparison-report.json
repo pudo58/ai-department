@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-24T05:54:11.128Z",
+  "model": "claude-haiku-5-5",
+  "effort": "medium",
+  "checkpoint": "991203e63ccd88be2c4e781e7baf98f12a29599a",
+  "budgetUsdPerArm": 6,
+  "sharedSpec": true,
+  "single": {
+    "projectId": "prj_e2533ee1",
+    "runId": "run_81d1dc0f",
+    "status": "awaiting_acceptance",
+    "checkpoint": "82237cfddafc2b66637fe9087b1b621a63f3d539",
+    "modelRoles": [
+      {
+        "role": "planner",
+        "model": "claude-haiku-5-5",
+        "status": "completed"
+      },
+      {
+        "role": "developer",
+        "model": "claude-haiku-5-5",
+        "status": "completed"
+      }
+    ],
+    "checks": {
+      "passed": 116,
+      "total": 116
+    },
+    "frozenEvaluator": {
+      "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\workspaces\\run_81d1dc0f-A",
+      "total": 53,
+      "passed": 53,
+      "failed": 0,
+      "score": 10,
+      "results": [
+        {
+          "id": "CFG01",
+          "status": "passed"
+        },
+        {
+          "id": "CFG02",
+          "status": "passed"
+        },
+        {
+          "id": "CFG03",
+          "status": "passed"
+        },
+        {
+          "id": "CFG04",
+          "status": "passed"
+        },
+        {
+          "id": "CFG05",
+          "status": "passed"
+        },
+        {
+          "id": "CFG06",
+          "status": "passed"
+        },
+        {
+          "id": "CFG07",
+          "status": "passed"
+        },
+        {
+          "id": "ST01",
+          "status": "passed"
+        },
+        {
+          "id": "ST02",
+          "status": "passed"
+        },
+        {
+          "id": "ST03",
+          "status": "passed"
+        },
+        {
+          "id": "IN01",
+          "status": "passed"
+        },
+        {
+          "id": "IN02",
+          "status": "passed"
+        },
+        {
+          "id": "IN03",
+          "status": "passed"
+        },
+        {
+          "id": "IN04",
+          "status": "passed"
+        },
+        {
+          "id": "IN05",
+          "status": "passed"
+        },
+        {
+          "id": "IN06",
+          "status": "passed"
+        },
+        {
+          "id": "IV01",
+          "status": "passed"
+        },
+        {
+          "id": "IV02",
+          "status": "passed"
+        },
+        {
+          "id": "IV03",
+          "status": "passed"
+        },
+        {
+          "id": "IV04",
+          "status": "passed"
+        },
+        {
+          "id": "IV05",
+          "status": "passed"
+        },
+        {
+          "id": "ID01",
+          "status": "passed"
+        },
+        {
+          "id": "ID02",
+          "status": "passed"
+        },
+        {
+          "id": "ID03",
+          "status": "passed"
+        },
+        {
+          "id": "ID04",
+          "status": "passed"
+        },
+        {
+          "id": "WM01",
+          "status": "passed"
+        },
+        {
+          "id": "WM02",
+          "status": "passed"
+        },
+        {
+          "id": "WM03",
+          "status": "passed"
+        },
+        {
+          "id": "WM04",
+          "status": "passed"
+        },
+        {
+          "id": "WM05",
+          "status": "passed"
+        },
+        {
+          "id": "WM06",
+          "status": "passed"
+        },
+        {
+          "id": "WM07",
+          "status": "passed"
+        },
+        {
+          "id": "WM08",
+          "status": "passed"
+        },
+        {
+          "id": "WM09",
+          "status": "passed"
+        },
+        {
+          "id": "WM10",
+          "status": "passed"
+        },
+        {
+          "id": "WM11",
+          "status": "passed"
+        },
+        {
+          "id": "Q01",
+          "status": "passed"
+        },
+        {
+          "id": "Q02",
+          "status": "passed"
+        },
+        {
+          "id": "Q03",
+          "status": "passed"
+        },
+        {
+          "id": "Q04",
+          "status": "passed"
+        },
+        {
+          "id": "TN01",
+          "status": "passed"
+        },
+        {
+          "id": "TN02",
+          "status": "passed"
+        },
+        {
+          "id": "TN03",
+          "status": "passed"
+        },
+        {
+          "id": "CC01",
+          "status": "passed"
+        },
+        {
+          "id": "CC02",
+          "status": "passed"
+        },
+        {
+          "id": "CC03",
+          "status": "passed"
+        },
+        {
+          "id": "CC04",
+          "status": "passed"
+        },
+        {
+          "id": "ER01",
+          "status": "passed"
+        },
+        {
+          "id": "ER02",
+          "status": "passed"
+        },
+        {
+          "id": "ER03",
+          "status": "passed"
+        },
+        {
+          "id": "DU01",
+          "status": "passed"
+        },
+        {
+          "id": "DU02",
+          "status": "passed"
+        },
+        {
+          "id": "DU03",
+          "status": "passed"
+        }
+      ]
+    },
+    "usage": [
+      {
+        "inputTokens": 21512,
+        "outputTokens": 9439,
+        "subscriptionNotionalUsd": 0.0090217
+      },
+      {
+        "inputTokens": 1753673,
+        "outputTokens": 98471,
+        "subscriptionNotionalUsd": 0.21775017999999996
+      }
+    ]
+  },
+  "department": {
+    "projectId": "prj_b8e392fc",
+    "runId": "run_8b9f6fff",
+    "status": "blocked",
+    "stage": "implement",
+    "checkpoint": null,
+    "blocker": "Manifest Author không hợp lệ: C-4: liên kết yêu cầu không khớp kế hoạch.",
+    "attempts": [
+      {
+        "role": "planner",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T05:08:57.920Z",
+        "endedAt": "2026-10-24T05:10:05.017Z"
+      },
+      {
+        "role": "author",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T05:10:05.190Z",
+        "endedAt": "2026-10-24T05:12:46.090Z"
+      },
+      {
+        "role": "author",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T05:13:48.347Z",
+        "endedAt": "2026-10-24T05:20:52.504Z"
+      },
+      {
+        "role": "author",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T05:28:08.301Z",
+        "endedAt": "2026-10-24T05:36:06.104Z"
+      },
+      {
+        "role": "author",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T05:37:01.698Z",
+        "endedAt": "2026-10-24T05:45:18.766Z"
+      },
+      {
+        "role": "author",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T05:46:39.194Z",
+        "endedAt": "2026-10-24T05:53:46.981Z"
+      }
+    ],
+    "manifestEntriesLatest": 150,
+    "mismatchCaseIdsLatest": [
+      "C-4"
+    ],
+    "checks": 0,
+    "frozenEvaluator": null,
+    "interventions": "human contract/plan corrections; recorded separately; no source or test rescue edits"
+  },
+  "caveats": [
+    "Department did not produce a Developer checkpoint, so no Department code score can be reported.",
+    "Single run is app Single mode: same Haiku model handled Planner and Developer; it had no independent Verifier.",
+    "Frozen evaluator scores the same 53 public API scenarios and is not a measure of all software quality.",
+    "This is one synthetic task and does not establish general superiority."
+  ]
+}

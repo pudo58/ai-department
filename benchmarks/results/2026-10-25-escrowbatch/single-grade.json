@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_c814fa27-A\\src\\ledger.js",
+  "at": "2026-10-25T02:56:19.609Z",
+  "passed": 64,
+  "failed": 1,
+  "total": 65,
+  "score": 98.5,
+  "byGroup": {
+    "public-api": {
+      "passed": 2,
+      "total": 2
+    },
+    "time": {
+      "passed": 6,
+      "total": 6
+    },
+    "money": {
+      "passed": 3,
+      "total": 3
+    },
+    "holds": {
+      "passed": 5,
+      "total": 5
+    },
+    "boundary": {
+      "passed": 1,
+      "total": 1
+    },
+    "history": {
+      "passed": 6,
+      "total": 6
+    },
+    "errors": {
+      "passed": 1,
+      "total": 1
+    },
+    "atomicity": {
+      "passed": 4,
+      "total": 5
+    },
+    "validation": {
+      "passed": 10,
+      "total": 10
+    },
+    "revision": {
+      "passed": 2,
+      "total": 2
+    },
+    "idempotency": {
+      "passed": 5,
+      "total": 5
+    },
+    "aliasing": {
+      "passed": 4,
+      "total": 4
+    },
+    "snapshot": {
+      "passed": 3,
+      "total": 3
+    },
+    "stateful": {
+      "passed": 12,
+      "total": 12
+    }
+  },
+  "results": [
+    {
+      "id": "D01-initial-state",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.7959999999999994
+    },
+    {
+      "id": "D02-initial-time",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.06590000000000273
+    },
+    {
+      "id": "D03-transfer",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.37579999999999814
+    },
+    {
+      "id": "D04-reserve-does-not-debit",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.1828000000000003
+    },
+    {
+      "id": "D05-exact-available",
+      "group": "boundary",
+      "status": "PASSED",
+      "ms": 0.07499999999999929
+    },
+    {
+      "id": "D06-held-funds-block-transfer",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.22710000000000008
+    },
+    {
+      "id": "D07-partial-settle-releases-remainder",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.14240000000000208
+    },
+    {
+      "id": "D08-full-settle",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.06379999999999697
+    },
+    {
+      "id": "D09-release",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.067499999999999
+    },
+    {
+      "id": "D10-closed-settle",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.10130000000000194
+    },
+    {
+      "id": "D10-closed-release",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.046599999999997976
+    },
+    {
+      "id": "D10-closed-reserve",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.04400000000000048
+    },
+    {
+      "id": "D11-unknown-hold",
+      "group": "errors",
+      "status": "PASSED",
+      "ms": 0.04649999999999821
+    },
+    {
+      "id": "D12-excess-settle-leaves-hold-live",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.06669999999999732
+    },
+    {
+      "id": "D13-expiry-exact-boundary",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.5580999999999996
+    },
+    {
+      "id": "D14-many-expiries-one-revision",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.08899999999999864
+    },
+    {
+      "id": "D15-mixed-expiries",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.08619999999999806
+    },
+    {
+      "id": "D16-time-without-expiry",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.041499999999999204
+    },
+    {
+      "id": "D17-invalid-time--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.04960000000000164
+    },
+    {
+      "id": "D17-invalid-time-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.012199999999999989
+    },
+    {
+      "id": "D17-invalid-time-NaN",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.00980000000000203
+    },
+    {
+      "id": "D18-time-cannot-rewind",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.026799999999997937
+    },
+    {
+      "id": "D19-expired-release",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.061599999999998545
+    },
+    {
+      "id": "D19-expired-settle",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.027599999999999625
+    },
+    {
+      "id": "D20-expired-ID-not-reusable",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.05460000000000065
+    },
+    {
+      "id": "D21-ordered-provisional-effects",
+      "group": "atomicity",
+      "status": "FAILED",
+      "ms": 0.06709999999999994,
+      "error": "Error: INSUFFICIENT_FUNDS\n    at fail (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/workspaces/run_c814fa27-A/src/ledger.js:2:40)\n    at Object.apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/workspaces/run_c814fa27-A/src/ledger.js:59:53)\n    at apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:16:45)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:41:96\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:41:1"
+    },
+    {
+      "id": "D22-rollback-all-ops",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.12760000000000105
+    },
+    {
+      "id": "D23-rollback-does-not-consume-IDs",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.08159999999999812
+    },
+    {
+      "id": "D24-rollback-terminal-status",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.07469999999999999
+    },
+    {
+      "id": "D25-revision-CAS",
+      "group": "revision",
+      "status": "PASSED",
+      "ms": 0.08869999999999933
+    },
+    {
+      "id": "D26-zero-net-batch-increments-once",
+      "group": "revision",
+      "status": "PASSED",
+      "ms": 0.03849999999999909
+    },
+    {
+      "id": "D27-self-transfer-validates-available",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.07610000000000028
+    },
+    {
+      "id": "D28-self-settle",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.04380000000000095
+    },
+    {
+      "id": "D29-replay-precedes-CAS",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.08100000000000307
+    },
+    {
+      "id": "D30-id-conflict-precedes-CAS",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.05460000000000065
+    },
+    {
+      "id": "D31-key-order-independent-replay",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.04139999999999944
+    },
+    {
+      "id": "D32-array-order-matters",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.044400000000003104
+    },
+    {
+      "id": "D33-replay-does-not-resurrect-expired-hold",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.050200000000000244
+    },
+    {
+      "id": "D34-request-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.061299999999999244
+    },
+    {
+      "id": "D35-result-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.04830000000000112
+    },
+    {
+      "id": "D36-inspect-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.05270000000000152
+    },
+    {
+      "id": "D37-snapshot-roundtrip",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.15800000000000125
+    },
+    {
+      "id": "D38-restored-replay-and-closed-history",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.21899999999999764
+    },
+    {
+      "id": "D39-restored-expired-history",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.14310000000000045
+    },
+    {
+      "id": "D40-snapshot-and-restore-independent",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.12250000000000227
+    },
+    {
+      "id": "D41-invalid-amount-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.10129999999999839
+    },
+    {
+      "id": "D41-invalid-amount--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.037400000000001654
+    },
+    {
+      "id": "D41-invalid-amount-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.03510000000000346
+    },
+    {
+      "id": "D42-invalid-ttl-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.5511000000000017
+    },
+    {
+      "id": "D42-invalid-ttl--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.03160000000000451
+    },
+    {
+      "id": "D42-invalid-ttl-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.038599999999995305
+    },
+    {
+      "id": "D43-unknown-account",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.08849999999999625
+    },
+    {
+      "id": "D44-special-IDs",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.09879999999999711
+    },
+    {
+      "id": "T01-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 9.212400000000002
+    },
+    {
+      "id": "T02-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.122300000000003
+    },
+    {
+      "id": "T03-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.817600000000006
+    },
+    {
+      "id": "T04-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.5330999999999975
+    },
+    {
+      "id": "T05-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 6.6784000000000106
+    },
+    {
+      "id": "T06-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.780000000000001
+    },
+    {
+      "id": "T07-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.405699999999996
+    },
+    {
+      "id": "T08-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.820499999999996
+    },
+    {
+      "id": "T09-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 9.044299999999993
+    },
+    {
+      "id": "T10-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 9.0882
+    },
+    {
+      "id": "T11-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.814700000000002
+    },
+    {
+      "id": "T12-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.330999999999989
+    }
+  ]
+}

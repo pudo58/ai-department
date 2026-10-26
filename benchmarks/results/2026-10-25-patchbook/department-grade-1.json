@@ -1,0 +1,642 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T15:11:53.546Z",
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\workspaces\\run_627ff9de-A\\src\\patchbook.js",
+  "passed": 95,
+  "failed": 0,
+  "total": 95,
+  "groups": {
+    "shape": {
+      "passed": 6,
+      "total": 6
+    },
+    "validation": {
+      "passed": 28,
+      "total": 28
+    },
+    "edits": {
+      "passed": 3,
+      "total": 3
+    },
+    "arrays": {
+      "passed": 2,
+      "total": 2
+    },
+    "paths": {
+      "passed": 20,
+      "total": 20
+    },
+    "safety": {
+      "passed": 2,
+      "total": 2
+    },
+    "checks": {
+      "passed": 1,
+      "total": 1
+    },
+    "atomicity": {
+      "passed": 3,
+      "total": 3
+    },
+    "precedence": {
+      "passed": 5,
+      "total": 5
+    },
+    "revisions": {
+      "passed": 1,
+      "total": 1
+    },
+    "moves": {
+      "passed": 8,
+      "total": 8
+    },
+    "replay": {
+      "passed": 5,
+      "total": 5
+    },
+    "detachment": {
+      "passed": 1,
+      "total": 1
+    },
+    "snapshot": {
+      "passed": 2,
+      "total": 2
+    },
+    "stateful": {
+      "passed": 8,
+      "total": 8
+    }
+  },
+  "results": [
+    {
+      "id": "D01-exports",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.04639999999999844
+    },
+    {
+      "id": "D02-root-null",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.5368999999999993
+    },
+    {
+      "id": "D02-root-scalar",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.013700000000000045
+    },
+    {
+      "id": "D02-root-array",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.012299999999999756
+    },
+    {
+      "id": "D02-root-object",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.036599999999999966
+    },
+    {
+      "id": "D03-invalid-initial-undefined",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.12970000000000326
+    },
+    {
+      "id": "D03-invalid-initial-NaN",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.013500000000000512
+    },
+    {
+      "id": "D03-invalid-initial-Infinity",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.00829999999999842
+    },
+    {
+      "id": "D03-invalid-initial-hole",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.008500000000001506
+    },
+    {
+      "id": "D03-invalid-initial-nested-undefined",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.013799999999999812
+    },
+    {
+      "id": "D03-invalid-initial-function",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.009499999999999176
+    },
+    {
+      "id": "D03-invalid-initial-cycle",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.016899999999999693
+    },
+    {
+      "id": "D04-request-null",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.25009999999999977
+    },
+    {
+      "id": "D04-request-array",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.035199999999999676
+    },
+    {
+      "id": "D04-request-empty",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.02430000000000021
+    },
+    {
+      "id": "D04-request-extra",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.01419999999999888
+    },
+    {
+      "id": "D04-request-empty-id",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.04299999999999926
+    },
+    {
+      "id": "D04-request-long-id",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.024899999999998812
+    },
+    {
+      "id": "D04-request-negative-revision",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.01529999999999987
+    },
+    {
+      "id": "D04-request-unsafe-revision",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.015600000000002723
+    },
+    {
+      "id": "D04-request-empty-ops",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.00969999999999871
+    },
+    {
+      "id": "D04-request-too-many",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.010600000000000165
+    },
+    {
+      "id": "D04-request-null-op",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.026600000000001955
+    },
+    {
+      "id": "D04-request-unknown-op",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.0329999999999977
+    },
+    {
+      "id": "D04-request-extra-op-field",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.017800000000001148
+    },
+    {
+      "id": "D04-request-missing-value",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.010799999999999699
+    },
+    {
+      "id": "D04-request-null-path",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.028400000000001313
+    },
+    {
+      "id": "D04-request-invalid-json-value",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.02120000000000033
+    },
+    {
+      "id": "D04-request-sparse-ops",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.010999999999999233
+    },
+    {
+      "id": "D05-invalid-restore-null",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.03190000000000026
+    },
+    {
+      "id": "D05-invalid-restore-",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.0045000000000001705
+    },
+    {
+      "id": "D05-invalid-restore-false",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.003500000000002501
+    },
+    {
+      "id": "D06-literal-id-and-max-batch",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.32310000000000016
+    },
+    {
+      "id": "D07-exact-receipt",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.14369999999999905
+    },
+    {
+      "id": "D08-object-replace-and-insert",
+      "group": "edits",
+      "status": "passed",
+      "durationMs": 0.486699999999999
+    },
+    {
+      "id": "D09-array-inserts-not-overwrites",
+      "group": "arrays",
+      "status": "passed",
+      "durationMs": 0.11909999999999954
+    },
+    {
+      "id": "D10-array-end-and-append",
+      "group": "arrays",
+      "status": "passed",
+      "durationMs": 0.08549999999999969
+    },
+    {
+      "id": "D11-invalid-index-01",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.07430000000000092
+    },
+    {
+      "id": "D11-invalid-index--1",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.027199999999997004
+    },
+    {
+      "id": "D11-invalid-index-1.0",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.022100000000001785
+    },
+    {
+      "id": "D11-invalid-index-+0",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.018499999999999517
+    },
+    {
+      "id": "D11-invalid-index- ",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.02079999999999771
+    },
+    {
+      "id": "D11-invalid-index-foo",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.016899999999999693
+    },
+    {
+      "id": "D11-invalid-index-9007199254740992",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.024799999999999045
+    },
+    {
+      "id": "D12-index-bounds-and-minus-context",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.15759999999999863
+    },
+    {
+      "id": "D13-object-numeric-and-empty-keys",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.06559999999999988
+    },
+    {
+      "id": "D14-single-pass-pointer-decoding",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.06109999999999971
+    },
+    {
+      "id": "D15-malformed-pointer-a",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.05299999999999727
+    },
+    {
+      "id": "D15-malformed-pointer-/~",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.023299999999998988
+    },
+    {
+      "id": "D15-malformed-pointer-/~2",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.016899999999999693
+    },
+    {
+      "id": "D15-malformed-pointer-/a/~3",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.018599999999999284
+    },
+    {
+      "id": "D15-malformed-pointer-/~10~",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.01419999999999888
+    },
+    {
+      "id": "D16-missing-ancestor-not-autocreated",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.10070000000000334
+    },
+    {
+      "id": "D17-traversal-primitive-null",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.0376999999999974
+    },
+    {
+      "id": "D17-traversal-primitive-3",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.016100000000001558
+    },
+    {
+      "id": "D17-traversal-primitive-\"s\"",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.01899999999999835
+    },
+    {
+      "id": "D17-traversal-primitive-true",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.015200000000000102
+    },
+    {
+      "id": "D18-own-properties-only",
+      "group": "safety",
+      "status": "passed",
+      "durationMs": 0.10650000000000048
+    },
+    {
+      "id": "D19-prototype-keys-are-data",
+      "group": "safety",
+      "status": "passed",
+      "durationMs": 0.09609999999999985
+    },
+    {
+      "id": "D20-root-put-remove-and-check-null",
+      "group": "edits",
+      "status": "passed",
+      "durationMs": 0.0630999999999986
+    },
+    {
+      "id": "D21-object-and-array-remove",
+      "group": "edits",
+      "status": "passed",
+      "durationMs": 0.1343000000000032
+    },
+    {
+      "id": "D22-check-deep-equality",
+      "group": "checks",
+      "status": "passed",
+      "durationMs": 0.19640000000000057
+    },
+    {
+      "id": "D23-atomic-earlier-ops-rollback",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.08440000000000225
+    },
+    {
+      "id": "D24-all-syntax-validated-before-execution",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.15840000000000032
+    },
+    {
+      "id": "D25-revision-before-resolution",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.08649999999999736
+    },
+    {
+      "id": "D26-revision-per-batch-not-operation",
+      "group": "revisions",
+      "status": "passed",
+      "durationMs": 0.11090000000000089
+    },
+    {
+      "id": "D27-move-array-post-removal-index",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.0876000000000019
+    },
+    {
+      "id": "D28-move-invalid-after-removal-rollback",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.06789999999999807
+    },
+    {
+      "id": "D29-move-append-and-overwrite-key",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.05790000000000006
+    },
+    {
+      "id": "D30-same-path-still-resolves-source",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.0666000000000011
+    },
+    {
+      "id": "D31-decoded-prefix-rejects-descendant",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.049900000000000944
+    },
+    {
+      "id": "D32-text-prefix-is-not-ancestor",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.033500000000000085
+    },
+    {
+      "id": "D33-root-source-descendant-forbidden",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.054299999999997794
+    },
+    {
+      "id": "D34-nested-to-root",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.040399999999998215
+    },
+    {
+      "id": "D35-destination-resolves-after-removal",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.05570000000000164
+    },
+    {
+      "id": "D36-failed-destination-restores-source",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.04800000000000182
+    },
+    {
+      "id": "D37-historical-replay-not-current",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.4419000000000004
+    },
+    {
+      "id": "D38-replay-ignores-object-order",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.10290000000000177
+    },
+    {
+      "id": "D39-id-conflict-before-revision-base",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.07660000000000267
+    },
+    {
+      "id": "D39-id-conflict-before-revision-ops",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.034600000000001074
+    },
+    {
+      "id": "D40-shape-and-syntax-before-id-history",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.09450000000000003
+    },
+    {
+      "id": "D41-replay-does-not-resolve-old-path",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.03610000000000113
+    },
+    {
+      "id": "D42-op-values-do-not-alias-history",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.07340000000000302
+    },
+    {
+      "id": "D43-replay-array-order-matters",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.06070000000000064
+    },
+    {
+      "id": "D44-input-and-return-detachment",
+      "group": "detachment",
+      "status": "passed",
+      "durationMs": 0.07620000000000005
+    },
+    {
+      "id": "D45-snapshot-exact-commit-order",
+      "group": "snapshot",
+      "status": "passed",
+      "durationMs": 0.07959999999999923
+    },
+    {
+      "id": "D46-restore-preserves-historical-results",
+      "group": "snapshot",
+      "status": "passed",
+      "durationMs": 0.19739999999999824
+    },
+    {
+      "id": "T1-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 23.9181
+    },
+    {
+      "id": "T2-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 22.028699999999994
+    },
+    {
+      "id": "T3-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 18.63470000000001
+    },
+    {
+      "id": "T4-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 22.13579999999999
+    },
+    {
+      "id": "T5-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 22.45559999999999
+    },
+    {
+      "id": "T6-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 19.57469999999998
+    },
+    {
+      "id": "T7-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 23.289000000000016
+    },
+    {
+      "id": "T8-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 20.746099999999984
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "at": "2026-10-25T02:56:48.780Z",
+  "kind": "post-run diagnosis; not included in frozen 65-item score",
+  "candidateCheckpoint": "a31e49df552b875c8da6b34eea091336c6bc7c29",
+  "probes": [
+    {
+      "id": "P01-provisional-credit",
+      "request": {
+        "id": "x",
+        "expectedRevision": 0,
+        "ops": [
+          {
+            "type": "transfer",
+            "from": "a",
+            "to": "b",
+            "amount": 80
+          },
+          {
+            "type": "reserve",
+            "hold": "h",
+            "account": "b",
+            "amount": 70,
+            "ttl": 5
+          },
+          {
+            "type": "settle",
+            "hold": "h",
+            "to": "a",
+            "amount": 30
+          }
+        ]
+      },
+      "expected": {
+        "result": {
+          "revision": 1
+        },
+        "state": {
+          "now": 0,
+          "revision": 1,
+          "accounts": [
+            {
+              "id": "a",
+              "balance": 50,
+              "available": 50
+            },
+            {
+              "id": "b",
+              "balance": 50,
+              "available": 50
+            }
+          ],
+          "holds": []
+        }
+      },
+      "actual": {
+        "error": "INSUFFICIENT_FUNDS",
+        "state": {
+          "now": 0,
+          "revision": 0,
+          "accounts": [
+            {
+              "id": "a",
+              "balance": 100,
+              "available": 100
+            },
+            {
+              "id": "b",
+              "balance": 0,
+              "available": 0
+            }
+          ],
+          "holds": []
+        }
+      },
+      "matches": false
+    },
+    {
+      "id": "P02-double-spend-in-one-batch",
+      "request": {
+        "id": "x",
+        "expectedRevision": 0,
+        "ops": [
+          {
+            "type": "transfer",
+            "from": "a",
+            "to": "b",
+            "amount": 80
+          },
+          {
+            "type": "transfer",
+            "from": "a",
+            "to": "b",
+            "amount": 80
+          }
+        ]
+      },
+      "expected": {
+        "error": "INSUFFICIENT_FUNDS",
+        "state": {
+          "now": 0,
+          "revision": 0,
+          "accounts": [
+            {
+              "id": "a",
+              "balance": 100,
+              "available": 100
+            },
+            {
+              "id": "b",
+              "balance": 0,
+              "available": 0
+            }
+          ],
+          "holds": []
+        }
+      },
+      "actual": {
+        "result": {
+          "revision": 1
+        },
+        "state": {
+          "now": 0,
+          "revision": 1,
+          "accounts": [
+            {
+              "id": "a",
+              "balance": -60,
+              "available": -60
+            },
+            {
+              "id": "b",
+              "balance": 160,
+              "available": 160
+            }
+          ],
+          "holds": []
+        }
+      },
+      "matches": false
+    }
+  ],
+  "rootCause": "getAvailable calls available(account,nextHolds), but available reads committed accounts instead of nextAccounts. Earlier provisional credits and debits are invisible.",
+  "source": "src/ledger.js",
+  "severity": "high",
+  "releaseDecision": "reject until corrected and independently verified",
+  "operatorChangedCandidate": false
+}

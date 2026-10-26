@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T10:59:05.996Z",
+  "task": "CartStock",
+  "runId": "run_743c5eb3",
+  "status": "blocked",
+  "policyVersion": 3,
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "completion": false,
+  "candidateGrade": null,
+  "automaticMs": 226049,
+  "waitingMsAtCapture": 401329,
+  "waitingIncludesOperatorReviewAndDiagnostic": true,
+  "spentUsdEstimated": 0.7319327999999999,
+  "budgetUsd": 10.8,
+  "usage": {
+    "input": 202261,
+    "output": 33503,
+    "cached": 139776
+  },
+  "attemptsByRole": {
+    "planner": 1,
+    "author": 3
+  },
+  "interventions": {
+    "contractRevision": 1,
+    "contractApproval": 1,
+    "savedDraftRevalidation": 1,
+    "benchmarkConclusion": 1
+  },
+  "draft": {
+    "entries": 17,
+    "assertionBindings": 95,
+    "problemCounts": {
+      "expectedMismatch": 48,
+      "missingStep": 5,
+      "nonUniqueExpression": 16,
+      "unboundAssertion": 16
+    },
+    "referenceRunner": {
+      "passed": 17,
+      "failed": 0,
+      "total": 17
+    }
+  },
+  "upgrades": {
+    "preflight": "passed before Planner",
+    "stepOracle": "rejected invalid plan; bounded Author correction insufficient; operator revision recorded",
+    "assertionSourceGate": "blocked invalid Author output before Developer",
+    "draftRecovery": "exact stored output revalidated without model; remains invalid",
+    "diagnosisV3": "not reached",
+    "mutation": "not reached",
+    "verifierReproduction": "not reached",
+    "delivery": "not reached"
+  },
+  "limitations": [
+    "Single Department run; no Single comparator requested.",
+    "Reference 64/64 is a grader self-check, not Department implementation score.",
+    "Author draft 17/17 against reference only shows compatibility with that implementation, not adequacy or complete sync/async portability. Several test calls assume synchronous return despite original API allowing async; this needs separate Author review.",
+    "No candidate source produced; cannot score code quality, mutation or independent Verifier.",
+    "Exact expected text and unique AST matching prove trace/correspondence only, not semantic correctness.",
+    "No post-launch product/schema/grader fixes or manually manufactured manifest."
+  ]
+}

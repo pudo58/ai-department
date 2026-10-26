@@ -1,0 +1,280 @@
+{
+  "at": "2026-10-25T11:28:39.699Z",
+  "runId": "run_3973832e",
+  "status": "completed",
+  "blocker": null,
+  "addedAutomaticMs": 360595,
+  "execution": {
+    "available": true,
+    "automaticMs": 361825,
+    "waitingMs": 132031,
+    "agentQueueMs": 11,
+    "spans": [
+      {
+        "id": "0a098389-a2cc-436e-8c21-44c10249e8b6",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T11:20:24.532Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:24.542Z"
+      },
+      {
+        "id": "d5ee18d1-2df0-40bd-8636-6cbbe3236cba",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T11:20:24.534Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:22:54.260Z"
+      },
+      {
+        "id": "27db07c0-cfb3-44ec-9f7b-9a1424c590d2",
+        "kind": "setup",
+        "label": "Chuẩn bị bản sao/cài dependency",
+        "startedAt": "2026-10-25T11:20:24.550Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:25.002Z"
+      },
+      {
+        "id": "d2f29f64-8dfc-4d26-b955-36d2a9063aee",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T11:20:25.016Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:26.787Z"
+      },
+      {
+        "attemptId": "att_93fd0e7d",
+        "role": "planner",
+        "id": "d440bf74-c135-4e66-b2e2-969af6f6db9a",
+        "kind": "agent_queue",
+        "label": "planner chờ slot",
+        "startedAt": "2026-10-25T11:20:26.806Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:26.808Z"
+      },
+      {
+        "attemptId": "att_93fd0e7d",
+        "role": "planner",
+        "id": "eea165e2-2b03-482f-9cb6-9a477e0f6d52",
+        "kind": "agent",
+        "label": "planner (A)",
+        "startedAt": "2026-10-25T11:20:26.810Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:47.829Z"
+      },
+      {
+        "attemptId": "att_163b68b4",
+        "role": "author",
+        "id": "f3b8bf98-bb80-44c6-b537-dd5288ce9e72",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T11:20:47.997Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:47.999Z"
+      },
+      {
+        "attemptId": "att_163b68b4",
+        "role": "author",
+        "id": "24567101-9557-4ac8-8d78-48ee99f7eb7f",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T11:20:48.001Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:21:56.993Z"
+      },
+      {
+        "retryReason": "invalid_output",
+        "id": "615493cd-1bcc-4b7f-9cc7-55ca553f67eb",
+        "kind": "tool",
+        "label": "Author sửa kế hoạch ca một lần theo 9 lỗi kiểm tra; chưa duyệt hợp đồng.",
+        "startedAt": "2026-10-25T11:21:57.135Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:21:57.137Z"
+      },
+      {
+        "attemptId": "att_95ad5fc4",
+        "role": "author",
+        "id": "22cc6ea5-9ed7-48c4-b280-a68c6568a582",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T11:21:57.151Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:21:57.153Z"
+      },
+      {
+        "attemptId": "att_95ad5fc4",
+        "role": "author",
+        "id": "5d24cd04-3da5-4711-af43-6c55040c62a8",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T11:21:57.155Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:22:54.095Z"
+      },
+      {
+        "id": "6fde21e7-63eb-46cd-a5db-7dbcc209a8a9",
+        "kind": "approval",
+        "label": "awaiting_approval",
+        "startedAt": "2026-10-25T11:22:54.255Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:24:16.304Z"
+      },
+      {
+        "id": "833d93e0-bb9b-44dc-8f5b-47546dc00bee",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T11:24:16.304Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:24:16.308Z"
+      },
+      {
+        "id": "ff6770b0-196f-4e45-b6ae-33a689e7749a",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T11:24:16.306Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:27:48.405Z"
+      },
+      {
+        "id": "7cade0b0-e311-4a26-9003-02435a45ef34",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T11:24:16.313Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:24:17.433Z"
+      },
+      {
+        "attemptId": "att_9df170cb",
+        "role": "author",
+        "id": "cfc38b8c-e868-4dfb-9e4b-d2c32c34529e",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T11:24:17.454Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:24:17.456Z"
+      },
+      {
+        "attemptId": "att_9df170cb",
+        "role": "author",
+        "id": "7dda1d08-7215-4297-a68a-57bd8e11bd40",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T11:24:17.458Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:25:30.007Z"
+      },
+      {
+        "attemptId": "att_bbf3ca44",
+        "role": "developer",
+        "id": "9e0cf5fb-8fd7-48e9-99c9-b495f7f0d400",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T11:25:30.409Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:25:30.411Z"
+      },
+      {
+        "attemptId": "att_bbf3ca44",
+        "role": "developer",
+        "id": "86e35391-1b36-4b76-bf76-9c5dbf1999c9",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T11:25:30.413Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:26:33.932Z"
+      },
+      {
+        "id": "5cd4521c-9bfd-4d66-80d8-32ca562c85ee",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T11:26:34.269Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:26:35.439Z"
+      },
+      {
+        "id": "71ae1bc0-0d94-43c3-9631-5c2df7134ab7",
+        "kind": "mutation",
+        "label": "Kiểm tra khả năng bắt lỗi của test (tối đa 5 phút)",
+        "startedAt": "2026-10-25T11:26:35.473Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:27:33.746Z"
+      },
+      {
+        "attemptId": "att_522bfdf7",
+        "role": "verifier",
+        "id": "d82b9c76-e3b3-4286-b97d-2c46cfd5ed3e",
+        "kind": "agent_queue",
+        "label": "verifier chờ slot",
+        "startedAt": "2026-10-25T11:27:33.898Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:27:33.899Z"
+      },
+      {
+        "attemptId": "att_522bfdf7",
+        "role": "verifier",
+        "id": "7c948173-3f5b-4b97-8c5e-30031b080976",
+        "kind": "agent",
+        "label": "verifier (A)",
+        "startedAt": "2026-10-25T11:27:33.901Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:27:48.241Z"
+      },
+      {
+        "id": "0ebb275b-a5ce-4774-b146-6c683ad133a4",
+        "kind": "approval",
+        "label": "awaiting_acceptance",
+        "startedAt": "2026-10-25T11:27:48.400Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:28:38.368Z"
+      }
+    ],
+    "attemptsByRole": {
+      "planner": 1,
+      "author": 3,
+      "developer": 1,
+      "verifier": 1
+    },
+    "retries": [
+      {
+        "reason": "invalid_output",
+        "count": 1
+      }
+    ]
+  },
+  "budget": {
+    "capUsd": 10.8,
+    "spentUsd": 1.0269270000000001,
+    "estimated": true,
+    "phases": {
+      "prepare": {
+        "allocatedUsd": 2.16,
+        "spentUsd": 0.4134204
+      },
+      "implement": {
+        "allocatedUsd": 4.32,
+        "spentUsd": 0.5064636
+      },
+      "repair": {
+        "allocatedUsd": 1.08,
+        "spentUsd": 0
+      },
+      "verify": {
+        "allocatedUsd": 3.24,
+        "spentUsd": 0.107043
+      }
+    }
+  },
+  "delivery": {
+    "kind": "branch",
+    "target": "aidept/run_3973832e-A",
+    "status": "succeeded",
+    "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+    "contractVersion": 4,
+    "slot": "A",
+    "startedAt": "2026-10-25T11:28:38.081Z",
+    "endedAt": "2026-10-25T11:28:38.367Z",
+    "result": "Đã tạo branch aidept/run_3973832e-A trong repository gốc"
+  },
+  "attempts": 6,
+  "priorAttempts": 0
+}

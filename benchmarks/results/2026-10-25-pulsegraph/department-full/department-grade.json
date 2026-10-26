@@ -1,0 +1,518 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\pulsegraph-20261025\\workspaces\\run_dfd3d309-A\\src\\scheduler.js",
+  "at": "2026-10-25T08:30:54.937Z",
+  "passed": 75,
+  "failed": 0,
+  "total": 75,
+  "byGroup": {
+    "public-api": {
+      "passed": 1,
+      "total": 1
+    },
+    "time": {
+      "passed": 5,
+      "total": 5
+    },
+    "validation": {
+      "passed": 10,
+      "total": 10
+    },
+    "states": {
+      "passed": 1,
+      "total": 1
+    },
+    "dependencies": {
+      "passed": 10,
+      "total": 10
+    },
+    "ordering": {
+      "passed": 3,
+      "total": 3
+    },
+    "lease": {
+      "passed": 10,
+      "total": 10
+    },
+    "aliasing": {
+      "passed": 4,
+      "total": 4
+    },
+    "retry": {
+      "passed": 8,
+      "total": 8
+    },
+    "cancel": {
+      "passed": 5,
+      "total": 5
+    },
+    "history": {
+      "passed": 1,
+      "total": 1
+    },
+    "snapshot": {
+      "passed": 4,
+      "total": 4
+    },
+    "ids": {
+      "passed": 1,
+      "total": 1
+    },
+    "stateful": {
+      "passed": 12,
+      "total": 12
+    }
+  },
+  "results": [
+    {
+      "id": "D01-empty-defaults",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 1.1792999999999978
+    },
+    {
+      "id": "D02-custom-options",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.06790000000000163
+    },
+    {
+      "id": "D03-invalid-options--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.5870999999999995
+    },
+    {
+      "id": "D03-invalid-options-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.052599999999998204
+    },
+    {
+      "id": "D03-invalid-options-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.06799999999999784
+    },
+    {
+      "id": "D03-invalid-options-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.017799999999994043
+    },
+    {
+      "id": "D04-submit-ready",
+      "group": "states",
+      "status": "PASSED",
+      "ms": 0.3108000000000004
+    },
+    {
+      "id": "D05-submit-waits-for-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.1938999999999993
+    },
+    {
+      "id": "D06-completion-readies-child",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.2734999999999985
+    },
+    {
+      "id": "D07-transitive-readiness",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.1687999999999974
+    },
+    {
+      "id": "D08-unknown-dependency-atomic",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.1389999999999958
+    },
+    {
+      "id": "D09-invalid-dependency-list",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.1717000000000013
+    },
+    {
+      "id": "D10-existing-job-id",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.10889999999999844
+    },
+    {
+      "id": "D11-invalid-job-scalars",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.11899999999999977
+    },
+    {
+      "id": "D12-priority-descending",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.1640999999999977
+    },
+    {
+      "id": "D13-fifo-within-priority",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.0519999999999996
+    },
+    {
+      "id": "D14-negative-priorities",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.06449999999999534
+    },
+    {
+      "id": "D15-claim-increments-token-and-attempt",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.031399999999997874
+    },
+    {
+      "id": "D16-global-fencing-token",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.08559999999999945
+    },
+    {
+      "id": "D17-renew-extends",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.2845000000000013
+    },
+    {
+      "id": "D18-renew-does-not-shorten",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.06940000000000168
+    },
+    {
+      "id": "D19-wrong-worker-loses-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.10079999999999956
+    },
+    {
+      "id": "D20-wrong-token-loses-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.10309999999999775
+    },
+    {
+      "id": "D21-boundary-expires-before-return",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.24969999999999715
+    },
+    {
+      "id": "D22-lease-remains-current-before-boundary",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.08249999999999602
+    },
+    {
+      "id": "D23-complete-detaches-result",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.12539999999999907
+    },
+    {
+      "id": "D24-success-unblocks-dependent",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.14650000000000318
+    },
+    {
+      "id": "D25-fail-retry-base-delay",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.18829999999999814
+    },
+    {
+      "id": "D26-exponential-retry-delay",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.11260000000000048
+    },
+    {
+      "id": "D27-attempt-limit-includes-first-claim",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.07490000000000663
+    },
+    {
+      "id": "D28-expiry-boundary-retries",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.125
+    },
+    {
+      "id": "D29-expiry-order-deadline-then-sequence",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.9393000000000029
+    },
+    {
+      "id": "D30-expiry-exhausts-to-dead",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.11980000000000501
+    },
+    {
+      "id": "D31-expiry-blocks-descendants",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.08720000000000283
+    },
+    {
+      "id": "D32-failure-does-not-yet-block-child",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.0818000000000012
+    },
+    {
+      "id": "D33-exhausted-failure-blocks-transitively",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.10609999999999786
+    },
+    {
+      "id": "D34-blockedBy-uses-first-failed-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.11890000000000356
+    },
+    {
+      "id": "D35-cancel-ready-blocks-child",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.05169999999999675
+    },
+    {
+      "id": "D36-cancel-waiting-blocks-transitive",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.06169999999999476
+    },
+    {
+      "id": "D37-cancel-leased-invalidates-token",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.10560000000000258
+    },
+    {
+      "id": "D38-cancel-terminal-is-error",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.06839999999999691
+    },
+    {
+      "id": "D39-cancel-unknown-is-error",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.04919999999999902
+    },
+    {
+      "id": "D40-unknown-get-is-error",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.026299999999999102
+    },
+    {
+      "id": "D41-duplicate-id-after-cancel",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.047699999999998965
+    },
+    {
+      "id": "D42-invalid-time-does-not-mutate",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.08169999999999789
+    },
+    {
+      "id": "D43-same-time-advance-no-double-expiry",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.07090000000000174
+    },
+    {
+      "id": "D44-advance-without-expiry-updates-time",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.030000000000001137
+    },
+    {
+      "id": "D45-snapshot-restores-live-lease",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.18350000000000222
+    },
+    {
+      "id": "D46-restored-claim-token-never-repeats",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.09029999999999916
+    },
+    {
+      "id": "D47-restores-delayed-retry",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.1168000000000049
+    },
+    {
+      "id": "D48-original-and-restored-are-independent",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.06680000000000064
+    },
+    {
+      "id": "D49-snapshot-and-view-are-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.04999999999999716
+    },
+    {
+      "id": "D50-input-dependencies-are-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.0449999999999946
+    },
+    {
+      "id": "D51-get-result-is-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.08099999999999596
+    },
+    {
+      "id": "D52-special-string-IDs",
+      "group": "ids",
+      "status": "PASSED",
+      "ms": 0.04679999999999751
+    },
+    {
+      "id": "D53-expired-matching-lease-before-advance",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.12340000000000373
+    },
+    {
+      "id": "D54-claim-never-overrides-live-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.028599999999997294
+    },
+    {
+      "id": "D55-retry-clears-active-lease-and-preserves-error",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.05269999999999442
+    },
+    {
+      "id": "D56-completion-clears-last-error",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.07890000000000441
+    },
+    {
+      "id": "D57-claim-does-not-expire-implicitly",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.04129999999999967
+    },
+    {
+      "id": "D58-submit-from-already-done-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.04840000000000089
+    },
+    {
+      "id": "D59-submit-from-dead-dependency-is-blocked",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.04910000000000281
+    },
+    {
+      "id": "D60-fail-rejects-empty-error",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.07500000000000284
+    },
+    {
+      "id": "T01-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 29.900000000000006
+    },
+    {
+      "id": "T02-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 23.810699999999997
+    },
+    {
+      "id": "T03-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 13.009900000000002
+    },
+    {
+      "id": "T04-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 10.040299999999988
+    },
+    {
+      "id": "T05-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.239799999999974
+    },
+    {
+      "id": "T06-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 17.5762
+    },
+    {
+      "id": "T07-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 14.305199999999985
+    },
+    {
+      "id": "T08-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 8.673100000000005
+    },
+    {
+      "id": "T09-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 9.9315
+    },
+    {
+      "id": "T10-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 14.369199999999978
+    },
+    {
+      "id": "T11-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 8.934000000000026
+    },
+    {
+      "id": "T12-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 14.378599999999977
+    }
+  ]
+}

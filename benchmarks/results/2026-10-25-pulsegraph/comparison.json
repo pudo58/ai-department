@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-25T07:40:50.964Z",
+  "protocol": {
+    "schemaVersion": 1,
+    "lockedAt": "2026-10-25T07:34:12.706Z",
+    "task": "PulseGraph",
+    "base": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\pulsegraph-20261025\\base",
+    "baseSha": "64ab45c3819ea857e420355566e0acefed89ffd6",
+    "specHash": "6039a7dc2603758ad1ca389ab5212655645e1f8ac8a51fff443a948a93a4aa98",
+    "graderHash": "9d18872567fc728bba3c4dd223d5b4b0ee0f9042651b4d421b3ac71d29dace00",
+    "referenceHash": "38cab74a28794c809ce456e59693bdd3de290dcacb5064f35eb34b66d8f880cf",
+    "sourceManifestHash": "72589ff15de7c3678276be71208a1bf4eaf489aac73a99cca31364bcb73676b6",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "arms": [
+      "department",
+      "single"
+    ],
+    "singleMeans": "AI Department Single mode: Planner plus one implementation/self-review agent, no independent Author or Verifier",
+    "effectiveCapUsd": 10.8,
+    "baseBudget": {
+      "department": 6,
+      "single": 10.8
+    },
+    "automatedLimitMs": 1800000,
+    "repetitions": 1,
+    "policy": "Sequential; same scaffold, SPEC, tools and effective budget. No model retry, source/test/schema rescue or hidden-grader feedback. Human contract/test-repair decisions are recorded with hashes. Grade any implementation even if pipeline blocks. No acceptance/delivery. Grader outside workspaces; no sibling access.",
+    "auditHash": "af19c600798e9f6ab7d4ceb101277fb87801b8457214267cba1411b1a8576c28",
+    "setupHash": "3e4b4da126fff670741581ed31e11382d6e4c2f5b6af716b62805a74b79fe906"
+  },
+  "audit": {
+    "schemaVersion": 1,
+    "at": "2026-10-25T07:34:29.892Z",
+    "oracleSelfCheck": {
+      "passed": 75,
+      "total": 75
+    },
+    "unimplementedScaffold": {
+      "passed": 0,
+      "failed": 75,
+      "total": 75
+    },
+    "mutants": [
+      {
+        "name": "broken-expiry-boundary",
+        "expectedFailure": "D21-boundary-expires-before-return",
+        "caught": true,
+        "passed": 62,
+        "failed": 13,
+        "total": 75
+      },
+      {
+        "name": "broken-exponential-retry",
+        "expectedFailure": "D26-exponential-retry-delay",
+        "caught": true,
+        "passed": 72,
+        "failed": 3,
+        "total": 75
+      }
+    ]
+  },
+  "summaries": [
+    {
+      "arm": "department",
+      "runId": "run_dfd3d309",
+      "url": "http://127.0.0.1:14342/#/run/run_dfd3d309",
+      "status": "awaiting_approval",
+      "blocker": null,
+      "candidateProduced": false,
+      "grade": null,
+      "startedAt": "2026-10-25T07:35:22.032Z",
+      "endedAt": "2026-10-25T07:37:15.305Z",
+      "automaticMs": 112243,
+      "waitingMs": 167,
+      "attemptCount": 3,
+      "roles": {
+        "planner": 1,
+        "author": 2
+      },
+      "models": [
+        "gpt-6-luna"
+      ],
+      "inputTokens": 66075,
+      "cachedTokens": 35328,
+      "outputTokens": 14141,
+      "estimatedUsd": 0.31495439999999997,
+      "interventions": [],
+      "checks": [],
+      "contractProblems": [
+        "Nhóm Quyền truy cập khai báo mâu thuẫn hoặc trùng."
+      ],
+      "qualityPolicyVersion": 2,
+      "mutation": null,
+      "candidatePath": null
+    },
+    {
+      "arm": "single",
+      "runId": "run_2419cf0c",
+      "url": "http://127.0.0.1:14342/#/run/run_2419cf0c",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "candidateProduced": true,
+      "grade": {
+        "passed": 58,
+        "total": 75,
+        "score": 77.33333333333333,
+        "byGroup": {
+          "public-api": {
+            "passed": 0,
+            "total": 1
+          },
+          "time": {
+            "passed": 5,
+            "total": 5
+          },
+          "validation": {
+            "passed": 7,
+            "total": 10
+          },
+          "states": {
+            "passed": 0,
+            "total": 1
+          },
+          "dependencies": {
+            "passed": 10,
+            "total": 10
+          },
+          "ordering": {
+            "passed": 3,
+            "total": 3
+          },
+          "lease": {
+            "passed": 10,
+            "total": 10
+          },
+          "aliasing": {
+            "passed": 4,
+            "total": 4
+          },
+          "retry": {
+            "passed": 8,
+            "total": 8
+          },
+          "cancel": {
+            "passed": 5,
+            "total": 5
+          },
+          "history": {
+            "passed": 1,
+            "total": 1
+          },
+          "snapshot": {
+            "passed": 4,
+            "total": 4
+          },
+          "ids": {
+            "passed": 1,
+            "total": 1
+          },
+          "stateful": {
+            "passed": 0,
+            "total": 12
+          }
+        },
+        "failures": [
+          {
+            "id": "D01-empty-defaults",
+            "group": "public-api",
+            "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:19:119\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:19:1"
+          },
+          {
+            "id": "D03-invalid-options-INVALID_TIME--1",
+            "group": "validation",
+            "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'INVALID_INPUT'\n- 'INVALID_TIME'\n           ^\n\n    at expectCode (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:15:137)"
+          },
+          {
+            "id": "D03-invalid-options-INVALID_TIME-1.5",
+            "group": "validation",
+            "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'INVALID_INPUT'\n- 'INVALID_TIME'\n           ^\n\n    at expectCode (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:15:137)"
+          },
+          {
+            "id": "D04-submit-ready",
+            "group": "states",
+            "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    attempt: 0,\n    availableAt: 0,\n    dependsOn: [],\n    id: 'a',\n    priority: 0,\n+   sequence: 0,\n-   sequence: 1,\n    status: 'ready'\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:22:79\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:22:1"
+          },
+          {
+            "id": "D60-fail-rejects-empty-error",
+            "group": "validation",
+            "error": "AssertionError [ERR_ASSERTION]: expected an Error\n    at expectCode (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:15:79)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:78:131\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:78:1"
+          },
+          {
+            "id": "T01-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=1 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T02-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=2 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 2,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T03-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=3 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T04-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=4 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T05-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=5 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T06-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=6 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T07-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=7 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T08-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=8 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T09-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=9 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T10-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=10 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T11-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: state seed=11 step=0\n+ actual - expected\n\n  {\n    jobs: [],\n    maxAttempts: 3,\n+   nextSequence: 0,\n-   nextSequence: 1,\n    nextToken: 1,\n    now: 0,\n    retryBase: 2,\n    schemaVersion: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          },
+          {
+            "id": "T12-100-step-trace",
+            "group": "stateful",
+            "error": "AssertionError [ERR_ASSERTION]: seed=12 step=0 method=submit\n+ actual - expected\n\n  {\n    value: {\n      attempt: 0,\n      availableAt: 0,\n      dependsOn: [],\n      id: 's12-0',\n      priority: 1,\n+     sequence: 0,\n-     sequence: 1,\n      status: 'ready'\n    }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:80\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+          }
+        ]
+      },
+      "startedAt": "2026-10-25T07:37:15.499Z",
+      "endedAt": "2026-10-25T07:40:41.803Z",
+      "automaticMs": 169947,
+      "waitingMs": 35104,
+      "attemptCount": 3,
+      "roles": {
+        "planner": 1,
+        "developer": 2
+      },
+      "models": [
+        "gpt-6-luna"
+      ],
+      "inputTokens": 886472,
+      "cachedTokens": 828032,
+      "outputTokens": 18394,
+      "estimatedUsd": 0.6996396,
+      "interventions": [
+        {
+          "type": "contract_review",
+          "contractHash": "6d133283b1f0db8cc2e3519a51eeaa36692a5629a0dfb0b18d5657eb08af3714",
+          "approve": true,
+          "acknowledgeWarnings": true,
+          "reason": "Đã đối chiếu hợp đồng với SPEC đã khóa; tiêu chí và ca nghiệm thu nhất quán, giả định đều nêu rõ phạm vi.",
+          "at": "2026-10-25T07:38:14.115Z"
+        }
+      ],
+      "checks": [],
+      "contractProblems": [],
+      "qualityPolicyVersion": null,
+      "mutation": null,
+      "candidatePath": "candidate-single"
+    }
+  ],
+  "limitations": [
+    "Một task tổng hợp và một lượt cho mỗi nhánh; chưa đủ để kết luận độ tin cậy chung.",
+    "Nhánh Single là chế độ Single trong AI Department: một luồng lập kế hoạch/triển khai/tự soát theo policy ứng dụng.",
+    "Bộ chấm có 75 ca định hướng và 12 trace stateful cố định, không chứng minh đúng tuyệt đối.",
+    "Chi phí là ước lượng của ứng dụng, không phải hóa đơn API độc lập.",
+    "Không có code thì ghi không chấm code, không tự gán điểm 0.",
+    "Mọi lần duyệt hợp đồng hoặc sửa test được ghi là can thiệp; grader không được đưa cho model.",
+    "Không nghiệm thu hoặc giao kết quả tự động."
+  ],
+  "scoreAudit": {
+    "originalLockedScore": "58/75",
+    "originalScoreValid": false,
+    "specAlignedSupplement": "75/75",
+    "referenceSupplement": "75/75",
+    "explanation": "The original grader asserted unspecified sequence offsets and error details. The spec-aligned supplement changes no candidate code and preserves the locked original grader and score."
+  }
+}

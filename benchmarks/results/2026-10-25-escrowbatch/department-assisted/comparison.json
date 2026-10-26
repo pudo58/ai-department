@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-25T03:10:35.375Z",
+  "runId": "run_8cb7d7c4",
+  "status": "blocked",
+  "checkpoint": "770cc726b8e23b3323299ffe0a4b58ea5faa8382",
+  "assisted": true,
+  "blindBenchmark": false,
+  "grade": {
+    "passed": 65,
+    "total": 65
+  },
+  "internal": {
+    "passed": 11,
+    "failed": 16,
+    "skipped": 0
+  },
+  "attempts": 6,
+  "roles": {
+    "planner": 1,
+    "author": 4,
+    "developer": 1
+  },
+  "automaticMs": 326747,
+  "totalInput": 1016057,
+  "totalOutput": 35096,
+  "estimatedUsd": 1.1630141999999999,
+  "blocker": "Chẩn đoán Author không hợp lệ; giữ test đã khóa và dừng để xem xét.",
+  "mutation": null,
+  "verifierRan": false,
+  "operatorChanges": [
+    "Repaired seven test-plan validation defects",
+    "Requested one additional Author attempt after deleting protected scaffold test; no scope relaxation",
+    "No implementation source edits, no assertion weakening, no locked test edits"
+  ],
+  "diagnosis": "Author tests eagerly call synchronous throwing API before awaiting/rejection helper; SPEC allows synchronous APIs. Diagnosis output raw JSON lacks required fenced block and is rejected; do not reset bounded diagnosis marker.",
+  "originalBenchmarkUnchanged": true
+}

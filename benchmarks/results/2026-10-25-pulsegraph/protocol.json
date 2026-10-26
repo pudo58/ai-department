@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "lockedAt": "2026-10-25T07:34:12.706Z",
+  "task": "PulseGraph",
+  "base": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\pulsegraph-20261025\\base",
+  "baseSha": "64ab45c3819ea857e420355566e0acefed89ffd6",
+  "specHash": "6039a7dc2603758ad1ca389ab5212655645e1f8ac8a51fff443a948a93a4aa98",
+  "graderHash": "9d18872567fc728bba3c4dd223d5b4b0ee0f9042651b4d421b3ac71d29dace00",
+  "referenceHash": "38cab74a28794c809ce456e59693bdd3de290dcacb5064f35eb34b66d8f880cf",
+  "sourceManifestHash": "72589ff15de7c3678276be71208a1bf4eaf489aac73a99cca31364bcb73676b6",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "arms": [
+    "department",
+    "single"
+  ],
+  "singleMeans": "AI Department Single mode: Planner plus one implementation/self-review agent, no independent Author or Verifier",
+  "effectiveCapUsd": 10.8,
+  "baseBudget": {
+    "department": 6,
+    "single": 10.8
+  },
+  "automatedLimitMs": 1800000,
+  "repetitions": 1,
+  "policy": "Sequential; same scaffold, SPEC, tools and effective budget. No model retry, source/test/schema rescue or hidden-grader feedback. Human contract/test-repair decisions are recorded with hashes. Grade any implementation even if pipeline blocks. No acceptance/delivery. Grader outside workspaces; no sibling access.",
+  "auditHash": "af19c600798e9f6ab7d4ceb101277fb87801b8457214267cba1411b1a8576c28",
+  "setupHash": "3e4b4da126fff670741581ed31e11382d6e4c2f5b6af716b62805a74b79fe906"
+}

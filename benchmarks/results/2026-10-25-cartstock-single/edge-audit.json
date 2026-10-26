@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T13:41:52.759Z",
+  "purpose": "Post-run source-informed diagnostic; added after seeing code. Separate from the frozen 64-case grader, not a held-out score or fair additional benchmark cohort.",
+  "basis": "SPEC clause 1: invalid shapes/scalars throw Error with code INVALID. These probes interpret invalid outer option/request shapes as covered by that clause. No unrelated otherwise-valid command field is varied.",
+  "notFedToAgents": true,
+  "rows": [
+    {
+      "arm": "department",
+      "runId": "run_3973832e",
+      "name": "null-options",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "Expected stockroom options"
+      }
+    },
+    {
+      "arm": "department",
+      "runId": "run_3973832e",
+      "name": "null-stock",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "Expected an object map"
+      }
+    },
+    {
+      "arm": "department",
+      "runId": "run_3973832e",
+      "name": "null-reserve",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "Expected reservation object"
+      }
+    },
+    {
+      "arm": "department",
+      "runId": "run_3973832e",
+      "name": "null-amend",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "Expected command object"
+      }
+    },
+    {
+      "arm": "department",
+      "runId": "run_3973832e",
+      "name": "null-confirm",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "Expected command object"
+      }
+    },
+    {
+      "arm": "department",
+      "runId": "run_3973832e",
+      "name": "null-cancel",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "Expected command object"
+      }
+    },
+    {
+      "arm": "department",
+      "runId": "run_3973832e",
+      "name": "null-get",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "Invalid reservation ID"
+      }
+    },
+    {
+      "arm": "single",
+      "runId": "run_24c7854e",
+      "name": "null-options",
+      "expectedCode": "INVALID",
+      "status": "failed",
+      "actual": {
+        "name": "TypeError",
+        "code": null,
+        "message": "Cannot destructure property 'stock' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+      }
+    },
+    {
+      "arm": "single",
+      "runId": "run_24c7854e",
+      "name": "null-stock",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "INVALID"
+      }
+    },
+    {
+      "arm": "single",
+      "runId": "run_24c7854e",
+      "name": "null-reserve",
+      "expectedCode": "INVALID",
+      "status": "failed",
+      "actual": {
+        "name": "TypeError",
+        "code": null,
+        "message": "Cannot destructure property 'id' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+      }
+    },
+    {
+      "arm": "single",
+      "runId": "run_24c7854e",
+      "name": "null-amend",
+      "expectedCode": "INVALID",
+      "status": "failed",
+      "actual": {
+        "name": "TypeError",
+        "code": null,
+        "message": "Cannot destructure property 'id' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+      }
+    },
+    {
+      "arm": "single",
+      "runId": "run_24c7854e",
+      "name": "null-confirm",
+      "expectedCode": "INVALID",
+      "status": "failed",
+      "actual": {
+        "name": "TypeError",
+        "code": null,
+        "message": "Cannot destructure property 'id' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+      }
+    },
+    {
+      "arm": "single",
+      "runId": "run_24c7854e",
+      "name": "null-cancel",
+      "expectedCode": "INVALID",
+      "status": "failed",
+      "actual": {
+        "name": "TypeError",
+        "code": null,
+        "message": "Cannot destructure property 'id' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+      }
+    },
+    {
+      "arm": "single",
+      "runId": "run_24c7854e",
+      "name": "null-get",
+      "expectedCode": "INVALID",
+      "status": "passed",
+      "actual": {
+        "name": "Error",
+        "code": "INVALID",
+        "message": "INVALID"
+      }
+    }
+  ]
+}

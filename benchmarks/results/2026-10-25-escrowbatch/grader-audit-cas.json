@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\test-results\\2026-10-25-escrowbatch\\audit-broken-cas.mjs",
+  "at": "2026-10-25T02:52:34.529Z",
+  "passed": 46,
+  "failed": 19,
+  "total": 65,
+  "score": 70.8,
+  "byGroup": {
+    "public-api": {
+      "passed": 2,
+      "total": 2
+    },
+    "time": {
+      "passed": 6,
+      "total": 6
+    },
+    "money": {
+      "passed": 3,
+      "total": 3
+    },
+    "holds": {
+      "passed": 5,
+      "total": 5
+    },
+    "boundary": {
+      "passed": 1,
+      "total": 1
+    },
+    "history": {
+      "passed": 6,
+      "total": 6
+    },
+    "errors": {
+      "passed": 1,
+      "total": 1
+    },
+    "atomicity": {
+      "passed": 5,
+      "total": 5
+    },
+    "validation": {
+      "passed": 10,
+      "total": 10
+    },
+    "revision": {
+      "passed": 2,
+      "total": 2
+    },
+    "idempotency": {
+      "passed": 1,
+      "total": 5
+    },
+    "aliasing": {
+      "passed": 2,
+      "total": 4
+    },
+    "snapshot": {
+      "passed": 2,
+      "total": 3
+    },
+    "stateful": {
+      "passed": 0,
+      "total": 12
+    }
+  },
+  "results": [
+    {
+      "id": "D01-initial-state",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.6833999999999989
+    },
+    {
+      "id": "D02-initial-time",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.10679999999999978
+    },
+    {
+      "id": "D03-transfer",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.36430000000000007
+    },
+    {
+      "id": "D04-reserve-does-not-debit",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.18189999999999884
+    },
+    {
+      "id": "D05-exact-available",
+      "group": "boundary",
+      "status": "PASSED",
+      "ms": 0.09629999999999939
+    },
+    {
+      "id": "D06-held-funds-block-transfer",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.23019999999999996
+    },
+    {
+      "id": "D07-partial-settle-releases-remainder",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.21100000000000207
+    },
+    {
+      "id": "D08-full-settle",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.09009999999999962
+    },
+    {
+      "id": "D09-release",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.10759999999999792
+    },
+    {
+      "id": "D10-closed-settle",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.1313999999999993
+    },
+    {
+      "id": "D10-closed-release",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.5507999999999988
+    },
+    {
+      "id": "D10-closed-reserve",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.10770000000000124
+    },
+    {
+      "id": "D11-unknown-hold",
+      "group": "errors",
+      "status": "PASSED",
+      "ms": 0.06659999999999755
+    },
+    {
+      "id": "D12-excess-settle-leaves-hold-live",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.12140000000000128
+    },
+    {
+      "id": "D13-expiry-exact-boundary",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.10620000000000118
+    },
+    {
+      "id": "D14-many-expiries-one-revision",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.05760000000000076
+    },
+    {
+      "id": "D15-mixed-expiries",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.08530000000000015
+    },
+    {
+      "id": "D16-time-without-expiry",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.03819999999999979
+    },
+    {
+      "id": "D17-invalid-time--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.04320000000000235
+    },
+    {
+      "id": "D17-invalid-time-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.015100000000000335
+    },
+    {
+      "id": "D17-invalid-time-NaN",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.02319999999999922
+    },
+    {
+      "id": "D18-time-cannot-rewind",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.033600000000003405
+    },
+    {
+      "id": "D19-expired-release",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.07890000000000086
+    },
+    {
+      "id": "D19-expired-settle",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.052300000000002456
+    },
+    {
+      "id": "D20-expired-ID-not-reusable",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.06590000000000273
+    },
+    {
+      "id": "D21-ordered-provisional-effects",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.13039999999999807
+    },
+    {
+      "id": "D22-rollback-all-ops",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.17449999999999832
+    },
+    {
+      "id": "D23-rollback-does-not-consume-IDs",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.11160000000000281
+    },
+    {
+      "id": "D24-rollback-terminal-status",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.13600000000000279
+    },
+    {
+      "id": "D25-revision-CAS",
+      "group": "revision",
+      "status": "PASSED",
+      "ms": 0.1075000000000017
+    },
+    {
+      "id": "D26-zero-net-batch-increments-once",
+      "group": "revision",
+      "status": "PASSED",
+      "ms": 0.061700000000001864
+    },
+    {
+      "id": "D27-self-transfer-validates-available",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.1203000000000003
+    },
+    {
+      "id": "D28-self-settle",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.0799999999999983
+    },
+    {
+      "id": "D29-replay-precedes-CAS",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.10879999999999868,
+      "error": "Error: wrong CAS precedence\n    at Object.apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/audit-broken-cas.mjs:2:96)\n    at apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:16:45)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:49:203\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:49:1"
+    },
+    {
+      "id": "D30-id-conflict-precedes-CAS",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.642199999999999,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'REVISION_CONFLICT'\n- 'IDEMPOTENCY_CONFLICT'\n\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:19:117)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:50:121\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:50:1"
+    },
+    {
+      "id": "D31-key-order-independent-replay",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.1065999999999967,
+      "error": "Error: wrong CAS precedence\n    at Object.apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/audit-broken-cas.mjs:2:96)\n    at apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:16:45)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:51:147\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:51:1"
+    },
+    {
+      "id": "D32-array-order-matters",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.49950000000000117
+    },
+    {
+      "id": "D33-replay-does-not-resurrect-expired-hold",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.08149999999999835,
+      "error": "Error: wrong CAS precedence\n    at Object.apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/audit-broken-cas.mjs:2:96)\n    at apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:16:45)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:53:176\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:53:1"
+    },
+    {
+      "id": "D34-request-detached",
+      "group": "aliasing",
+      "status": "FAILED",
+      "ms": 0.09679999999999822,
+      "error": "Error: wrong CAS precedence\n    at Object.apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/audit-broken-cas.mjs:2:96)\n    at apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:16:45)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:54:168\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:54:1"
+    },
+    {
+      "id": "D35-result-detached",
+      "group": "aliasing",
+      "status": "FAILED",
+      "ms": 0.15759999999999863,
+      "error": "Error: wrong CAS precedence\n    at Object.apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/audit-broken-cas.mjs:2:96)\n    at apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:16:45)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:55:151\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:55:1"
+    },
+    {
+      "id": "D36-inspect-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.0998999999999981
+    },
+    {
+      "id": "D37-snapshot-roundtrip",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.14120000000000132
+    },
+    {
+      "id": "D38-restored-replay-and-closed-history",
+      "group": "snapshot",
+      "status": "FAILED",
+      "ms": 0.13160000000000238,
+      "error": "Error: wrong CAS precedence\n    at Object.apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/audit-broken-cas.mjs:2:96)\n    at apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:16:45)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:58:260\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:58:1"
+    },
+    {
+      "id": "D39-restored-expired-history",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.12109999999999843
+    },
+    {
+      "id": "D40-snapshot-and-restore-independent",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.12239999999999895
+    },
+    {
+      "id": "D41-invalid-amount-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.10579999999999856
+    },
+    {
+      "id": "D41-invalid-amount--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.05099999999999838
+    },
+    {
+      "id": "D41-invalid-amount-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.045999999999999375
+    },
+    {
+      "id": "D42-invalid-ttl-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.079699999999999
+    },
+    {
+      "id": "D42-invalid-ttl--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.029299999999999216
+    },
+    {
+      "id": "D42-invalid-ttl-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.025500000000000966
+    },
+    {
+      "id": "D43-unknown-account",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.12140000000000484
+    },
+    {
+      "id": "D44-special-IDs",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.1822000000000017
+    },
+    {
+      "id": "T01-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 3.4769000000000005,
+      "error": "AssertionError [ERR_ASSERTION]: request step25: {\"id\":\"q11\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"reserve\",\"hold\":\"h3\",\"account\":\"a\",\"amount\":26,\"ttl\":1}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 3\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T02-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.2781999999999982,
+      "error": "AssertionError [ERR_ASSERTION]: request step1: {\"id\":\"q0\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"reserve\",\"hold\":\"h4\",\"account\":\"b\",\"amount\":47,\"ttl\":6}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 1\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T03-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.9087000000000032,
+      "error": "AssertionError [ERR_ASSERTION]: request step11: {\"id\":\"q3\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"transfer\",\"from\":\"b\",\"to\":\"c\",\"amount\":37}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 2\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T04-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 1.3128000000000029,
+      "error": "AssertionError [ERR_ASSERTION]: request step15: {\"id\":\"q0\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"reserve\",\"hold\":\"h1\",\"account\":\"a\",\"amount\":9,\"ttl\":6}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 1\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T05-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 4.531799999999997,
+      "error": "AssertionError [ERR_ASSERTION]: request step45: {\"id\":\"q17\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"reserve\",\"hold\":\"h0\",\"account\":\"b\",\"amount\":27,\"ttl\":4}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 7\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T06-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.9512,
+      "error": "AssertionError [ERR_ASSERTION]: request step14: {\"id\":\"q10\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"reserve\",\"hold\":\"h4\",\"account\":\"c\",\"amount\":25,\"ttl\":2}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 4\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T07-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 4.459000000000003,
+      "error": "AssertionError [ERR_ASSERTION]: request step44: {\"id\":\"q9\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"transfer\",\"from\":\"b\",\"to\":\"a\",\"amount\":15}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 3\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T08-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.36059999999999803,
+      "error": "AssertionError [ERR_ASSERTION]: request step3: {\"id\":\"q1\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"reserve\",\"hold\":\"h9\",\"account\":\"b\",\"amount\":48,\"ttl\":1}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 2\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T09-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 10.691200000000002,
+      "error": "AssertionError [ERR_ASSERTION]: request step84: {\"id\":\"q19\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"transfer\",\"from\":\"b\",\"to\":\"c\",\"amount\":40}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 8\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T10-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 1.744099999999996,
+      "error": "AssertionError [ERR_ASSERTION]: request step19: {\"id\":\"q11\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"transfer\",\"from\":\"b\",\"to\":\"b\",\"amount\":10}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 9\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T11-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.38410000000000366,
+      "error": "AssertionError [ERR_ASSERTION]: request step5: {\"id\":\"q3\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"reserve\",\"hold\":\"h10\",\"account\":\"c\",\"amount\":6,\"ttl\":3}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 1\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T12-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.17949999999999733,
+      "error": "AssertionError [ERR_ASSERTION]: request step4: {\"id\":\"q0\",\"expectedRevision\":-1,\"ops\":[{\"type\":\"reserve\",\"hold\":\"h4\",\"account\":\"b\",\"amount\":11,\"ttl\":6}]}\n+ actual - expected\n\n  {\n+   error: 'REVISION_CONFLICT'\n-   value: {\n-     revision: 1\n-   }\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:81:14\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "lockedAt": "2026-10-25T10:47:33.033Z",
+  "task": "CartStock",
+  "base": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\base",
+  "baseSha": "deed43127fd6d0dc806bbe5a0852ecb540ae2553",
+  "files": {
+    "SPEC.md": "e214b58b3f2e1699eb33b984f559ae02cc2a698817391e6acbb9ba4e0b353923",
+    "grade.mjs": "50f40e9ebc69d9d5e99f465d865f47822fd7c94f275249b2b5fb7277f1154209",
+    "reference.mjs": "1575df734bfd993c5cd5f85871453a48aae42c1e60d91c1e47708c55921de185",
+    "grader-audit.json": "7b18c7a2cef7486d1997dc1618195421e81b669d5f9fcd615c2ceb3718bc9624",
+    "setup.mjs": "afc699a9f81a2ea39a81f40d300dba7c47a2f14f272041e73f008b54c01660be",
+    "controller.mjs": "601dae8aaf161d734a85055459f1765c791cd4d94ca32134c2a0e8175d47d41b",
+    "source-manifest.json": "c81ad1aee51349c3ac60ad2078790c2504245ba3473f34edd333fd00b7ac029f"
+  },
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "qualityPolicyVersion": 3,
+  "effectiveBudgetUsd": 10.8,
+  "automaticLimitMs": 1800000,
+  "repetitions": 1,
+  "policy": "One real Department Verify run. Existing uncommitted product source frozen and copied before first model call. Human delegated contract/test-repair/finding/acceptance decisions retained with hashes. No manual source/test edits, hidden grader feedback, arbitrary model retries, dependency changes or post-launch grader changes. Grade any developer candidate even if pipeline blocks. External grader is inaccessible to agent workspace by task policy. Delivery only local branch after public checks and external grading pass. Results do not establish comparative superiority or bug-free software."
+}

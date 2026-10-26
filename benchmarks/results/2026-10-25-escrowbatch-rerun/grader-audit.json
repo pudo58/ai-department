@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-25T02:53:47.008Z",
+  "directedCases": 53,
+  "statefulTraces": 12,
+  "stepsPerTrace": 100,
+  "selfCheck": {
+    "passed": 65,
+    "total": 65
+  },
+  "brokenCAS": {
+    "failed": 19,
+    "caught": [
+      "D29-replay-precedes-CAS",
+      "D30-id-conflict-precedes-CAS",
+      "D31-key-order-independent-replay",
+      "D33-replay-does-not-resurrect-expired-hold",
+      "D34-request-detached",
+      "D35-result-detached",
+      "D38-restored-replay-and-closed-history",
+      "T01-100-step-trace",
+      "T02-100-step-trace",
+      "T03-100-step-trace",
+      "T04-100-step-trace",
+      "T05-100-step-trace",
+      "T06-100-step-trace",
+      "T07-100-step-trace",
+      "T08-100-step-trace",
+      "T09-100-step-trace",
+      "T10-100-step-trace",
+      "T11-100-step-trace",
+      "T12-100-step-trace"
+    ]
+  },
+  "brokenExpiry": {
+    "failed": 15,
+    "caught": [
+      "D13-expiry-exact-boundary",
+      "D16-time-without-expiry",
+      "D17-invalid-time--1",
+      "T01-100-step-trace",
+      "T02-100-step-trace",
+      "T03-100-step-trace",
+      "T04-100-step-trace",
+      "T05-100-step-trace",
+      "T06-100-step-trace",
+      "T07-100-step-trace",
+      "T08-100-step-trace",
+      "T09-100-step-trace",
+      "T10-100-step-trace",
+      "T11-100-step-trace",
+      "T12-100-step-trace"
+    ]
+  },
+  "scaffold": {
+    "passed": 0,
+    "total": 65
+  },
+  "scope": "Directed expectations reviewed against SPEC; executable model separately represented as arrays. Differential traces are not proof the oracle is bug-free. Test counts do not imply all business behavior is covered."
+}

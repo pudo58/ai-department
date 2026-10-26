@@ -1,0 +1,444 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-25T11:28:39.492Z",
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\workspaces\\run_3973832e-A\\src\\stockroom.js",
+  "passed": 64,
+  "failed": 0,
+  "total": 64,
+  "byGroup": {
+    "shape": {
+      "passed": 1,
+      "total": 1
+    },
+    "validation": {
+      "passed": 18,
+      "total": 18
+    },
+    "holds": {
+      "passed": 3,
+      "total": 3
+    },
+    "atomicity": {
+      "passed": 5,
+      "total": 5
+    },
+    "idempotency": {
+      "passed": 7,
+      "total": 7
+    },
+    "time": {
+      "passed": 5,
+      "total": 5
+    },
+    "versions": {
+      "passed": 4,
+      "total": 4
+    },
+    "authorization": {
+      "passed": 6,
+      "total": 6
+    },
+    "accounting": {
+      "passed": 2,
+      "total": 2
+    },
+    "detachment": {
+      "passed": 2,
+      "total": 2
+    },
+    "restore": {
+      "passed": 3,
+      "total": 3
+    },
+    "stateful": {
+      "passed": 8,
+      "total": 8
+    }
+  },
+  "results": [
+    {
+      "id": "D01-initial-shape",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.704699999999999
+    },
+    {
+      "id": "D02-constructor-{\"stock\":{}}",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.13659999999999783
+    },
+    {
+      "id": "D02-constructor-{\"stock\":{\"A\":-1}}",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.019199999999997885
+    },
+    {
+      "id": "D02-constructor-{\"stock\":{\"A\":1.5}}",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.010499999999996845
+    },
+    {
+      "id": "D02-constructor-{\"stock\":{\"A\":1},\"now\":-1}",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.010799999999999699
+    },
+    {
+      "id": "D03-reserve-exact-view",
+      "group": "holds",
+      "status": "passed",
+      "durationMs": 0.22820000000000107
+    },
+    {
+      "id": "D04-multi-sku",
+      "group": "holds",
+      "status": "passed",
+      "durationMs": 0.05940000000000012
+    },
+    {
+      "id": "D05-capacity-equality",
+      "group": "holds",
+      "status": "passed",
+      "durationMs": 0.06680000000000064
+    },
+    {
+      "id": "D06-reserve-atomic-failure",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.08010000000000161
+    },
+    {
+      "id": "D07-empty-items",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.04870000000000019
+    },
+    {
+      "id": "D07-zero-item",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.0259999999999998
+    },
+    {
+      "id": "D07-negative-item",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.027699999999999392
+    },
+    {
+      "id": "D07-fractional-item",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.0329999999999977
+    },
+    {
+      "id": "D07-unknown-sku",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.02839999999999776
+    },
+    {
+      "id": "D07-empty-owner",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.013099999999997891
+    },
+    {
+      "id": "D07-empty-id",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.008900000000000574
+    },
+    {
+      "id": "D07-zero-ttl",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.015600000000002723
+    },
+    {
+      "id": "D08-replay-key-order",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.13700000000000045
+    },
+    {
+      "id": "D09-replay-conflict-owner",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.0730000000000004
+    },
+    {
+      "id": "D09-replay-conflict-ttl",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.032099999999999795
+    },
+    {
+      "id": "D09-replay-conflict-items",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.020899999999997476
+    },
+    {
+      "id": "D10-replay-current-after-amend",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.23659999999999926
+    },
+    {
+      "id": "D11-replay-does-not-renew",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.09209999999999852
+    },
+    {
+      "id": "D12-amend-credits-own-hold",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.18209999999999837
+    },
+    {
+      "id": "D13-amend-replaces-items",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.08710000000000306
+    },
+    {
+      "id": "D14-amend-rollback-every-field",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.08230000000000004
+    },
+    {
+      "id": "D15-amend-must-not-credit-other-hold",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.44869999999999877
+    },
+    {
+      "id": "D16-amend-expiry-kept-or-replaced",
+      "group": "time",
+      "status": "passed",
+      "durationMs": 0.08030000000000115
+    },
+    {
+      "id": "D17-identical-amend-increments-once",
+      "group": "versions",
+      "status": "passed",
+      "durationMs": 0.03859999999999886
+    },
+    {
+      "id": "D18-owner-before-version-amend",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.08010000000000161
+    },
+    {
+      "id": "D19-stale-version-amend",
+      "group": "versions",
+      "status": "passed",
+      "durationMs": 0.06510000000000105
+    },
+    {
+      "id": "D18-owner-before-version-confirm",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.058099999999999596
+    },
+    {
+      "id": "D19-stale-version-confirm",
+      "group": "versions",
+      "status": "passed",
+      "durationMs": 0.017600000000001614
+    },
+    {
+      "id": "D18-owner-before-version-cancel",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.02839999999999776
+    },
+    {
+      "id": "D19-stale-version-cancel",
+      "group": "versions",
+      "status": "passed",
+      "durationMs": 0.013700000000000045
+    },
+    {
+      "id": "D20-confirm-preserves-availability",
+      "group": "accounting",
+      "status": "passed",
+      "durationMs": 0.0472999999999999
+    },
+    {
+      "id": "D21-cancel-releases-no-purchase",
+      "group": "accounting",
+      "status": "passed",
+      "durationMs": 0.027300000000000324
+    },
+    {
+      "id": "D22-terminal-precedence-confirmed",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.1562000000000019
+    },
+    {
+      "id": "D22-terminal-precedence-cancelled",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.08039999999999736
+    },
+    {
+      "id": "D22-terminal-precedence-expired",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.08299999999999841
+    },
+    {
+      "id": "D23-expiry-exact-boundary",
+      "group": "time",
+      "status": "passed",
+      "durationMs": 0.047699999999998965
+    },
+    {
+      "id": "D24-expiry-order-and-repeat",
+      "group": "time",
+      "status": "passed",
+      "durationMs": 0.1039999999999992
+    },
+    {
+      "id": "D25-terminal-never-expires",
+      "group": "time",
+      "status": "passed",
+      "durationMs": 0.05249999999999844
+    },
+    {
+      "id": "D26-invalid-time--1",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.047800000000002285
+    },
+    {
+      "id": "D26-invalid-time-1.5",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.011299999999998533
+    },
+    {
+      "id": "D26-invalid-time-9007199254740992",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.009799999999998477
+    },
+    {
+      "id": "D27-time-cannot-go-back",
+      "group": "time",
+      "status": "passed",
+      "durationMs": 0.031399999999997874
+    },
+    {
+      "id": "D28-unknown-id-and-invalid-id",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.0627999999999993
+    },
+    {
+      "id": "D29-safe-deadline",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.06040000000000134
+    },
+    {
+      "id": "D30-terminal-replay-does-not-recompute-deadline",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.04870000000000019
+    },
+    {
+      "id": "D31-literal-owner-and-prototype-name-sku",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.038000000000000256
+    },
+    {
+      "id": "D32-input-detachment",
+      "group": "detachment",
+      "status": "passed",
+      "durationMs": 0.03340000000000032
+    },
+    {
+      "id": "D33-output-detachment",
+      "group": "detachment",
+      "status": "passed",
+      "durationMs": 0.05150000000000077
+    },
+    {
+      "id": "D34-snapshot-shape-sorted-history",
+      "group": "restore",
+      "status": "passed",
+      "durationMs": 0.06470000000000198
+    },
+    {
+      "id": "D35-restore-full-history-and-initial-replay",
+      "group": "restore",
+      "status": "passed",
+      "durationMs": 0.25679999999999836
+    },
+    {
+      "id": "D36-restored-expiry-version",
+      "group": "restore",
+      "status": "passed",
+      "durationMs": 0.05100000000000193
+    },
+    {
+      "id": "T1-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 5.675399999999996
+    },
+    {
+      "id": "T2-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 3.0727999999999938
+    },
+    {
+      "id": "T3-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 2.8019999999999996
+    },
+    {
+      "id": "T4-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 2.640099999999997
+    },
+    {
+      "id": "T5-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 2.5598000000000027
+    },
+    {
+      "id": "T6-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 3.1591999999999985
+    },
+    {
+      "id": "T7-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 2.6048999999999936
+    },
+    {
+      "id": "T8-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 2.0992999999999995
+    }
+  ]
+}

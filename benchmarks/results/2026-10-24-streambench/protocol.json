@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-streamfold-20261024",
+  "baseSha": "991203e63ccd88be2c4e781e7baf98f12a29599a",
+  "specHash": "d87de8359eabba8b8ab1d6626536c2e509773482a47303af8471724bea466cae",
+  "evaluatorHash": "0f8e7105eaf6bb94c6b9e6fe4f23cdfb5b333943cab4ef703b809b1d2a40ff11",
+  "lockedAt": "2026-10-24T04:18:54.061Z",
+  "modelPair": {
+    "single": "gpt-6-luna",
+    "planner": "gpt-6-luna",
+    "developer": "gpt-6-luna",
+    "author": "claude-haiku-5-5",
+    "verifier": "claude-haiku-5-5"
+  },
+  "effort": "medium",
+  "timeLimitMs": 1200000,
+  "departmentBudgetUsd": 6,
+  "repetitions": 1,
+  "grade": "100 * passed external cases / total; report workflow and human interventions separately",
+  "rules": [
+    "No source/test rescue edits by coordinator.",
+    "Do not rewrite Author plan to silently improve arm; answer exact questions only with intervention receipt.",
+    "Same Node/Vitest/Stryker and configLoader runner.",
+    "No hidden-score feedback or repair calls after terminal workflow.",
+    "Native one agent; Department production Verify workflow.",
+    "Cash estimates are not comparable across subscription providers.",
+    "One hard synthetic task does not establish general superiority."
+  ],
+  "evaluatorCorrection": {
+    "previousRevisionHash": "0f196814c8b9afe6dc08f65216310c01a7c818ab32832bd293f838fe940a8cd9",
+    "revisionHash": "0f8e7105eaf6bb94c6b9e6fe4f23cdfb5b333943cab4ef703b809b1d2a40ff11",
+    "corrections": [
+      {
+        "cases": [
+          "WM10",
+          "CC03",
+          "ER01",
+          "ER02"
+        ],
+        "reason": "WM10 placed the second window below its close boundary; moved watermarks to 220 so both windows are actually closed. Failure/no-commit cases now compare the post-error store with its pre-error snapshot, allowing either valid lazy or eager initialization while proving the failed mutation did not persist."
+      },
+      {
+        "cases": [
+          "CFG05",
+          "CFG07",
+          "WM03"
+        ],
+        "reason": "CFG05/CFG07 now first persist an event so they truly test reopening a nonempty store; a lazy open of a null store need not persist initialization. WM03 now creates an aggregate before asserting one newly closed window."
+      }
+    ]
+  }
+}

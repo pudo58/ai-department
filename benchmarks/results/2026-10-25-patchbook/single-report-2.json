@@ -1,0 +1,460 @@
+{
+  "findingReplays": [],
+  "execution": {
+    "available": true,
+    "automaticMs": 147000,
+    "waitingMs": 123435,
+    "agentQueueMs": 6,
+    "spans": [
+      {
+        "id": "9707b722-05f8-4815-ad2f-2bd11116a0a1",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T15:12:47.183Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:12:47.186Z"
+      },
+      {
+        "id": "e9436978-cf2a-4656-a2a4-4b1d8a4175f0",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T15:12:47.185Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:13:13.722Z"
+      },
+      {
+        "id": "c7772c65-5049-41fd-9a7c-1c29b21f73b3",
+        "kind": "setup",
+        "label": "Chuẩn bị bản sao/cài dependency",
+        "startedAt": "2026-10-25T15:12:47.193Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:12:47.626Z"
+      },
+      {
+        "id": "d34bbe47-5e19-4a84-8fe1-bfd62bd9fece",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T15:12:47.637Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:12:52.643Z"
+      },
+      {
+        "attemptId": "att_18603544",
+        "role": "planner",
+        "id": "2c886b10-aeb8-4831-8441-090f8f757b1c",
+        "kind": "agent_queue",
+        "label": "planner chờ slot",
+        "startedAt": "2026-10-25T15:12:52.657Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:12:52.659Z"
+      },
+      {
+        "attemptId": "att_18603544",
+        "role": "planner",
+        "id": "8828a9e5-1e9f-4a59-937f-ae4c5e7381e6",
+        "kind": "agent",
+        "label": "planner (A)",
+        "startedAt": "2026-10-25T15:12:52.661Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:13:13.569Z"
+      },
+      {
+        "id": "cb3896f2-8d8d-4b03-8489-4957fef8db5b",
+        "kind": "approval",
+        "label": "awaiting_approval",
+        "startedAt": "2026-10-25T15:13:13.717Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:13:53.909Z"
+      },
+      {
+        "id": "b990b5f8-27db-44df-aff5-edbb89b5cd6a",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T15:13:53.909Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:13:53.913Z"
+      },
+      {
+        "id": "8650e226-ef69-4ac9-835f-01c45ad14f6b",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T15:13:53.911Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:15:54.374Z"
+      },
+      {
+        "attemptId": "att_b554ba1f",
+        "role": "developer",
+        "id": "16f3d3d1-f09d-4220-8d0b-30fc5aaf370b",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T15:13:53.926Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:13:53.928Z"
+      },
+      {
+        "attemptId": "att_b554ba1f",
+        "role": "developer",
+        "id": "d9ead6b3-cc6c-4843-8fda-a39d3cb5e33c",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T15:13:53.929Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:15:04.044Z"
+      },
+      {
+        "id": "79963fc8-fd09-4c90-a46f-99726ac40b9e",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T15:15:04.358Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:15:05.278Z"
+      },
+      {
+        "retryReason": "missing_evidence",
+        "id": "7cb0d100-5e6d-4d80-81af-c759c37f554d",
+        "kind": "tool",
+        "label": "Bổ sung bằng chứng cho R-1, R-2, R-3, R-4, R-5, R-6, R-7, R-8, R-9, R-10, R-11, R-12.",
+        "startedAt": "2026-10-25T15:15:05.289Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:15:05.291Z"
+      },
+      {
+        "attemptId": "att_0055b7ed",
+        "role": "developer",
+        "id": "c2fcd18a-bf11-4c33-949f-29852bca1baf",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T15:15:05.310Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:15:05.312Z"
+      },
+      {
+        "attemptId": "att_0055b7ed",
+        "role": "developer",
+        "id": "93c4d202-b865-4318-ae60-b94043e194eb",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T15:15:05.314Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:15:52.369Z"
+      },
+      {
+        "id": "f1e5d173-13c4-4963-adb1-1d303dbd0e16",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T15:15:52.925Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:15:54.095Z"
+      },
+      {
+        "id": "730fb457-f982-490e-bea7-412a2eafc1bf",
+        "kind": "approval",
+        "label": "awaiting_acceptance",
+        "startedAt": "2026-10-25T15:15:54.327Z",
+        "status": "running"
+      }
+    ],
+    "attemptsByRole": {
+      "planner": 1,
+      "developer": 2
+    },
+    "retries": [
+      {
+        "reason": "missing_evidence",
+        "count": 1
+      }
+    ]
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "runtime": "local",
+    "workspace": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\workspaces\\run_509fd9fe-A",
+    "configHash": "cc243db3e59ef021cfaeb5155c31b997616b710d2324ca3e2ef25263184065d4",
+    "checkpoint": null,
+    "startedAt": "2026-10-25T15:12:47.646Z",
+    "endedAt": "2026-10-25T15:12:52.642Z",
+    "checks": [
+      {
+        "recipeId": "test",
+        "runner": "vitest",
+        "version": "vitest/3.2.4 win32-x64 node-v24.12.0",
+        "status": "passed",
+        "message": "Runner tải cấu hình và discovery thành công; chưa chứng minh test nghiệp vụ đạt."
+      }
+    ],
+    "limitation": "Kiểm tra trên runtime chạy checks; không xác nhận quyền thực thi trong sandbox riêng của agent. Không phải bằng chứng nghiệm thu."
+  },
+  "quality": {
+    "enabled": false,
+    "manifestHash": "86adf95570a0b0d73aaef11bed5de4a7ea97f25f9ac752abe70761b8855e27a8",
+    "manifestProblems": [],
+    "capability": {
+      "status": "unsupported",
+      "reason": "Chưa nhận diện khả năng mutation trên checkpoint này."
+    },
+    "mutation": null,
+    "testMs": 1113,
+    "cases": []
+  },
+  "generatedAt": "2026-10-25T15:17:17.563Z",
+  "runId": "run_509fd9fe",
+  "title": "PatchBook / single / GPT-6 Luna medium",
+  "requirement": "# PatchBook — atomic JSON edits with historical replay\n\nImplement a small in-memory JavaScript ES module `src/patchbook.js`. Export exactly `createPatchBook(initial)` and `restorePatchBook(snapshot)`. A book has `read()`, `apply({id,baseRevision,ops})`, `snapshot()`. Calls may be sync or async; callers await each. Add a short README example. No dependency, filesystem, network, wall clock, background task, eval or dynamic code execution. Only documented behavior is required; do not invent behavior for unspecified inputs.\n\n1. A JSON value is null, boolean, string, finite number, dense array of JSON values, or plain object (Object.prototype or null prototype) with JSON values in its own enumerable string properties. Reject undefined, NaN/Infinity, holes and cycles with Error code `INVALID`. Root null is valid. `createPatchBook(initial)` clones the initial value and starts revision 0. `read()` returns exactly `{revision,document}`, detached. All submitted values, returned reads/receipts/snapshots and restored instances must remain independent of internal state.\n2. `apply` requires a non-null plain object with exactly id, baseRevision, ops. ID is a literal string length 1–64, without trimming. baseRevision is a nonnegative safe integer. ops is a dense array of 1–32 operation objects. Operation shapes are exact: `{op:'put',path,value}`, `{op:'remove',path}`, `{op:'check',path,value}`, `{op:'move',from,path}`. path/from must be strings; value must be JSON. Reject malformed outer request, null request/operation, missing/extra field, unknown op or invalid scalar/value with `INVALID`. No precedence is required between unrelated malformed fields.\n3. Paths use THIS grammar (not an external standard): empty string is root; every other path begins `/`, then segments separated by `/`. In each segment `~0` decodes to `~` and `~1` to `/` in a single pass; any other/lone tilde and any nonempty path without leading `/` throws `PATH_SYNTAX`. Empty segments and keys `__proto__`, `constructor`, `prototype` are valid literal object keys and must never access inherited properties or change prototypes. On objects, all intermediate keys must exist as OWN properties or throw `NOT_FOUND`. Traversing a primitive/null throws `TYPE`. On arrays, an index must be canonical decimal `0` or a nonzero digit followed by digits, and be a safe integer: invalid spelling or out-of-range throws `INDEX`. Intermediate indices must exist; `-` is allowed ONLY as the final array destination of put/move, meaning append. Object segments such as `01` or `-` are ordinary keys.\n4. `put` at root replaces the document. In an object, put inserts/replaces the final own key (without creating missing ancestors). In an array, put INSERTS at indices 0..length (or appends for `-`), shifting later items; it does not overwrite an item. `remove` requires an existing own key or array index 0..length-1; root removal replaces the document with null. `check` compares the value at its path with the submitted value: JSON deep equality ignores object key order, preserves array order, and treats -0 as 0. Unequal values throw `TEST_FAILED`; missing paths use the normal lookup errors. Check does not alter document content.\n5. `move` first resolves an existing source value. Same decoded source and destination is a successful no-op (source must still exist). A proper decoded-segment prefix from source to destination throws `MOVE_INTO_SELF` BEFORE removing anything; `/a` is not an ancestor of `/ab`, while root is an ancestor of every non-root path. Otherwise remove source, then resolve destination on the POST-REMOVAL document and insert/replace using put rules. Thus moving `/items/1` to `/items/3` in a four-item array is valid and yields the old second item at the end; an index valid before removal can be invalid afterwards. A failed destination rolls back both the removal and any earlier operation in the batch. Moving a nested value to root is allowed.\n6. Precedence and transaction rules: first validate ALL request/operation shapes, JSON values and path syntaxes, without resolving paths. Next handle successful ID history (rule 7), then compare baseRevision to current revision; mismatch throws `REVISION_CONFLICT` before path resolution. Then execute operations sequentially on a private candidate. First operation failure aborts everything: document, revision and receipt history stay unchanged; a failed new ID is reusable. A successful batch increments revision exactly once, including check-only or same-path-move batches, and returns a detached receipt exactly `{id,revision,document}` showing its committed document. No intermediate state becomes visible.\n7. Successful IDs are permanent. Replay matches the INITIAL `{baseRevision,ops}` structurally, ignoring object key order but preserving arrays and literal IDs. An exact repeat returns the SAME HISTORICAL receipt saved for that ID, even after later commits or restore, without checking current revision, resolving old paths, incrementing revision or changing history. Any different baseRevision/ops using that ID throws `ID_CONFLICT`, ahead of revision/path-resolution errors. Invalid shapes and pointer syntax are still rejected before ID history. Do not return the current document as an old receipt or mutate stored requests while executing their values.\n8. `snapshot()` returns exactly `{schemaVersion:1,revision,document,receipts}`. receipts is an array in commit order, each entry exactly `{id,baseRevision,ops,result}` where result has exactly the three receipt fields `{id,revision,document}`. Store initial request ops and historical committed result, not the latest document for every entry. Snapshot/JSON-clone/restore preserves all content, revision and replay receipts. Only this implementation's produced snapshots are required restore inputs; nevertheless a null/non-object outer restore argument must throw `INVALID`. Do not infer validation rules for hand-authored/corrupted snapshot internals. Returned snapshots and both original/restored instances evolve independently.\n\nExamples: starting `{items:['a','b','c','d']}`, one batch `move /items/1 -> /items/3` commits `{items:['a','c','d','b']}`. Starting `{a:1}`, a batch `put /b = 2`, `check /a = 9` fails `TEST_FAILED` and leaves revision 0/document `{a:1}` with no receipt. Commit request X adding b, then request Y removing a: replay X returns its earlier `{a:1,b:2}` document and earlier revision, while `read()` stays at Y. A null apply request is invalid; a null initial document is valid.\n",
+  "mode": "single",
+  "provider": "codex",
+  "readiness": "ready_with_warnings",
+  "notReadyReasons": [],
+  "checkpoint": "12141d1e162919d9601716742a1e437adc49b1df",
+  "baseSha": "a3b6308a3e65ad27af5fff9ea1ba3d2a4c07085b",
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "Export exactly createPatchBook(initial) and restorePatchBook(snapshot) from the ES module.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-1] exports exactly the two public factories"
+      ]
+    },
+    {
+      "id": "R-2",
+      "text": "Accept JSON values as defined: null, booleans, strings, finite numbers, dense arrays and plain objects with JSON values in own enumerable string properties. Reject undefined, non-finite numbers, array holes and cycles with an Error whose code is INVALID. Root null is valid.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-2] accepts JSON values and rejects non-JSON values"
+      ]
+    },
+    {
+      "id": "R-3",
+      "text": "createPatchBook clones its initial document and starts at revision 0. read() returns exactly {revision,document} with a document detached from internal state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-3] clones initial input and detaches exact read results"
+      ]
+    },
+    {
+      "id": "R-4",
+      "text": "Require apply requests to be non-null plain objects with exactly id, baseRevision and ops; validate ID, nonnegative safe-integer baseRevision, dense ops array of 1–32 operations, exact operation shapes, scalar/value validity and path syntax. Reject malformed requests and null operations with code INVALID where specified.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-4] validates outer request, scalar fields, operation shapes, values and paths"
+      ]
+    },
+    {
+      "id": "R-5",
+      "text": "Parse paths using the specified grammar: empty path is root; other paths begin with /; decode ~0 and ~1 once; reject other or lone tilde escapes and missing leading slash with PATH_SYNTAX. Preserve empty segments and literal keys __proto__, constructor and prototype without inherited-property access or prototype changes.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-5] decodes path escapes once and safely handles literal special keys"
+      ]
+    },
+    {
+      "id": "R-6",
+      "text": "Resolve object paths through own properties only. Missing intermediate/final object keys throw NOT_FOUND; traversal through primitive or null throws TYPE. Array indices must be canonical safe decimal indices; invalid spelling and out-of-range indices throw INDEX. Intermediate indices must exist. Permit - only as a final array destination for put or move; treat object segments such as 01 and - as ordinary keys.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-6] uses own object keys and canonical array indices with destination append"
+      ]
+    },
+    {
+      "id": "R-7",
+      "text": "Implement put, remove and check as specified: root put replaces the document; object put inserts or replaces a final own key without creating ancestors; array put inserts at 0..length or appends with -, shifting items. Remove requires an existing object key or array index and replaces the root with null. Check uses JSON deep equality independent of object key order, preserving array order and treating -0 as 0; unequal values throw TEST_FAILED and missing paths use normal lookup errors.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-7] applies root, object and array edits and JSON checks"
+      ]
+    },
+    {
+      "id": "R-8",
+      "text": "Move resolves an existing source first; equal decoded source and destination is a successful no-op; a proper decoded-segment source prefix of destination throws MOVE_INTO_SELF before removal. Otherwise remove the source, resolve destination against the post-removal document, then apply put insertion/replacement rules. Moving to root is allowed.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-8] moves with decoded path rules and post-removal destinations"
+      ]
+    },
+    {
+      "id": "R-9",
+      "text": "Validate all request and operation shapes, JSON values and path syntaxes before ID history lookup; then process successful-ID replay/conflict before revision comparison; compare baseRevision before resolving paths. Execute operations sequentially against a private candidate and commit atomically. Any failure leaves document, revision and receipt history unchanged; failed new IDs remain reusable. A successful batch increments revision once and returns a detached {id,revision,document} receipt.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-9] validates before history, checks revision before paths, and commits atomically"
+      ]
+    },
+    {
+      "id": "R-10",
+      "text": "Successful IDs are permanent. Replay succeeds only when the original baseRevision and ops structurally match, ignoring object key order while preserving arrays and literal IDs; return the same historical receipt without re-execution or revision/history changes. Different baseRevision or ops for a successful ID throws ID_CONFLICT. Shape and path-syntax validation still precede history lookup.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-10] replays historical receipts by structural request identity"
+      ]
+    },
+    {
+      "id": "R-11",
+      "text": "snapshot() returns exactly {schemaVersion:1,revision,document,receipts}; receipts are in commit order and each entry is exactly {id,baseRevision,ops,result}, with result exactly {id,revision,document}. Preserve original request ops and each historical committed result. Snapshot, JSON-clone and restore preserve replay history; reject null or non-object outer restore arguments with INVALID. Snapshot, original and restored instances evolve independently.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-11] snapshots preserve exact historical data and restore independently"
+      ]
+    },
+    {
+      "id": "R-12",
+      "text": "All submitted values, read results, receipts, snapshots and restored instances remain independent of internal state; mutating a caller-owned input or returned value cannot mutate stored book state or historical receipts.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "[R-12] caller inputs and returned values cannot mutate book state or receipts"
+      ]
+    },
+    {
+      "id": "R-13",
+      "text": "Do not use dependencies, filesystem, network, wall clock, background tasks, eval or dynamic code execution.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden",
+      "status": "manual_pending",
+      "tests": []
+    },
+    {
+      "id": "R-14",
+      "text": "Do not invent behavior for inputs or corrupted snapshot internals beyond what the request specifies.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden",
+      "status": "manual_pending",
+      "tests": []
+    }
+  ],
+  "assumptions": [],
+  "changes": {
+    "available": true,
+    "files": [
+      {
+        "path": "README.md",
+        "status": "modified",
+        "added": 15,
+        "removed": 1
+      },
+      {
+        "path": "src/patchbook.js",
+        "status": "modified",
+        "added": 181,
+        "removed": 2
+      },
+      {
+        "path": "tests/patchbook.test.js",
+        "status": "added",
+        "added": 171,
+        "removed": 0
+      }
+    ],
+    "added": 367,
+    "removed": 3,
+    "testFiles": [
+      "tests/patchbook.test.js"
+    ],
+    "patch": "diff --git a/README.md b/README.md\nindex 149e8a5..293dff3 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,16 @@\n # PatchBook\n-Implement SPEC.md and add a short usage example.\n+\n+An in-memory JSON document with atomic edits and replayable receipts.\n+\n+```js\n+import { createPatchBook } from './src/patchbook.js';\n+\n+const book = createPatchBook({ items: ['a', 'b', 'c', 'd'] });\n+const receipt = book.apply({\n+  id: 'move-b',\n+  baseRevision: 0,\n+  ops: [{ op: 'move', from: '/items/1', path: '/items/3' }]\n+});\n+\n+console.log(receipt.document); // { items: ['a', 'c', 'd', 'b'] }\n+```\ndiff --git a/src/patchbook.js b/src/patchbook.js\nindex 3066584..a66b3c6 100644\n--- a/src/patchbook.js\n+++ b/src/patchbook.js\n@@ -1,2 +1,181 @@\n-export function createPatchBook(){throw new Error('Not implemented');}\n-export function restorePatchBook(){throw new Error('Not implemented');}\n+const invalid = (code, message) => Object.assign(new Error(message), { code });\n+const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);\n+const plain = value => value !== null && typeof value === 'object' &&\n+  (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null);\n+\n+function cloneJson(value, stack = new Set()) {\n+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;\n+  if (typeof value === 'number' && Number.isFinite(value)) return value;\n+  if (typeof value !== 'object' || stack.has(value)) throw invalid('INVALID', 'Expected a JSON value');\n+  stack.add(value);\n+  let copy;\n+  if (Array.isArray(value)) {\n+    copy = new Array(value.length);\n+    for (let i = 0; i < value.length; i++) {\n+      if (!own(value, i)) throw invalid('INVALID', 'Sparse arrays are not JSON values');\n+      copy[i] = cloneJson(value[i], stack);\n+    }\n+  } else {\n+    if (!plain(value)) throw invalid('INVALID', 'Expected a plain object');\n+    copy = Object.getPrototypeOf(value) === null ? Object.create(null) : {};\n+    for (const key of Object.keys(value)) Object.defineProperty(copy, key, {\n+      value: cloneJson(value[key], stack), enumerable: true, writable: true, configurable: true\n+    });\n+  }\n+  stack.delete(value);\n+  return copy;\n+}\n+\n+function equal(a, b) {\n+  if (typeof a !== typeof b || a === null || b === null) return a === b;\n+  if (typeof a === 'number') return a === b; // Includes equality of -0 and 0.\n+  if (typeof a !== 'object') return a === b;\n+  if (Array.isArray(a) || Array.isArray(b))\n+    return Array.isArray(a) && Array.isArray(b) && a.length === b.length && a.every((v, i) => equal(v, b[i]));\n+  const ak = Object.keys(a), bk = Object.keys(b);\n+  return ak.length === bk.length && ak.every(k => own(b, k) && equal(a[k], b[k]));\n+}\n+\n+function parsePath(path) {\n+  if (path === '') return [];\n+  if (!path.startsWith('/')) throw invalid('PATH_SYNTAX', 'Path must begin with /');\n+  return path.slice(1).split('/').map(segment => {\n+    let decoded = '';\n+    for (let i = 0; i < segment.length; i++) {\n+      if (segment[i] !== '~') decoded += segment[i];\n+      else {\n+        const next = segment[++i];\n+        if (next === '0') decoded += '~';\n+        else if (next === '1') decoded += '/';\n+        else throw invalid('PATH_SYNTAX', 'Invalid path escape');\n+      }\n+    }\n+    return decoded;\n+  });\n+}\n+\n+function validateRequest(request) {\n+  if (!plain(request)) throw invalid('INVALID', 'Request must be a plain object');\n+  const keys = Object.keys(request);\n+  if (keys.length !== 3 || !['id', 'baseRevision', 'ops'].every(k => own(request, k)))\n+    throw invalid('INVALID', 'Request must contain exactly id, baseRevision and ops');\n+  const { id, baseRevision, ops } = request;\n+  if (typeof id !== 'string' || id.length < 1 || id.length > 64 ||\n+      !Number.isSafeInteger(baseRevision) || baseRevision < 0 || !Array.isArray(ops) ||\n+      ops.length < 1 || ops.length > 32) throw invalid('INVALID', 'Invalid request fields');\n+  const parsed = [];\n+  for (let i = 0; i < ops.length; i++) {\n+    if (!own(ops, i) || !plain(ops[i])) throw invalid('INVALID', 'Invalid operation');\n+    const op = ops[i], kind = op.op;\n+    const fields = kind === 'put' || kind === 'check' ? ['op', 'path', 'value'] :\n+      kind === 'remove' ? ['op', 'path'] : kind === 'move' ? ['op', 'from', 'path'] : null;\n+    if (!fields || Object.keys(op).length !== fields.length || !fields.every(k => own(op, k)))\n+      throw invalid('INVALID', 'Invalid operation shape');\n+    if (typeof op.path !== 'string' || (kind === 'move' && typeof op.from !== 'string'))\n+      throw invalid('INVALID', 'Path must be a string');\n+    const path = parsePath(op.path), from = kind === 'move' ? parsePath(op.from) : null;\n+    const value = kind === 'put' || kind === 'check' ? cloneJson(op.value) : undefined;\n+    parsed.push({ kind, path, from, value });\n+  }\n+  // Copy the original ops separately: replay compares the submitted request, not an execution-mutated value.\n+  return { id, baseRevision, ops: cloneJson(ops), parsed };\n+}\n+\n+function lookup(root, segments) {\n+  let value = root;\n+  for (const segment of segments) {\n+    if (Array.isArray(value)) {\n+      const index = arrayIndex(segment);\n+      if (index >= value.length) throw invalid('INDEX', 'Array index out of range');\n+      value = value[index];\n+    } else if (value !== null && typeof value === 'object') {\n+      if (!own(value, segment)) throw invalid('NOT_FOUND', 'Object key not found');\n+      value = value[segment];\n+    } else throw invalid('TYPE', 'Cannot traverse a primitive');\n+  }\n+  return value;\n+}\n+function arrayIndex(segment) {\n+  if (!/^(0|[1-9][0-9]*)$/.test(segment)) throw invalid('INDEX', 'Invalid array index');\n+  const n = Number(segment);\n+  if (!Number.isSafeInteger(n)) throw invalid('INDEX', 'Invalid array index');\n+  return n;\n+}\n+function parentAt(root, segments, destination = false) {\n+  const parent = lookup(root, segments.slice(0, -1)), key = segments.at(-1);\n+  if (Array.isArray(parent)) {\n+    if (destination && key === '-') return { parent, key: parent.length };\n+    const index = arrayIndex(key);\n+    if (index > parent.length || (!destination && index === parent.length))\n+      throw invalid('INDEX', 'Array index out of range');\n+    return { parent, key: index };\n+  }\n+  if (parent === null || typeof parent !== 'object') throw invalid('TYPE', 'Cannot traverse a primitive');\n+  return { parent, key };\n+}\n+function put(root, path, value) {\n+  if (path.length === 0) return cloneJson(value);\n+  const { parent, key } = parentAt(root, path, true), copy = cloneJson(value);\n+  if (Array.isArray(parent)) parent.splice(key, 0, copy);\n+  else Object.defineProperty(parent, key, { value: copy, enumerable: true, writable: true, configurable: true });\n+  return root;\n+}\n+function remove(root, path) {\n+  if (path.length === 0) return null;\n+  const { parent, key } = parentAt(root, path);\n+  if (Array.isArray(parent)) return (parent.splice(key, 1), root);\n+  if (!own(parent, key)) throw invalid('NOT_FOUND', 'Object key not found');\n+  delete parent[key];\n+  return root;\n+}\n+function samePath(a, b) { return a.length === b.length && a.every((v, i) => v === b[i]); }\n+function execute(root, op) {\n+  if (op.kind === 'put') return put(root, op.path, op.value);\n+  if (op.kind === 'remove') return remove(root, op.path);\n+  if (op.kind === 'check') {\n+    if (!equal(lookup(root, op.path), op.value)) throw invalid('TEST_FAILED', 'Check failed');\n+    return root;\n+  }\n+  const value = cloneJson(lookup(root, op.from));\n+  if (samePath(op.from, op.path)) return root;\n+  if (op.path.length > op.from.length && op.from.every((v, i) => v === op.path[i]))\n+    throw invalid('MOVE_INTO_SELF', 'Cannot move a value into itself');\n+  root = remove(root, op.from);\n+  return put(root, op.path, value);\n+}\n+\n+function makeBook(document, revision, receipts) {\n+  return {\n+    read() { return { revision, document: cloneJson(document) }; },\n+    apply(request) {\n+      const validated = validateRequest(request);\n+      const previous = receipts.find(entry => entry.id === validated.id);\n+      if (previous) {\n+        if (previous.baseRevision !== validated.baseRevision || !equal(previous.ops, validated.ops))\n+          throw invalid('ID_CONFLICT', 'ID already committed with different content');\n+        return cloneJson(previous.result);\n+      }\n+      if (validated.baseRevision !== revision) throw invalid('REVISION_CONFLICT', 'Revision mismatch');\n+      let candidate = cloneJson(document);\n+      for (const op of validated.parsed) candidate = execute(candidate, op);\n+      revision++;\n+      document = candidate;\n+      const result = { id: validated.id, revision, document: cloneJson(document) };\n+      receipts.push({ id: validated.id, baseRevision: validated.baseRevision, ops: validated.ops, result });\n+      return cloneJson(result);\n+    },\n+    snapshot() {\n+      return cloneJson({ schemaVersion: 1, revision, document, receipts });\n+    }\n+  };\n+}\n+\n+export function createPatchBook(initial) {\n+  return makeBook(cloneJson(initial), 0, []);\n+}\n+\n+export function restorePatchBook(snapshot) {\n+  if (snapshot === null || typeof snapshot !== 'object') throw invalid('INVALID', 'Snapshot must be an object');\n+  const copy = cloneJson(snapshot);\n+  return makeBook(copy.document, copy.revision, copy.receipts);\n+}\ndiff --git a/tests/patchbook.test.js b/tests/patchbook.test.js\nnew file mode 100644\nindex 0000000..7addcc7\n--- /dev/null\n+++ b/tests/patchbook.test.js\n@@ -0,0 +1,171 @@\n+import { test, expect } from 'vitest';\n+import * as patchbook from '../src/patchbook.js';\n+\n+const { createPatchBook, restorePatchBook } = patchbook;\n+const failureCode = (code, action) => {\n+  try { action(); } catch (error) { expect(error.code).toBe(code); return; }\n+  throw new Error(`Expected ${code}`);\n+};\n+const request = (id, baseRevision, ...ops) => ({ id, baseRevision, ops });\n+\n+test('[R-1] exports exactly the two public factories', () => {\n+  expect(Object.keys(patchbook).sort()).toEqual(['createPatchBook', 'restorePatchBook']);\n+  expect(typeof createPatchBook).toBe('function');\n+  expect(typeof restorePatchBook).toBe('function');\n+});\n+\n+test('[R-2] accepts JSON values and rejects non-JSON values', () => {\n+  const value = { nil: null, yes: true, text: 'x', number: 2.5, list: [false, { n: 1 }] };\n+  expect(createPatchBook(value).read().document).toEqual(value);\n+  expect(createPatchBook(null).read().document).toBeNull();\n+  for (const bad of [undefined, NaN, Infinity, [1, , 3]])\n+    failureCode('INVALID', () => createPatchBook(bad));\n+  const cycle = {}; cycle.self = cycle;\n+  failureCode('INVALID', () => createPatchBook(cycle));\n+  failureCode('INVALID', () => createPatchBook({ value: undefined }));\n+});\n+\n+test('[R-3] clones initial input and detaches exact read results', () => {\n+  const initial = { nested: { value: 1 } };\n+  const book = createPatchBook(initial);\n+  initial.nested.value = 2;\n+  expect(book.read()).toEqual({ revision: 0, document: { nested: { value: 1 } } });\n+  const read = book.read();\n+  expect(Object.keys(read).sort()).toEqual(['document', 'revision']);\n+  read.document.nested.value = 9;\n+  expect(book.read().document.nested.value).toBe(1);\n+});\n+\n+test('[R-4] validates outer request, scalar fields, operation shapes, values and paths', () => {\n+  const book = createPatchBook({});\n+  for (const invalid of [null, {}, { id: '', baseRevision: 0, ops: [{}] },\n+    { id: 'x', baseRevision: -1, ops: [{ op: 'remove', path: '' }] },\n+    { id: 'x', baseRevision: 0, ops: [] },\n+    { id: 'x', baseRevision: 0, ops: [null] },\n+    { id: 'x', baseRevision: 0, ops: [{ op: 'remove', path: '', extra: 1 }] },\n+    { id: 'x', baseRevision: 0, ops: [{ op: 'put', path: '', value: NaN }] }])\n+    failureCode('INVALID', () => book.apply(invalid));\n+});\n+\n+test('[R-5] decodes path escapes once and safely handles literal special keys', () => {\n+  const initial = Object.create(null);\n+  initial['a/b'] = { '~': 1 };\n+  initial['a~1b'] = { '~0': 0 };\n+  initial.__proto__ = { value: 1 };\n+  initial.constructor = 2;\n+  initial.prototype = 3;\n+  const book = createPatchBook(initial);\n+  book.apply(request('escaped', 0, { op: 'put', path: '/a~1b/~0', value: 4 },\n+    { op: 'put', path: '/__proto__/value', value: 8 },\n+    { op: 'put', path: '/constructor', value: 5 },\n+    { op: 'put', path: '/prototype', value: 6 },\n+    { op: 'put', path: '/a~01b/~00', value: 7 }));\n+  const result = book.read().document;\n+  expect(result['a/b']['~']).toBe(4);\n+  expect(result['a~1b']['~0']).toBe(7);\n+  expect(result.__proto__.value).toBe(8);\n+  expect(result.constructor).toBe(5);\n+  expect(result.prototype).toBe(6);\n+  for (const path of ['no-slash', '/bad~', '/bad~2'])\n+    failureCode('PATH_SYNTAX', () => book.apply(request(`bad-${path}`, 1, { op: 'check', path, value: 0 })));\n+});\n+\n+test('[R-6] uses own object keys and canonical array indices with destination append', () => {\n+  const book = createPatchBook({ obj: { '-': 1, '01': 2 }, list: ['a'] });\n+  book.apply(request('keys', 0, { op: 'check', path: '/obj/-', value: 1 },\n+    { op: 'check', path: '/obj/01', value: 2 }, { op: 'put', path: '/list/-', value: 'b' }));\n+  expect(book.read().document.list).toEqual(['a', 'b']);\n+  failureCode('NOT_FOUND', () => book.apply(request('missing', 1, { op: 'check', path: '/obj/nope', value: 0 })));\n+  failureCode('TYPE', () => book.apply(request('primitive', 1, { op: 'check', path: '/list/0/x', value: 0 })));\n+  for (const path of ['/list/01', '/list/-', '/list/8', '/list/9007199254740992'])\n+    failureCode('INDEX', () => book.apply(request(`index-${path}`, 1, { op: 'check', path, value: 0 })));\n+});\n+\n+test('[R-7] applies root, object and array edits and JSON checks', () => {\n+  const book = createPatchBook({ obj: { a: 1 }, list: ['a', 'c'] });\n+  book.apply(request('edit', 0,\n+    { op: 'put', path: '/obj/b', value: { x: -0 } },\n+    { op: 'put', path: '/list/1', value: 'b' },\n+    { op: 'check', path: '/obj/b', value: { x: 0 } },\n+    { op: 'check', path: '/obj', value: { b: { x: 0 }, a: 1 } }));\n+  expect(book.read().document.list).toEqual(['a', 'b', 'c']);\n+  book.apply(request('remove', 1, { op: 'remove', path: '/obj/a' }));\n+  book.apply(request('root-put', 2, { op: 'put', path: '', value: null }));\n+  expect(book.read().document).toBeNull();\n+  const root = createPatchBook({ a: 1 });\n+  root.apply(request('root-remove', 0, { op: 'remove', path: '' }));\n+  expect(root.read().document).toBeNull();\n+  failureCode('TEST_FAILED', () => createPatchBook({ a: [1, 2] }).apply(request('unequal', 0,\n+    { op: 'check', path: '/a', value: [2, 1] })));\n+});\n+\n+test('[R-8] moves with decoded path rules and post-removal destinations', () => {\n+  const book = createPatchBook({ items: ['a', 'b', 'c', 'd'], nested: { child: 1 } });\n+  book.apply(request('shift', 0, { op: 'move', from: '/items/1', path: '/items/3' }));\n+  expect(book.read().document.items).toEqual(['a', 'c', 'd', 'b']);\n+  book.apply(request('same', 1, { op: 'move', from: '/nested/child', path: '/nested/child' }));\n+  failureCode('MOVE_INTO_SELF', () => book.apply(request('self', 2,\n+    { op: 'move', from: '/nested', path: '/nested/new' })));\n+  book.apply(request('to-root', 2, { op: 'move', from: '/nested', path: '' }));\n+  expect(book.read().document).toEqual({ child: 1 });\n+});\n+\n+test('[R-9] validates before history, checks revision before paths, and commits atomically', () => {\n+  const book = createPatchBook({ a: 1 });\n+  failureCode('PATH_SYNTAX', () => book.apply(request('id', 99, { op: 'remove', path: 'bad' })));\n+  failureCode('REVISION_CONFLICT', () => book.apply(request('id', 99, { op: 'remove', path: '/missing' })));\n+  failureCode('TEST_FAILED', () => book.apply(request('failed', 0,\n+    { op: 'put', path: '/b', value: 2 }, { op: 'check', path: '/a', value: 9 })));\n+  expect(book.read()).toEqual({ revision: 0, document: { a: 1 } });\n+  expect(book.snapshot().receipts).toEqual([]);\n+  expect(book.apply(request('failed', 0, { op: 'put', path: '/b', value: 2 })).revision).toBe(1);\n+  expect(book.apply(request('check', 1, { op: 'check', path: '/a', value: 1 })).revision).toBe(2);\n+});\n+\n+test('[R-10] replays historical receipts by structural request identity', () => {\n+  const book = createPatchBook({ a: 1 });\n+  const first = book.apply(request('x', 0, { op: 'put', path: '/b', value: { left: 1, right: 2 } }));\n+  book.apply(request('y', 1, { op: 'remove', path: '/a' }));\n+  const reordered = request('x', 0, { value: { right: 2, left: 1 }, path: '/b', op: 'put' });\n+  expect(book.apply(reordered)).toEqual(first);\n+  expect(book.read()).toEqual({ revision: 2, document: { b: { left: 1, right: 2 } } });\n+  failureCode('ID_CONFLICT', () => book.apply(request('x', 0, { op: 'put', path: '/b', value: 3 })));\n+  failureCode('ID_CONFLICT', () => book.apply(request('x', 1, { op: 'put', path: '/b', value: { left: 1, right: 2 } })));\n+  failureCode('PATH_SYNTAX', () => book.apply(request('x', 0, { op: 'put', path: '/bad~', value: 3 })));\n+});\n+\n+test('[R-11] snapshots preserve exact historical data and restore independently', () => {\n+  const book = createPatchBook({ a: 1 });\n+  const old = book.apply(request('first', 0, { op: 'put', path: '/b', value: 2 }));\n+  book.apply(request('second', 1, { op: 'remove', path: '/a' }));\n+  const snapshot = book.snapshot();\n+  expect(Object.keys(snapshot).sort()).toEqual(['document', 'receipts', 'revision', 'schemaVersion']);\n+  expect(snapshot.receipts[0]).toEqual({ id: 'first', baseRevision: 0,\n+    ops: [{ op: 'put', path: '/b', value: 2 }], result: old });\n+  expect(Object.keys(snapshot.receipts[0].result).sort()).toEqual(['document', 'id', 'revision']);\n+  failureCode('INVALID', () => restorePatchBook(null));\n+  failureCode('INVALID', () => restorePatchBook(3));\n+  const restored = restorePatchBook(JSON.parse(JSON.stringify(snapshot)));\n+  expect(restored.apply(request('first', 0, { op: 'put', path: '/b', value: 2 }))).toEqual(old);\n+  restored.apply(request('third', 2, { op: 'put', path: '/c', value: 3 }));\n+  expect(book.read().document).toEqual({ b: 2 });\n+  snapshot.document.b = 99;\n+  expect(book.read().document.b).toBe(2);\n+});\n+\n+test('[R-12] caller inputs and returned values cannot mutate book state or receipts', () => {\n+  const initial = { nested: { value: 1 } };\n+  const book = createPatchBook(initial);\n+  const submitted = { id: 'put', baseRevision: 0,\n+    ops: [{ op: 'put', path: '/nested', value: { value: 2 } }] };\n+  const receipt = book.apply(submitted);\n+  submitted.ops[0].value.value = 8;\n+  receipt.document.nested.value = 9;\n+  const read = book.read(); read.document.nested.value = 10;\n+  const snapshot = book.snapshot(); snapshot.receipts[0].result.document.nested.value = 11;\n+  expect(book.read().document.nested.value).toBe(2);\n+  expect(book.apply({ ...submitted, ops: [{ op: 'put', path: '/nested', value: { value: 2 } }] })).toEqual(\n+    { id: 'put', revision: 1, document: { nested: { value: 2 } } });\n+  initial.nested.value = 12;\n+  expect(book.read().document.nested.value).toBe(2);\n+});\n"
+  },
+  "checks": [
+    {
+      "id": "test",
+      "command": "node node_modules/vitest/vitest.mjs run --configLoader runner --reporter=json --outputFile=.aidept-report.json",
+      "status": "passed",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "skippedNames": [],
+      "durationMs": 1113,
+      "runs": 1,
+      "quarantined": false,
+      "issues": []
+    }
+  ],
+  "verifier": {
+    "expected": false,
+    "ran": false,
+    "verdict": null,
+    "findings": []
+  },
+  "effort": {
+    "costUsd": 0.6405342,
+    "estimated": true,
+    "tokens": 776461,
+    "aiMs": 138224,
+    "humanMs": 0,
+    "attempts": 3,
+    "repairs": 1
+  },
+  "scopeApprovals": [],
+  "skills": [],
+  "warnings": [
+    {
+      "level": "info",
+      "text": "Chưa áp dụng kiểm thử sâu cho run này."
+    },
+    {
+      "level": "info",
+      "text": "Single: Planner, viết test và review do cùng một agent làm. Đây là tự review, không phải kiểm chứng độc lập."
+    },
+    {
+      "level": "warn",
+      "text": "Cần bạn tự kiểm tra: R-13, R-14 (tiêu chí thủ công, hệ thống không kiểm được)."
+    },
+    {
+      "level": "info",
+      "text": "Công cụ phân tích mã (knip, jscpd, dependency-cruiser) chưa chạy: chưa có đánh giá về mã chết, trùng lặp hay vi phạm ranh giới module."
+    },
+    {
+      "level": "info",
+      "text": "Task đã qua 1 vòng sửa."
+    }
+  ],
+  "delivery": {
+    "kind": "branch",
+    "target": "aidept/run_509fd9fe-A",
+    "branch": "aidept/run_509fd9fe-A",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\single",
+    "delivered": false,
+    "status": "unconfirmed",
+    "commands": [
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\single\" log --oneline HEAD..aidept/run_509fd9fe-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\single\" diff HEAD..aidept/run_509fd9fe-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\single\" merge aidept/run_509fd9fe-A"
+    ]
+  }
+}

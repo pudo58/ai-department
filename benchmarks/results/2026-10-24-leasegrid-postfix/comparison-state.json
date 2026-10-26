@@ -1,0 +1,21 @@
+{
+  "createdAt": "2026-10-24T09:49:25.263Z",
+  "startingCheckpoint": "4bacc33bf6761b2d271d1ae101f37b511627cf84",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "department": {
+    "projectId": "prj_33ef3c24",
+    "runId": "run_d90095df",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-leasegrid-20261024-postfix\\department"
+  },
+  "single": {
+    "projectId": "prj_ae3f00d5",
+    "runId": "run_9079fff6",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-leasegrid-20261024-postfix\\single"
+  },
+  "departmentEffectiveBudgetUsd": 6,
+  "singleBudgetUsd": 6,
+  "evaluatorCases": 52,
+  "specHash": "11a88111dbbb2fe12818ccaa57d11b2a8b3c56b98da79868e37ad99ebac1b04c",
+  "evaluatorHash": "8700575c987a2d95f97b32a2c0d90ada5fbc6ce215cf8c59e398cd32b02d476c"
+}

@@ -1,0 +1,1901 @@
+{
+  "schemaVersion": 1,
+  "source": "stryker-vitest",
+  "status": "completed",
+  "checkpoint": "87b262644c401c4a1a1ae86ba3598b8b7b070514",
+  "slot": "A",
+  "contractVersion": 3,
+  "configHash": "da2041f6292315e8c4ad028717882499b7c7731ff038946c97b4d6591e8f3497",
+  "capability": {
+    "adapter": "stryker-vitest",
+    "root": ".",
+    "candidates": [
+      "."
+    ],
+    "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+    "status": "available",
+    "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+    "toolVersion": "9.6.1",
+    "vitestVersion": "3.2.4",
+    "configFile": "vitest.config.js"
+  },
+  "startedAt": "2026-10-25T13:39:04.666Z",
+  "durationMs": 60696,
+  "baseline": "passed",
+  "counts": {
+    "killed": 264,
+    "survived": 39,
+    "no_coverage": 7,
+    "timeout": 0,
+    "errors": 0,
+    "pending": 0
+  },
+  "mutants": [
+    {
+      "file": "src/stockroom.js",
+      "line": 48,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "NoCoverage",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "NoCoverage",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "NoCoverage",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "NoCoverage",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "NoCoverage",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 9,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 3,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 10,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 13,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 14,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 17,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 21,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 24,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 27,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 28,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 29,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 39,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 40,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 41,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 44,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 45,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 47,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 48,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 48,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 48,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 49,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 50,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 50,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 50,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 50,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 51,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 51,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 51,
+      "status": "Survived",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 51,
+      "status": "Survived",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 56,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 57,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 57,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 57,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 57,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 57,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 57,
+      "status": "Killed",
+      "mutator": "ArithmeticOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 57,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 58,
+      "status": "Killed",
+      "mutator": "ArithmeticOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 61,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 63,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 64,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 65,
+      "status": "Killed",
+      "mutator": "AssignmentOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 67,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 67,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 67,
+      "status": "Killed",
+      "mutator": "AssignmentOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 71,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 72,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 74,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 78,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Survived",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 79,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 80,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 80,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 80,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 80,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 81,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 81,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 81,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 81,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 81,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 82,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 82,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 82,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 82,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 83,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 83,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 83,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 83,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 86,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 87,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 90,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 90,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 90,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 90,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 92,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 92,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 92,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 93,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 94,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 94,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Survived",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 99,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 100,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 101,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 102,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 108,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 112,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 112,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 112,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 114,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 117,
+      "status": "Killed",
+      "mutator": "AssignmentOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 121,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 124,
+      "status": "Killed",
+      "mutator": "AssignmentOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 125,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 126,
+      "status": "Killed",
+      "mutator": "AssignmentOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 130,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 133,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 134,
+      "status": "Killed",
+      "mutator": "AssignmentOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 138,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 140,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 142,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 143,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 143,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 143,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 143,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 143,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 143,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 143,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 143,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 145,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 145,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 145,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 146,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "ArithmeticOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 147,
+      "status": "Killed",
+      "mutator": "UnaryOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 148,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 149,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 150,
+      "status": "Killed",
+      "mutator": "AssignmentOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 152,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 152,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 155,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Killed",
+      "mutator": "MethodExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Killed",
+      "mutator": "UnaryOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Survived",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 156,
+      "status": "Survived",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 157,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 161,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 161,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 163,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 174,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "EqualityOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 175,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 177,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "ConditionalExpression"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "LogicalOperator"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 178,
+      "status": "Killed",
+      "mutator": "StringLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 179,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 179,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 179,
+      "status": "Killed",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 179,
+      "status": "Survived",
+      "mutator": "BooleanLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 184,
+      "status": "Killed",
+      "mutator": "BlockStatement"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 186,
+      "status": "Killed",
+      "mutator": "ArrowFunction"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 186,
+      "status": "Killed",
+      "mutator": "ArrayDeclaration"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 186,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 193,
+      "status": "Killed",
+      "mutator": "ObjectLiteral"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 1,
+      "status": "Killed",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 1,
+      "status": "Killed",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 1,
+      "status": "Survived",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 1,
+      "status": "Killed",
+      "mutator": "Regex"
+    },
+    {
+      "file": "src/stockroom.js",
+      "line": 1,
+      "status": "Killed",
+      "mutator": "Regex"
+    }
+  ],
+  "files": [
+    "src/stockroom.js"
+  ],
+  "message": "Đã kiểm tra các mutation trong phạm vi source đã chọn.",
+  "endedAt": "2026-10-25T13:40:05.362Z",
+  "externalToSinglePipeline": true
+}

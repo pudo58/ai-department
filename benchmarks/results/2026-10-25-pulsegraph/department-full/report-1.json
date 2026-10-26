@@ -1,0 +1,1509 @@
+{
+  "execution": {
+    "available": true,
+    "automaticMs": 267695,
+    "waitingMs": 2474865,
+    "agentQueueMs": 19,
+    "spans": [
+      {
+        "id": "54b56128-8936-40d0-8cdc-73254ecef544",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T07:35:22.033Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:35:22.037Z"
+      },
+      {
+        "id": "58cecaeb-f463-4310-a137-0163a90227b1",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T07:35:22.035Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:37:15.148Z"
+      },
+      {
+        "id": "65627bd0-153f-402d-9597-893bda92c0d3",
+        "kind": "setup",
+        "label": "Chuẩn bị bản sao/cài dependency",
+        "startedAt": "2026-10-25T07:35:22.045Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:35:22.632Z"
+      },
+      {
+        "id": "4fdcc021-cbe8-4ae9-a202-2b1f98b2e5af",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T07:35:22.644Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:35:24.434Z"
+      },
+      {
+        "attemptId": "att_a8e0593f",
+        "role": "planner",
+        "id": "9ce28043-2233-403e-827e-ee5feb4e2069",
+        "kind": "agent_queue",
+        "label": "planner chờ slot",
+        "startedAt": "2026-10-25T07:35:24.456Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:35:24.458Z"
+      },
+      {
+        "attemptId": "att_a8e0593f",
+        "role": "planner",
+        "id": "abadda61-e81c-47c1-98c7-5416fe332a71",
+        "kind": "agent",
+        "label": "planner (A)",
+        "startedAt": "2026-10-25T07:35:24.460Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:35:43.143Z"
+      },
+      {
+        "attemptId": "att_221a91db",
+        "role": "author",
+        "id": "f6709e05-81b9-45c4-bfec-f95549d68a87",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T07:35:43.322Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:35:43.324Z"
+      },
+      {
+        "attemptId": "att_221a91db",
+        "role": "author",
+        "id": "08d09ddc-a2a4-40a4-b38e-a8c6df3c5a0d",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T07:35:43.326Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:36:38.408Z"
+      },
+      {
+        "retryReason": "invalid_output",
+        "id": "6a998067-642e-46d1-9e73-6ecf413542c9",
+        "kind": "tool",
+        "label": "Author sửa kế hoạch ca một lần theo 1 lỗi kiểm tra; chưa duyệt hợp đồng.",
+        "startedAt": "2026-10-25T07:36:38.562Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:36:38.564Z"
+      },
+      {
+        "attemptId": "att_201279ac",
+        "role": "author",
+        "id": "40170a8f-879d-462c-a625-bf05005b399a",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T07:36:38.579Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:36:38.581Z"
+      },
+      {
+        "attemptId": "att_201279ac",
+        "role": "author",
+        "id": "26834cd1-f09c-406d-b102-8ee67c75720f",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T07:36:38.583Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T07:37:14.985Z"
+      },
+      {
+        "id": "24998ae5-e030-4fcd-b43c-b7ae17bcb6e1",
+        "kind": "approval",
+        "label": "awaiting_approval",
+        "startedAt": "2026-10-25T07:37:15.141Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:18:29.062Z"
+      },
+      {
+        "id": "6695e1cc-3f71-4b8f-b5dd-cd30bed0dda2",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T08:18:29.062Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:18:29.066Z"
+      },
+      {
+        "id": "d090ed5f-c0c6-476d-abee-1c728231e0b2",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T08:18:29.064Z",
+        "status": "failed",
+        "endedAt": "2026-10-25T08:21:03.646Z"
+      },
+      {
+        "id": "73b06bd6-52c2-4eef-a6f9-07260e406039",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T08:18:29.073Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:18:30.717Z"
+      },
+      {
+        "attemptId": "att_82702d58",
+        "role": "author",
+        "id": "92a19887-9d02-4ed0-8f11-34862e529840",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T08:18:30.749Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:18:30.752Z"
+      },
+      {
+        "attemptId": "att_82702d58",
+        "role": "author",
+        "id": "a3169851-3b56-4379-8030-8294806e6cc1",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T08:18:30.754Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:19:31.698Z"
+      },
+      {
+        "attemptId": "att_ffac4471",
+        "role": "developer",
+        "id": "16986055-24e2-4140-b233-4c77c40e6083",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T08:19:32.085Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:19:32.088Z"
+      },
+      {
+        "attemptId": "att_ffac4471",
+        "role": "developer",
+        "id": "fc9f100d-073b-46f6-bd2d-98d6c903c576",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T08:19:32.091Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:20.066Z"
+      },
+      {
+        "id": "23bbd216-f4e5-4b09-8215-70fbcc2d72e6",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T08:20:20.398Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:21.601Z"
+      },
+      {
+        "retryReason": "check_failure",
+        "id": "33f191c0-2f19-453c-a63a-7f23222f0531",
+        "kind": "tool",
+        "label": "Chạy lại check test một lần để kiểm tra flaky; chưa quy lỗi cho source hay test.",
+        "startedAt": "2026-10-25T08:20:21.605Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:21.607Z"
+      },
+      {
+        "id": "0f3d8217-501e-4af7-9f2f-f8d3088aea5d",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T08:20:21.615Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:23.026Z"
+      },
+      {
+        "attemptId": "att_4849c27a",
+        "role": "author",
+        "id": "7ead02dc-7747-47e4-a3e2-3d62ed5f5829",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T08:20:23.058Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:23.060Z"
+      },
+      {
+        "attemptId": "att_4849c27a",
+        "role": "author",
+        "id": "726d8c56-3182-48ea-99a6-372d2b198ba4",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T08:20:23.062Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:33.554Z"
+      },
+      {
+        "retryReason": "implementation",
+        "id": "94aa5a3f-0300-42d1-9b04-94502dad119f",
+        "kind": "tool",
+        "label": "Chẩn đoán: implementation",
+        "startedAt": "2026-10-25T08:20:33.574Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:33.577Z"
+      },
+      {
+        "attemptId": "att_384a263c",
+        "role": "developer",
+        "id": "2164eeef-1a41-400a-9557-4f313ca3d273",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T08:20:33.683Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:33.686Z"
+      },
+      {
+        "attemptId": "att_384a263c",
+        "role": "developer",
+        "id": "e040f642-8507-40fd-8f2f-b7d39edac45e",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T08:20:33.688Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:46.926Z"
+      },
+      {
+        "attemptId": "att_659e510b",
+        "role": "developer",
+        "id": "8826ee46-b2b0-4fed-bc7a-273340f0afbe",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T08:20:47.081Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:20:47.083Z"
+      },
+      {
+        "attemptId": "att_659e510b",
+        "role": "developer",
+        "id": "5fed5c07-56ad-4820-8366-bea560e69698",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T08:20:47.086Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T08:21:03.492Z"
+      },
+      {
+        "id": "5673824d-dd51-4854-9d87-85ae69788391",
+        "kind": "approval",
+        "label": "failed",
+        "startedAt": "2026-10-25T08:21:03.641Z",
+        "status": "running"
+      }
+    ],
+    "attemptsByRole": {
+      "planner": 1,
+      "author": 4,
+      "developer": 3
+    },
+    "retries": [
+      {
+        "reason": "invalid_output",
+        "count": 1
+      },
+      {
+        "reason": "check_failure",
+        "count": 1
+      },
+      {
+        "reason": "implementation",
+        "count": 1
+      }
+    ]
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "runtime": "local",
+    "workspace": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\pulsegraph-20261025\\workspaces\\run_dfd3d309-A",
+    "configHash": "3ab91e75ad1908240b235c0f2f97b5b6077b831c9504c3e7c6fe0d25cb11acef",
+    "checkpoint": null,
+    "startedAt": "2026-10-25T08:18:29.078Z",
+    "endedAt": "2026-10-25T08:18:30.716Z",
+    "checks": [
+      {
+        "recipeId": "test",
+        "runner": "vitest",
+        "version": "vitest/3.2.4 win32-x64 node-v24.12.0",
+        "status": "passed",
+        "message": "Runner tải cấu hình và discovery thành công; chưa chứng minh test nghiệp vụ đạt."
+      }
+    ],
+    "limitation": "Kiểm tra trên runtime chạy checks; không xác nhận quyền thực thi trong sandbox riêng của agent. Không phải bằng chứng nghiệm thu."
+  },
+  "quality": {
+    "enabled": true,
+    "plan": {
+      "schemaVersion": 2,
+      "statefulModelVersion": 1,
+      "cases": [
+        {
+          "id": "C-1",
+          "group": "boundary",
+          "risk": "Constructor accepts invalid logical time or retry options.",
+          "priority": "high",
+          "preconditions": "Public API is available.",
+          "actions": "Call createScheduler with now=-1, then with retryBase=0, then with maxAttempts=0. Also try a non-safe-integer value for each option.",
+          "expected": "Each call throws. No specific error code is asserted because the contract does not specify one.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-1",
+                "quote": "now is a nonnegative safe integer, and retryBase and maxAttempts are positive safe integers."
+              }
+            ],
+            "explanation": "Each supplied value violates one constructor option constraint. The contract requires valid option ranges but does not specify an error code."
+          },
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-1"
+          ]
+        },
+        {
+          "id": "C-2",
+          "group": "boundary",
+          "risk": "submit accepts invalid scalar fields or dependency lists, or changes state after rejection.",
+          "priority": "high",
+          "preconditions": "Create a scheduler and submit job A with no dependencies.",
+          "actions": "Try an empty ID and a non-safe-integer priority. Separately try a self-dependency, duplicate dependency, and unknown dependency. After each rejection, inspect snapshot; then submit valid job B depending on A.",
+          "expected": "Invalid scalar fields throw with code INVALID_INPUT; invalid dependency lists throw with code INVALID_DEPENDENCIES; the missing dependency throws with code UNKNOWN_DEPENDENCY. Rejected submissions do not add jobs. B is accepted with dependency A.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-2",
+                "quote": "Invalid scalar fields throw INVALID_INPUT; invalid dependency lists throw INVALID_DEPENDENCIES; missing dependencies throw UNKNOWN_DEPENDENCY;"
+              }
+            ],
+            "explanation": "Each invalid submission violates one listed condition at a time. Snapshot inspection checks that rejection did not partially add a job; the final valid submission checks the scheduler remains usable."
+          },
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-2"
+          ]
+        },
+        {
+          "id": "C-3",
+          "group": "happy",
+          "risk": "A new job has incorrect initial fields or does not start ready when its dependencies are done.",
+          "priority": "high",
+          "preconditions": "Create a scheduler with now=7. Submit A, claim A, and complete A with a JSON result.",
+          "actions": "Submit B with dependsOn [A]. Inspect B with get and inspect the scheduler snapshot.",
+          "expected": "B is ready, has attempt 0 and availableAt 7, and has no result or lastError. Its view contains the required job fields.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-3",
+                "quote": "ready when all dependencies are done"
+              },
+              {
+                "requirementId": "R-4",
+                "quote": "A submitted job starts at attempt 0 and availableAt equal to current logical time, with no result or lastError."
+              }
+            ],
+            "explanation": "A is completed before B is submitted, so B's sole dependency is done. The scheduler time remains 7, which determines B's initial availableAt."
+          },
+          "steps": [
+            {
+              "action": "Submit A, claim it, and complete it.",
+              "expected": "A is done."
+            },
+            {
+              "action": "Submit B depending on A, then inspect B.",
+              "expected": "B is ready with attempt 0 and availableAt 7, and has no result or lastError."
+            }
+          ],
+          "invariants": [
+            "Every accepted job has its required fields: id, dependsOn, priority, sequence, status, attempt, and availableAt."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-3",
+            "R-4"
+          ]
+        },
+        {
+          "id": "C-4",
+          "group": "dependency",
+          "risk": "Blocking fails to propagate or blockedBy does not follow dependsOn order.",
+          "priority": "high",
+          "preconditions": "Create a scheduler and submit A and B without dependencies.",
+          "actions": "Submit C with dependsOn [B,A], then D with dependsOn [C]. Cancel A and inspect C and D.",
+          "expected": "C and D are blocked. C.blockedBy is A, the first unsuccessful dependency in C's dependsOn order; D is blocked by C.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-3",
+                "quote": "Blocking propagates transitively; blockedBy is the first unsuccessful dependency in dependsOn order."
+              }
+            ],
+            "explanation": "A is unsuccessful after cancellation. C lists B before A, so A is its first unsuccessful dependency; D depends on blocked C, so blocking propagates."
+          },
+          "steps": [
+            {
+              "action": "Submit C depending on [B,A] and D depending on [C].",
+              "expected": "C and D are waiting."
+            },
+            {
+              "action": "Cancel A and inspect C and D.",
+              "expected": "C and D are blocked; C.blockedBy is A and D.blockedBy is C."
+            }
+          ],
+          "invariants": [
+            "A job with an unsuccessful dependency is blocked, and blocking propagates to its descendants.",
+            "For each blocked job, blockedBy is the first unsuccessful dependency in dependsOn order."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-3"
+          ]
+        },
+        {
+          "id": "C-5",
+          "group": "happy",
+          "risk": "claim ignores priority or submission order, or returns an incorrect lease view.",
+          "priority": "high",
+          "preconditions": "Create a scheduler at time 0. Submit A with priority 5, then B with priority 1, then C with priority 5.",
+          "actions": "Claim with worker w and leaseFor 4, then claim again with worker x and leaseFor 2.",
+          "expected": "The first claim is A and the second is C. Each claimed view has attempt 1, its assigned worker, a distinct increasing token, and leaseUntil equal to now plus that claim's leaseFor.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-5",
+                "quote": "otherwise it selects by priority descending, submission sequence ascending, then JavaScript string ID order, increments attempt and the global token, and returns a leased view with leaseUntil equal to now + leaseFor."
+              }
+            ],
+            "explanation": "A and C have equal higher priority, so earlier submission order selects A first and C next. Both claims occur at time 0; their leaseUntil values are respectively 4 and 2."
+          },
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-5"
+          ]
+        },
+        {
+          "id": "C-6",
+          "group": "authorization",
+          "risk": "Lease operations accept a wrong worker or token, or renew changes the fencing token.",
+          "priority": "high",
+          "preconditions": "Create a scheduler, submit A, and claim it as worker w with leaseFor 3. Save its token.",
+          "actions": "Try renew, complete, and fail with a wrong worker or token, one mismatch per call. Then renew with the correct worker and token using leaseFor 5.",
+          "expected": "Each mismatched lease operation throws an Error with code LEASE_LOST. The valid renewal retains the token and sets leaseUntil to 5 when current time is 0.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-6",
+                "quote": "A lease operation succeeds only when the job is leased and its worker and token match; otherwise it throws an Error with code LEASE_LOST."
+              },
+              {
+                "requirementId": "R-6",
+                "quote": "renew keeps the token and sets leaseUntil to max(old leaseUntil, now + leaseFor)."
+              }
+            ],
+            "explanation": "Each negative call violates a single lease identity condition. At time 0, max(3, 5) is 5 for the valid renewal."
+          },
+          "steps": [
+            {
+              "action": "Attempt lease operations with a mismatched worker or token.",
+              "expected": "Each operation throws an Error with code LEASE_LOST."
+            },
+            {
+              "action": "Renew A with its matching worker and token for 5 time units.",
+              "expected": "The lease token is unchanged and leaseUntil is 5."
+            }
+          ],
+          "invariants": [
+            "A lease operation succeeds only for a leased job with matching worker and token.",
+            "A rejected lease operation does not invalidate the current matching lease."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-6"
+          ]
+        },
+        {
+          "id": "C-7",
+          "group": "consistency",
+          "risk": "Mutating input results, returned views, or snapshots changes scheduler state.",
+          "priority": "high",
+          "preconditions": "Create a scheduler and submit A. Prepare a JSON-compatible result object with a nested field.",
+          "actions": "Claim and complete A with the result. Mutate the submitted result and the returned completion view. Read A, take a snapshot, mutate the snapshot's job view, then read A and take another snapshot.",
+          "expected": "Scheduler state retains the result as it was at completion, and mutations to returned views or snapshots do not alter get or subsequent snapshot results.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-7",
+                "quote": "Mutating the submitted result or returned job view does not mutate scheduler state."
+              },
+              {
+                "requirementId": "R-11",
+                "quote": "Mutating a returned snapshot or job view does not mutate scheduler state."
+              }
+            ],
+            "explanation": "The test mutates each caller-owned value after the scheduler has accepted or returned it, then observes scheduler state through the public API."
+          },
+          "steps": [
+            {
+              "action": "Complete A with the prepared result, then mutate the input result and returned view.",
+              "expected": "A's stored result remains equal to the result as submitted."
+            },
+            {
+              "action": "Mutate a returned snapshot and read A and a fresh snapshot.",
+              "expected": "Scheduler state and the fresh snapshot remain unchanged by the snapshot mutation."
+            }
+          ],
+          "invariants": [
+            "Caller mutations to inputs and returned values do not mutate scheduler state."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-7",
+            "R-11"
+          ]
+        },
+        {
+          "id": "C-8",
+          "group": "state",
+          "risk": "Retry timing, attempt limits, or lastError are wrong across repeated failures.",
+          "priority": "high",
+          "preconditions": "Create a scheduler with retryBase=2 and maxAttempts=3. Submit A.",
+          "actions": "Claim and fail A twice, advancing to each availableAt before the next claim. Claim and fail A a third time. Inspect A after each operation.",
+          "expected": "After attempt 1, A is ready with availableAt 2 and the first error. After attempt 2, it is ready with availableAt 6 and the second error. After attempt 3, it is dead; no fourth attempt is available.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-8",
+                "quote": "schedules a ready retry at now + retryBase * 2^(attempt-1) when attempt is below maxAttempts; otherwise it marks the job dead"
+              }
+            ],
+            "explanation": "With retryBase 2, the first failure schedules time 2 and the second failure at time 2 schedules time 6. The third claim reaches maxAttempts, so its failure makes A dead."
+          },
+          "steps": [
+            {
+              "action": "Claim A once and fail it with error e1.",
+              "expected": "A is ready with attempt 1, availableAt 2, and lastError e1."
+            },
+            {
+              "action": "Advance to 2, claim A for attempt 2, and fail it with error e2.",
+              "expected": "A is ready with attempt 2, availableAt 6, and lastError e2."
+            },
+            {
+              "action": "Advance to 6, claim A for attempt 3, and fail it with error e3.",
+              "expected": "A is dead with attempt 3 and lastError e3."
+            }
+          ],
+          "invariants": [
+            "The attempt count includes the original claim and never exceeds maxAttempts.",
+            "A retry is not claimable before its availableAt time."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-8"
+          ]
+        },
+        {
+          "id": "C-9",
+          "group": "state",
+          "risk": "Cancel fails to invalidate a lease or does not reject terminal and unknown jobs correctly.",
+          "priority": "high",
+          "preconditions": "Create a scheduler, submit A, and claim A. Also submit B and complete it.",
+          "actions": "Cancel leased A, then try completing it with its former lease. Try cancelling done job B and cancelling an unknown ID.",
+          "expected": "A becomes cancelled and its former lease operation throws LEASE_LOST. Cancelling B throws JOB_TERMINAL; cancelling the unknown ID throws UNKNOWN_JOB.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-9",
+                "quote": "cancels any nonterminal job, including a leased job, invalidates its lease, and blocks descendants."
+              },
+              {
+                "requirementId": "R-9",
+                "quote": "Cancelling a terminal job throws JOB_TERMINAL; unknown IDs throw UNKNOWN_JOB."
+              }
+            ],
+            "explanation": "A is leased and nonterminal when cancelled; B is already done and the final ID was never submitted. These conditions exercise the specified outcomes separately."
+          },
+          "steps": [
+            {
+              "action": "Cancel leased A and inspect it.",
+              "expected": "A is cancelled and has no lease fields."
+            },
+            {
+              "action": "Complete A with its former lease, cancel terminal B, and cancel an unknown ID.",
+              "expected": "The calls throw LEASE_LOST, JOB_TERMINAL, and UNKNOWN_JOB respectively."
+            }
+          ],
+          "invariants": [
+            "A cancelled job is terminal and its former lease is invalid.",
+            "Terminal jobs remain terminal."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-9"
+          ]
+        },
+        {
+          "id": "C-10",
+          "group": "boundary",
+          "risk": "advance mishandles the exact lease deadline, expiry order, or invalid times.",
+          "priority": "high",
+          "preconditions": "Create a scheduler. Submit A then B and claim both with leaseFor 4. Submit C and claim it with leaseFor 2. Save a snapshot.",
+          "actions": "Call advance with a time below now, a negative value, and a non-safe integer; then call advance(2), followed by advance(4).",
+          "expected": "Invalid calls throw INVALID_TIME without changing state. advance(2) reports C expired. advance(4) reports A then B, ordered by submission sequence for their shared deadline. Expired jobs have lastError LEASE_EXPIRED.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-10",
+                "quote": "invalid values throw INVALID_TIME without changing state."
+              },
+              {
+                "requirementId": "R-10",
+                "quote": "It updates logical time and expires leases whose leaseUntil is at most time, ordered by deadline then submission sequence."
+              },
+              {
+                "requirementId": "R-10",
+                "quote": "Each expiry follows fail retry/dead behavior with lastError LEASE_EXPIRED;"
+              }
+            ],
+            "explanation": "The leases have deadlines 4, 4, and 2. Advancing to each exact deadline tests the inclusive boundary and verifies ordering within the shared deadline."
+          },
+          "steps": [
+            {
+              "action": "Call advance with invalid times and compare snapshots.",
+              "expected": "Each call throws INVALID_TIME and scheduler state is unchanged."
+            },
+            {
+              "action": "Call advance(2), then advance(4).",
+              "expected": "The first result has expired [C]; the second has expired [A,B]. Expiry errors are LEASE_EXPIRED."
+            }
+          ],
+          "invariants": [
+            "Logical time never decreases.",
+            "Each lease expires at its deadline, and expiry processing follows deadline then submission order."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-10"
+          ]
+        },
+        {
+          "id": "C-11",
+          "group": "consistency",
+          "risk": "Snapshot omits fields, includes unexpected top-level fields, or exposes mutable scheduler state.",
+          "priority": "high",
+          "preconditions": "Create a scheduler with now=3, retryBase=4, maxAttempts=2 and submit A.",
+          "actions": "Take a snapshot and inspect its top-level keys and job fields. Mutate the returned snapshot, then inspect a fresh snapshot and get(A).",
+          "expected": "Top-level keys are exactly schemaVersion, now, retryBase, maxAttempts, nextSequence, nextToken, and jobs. The job has its complete current view. Mutations do not affect scheduler state.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-11",
+                "quote": "snapshot returns exactly schemaVersion, now, retryBase, maxAttempts, nextSequence, nextToken, and jobs;"
+              },
+              {
+                "requirementId": "R-11",
+                "quote": "Mutating a returned snapshot or job view does not mutate scheduler state."
+              }
+            ],
+            "explanation": "The test checks the exact key set and mutates caller-owned snapshot data before re-reading state through public methods."
+          },
+          "steps": [
+            {
+              "action": "Take and inspect a snapshot.",
+              "expected": "It has exactly the specified top-level keys and includes A's complete current view."
+            },
+            {
+              "action": "Mutate the returned snapshot and read a fresh snapshot and get(A).",
+              "expected": "The fresh values reflect unchanged scheduler state."
+            }
+          ],
+          "invariants": [
+            "Snapshot output is detached from scheduler state.",
+            "Snapshot top-level keys match the specified set exactly."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-11"
+          ]
+        },
+        {
+          "id": "C-12",
+          "group": "consistency",
+          "risk": "JSON-cloned restore loses active leases, retry state, sequence or fencing-token history, or shares state with the original.",
+          "priority": "high",
+          "preconditions": "Create a scheduler with retryBase=2 and maxAttempts=3. Submit A, claim it, and fail it so it is queued for retry. Submit B and claim it, leaving B leased.",
+          "actions": "Take a snapshot, JSON-clone it, and restore a second scheduler. On each scheduler advance to the same time, inspect jobs and claim available work. Then mutate the original and inspect the restored scheduler.",
+          "expected": "The restored scheduler preserves time, options, jobs, retry timing, lease fields, submission order, and next token. Both schedulers exhibit the same behavior when given the same operations, and later mutations to one do not affect the other.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-12",
+                "quote": "JSON-cloning a snapshot before restore preserves behavior, and original/restored schedulers evolve independently."
+              }
+            ],
+            "explanation": "The snapshot includes both a retry and an active lease, exercising restoration of timing and lease state. Matching operations compare behavior; mutating only one scheduler checks independence."
+          },
+          "steps": [
+            {
+              "action": "JSON-clone the snapshot and restore a scheduler from it.",
+              "expected": "The restored snapshot matches the source scheduler's snapshot values, including the queued retry and active lease."
+            },
+            {
+              "action": "Advance and claim on each scheduler, then mutate only the original scheduler.",
+              "expected": "Equivalent operations produce equivalent results; subsequent state changes to the original do not change the restored scheduler."
+            }
+          ],
+          "invariants": [
+            "Restored state preserves the next fencing token so a prior token is not reused.",
+            "Original and restored schedulers evolve independently."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-12"
+          ]
+        },
+        {
+          "id": "C-13",
+          "group": "concurrency",
+          "risk": "A stale lease is accepted after another worker claims the same job, or claim implicitly expires a lease.",
+          "priority": "high",
+          "preconditions": "Create a scheduler, submit A, and claim it as worker w1 with leaseFor 1. Keep the scheduler logical time unchanged.",
+          "actions": "Call claim again as w2. Then advance to time 1 and try completing A with the original worker and token.",
+          "expected": "The second claim returns null while A remains leased; claim does not expire it. After advance(1), completion with the old lease throws LEASE_LOST.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-5",
+                "quote": "It returns null when no ready job is available;"
+              },
+              {
+                "requirementId": "R-13",
+                "quote": "The scheduler uses no wall clock, and claim does not implicitly expire leases."
+              },
+              {
+                "requirementId": "R-6",
+                "quote": "otherwise it throws an Error with code LEASE_LOST."
+              }
+            ],
+            "explanation": "A is leased and no other job is ready, so claim returns null at unchanged logical time. Advancing to the exact deadline expires the lease, making the old lease invalid."
+          },
+          "steps": [
+            {
+              "action": "Call claim as w2 without advancing logical time.",
+              "expected": "It returns null and A remains leased to w1 with its original token."
+            },
+            {
+              "action": "Advance to 1 and complete using A's former lease.",
+              "expected": "The operation throws an Error with code LEASE_LOST."
+            }
+          ],
+          "invariants": [
+            "A job has at most one current lease.",
+            "A lease remains current until an operation changes its state or advance reaches its deadline."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-5",
+            "R-13",
+            "R-6"
+          ]
+        },
+        {
+          "id": "C-14",
+          "group": "state",
+          "risk": "Completing a retry fails to clear lastError or release dependents.",
+          "priority": "high",
+          "preconditions": "Create a scheduler, submit A and dependent B, then claim and fail A once.",
+          "actions": "Advance to A's availableAt, claim A again, and complete it with a result. Inspect A and B.",
+          "expected": "A is done with the result, no lastError, and no lease fields. B becomes ready.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-7",
+                "quote": "complete stores a detached result, clears lastError and lease fields, marks the job done, and makes newly unblocked dependents ready."
+              }
+            ],
+            "explanation": "A's first failure leaves it unfinished, so B waits. Completing A after its retry makes the dependency done and applies the specified cleanup."
+          },
+          "steps": [
+            {
+              "action": "Fail A once while B depends on it.",
+              "expected": "A is ready for retry and B remains waiting."
+            },
+            {
+              "action": "Advance to retry time, claim A, and complete it.",
+              "expected": "A is done with no lastError or lease fields, and B is ready."
+            }
+          ],
+          "invariants": [
+            "Dependents remain waiting until all dependencies are done.",
+            "Completed jobs have no lease fields."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-7"
+          ]
+        },
+        {
+          "id": "C-15",
+          "group": "happy",
+          "risk": "Duplicate IDs are accepted or the required duplicate-ID error is wrong.",
+          "priority": "high",
+          "preconditions": "Create a scheduler and submit job A.",
+          "actions": "Submit another job with ID A and then inspect the scheduler.",
+          "expected": "The second submission throws with code JOB_EXISTS; the original A remains present.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-2",
+                "quote": "reusing an ID throws JOB_EXISTS."
+              }
+            ],
+            "explanation": "The second submission reuses an already accepted ID, exercising the specified duplicate-ID outcome."
+          },
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-2"
+          ]
+        },
+        {
+          "id": "C-16",
+          "group": "state",
+          "risk": "A repeated advance preserves expiry processing order and applies retry scheduling to multiple expired leases.",
+          "priority": "high",
+          "preconditions": "Create a scheduler with retryBase=2 and maxAttempts=2. Submit A and B in that order. Claim both at time 0 with leaseFor 3.",
+          "actions": "Advance to time 3 and inspect both expired leases. Advance to time 5, claim A and B again with leaseFor 1, then advance to time 6 and inspect the expired list and states.",
+          "expected": "At time 3, expired is [A,B]; both are ready with attempt 1, lastError LEASE_EXPIRED and availableAt 5. advance(5) reports expired []; each new claim then has attempt 2 and leaseUntil 6. advance(6) reports expired [A,B]; both are dead with attempt 2 and lastError LEASE_EXPIRED.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-10",
+                "quote": "Each expiry follows fail retry/dead behavior with lastError LEASE_EXPIRED;"
+              },
+              {
+                "requirementId": "R-10",
+                "quote": "It updates logical time and expires leases whose leaseUntil is at most time, ordered by deadline then submission sequence."
+              },
+              {
+                "requirementId": "R-8",
+                "quote": "The attempt limit includes the original claim."
+              },
+              {
+                "requirementId": "R-5",
+                "quote": "claim requires a nonempty worker and positive safe-integer leaseFor. It returns null when no ready job is available; otherwise it selects by priority descending, submission sequence ascending, then JavaScript string ID order, increments attempt and the global token, and returns a leased view with leaseUntil equal to now + leaseFor."
+              }
+            ],
+            "explanation": "The first leases expire at 3 and their attempt-1 backoff is 2, so retries become available at 5. New claims at 5 with positive leaseFor 1 end at 6, not 5. At that second expiry, attempt 2 reaches maxAttempts and both jobs become dead. Shared deadlines use submission order."
+          },
+          "steps": [
+            {
+              "action": "Advance to the original shared lease deadline 3.",
+              "expected": "The result is {now:3,expired:[A,B]}; A and B are ready with attempt 1, availableAt 5 and lastError LEASE_EXPIRED."
+            },
+            {
+              "action": "Advance to 5 and claim A and B in order with leaseFor 1.",
+              "expected": "advance returns {now:5,expired:[]}; both claims have attempt 2 and leaseUntil 6."
+            },
+            {
+              "action": "Advance to the new shared lease deadline 6.",
+              "expected": "The result is {now:6,expired:[A,B]}; both jobs are dead with attempt 2 and lastError LEASE_EXPIRED."
+            }
+          ],
+          "invariants": [
+            "Each expired lease is processed once in deadline then submission order.",
+            "The attempt limit includes the original claim."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-10",
+            "R-8",
+            "R-5"
+          ]
+        }
+      ],
+      "notApplicable": [],
+      "questions": []
+    },
+    "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c",
+    "manifestProblems": [],
+    "capability": {
+      "status": "unsupported",
+      "reason": "Chưa nhận diện khả năng mutation trên checkpoint này."
+    },
+    "mutation": null,
+    "testMs": 2479,
+    "cases": [
+      {
+        "caseId": "C-1",
+        "requirementIds": [
+          "R-1"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-1][C-1] constructor validates logical time and retry options\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-2",
+        "requirementIds": [
+          "R-2"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-2][C-2] submit rejects invalid scalar and dependency inputs atomically\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-3",
+        "requirementIds": [
+          "R-3",
+          "R-4"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-3][R-4][C-3] submitted dependent of a done job is ready with initial fields\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-4",
+        "requirementIds": [
+          "R-3"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-3][C-4] unsuccessful dependencies block transitively using dependency order\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-5",
+        "requirementIds": [
+          "R-5"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "failed",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-5][C-5] claim orders by priority then submission sequence and returns lease fields\"]]"
+        ],
+        "reasons": [
+          "test: test thất bại."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-6",
+        "requirementIds": [
+          "R-6"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-6][C-6] lease identity is enforced and renewal preserves token\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-7",
+        "requirementIds": [
+          "R-7",
+          "R-11"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-7][R-11][C-7] result, completion views, and snapshots are detached\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-8",
+        "requirementIds": [
+          "R-8"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-8][C-8] retries use exponential backoff and stop at the attempt limit\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-9",
+        "requirementIds": [
+          "R-9"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-9][C-9] cancellation invalidates active leases and rejects terminal or unknown IDs\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-10",
+        "requirementIds": [
+          "R-10"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-10][C-10] advance rejects invalid time atomically and expires at inclusive deadlines\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-11",
+        "requirementIds": [
+          "R-11"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-11][C-11] snapshot has the exact public shape and detached job views\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-12",
+        "requirementIds": [
+          "R-12"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-12][C-12] JSON-cloned restore preserves leases, retries, token history, and independence\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-13",
+        "requirementIds": [
+          "R-5",
+          "R-13",
+          "R-6"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-5][R-13][R-6][C-13] claim does not expire a lease before logical time advances\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-14",
+        "requirementIds": [
+          "R-7"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-7][C-14] completing a retry clears its error and readies dependents\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-15",
+        "requirementIds": [
+          "R-2"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-2][C-15] duplicate job IDs throw JOB_EXISTS and preserve the original\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      },
+      {
+        "caseId": "C-16",
+        "requirementIds": [
+          "R-10",
+          "R-8",
+          "R-5"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "missing",
+        "tests": [
+          "test: @json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-10][R-8][R-5][C-16] repeated lease expiry orders jobs and applies retry then dead behavior\"]]"
+        ],
+        "reasons": [
+          "test: test chưa chạy đạt hoặc report không hợp lệ/skip/flaky/quarantine."
+        ],
+        "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "d6a9b91feffee012f132a0848a5840e4e8b46b5d94f67d19d973ae432cb8135c"
+      }
+    ]
+  },
+  "qualityPolicyVersion": 2,
+  "generatedAt": "2026-10-25T08:21:04.577Z",
+  "runId": "run_dfd3d309",
+  "title": "PulseGraph / department / GPT-6 Luna medium",
+  "requirement": "# PulseGraph — deterministic dependency scheduler\n\nImplement `src/scheduler.js` as an in-memory deterministic job scheduler. Export `createScheduler({now=0,retryBase=2,maxAttempts=3}={})` and `restoreScheduler(snapshot)`. Methods are synchronous or async; callers may always await them. Inputs/results are plain JSON.\n\nThe scheduler exposes `submit({id,dependsOn=[],priority=0})`, `get(id)`, `claim({worker,leaseFor})`, `renew({id,worker,token,leaseFor})`, `complete({id,worker,token,result})`, `fail({id,worker,token,error})`, `cancel(id)`, `advance(time)`, and `snapshot()`.\n\n1. IDs and worker names are nonempty strings. A new job ID is unique forever. `dependsOn` contains unique IDs of jobs that already exist; self/unknown/duplicate dependencies are invalid. Because dependencies must pre-exist, accepted jobs form a DAG. Priority is a safe integer; larger values run first. `retryBase` and `maxAttempts` are positive safe integers. Logical time starts at nonnegative safe integer `now`.\n2. A job is `waiting` while one or more dependencies are unfinished; it is `ready` when all dependencies are `done`. A dependency ending `dead`, `cancelled` or `blocked` makes the job `blocked`; blocking propagates transitively. A queued retry is `ready` but cannot be claimed before `availableAt`. Terminal states are `done`, `dead`, `cancelled`, and `blocked`.\n   Every job view contains `id,dependsOn,priority,sequence,status,attempt,availableAt`; `blockedBy` appears only on blocked jobs, `worker,token,leaseUntil` only on leased jobs, and `result`/`lastError` only when present. Views are detached.\n3. `submit` is atomic. If dependencies are already done, the new job is immediately ready. If a dependency is already terminal-unsuccessful, it is immediately blocked. Jobs cannot be deleted. Initial `attempt` is 0, `availableAt` is current time, `result` and `lastError` are absent.\n4. `claim` validates nonempty worker and positive safe integer `leaseFor`. It returns null if no ready job is available. Otherwise select by priority descending, submission order ascending, then ID using JavaScript string comparison. Claim increments that job's attempt and a scheduler-wide fencing token, then returns a detached job view with `worker`, `token`, and `leaseUntil=now+leaseFor`. Tokens start at 1, increase globally for every claim, and never repeat after restore.\n5. A lease is current only while the job is `leased` and worker/token match; otherwise lease operations throw an Error with code `LEASE_LOST`. `advance` expires leases at the exact boundary before returning, so a later operation with that token sees `LEASE_LOST`. `renew` at a current lease extends to `max(oldLeaseUntil, now+leaseFor)` and keeps the token. `complete` stores a detached result, clears `lastError` and the lease, changes state to done and readies newly-unblocked dependents. `fail` requires a nonempty error string, records it, clears the lease and either schedules retry at `now + retryBase * 2^(attempt-1)` (if attempts < maxAttempts) or marks the job dead and blocks descendants. The attempt limit includes the original claim.\n6. `cancel(id)` cancels any nonterminal job, including a leased one, invalidates its lease, and blocks descendants. Cancelling a terminal job throws `JOB_TERMINAL`. A blocked job view has `blockedBy` set to its first dependency in dependsOn that is dead/cancelled/blocked. Unknown IDs throw `UNKNOWN_JOB`; submitting an existing ID throws `JOB_EXISTS`; invalid scalar fields throw `INVALID_INPUT`; invalid dependency lists throw `INVALID_DEPENDENCIES`; missing dependencies throw `UNKNOWN_DEPENDENCY`.\n7. `advance(time)` requires a nonnegative safe integer not less than current time or throws `INVALID_TIME` without changing state. It expires every lease with `leaseUntil <= time`, processing deadline then submission order. Each expiry follows the same retry/dead rule as fail, with lastError `LEASE_EXPIRED`. It returns `{now,expired:[jobIds]}` in that processing order. No wall clock is used; `claim` never implicitly expires leases. Advancing with no expiry still updates time.\n8. `snapshot()` returns exactly `{schemaVersion:1,now,retryBase,maxAttempts,nextSequence,nextToken,jobs}`; each job has its complete view including `sequence`, current status, and optional lease/result/error fields. Mutating caller input, returned result, view or snapshot cannot change scheduler state. Snapshot/JSON-clone/restore preserves time, options, submission order, every job and dependency, retry schedule, result/error, lease, next fencing token and terminal history. Original and restored schedulers then evolve independently. Only snapshots produced by this implementation are required inputs to restore.\n\nError precedence is specified only where stated above; do not test precedence for inputs violating several unrelated rules at once. No persistence, network, threads, timers, worker execution, fairness guarantee beyond the stated ordering, or dependency deletion is required. Keep source compact, use the public API in tests, and do not add behavior beyond this contract.",
+  "mode": "verify",
+  "provider": "codex",
+  "readiness": "not_ready",
+  "notReadyReasons": [
+    "Check \"test\" đang fail.",
+    "Yêu cầu chưa được xác minh: R-1, R-2, R-3, R-4, R-5, R-6, R-7, R-8, R-9, R-10, R-11, R-12, R-13.",
+    "C-1: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-2: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-3: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-4: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-5: ca bắt buộc thất bại.",
+    "C-6: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-7: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-8: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-9: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-10: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-11: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-12: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-13: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-14: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-15: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-16: ca bắt buộc chưa có bằng chứng đạt."
+  ],
+  "checkpoint": "deac8af6e43e85735c1fd2f3d86211788237e98f",
+  "baseSha": "64ab45c3819ea857e420355566e0acefed89ffd6",
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "createScheduler({now=0,retryBase=2,maxAttempts=3}={}) initializes a scheduler; now is a nonnegative safe integer, and retryBase and maxAttempts are positive safe integers.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-2",
+      "text": "submit accepts a nonempty unique ID, unique pre-existing dependency IDs that exclude the job itself, and a safe-integer priority. Invalid scalar fields throw INVALID_INPUT; invalid dependency lists throw INVALID_DEPENDENCIES; missing dependencies throw UNKNOWN_DEPENDENCY; reusing an ID throws JOB_EXISTS.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-3",
+      "text": "Accepted jobs follow dependency state: waiting while a dependency is unfinished, ready when all dependencies are done, and blocked when a dependency is dead, cancelled, or blocked. Blocking propagates transitively; blockedBy is the first unsuccessful dependency in dependsOn order.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-4",
+      "text": "A submitted job starts at attempt 0 and availableAt equal to current logical time, with no result or lastError. It is immediately ready if all dependencies are done and immediately blocked if a dependency is already unsuccessful.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-5",
+      "text": "claim requires a nonempty worker and positive safe-integer leaseFor. It returns null when no ready job is available; otherwise it selects by priority descending, submission sequence ascending, then JavaScript string ID order, increments attempt and the global token, and returns a leased view with leaseUntil equal to now + leaseFor.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-6",
+      "text": "A lease operation succeeds only when the job is leased and its worker and token match; otherwise it throws an Error with code LEASE_LOST. renew keeps the token and sets leaseUntil to max(old leaseUntil, now + leaseFor).",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-7",
+      "text": "complete stores a detached result, clears lastError and lease fields, marks the job done, and makes newly unblocked dependents ready. Mutating the submitted result or returned job view does not mutate scheduler state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-8",
+      "text": "fail requires a nonempty error string, records it, clears the lease, and schedules a ready retry at now + retryBase * 2^(attempt-1) when attempt is below maxAttempts; otherwise it marks the job dead and blocks descendants. The attempt limit includes the original claim.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-9",
+      "text": "cancel(id) cancels any nonterminal job, including a leased job, invalidates its lease, and blocks descendants. Cancelling a terminal job throws JOB_TERMINAL; unknown IDs throw UNKNOWN_JOB.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-10",
+      "text": "advance(time) accepts only a nonnegative safe integer not less than current time; invalid values throw INVALID_TIME without changing state. It updates logical time and expires leases whose leaseUntil is at most time, ordered by deadline then submission sequence. Each expiry follows fail retry/dead behavior with lastError LEASE_EXPIRED; the returned value is {now,expired:[jobIds]} in processing order.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-11",
+      "text": "snapshot returns exactly schemaVersion, now, retryBase, maxAttempts, nextSequence, nextToken, and jobs; jobs include their complete current view and optional lease/result/error fields. Mutating a returned snapshot or job view does not mutate scheduler state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-12",
+      "text": "restoreScheduler restores snapshots produced by this implementation, preserving time, options, jobs, dependencies, retry schedule, result/error, leases, submission order, next token, and terminal history. JSON-cloning a snapshot before restore preserves behavior, and original/restored schedulers evolve independently.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-13",
+      "text": "The scheduler uses no wall clock, and claim does not implicitly expire leases.",
+      "required": true,
+      "manual": false,
+      "kind": "forbidden",
+      "status": "failed",
+      "tests": []
+    },
+    {
+      "id": "R-14",
+      "text": "Do not add persistence, networking, threads, timers, worker execution, dependency deletion, or behavior outside the stated contract.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden",
+      "status": "manual_pending",
+      "tests": []
+    }
+  ],
+  "assumptions": [
+    "Assume JSON-compatible inputs and results as stated; behavior for values that cannot be represented in JSON is unspecified.",
+    "Assume restoreScheduler only needs to accept snapshots produced by this implementation; validation behavior for malformed or foreign snapshots is unspecified.",
+    "Assume no error precedence beyond the precedence explicitly stated in the request; tests should avoid inputs violating multiple unrelated rules at once."
+  ],
+  "changes": {
+    "available": true,
+    "files": [
+      {
+        "path": "src/scheduler.js",
+        "status": "modified",
+        "added": 102,
+        "removed": 2
+      },
+      {
+        "path": "tests/scheduler.acceptance.test.js",
+        "status": "added",
+        "added": 263,
+        "removed": 0
+      }
+    ],
+    "added": 365,
+    "removed": 2,
+    "testFiles": [
+      "tests/scheduler.acceptance.test.js"
+    ],
+    "patch": "diff --git a/src/scheduler.js b/src/scheduler.js\nindex 05ca288..b0b8259 100644\n--- a/src/scheduler.js\n+++ b/src/scheduler.js\n@@ -1,2 +1,102 @@\n-export function createScheduler() { throw new Error('Not implemented'); }\n-export function restoreScheduler() { throw new Error('Not implemented'); }\n+const clone = value => value === undefined ? undefined : JSON.parse(JSON.stringify(value));\n+const error = code => Object.assign(new Error(code), { code });\n+const terminal = status => ['done', 'dead', 'cancelled', 'blocked'].includes(status);\n+const unsuccessful = status => ['dead', 'cancelled', 'blocked'].includes(status);\n+\n+function build(state) {\n+  const jobs = state.jobs;\n+  const find = id => {\n+    const job = jobs.get(id);\n+    if (!job) throw error('UNKNOWN_JOB');\n+    return job;\n+  };\n+  const view = job => clone(job);\n+  const refresh = () => {\n+    // Submission order is topological because dependencies must already exist.\n+    for (const job of jobs.values()) {\n+      if (terminal(job.status) || job.status === 'leased') continue;\n+      const bad = job.dependsOn.find(id => unsuccessful(jobs.get(id).status));\n+      if (bad !== undefined) {\n+        job.status = 'blocked';\n+        job.blockedBy = bad;\n+      } else {\n+        delete job.blockedBy;\n+        job.status = job.dependsOn.every(id => jobs.get(id).status === 'done') ? 'ready' : 'waiting';\n+      }\n+    }\n+  };\n+  const clearLease = job => { delete job.worker; delete job.token; delete job.leaseUntil; };\n+  const finishFailure = (job, message) => {\n+    job.lastError = message;\n+    clearLease(job);\n+    if (job.attempt < state.maxAttempts) {\n+      job.status = 'ready';\n+      job.availableAt = state.now + state.retryBase * 2 ** (job.attempt - 1);\n+    } else job.status = 'dead';\n+    refresh();\n+  };\n+  const leased = ({id, worker, token}) => {\n+    const job = find(id);\n+    if (job.status !== 'leased' || job.worker !== worker || job.token !== token) throw error('LEASE_LOST');\n+    return job;\n+  };\n+  return {\n+    submit({id, dependsOn = [], priority = 0} = {}) {\n+      if (typeof id !== 'string' || !id || !Number.isSafeInteger(priority)) throw error('INVALID_INPUT');\n+      if (jobs.has(id)) throw error('JOB_EXISTS');\n+      if (!Array.isArray(dependsOn) || dependsOn.some(dep => typeof dep !== 'string' || !dep) || new Set(dependsOn).size !== dependsOn.length || dependsOn.includes(id)) throw error('INVALID_DEPENDENCIES');\n+      if (dependsOn.some(dep => !jobs.has(dep))) throw error('UNKNOWN_DEPENDENCY');\n+      const job = {id, dependsOn: clone(dependsOn), priority, sequence: state.nextSequence++, status: 'waiting', attempt: 0, availableAt: state.now};\n+      jobs.set(id, job); refresh(); return view(job);\n+    },\n+    get(id) { return view(find(id)); },\n+    claim({worker, leaseFor} = {}) {\n+      if (typeof worker !== 'string' || !worker || !Number.isSafeInteger(leaseFor) || leaseFor <= 0) throw error('INVALID_INPUT');\n+      const job = [...jobs.values()].filter(item => item.status === 'ready' && item.availableAt <= state.now)\n+        .sort((a, b) => b.priority - a.priority || a.sequence - b.sequence || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))[0];\n+      if (!job) return null;\n+      job.status = 'leased'; job.attempt++; job.worker = worker; job.token = state.nextToken++; job.leaseUntil = state.now + leaseFor;\n+      return view(job);\n+    },\n+    renew(input = {}) {\n+      const {leaseFor} = input;\n+      if (!Number.isSafeInteger(leaseFor) || leaseFor <= 0) throw error('INVALID_INPUT');\n+      const job = leased(input); job.leaseUntil = Math.max(job.leaseUntil, state.now + leaseFor); return view(job);\n+    },\n+    complete(input = {}) {\n+      const job = leased(input);\n+      if (input.result !== undefined) job.result = clone(input.result); else delete job.result;\n+      delete job.lastError; clearLease(job); job.status = 'done'; refresh(); return view(job);\n+    },\n+    fail(input = {}) {\n+      if (typeof input.error !== 'string' || !input.error) throw error('INVALID_INPUT');\n+      const job = leased(input); finishFailure(job, input.error); return view(job);\n+    },\n+    cancel(id) {\n+      const job = find(id); if (terminal(job.status)) throw error('JOB_TERMINAL');\n+      clearLease(job); job.status = 'cancelled'; refresh(); return view(job);\n+    },\n+    advance(time) {\n+      if (!Number.isSafeInteger(time) || time < 0 || time < state.now) throw error('INVALID_TIME');\n+      state.now = time;\n+      const expired = [...jobs.values()].filter(job => job.status === 'leased' && job.leaseUntil <= time)\n+        .sort((a, b) => a.leaseUntil - b.leaseUntil || a.sequence - b.sequence);\n+      const ids = [];\n+      for (const job of expired) { ids.push(job.id); finishFailure(job, 'LEASE_EXPIRED'); }\n+      return {now: state.now, expired: ids};\n+    },\n+    snapshot() { return {schemaVersion: 1, now: state.now, retryBase: state.retryBase, maxAttempts: state.maxAttempts, nextSequence: state.nextSequence, nextToken: state.nextToken, jobs: [...jobs.values()].map(view)}; }\n+  };\n+}\n+\n+export function createScheduler({now = 0, retryBase = 2, maxAttempts = 3} = {}) {\n+  if (!Number.isSafeInteger(now) || now < 0 || !Number.isSafeInteger(retryBase) || retryBase <= 0 || !Number.isSafeInteger(maxAttempts) || maxAttempts <= 0) throw error('INVALID_INPUT');\n+  return build({now, retryBase, maxAttempts, nextSequence: 0, nextToken: 1, jobs: new Map()});\n+}\n+\n+export function restoreScheduler(snapshot) {\n+  const state = {now: snapshot.now, retryBase: snapshot.retryBase, maxAttempts: snapshot.maxAttempts,\n+    nextSequence: snapshot.nextSequence, nextToken: snapshot.nextToken,\n+    jobs: new Map(snapshot.jobs.map(job => [job.id, clone(job)]))};\n+  return build(state);\n+}\ndiff --git a/tests/scheduler.acceptance.test.js b/tests/scheduler.acceptance.test.js\nnew file mode 100644\nindex 0000000..5c3ef2b\n--- /dev/null\n+++ b/tests/scheduler.acceptance.test.js\n@@ -0,0 +1,263 @@\n+import { describe, it, expect } from 'vitest';\n+import { createScheduler, restoreScheduler } from '../src/scheduler.js';\n+\n+async function expectCode(call, expected) {\n+  try {\n+    await call();\n+  } catch (error) {\n+    expect(error.code).toBe(expected);\n+    return;\n+  }\n+  throw new Error('Expected failure');\n+}\n+\n+const ownKeys = value => Object.keys(value).sort();\n+const jobKeys = ['id', 'dependsOn', 'priority', 'sequence', 'status', 'attempt', 'availableAt'];\n+\n+describe('PulseGraph public scheduler contract', () => {\n+  it('[R-1][C-1] constructor validates logical time and retry options', () => {\n+    for (const options of [\n+      { now: -1 }, { now: 1.5 }, { now: Number.MAX_SAFE_INTEGER + 1 },\n+      { retryBase: 0 }, { retryBase: 1.5 }, { retryBase: Number.MAX_SAFE_INTEGER + 1 },\n+      { maxAttempts: 0 }, { maxAttempts: 1.5 }, { maxAttempts: Number.MAX_SAFE_INTEGER + 1 },\n+    ]) expect(() => createScheduler(options)).toThrow();\n+    const scheduler = createScheduler({ now: 4, retryBase: 2, maxAttempts: 3 });\n+    expect(scheduler.snapshot()).toMatchObject({ now: 4, retryBase: 2, maxAttempts: 3 });\n+  });\n+\n+  it('[R-2][C-2] submit rejects invalid scalar and dependency inputs atomically', async () => {\n+    const s = createScheduler();\n+    const a = await s.submit({ id: 'A' });\n+    expect(a.status).toBe('ready');\n+    const before = s.snapshot();\n+    await expectCode(() => s.submit({ id: '', priority: 0 }), 'INVALID_INPUT');\n+    expect(s.snapshot()).toEqual(before);\n+    await expectCode(() => s.submit({ id: 'bad-priority', priority: 1.2 }), 'INVALID_INPUT');\n+    expect(s.snapshot()).toEqual(before);\n+    await expectCode(() => s.submit({ id: 'self', dependsOn: ['self'] }), 'INVALID_DEPENDENCIES');\n+    expect(s.snapshot()).toEqual(before);\n+    await expectCode(() => s.submit({ id: 'dupe-dep', dependsOn: ['A', 'A'] }), 'INVALID_DEPENDENCIES');\n+    expect(s.snapshot()).toEqual(before);\n+    await expectCode(() => s.submit({ id: 'missing-dep', dependsOn: ['missing'] }), 'UNKNOWN_DEPENDENCY');\n+    expect(s.snapshot()).toEqual(before);\n+    const b = await s.submit({ id: 'B', dependsOn: ['A'] });\n+    expect(b.status).toBe('waiting');\n+    expect(s.snapshot().jobs.map(j => j.id)).toEqual(['A', 'B']);\n+  });\n+\n+  it('[R-3][R-4][C-3] submitted dependent of a done job is ready with initial fields', async () => {\n+    const s = createScheduler({ now: 7 });\n+    await s.submit({ id: 'A' });\n+    const a = await s.claim({ worker: 'w', leaseFor: 3 });\n+    expect(a.status).toBe('leased');\n+    const done = await s.complete({ id: 'A', worker: 'w', token: a.token, result: { ok: true } });\n+    expect(done.status).toBe('done');\n+    const b = await s.submit({ id: 'B', dependsOn: ['A'] });\n+    expect(b).toMatchObject({ id: 'B', dependsOn: ['A'], status: 'ready', attempt: 0, availableAt: 7 });\n+    for (const key of jobKeys) expect(b).toHaveProperty(key);\n+    expect(b).not.toHaveProperty('result');\n+    expect(b).not.toHaveProperty('lastError');\n+    expect(s.snapshot().jobs.find(j => j.id === 'B')).toEqual(b);\n+  });\n+\n+  it('[R-3][C-4] unsuccessful dependencies block transitively using dependency order', async () => {\n+    const s = createScheduler();\n+    await s.submit({ id: 'A' });\n+    await s.submit({ id: 'B' });\n+    const c = await s.submit({ id: 'C', dependsOn: ['B', 'A'] });\n+    const d = await s.submit({ id: 'D', dependsOn: ['C'] });\n+    expect(c.status).toBe('waiting');\n+    expect(d.status).toBe('waiting');\n+    await s.cancel('A');\n+    const blockedC = await s.get('C');\n+    const blockedD = await s.get('D');\n+    expect(blockedC).toMatchObject({ status: 'blocked', blockedBy: 'A' });\n+    expect(blockedD).toMatchObject({ status: 'blocked', blockedBy: 'C' });\n+  });\n+\n+  it('[R-5][C-5] claim orders by priority then submission sequence and returns lease fields', async () => {\n+    const s = createScheduler();\n+    await s.submit({ id: 'A', priority: 5 });\n+    await s.submit({ id: 'B', priority: 1 });\n+    await s.submit({ id: 'C', priority: 5 });\n+    const first = await s.claim({ worker: 'w', leaseFor: 4 });\n+    const second = await s.claim({ worker: 'x', leaseFor: 2 });\n+    expect(first).toMatchObject({ id: 'A', status: 'leased', attempt: 1, worker: 'w', leaseUntil: 4 });\n+    expect(second).toMatchObject({ id: 'C', status: 'leased', attempt: 1, worker: 'x', leaseUntil: 2 });\n+    expect(first.token).toBeGreaterThan(0);\n+    expect(second.token).toBeGreaterThan(first.token);\n+    expect(await s.claim({ worker: 'z', leaseFor: 1 })).toBeNull();\n+  });\n+\n+  it('[R-6][C-6] lease identity is enforced and renewal preserves token', async () => {\n+    const s = createScheduler();\n+    await s.submit({ id: 'A' });\n+    const lease = await s.claim({ worker: 'w', leaseFor: 3 });\n+    await expectCode(() => s.renew({ id: 'A', worker: 'wrong', token: lease.token, leaseFor: 1 }), 'LEASE_LOST');\n+    await expectCode(() => s.complete({ id: 'A', worker: 'w', token: lease.token + 100, result: null }), 'LEASE_LOST');\n+    await expectCode(() => s.fail({ id: 'A', worker: 'wrong', token: lease.token, error: 'e' }), 'LEASE_LOST');\n+    expect(await s.get('A')).toMatchObject({ status: 'leased', token: lease.token, leaseUntil: 3 });\n+    const renewed = await s.renew({ id: 'A', worker: 'w', token: lease.token, leaseFor: 5 });\n+    expect(renewed).toMatchObject({ token: lease.token, leaseUntil: 5, status: 'leased' });\n+  });\n+\n+  it('[R-7][R-11][C-7] result, completion views, and snapshots are detached', async () => {\n+    const s = createScheduler();\n+    await s.submit({ id: 'A' });\n+    const lease = await s.claim({ worker: 'w', leaseFor: 2 });\n+    const result = { nested: { value: 1 } };\n+    const returned = await s.complete({ id: 'A', worker: 'w', token: lease.token, result });\n+    result.nested.value = 9;\n+    returned.result.nested.value = 8;\n+    expect(await s.get('A')).toMatchObject({ status: 'done', result: { nested: { value: 1 } } });\n+    const snap = await s.snapshot();\n+    snap.jobs[0].result.nested.value = 7;\n+    snap.jobs[0].status = 'dead';\n+    expect(await s.get('A')).toMatchObject({ status: 'done', result: { nested: { value: 1 } } });\n+    expect((await s.snapshot()).jobs[0]).toMatchObject({ status: 'done', result: { nested: { value: 1 } } });\n+  });\n+\n+  it('[R-8][C-8] retries use exponential backoff and stop at the attempt limit', async () => {\n+    const s = createScheduler({ retryBase: 2, maxAttempts: 3 });\n+    await s.submit({ id: 'A' });\n+    let lease = await s.claim({ worker: 'w', leaseFor: 1 });\n+    let job = await s.fail({ id: 'A', worker: 'w', token: lease.token, error: 'e1' });\n+    expect(job).toMatchObject({ status: 'ready', attempt: 1, availableAt: 2, lastError: 'e1' });\n+    expect(await s.claim({ worker: 'w', leaseFor: 1 })).toBeNull();\n+    expect(await s.advance(2)).toEqual({ now: 2, expired: [] });\n+    lease = await s.claim({ worker: 'w', leaseFor: 1 });\n+    job = await s.fail({ id: 'A', worker: 'w', token: lease.token, error: 'e2' });\n+    expect(job).toMatchObject({ status: 'ready', attempt: 2, availableAt: 6, lastError: 'e2' });\n+    expect(await s.advance(6)).toEqual({ now: 6, expired: [] });\n+    lease = await s.claim({ worker: 'w', leaseFor: 1 });\n+    job = await s.fail({ id: 'A', worker: 'w', token: lease.token, error: 'e3' });\n+    expect(job).toMatchObject({ status: 'dead', attempt: 3, lastError: 'e3' });\n+    expect(await s.claim({ worker: 'w', leaseFor: 1 })).toBeNull();\n+  });\n+\n+  it('[R-9][C-9] cancellation invalidates active leases and rejects terminal or unknown IDs', async () => {\n+    const s = createScheduler();\n+    await s.submit({ id: 'A' });\n+    await s.submit({ id: 'B' });\n+    const lease = await s.claim({ worker: 'w', leaseFor: 5 });\n+    expect(lease.id).toBe('A');\n+    const bLease = await s.claim({ worker: 'x', leaseFor: 5 });\n+    expect(bLease.id).toBe('B');\n+    await s.complete({ id: 'B', worker: 'x', token: bLease.token, result: true });\n+    const cancelled = await s.cancel('A');\n+    expect(cancelled).toMatchObject({ status: 'cancelled' });\n+    expect(cancelled).not.toHaveProperty('worker');\n+    expect(cancelled).not.toHaveProperty('token');\n+    await expectCode(() => s.complete({ id: 'A', worker: 'w', token: lease.token, result: true }), 'LEASE_LOST');\n+    await expectCode(() => s.cancel('B'), 'JOB_TERMINAL');\n+    await expectCode(() => s.cancel('unknown'), 'UNKNOWN_JOB');\n+  });\n+\n+  it('[R-10][C-10] advance rejects invalid time atomically and expires at inclusive deadlines', async () => {\n+    const s = createScheduler();\n+    await s.submit({ id: 'A' });\n+    await s.submit({ id: 'B' });\n+    const a = await s.claim({ worker: 'w', leaseFor: 4 });\n+    const b = await s.claim({ worker: 'x', leaseFor: 4 });\n+    await s.submit({ id: 'C' });\n+    const c = await s.claim({ worker: 'y', leaseFor: 2 });\n+    const before = await s.snapshot();\n+    for (const time of [-1, 1.2, Number.MAX_SAFE_INTEGER + 1]) {\n+      await expectCode(() => s.advance(time), 'INVALID_TIME');\n+      expect(await s.snapshot()).toEqual(before);\n+    }\n+    expect([a.id, b.id, c.id]).toEqual(['A', 'B', 'C']);\n+    expect(await s.advance(2)).toEqual({ now: 2, expired: ['C'] });\n+    expect(await s.get('C')).toMatchObject({ status: 'ready', lastError: 'LEASE_EXPIRED' });\n+    expect(await s.advance(4)).toEqual({ now: 4, expired: ['A', 'B'] });\n+    expect(await s.get('A')).toMatchObject({ lastError: 'LEASE_EXPIRED' });\n+    expect(await s.get('B')).toMatchObject({ lastError: 'LEASE_EXPIRED' });\n+  });\n+\n+  it('[R-11][C-11] snapshot has the exact public shape and detached job views', async () => {\n+    const s = createScheduler({ now: 3, retryBase: 4, maxAttempts: 2 });\n+    const a = await s.submit({ id: 'A' });\n+    const snap = await s.snapshot();\n+    expect(ownKeys(snap)).toEqual(['jobs', 'maxAttempts', 'nextSequence', 'nextToken', 'now', 'retryBase', 'schemaVersion']);\n+    expect(ownKeys(snap.jobs[0])).toEqual([...jobKeys].sort());\n+    expect(snap.jobs[0]).toEqual(a);\n+    snap.now = 99;\n+    snap.jobs[0].dependsOn.push('mutated');\n+    expect(await s.get('A')).toEqual(a);\n+    expect(await s.snapshot()).toMatchObject({ now: 3, jobs: [a] });\n+  });\n+\n+  it('[R-12][C-12] JSON-cloned restore preserves leases, retries, token history, and independence', async () => {\n+    const s = createScheduler({ retryBase: 2, maxAttempts: 3 });\n+    await s.submit({ id: 'A' });\n+    let aLease = await s.claim({ worker: 'w', leaseFor: 5 });\n+    await s.fail({ id: 'A', worker: 'w', token: aLease.token, error: 'retry' });\n+    await s.submit({ id: 'B' });\n+    const bLease = await s.claim({ worker: 'x', leaseFor: 5 });\n+    const restored = restoreScheduler(JSON.parse(JSON.stringify(await s.snapshot())));\n+    expect(await restored.snapshot()).toEqual(await s.snapshot());\n+    expect((await restored.get('B')).token).toBe(bLease.token);\n+    expect(await s.advance(2)).toEqual({ now: 2, expired: [] });\n+    expect(await restored.advance(2)).toEqual({ now: 2, expired: [] });\n+    aLease = await s.claim({ worker: 'w2', leaseFor: 3 });\n+    const restoredALease = await restored.claim({ worker: 'w2', leaseFor: 3 });\n+    expect(aLease).toEqual(restoredALease);\n+    expect(aLease.token).toBeGreaterThan(bLease.token);\n+    await s.cancel('B');\n+    expect((await s.get('B')).status).toBe('cancelled');\n+    expect((await restored.get('B')).status).toBe('leased');\n+  });\n+\n+  it('[R-5][R-13][R-6][C-13] claim does not expire a lease before logical time advances', async () => {\n+    const s = createScheduler();\n+    await s.submit({ id: 'A' });\n+    const lease = await s.claim({ worker: 'w1', leaseFor: 1 });\n+    expect(await s.claim({ worker: 'w2', leaseFor: 1 })).toBeNull();\n+    expect(await s.get('A')).toMatchObject({ status: 'leased', worker: 'w1', token: lease.token, leaseUntil: 1 });\n+    expect(await s.advance(1)).toEqual({ now: 1, expired: ['A'] });\n+    await expectCode(() => s.complete({ id: 'A', worker: 'w1', token: lease.token, result: null }), 'LEASE_LOST');\n+  });\n+\n+  it('[R-7][C-14] completing a retry clears its error and readies dependents', async () => {\n+    const s = createScheduler();\n+    await s.submit({ id: 'A' });\n+    const b = await s.submit({ id: 'B', dependsOn: ['A'] });\n+    expect(b.status).toBe('waiting');\n+    let lease = await s.claim({ worker: 'w', leaseFor: 1 });\n+    const failed = await s.fail({ id: 'A', worker: 'w', token: lease.token, error: 'temporary' });\n+    expect(failed).toMatchObject({ status: 'ready', lastError: 'temporary' });\n+    expect((await s.get('B')).status).toBe('waiting');\n+    await s.advance(failed.availableAt);\n+    lease = await s.claim({ worker: 'w', leaseFor: 1 });\n+    const done = await s.complete({ id: 'A', worker: 'w', token: lease.token, result: { ok: true } });\n+    expect(done).toMatchObject({ status: 'done', result: { ok: true } });\n+    expect(done).not.toHaveProperty('lastError');\n+    expect(done).not.toHaveProperty('leaseUntil');\n+    expect((await s.get('B')).status).toBe('ready');\n+  });\n+\n+  it('[R-2][C-15] duplicate job IDs throw JOB_EXISTS and preserve the original', async () => {\n+    const s = createScheduler();\n+    const original = await s.submit({ id: 'A' });\n+    await expectCode(() => s.submit({ id: 'A' }), 'JOB_EXISTS');\n+    expect(await s.get('A')).toEqual(original);\n+    expect((await s.snapshot()).jobs).toHaveLength(1);\n+  });\n+\n+  it('[R-10][R-8][R-5][C-16] repeated lease expiry orders jobs and applies retry then dead behavior', async () => {\n+    const s = createScheduler({ retryBase: 2, maxAttempts: 2 });\n+    await s.submit({ id: 'A' });\n+    await s.submit({ id: 'B' });\n+    expect((await s.claim({ worker: 'w', leaseFor: 3 })).id).toBe('A');\n+    expect((await s.claim({ worker: 'x', leaseFor: 3 })).id).toBe('B');\n+    expect(await s.advance(3)).toEqual({ now: 3, expired: ['A', 'B'] });\n+    for (const id of ['A', 'B']) expect(await s.get(id)).toMatchObject({ status: 'ready', attempt: 1, availableAt: 5, lastError: 'LEASE_EXPIRED' });\n+    expect(await s.advance(5)).toEqual({ now: 5, expired: [] });\n+    const a2 = await s.claim({ worker: 'w', leaseFor: 1 });\n+    const b2 = await s.claim({ worker: 'x', leaseFor: 1 });\n+    expect(a2).toMatchObject({ id: 'A', attempt: 2, leaseUntil: 6 });\n+    expect(b2).toMatchObject({ id: 'B', attempt: 2, leaseUntil: 6 });\n+    expect(await s.advance(6)).toEqual({ now: 6, expired: ['A', 'B'] });\n+    for (const id of ['A', 'B']) expect(await s.get(id)).toMatchObject({ status: 'dead', attempt: 2, lastError: 'LEASE_EXPIRED' });\n+  });\n+});\n"
+  },
+  "checks": [
+    {
+      "id": "test",
+      "command": "node node_modules/vitest/vitest.mjs run --reporter=json --outputFile=.aidept-report.json",
+      "status": "failed",
+      "passed": 16,
+      "failed": 1,
+      "skipped": 0,
+      "skippedNames": [],
+      "durationMs": 1365,
+      "runs": 2,
+      "quarantined": false,
+      "issues": [
+        {
+          "kind": "assertion_failed",
+          "testId": "@json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-5][C-5] claim orders by priority then submission sequence and returns lease fields\"]]",
+          "message": "@json:[\"tests/scheduler.acceptance.test.js\",[\"PulseGraph public scheduler contract\",\"[R-5][C-5] claim orders by priority then submission sequence and returns lease fields\"]]: failed"
+        }
+      ]
+    }
+  ],
+  "verifier": {
+    "expected": true,
+    "ran": false,
+    "verdict": null,
+    "findings": []
+  },
+  "effort": {
+    "costUsd": 1.3151724,
+    "estimated": true,
+    "tokens": 1322714,
+    "aiMs": 259438,
+    "humanMs": 0,
+    "attempts": 8,
+    "repairs": 2
+  },
+  "scopeApprovals": [],
+  "skills": [],
+  "warnings": [
+    {
+      "level": "warn",
+      "text": "Mutation: Chưa nhận diện khả năng mutation trên checkpoint này."
+    },
+    {
+      "level": "warn",
+      "text": "Bản code này chưa có kết luận Verifier."
+    },
+    {
+      "level": "warn",
+      "text": "Cần bạn tự kiểm tra: R-14 (tiêu chí thủ công, hệ thống không kiểm được)."
+    },
+    {
+      "level": "info",
+      "text": "Công cụ phân tích mã (knip, jscpd, dependency-cruiser) chưa chạy: chưa có đánh giá về mã chết, trùng lặp hay vi phạm ranh giới module."
+    },
+    {
+      "level": "info",
+      "text": "Task đã qua 2 vòng sửa."
+    }
+  ],
+  "delivery": {
+    "kind": "branch",
+    "target": "aidept/run_dfd3d309-A",
+    "branch": "aidept/run_dfd3d309-A",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\pulsegraph-20261025\\department",
+    "delivered": false,
+    "status": "unconfirmed",
+    "commands": [
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\pulsegraph-20261025\\department\" log --oneline HEAD..aidept/run_dfd3d309-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\pulsegraph-20261025\\department\" diff HEAD..aidept/run_dfd3d309-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\pulsegraph-20261025\\department\" merge aidept/run_dfd3d309-A"
+    ]
+  }
+}

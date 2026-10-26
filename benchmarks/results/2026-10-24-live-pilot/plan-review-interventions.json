@@ -1,0 +1,220 @@
+{
+  "at": "2026-10-24T02:50:52.054Z",
+  "source": "Operator review of original SPEC before hidden scoring; no implementation/test source edits",
+  "casesChanged": 9,
+  "interventions": [
+    {
+      "caseId": "C-1",
+      "reason": "Second successful reserve must fit remaining stock.",
+      "before": {
+        "id": "C-1",
+        "requirementIds": [
+          "R-1",
+          "R-6"
+        ],
+        "group": "happy",
+        "risk": "normal",
+        "priority": "normal",
+        "preconditions": "Tạo instance với stock=3 và không truyền ttlMs; dùng now giả có thể đặt thời gian.",
+        "actions": "Gọi reserve({userId:'u1',key:'k1',quantity:2}) rồi kiểm tra snapshot và reservation trả về.",
+        "expected": "Reservation có id là chuỗi không rỗng, status 'held', quantity 2; available là 1; expiresAt bằng now() tại lúc reserve cộng 1000; reserve thứ hai với key khác và id khác id đầu tiên.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "Reserve (u1,k1,2) với stock=3, sau đó reserve (u1,k2,1); kiểm tra snapshot và id riêng của hai bản ghi."
+      }
+    },
+    {
+      "caseId": "C-3",
+      "reason": "Use separate holds for confirm and cancel; confirmed cannot be cancelled.",
+      "before": {
+        "id": "C-3",
+        "requirementIds": [
+          "R-2"
+        ],
+        "group": "dependency",
+        "risk": "high",
+        "priority": "high",
+        "preconditions": "Dùng vi.spyOn(Date,'now') và now giả có đếm số lần gọi; now trả giá trị đã biết.",
+        "actions": "Gọi createInventory({stock:3, now}) và kiểm tra kiểu trả về; thực hiện reserve, confirm, cancel, snapshot với now giả đã đổi giá trị.",
+        "expected": "createInventory trả về object đồng bộ (không phải Promise); now giả được gọi ở các thao tác; Date.now không được gọi lần nào trong toàn bộ luồng; expiresAt phản ánh giá trị now giả tại lúc reserve.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "Tạo instance với now giả và spy Date.now; reserve hai bản ghi riêng, confirm bản ghi thứ nhất, cancel bản ghi thứ hai, snapshot; kiểm tra constructor không phải Promise."
+      }
+    },
+    {
+      "caseId": "C-4",
+      "reason": "Plan incorrectly required synchronous method results; original specification explicitly permits async.",
+      "before": {
+        "id": "C-4",
+        "requirementIds": [
+          "R-3"
+        ],
+        "group": "happy",
+        "risk": "normal",
+        "priority": "normal",
+        "preconditions": "Instance stock=5 với now giả.",
+        "actions": "Gọi reserve, confirm, cancel, snapshot cả khi await và khi không await; kiểm tra các trường của reservation.",
+        "expected": "Kết quả giống nhau trong cả hai cách gọi (await kết quả luôn cho cùng giá trị); reservation có đủ các trường id, userId, key, quantity, status, expiresAt; status luôn thuộc tập held, confirmed, cancelled, expired.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "Gọi từng thao tác qua await trên các reservation độc lập, kiểm tra public shape; chấp nhận hàm trả object trực tiếp hoặc Promise.",
+        "expected": "await luôn cho reservation/snapshot đúng shape; không yêu cầu truy cập field trực tiếp trên Promise. Constructor vẫn đồng bộ; các method được phép async."
+      }
+    },
+    {
+      "caseId": "C-5",
+      "reason": "No guaranteed whitespace ID format; exact identity must not trim padded IDs.",
+      "before": {
+        "id": "C-5",
+        "requirementIds": [
+          "R-4"
+        ],
+        "group": "boundary",
+        "risk": "high",
+        "priority": "high",
+        "preconditions": "Instance stock=5 với now giả.",
+        "actions": "Thử userId, key và reservationId với các giá trị: '', '   ', '\\t\\n', thiếu, null, 1, {}, [] ở các vị trí tương ứng. Sau đó reserve với userId ' u ' và với userId 'u' (cùng key), và confirm bằng reservationId có khoảng trắng đầu/cuối của chính nó.",
+        "expected": "Các giá trị rỗng sau trim, thiếu hoặc sai kiểu ném Error code 'INVALID_INPUT'. ' u ' và 'u' tạo hai reservation độc lập; userId trong reservation giữ nguyên ' u ' có khoảng trắng; confirm bằng reservationId có khoảng trắng hoạt động đúng với id đã trả về.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "Thử chuỗi rỗng/whitespace thật (tab/newline), giá trị thiếu và sai kiểu cho userId/key/reservationId. Dùng đủ stock cho hai user ' u ' và 'u'. Confirm với đúng id đã trả về; thêm khoảng trắng vào id không tồn tại để thử tra cứu chính xác.",
+        "expected": "Input rỗng sau trim/sai kiểu báo INVALID_INPUT; user/key có khoảng trắng giữ nguyên và không gộp; confirm đúng id thành công; id được thêm khoảng trắng và không trùng bản ghi nào báo NOT_FOUND."
+      }
+    },
+    {
+      "caseId": "C-6",
+      "reason": "Valid numeric input does not imply enough remaining stock in a reused fixture.",
+      "before": {
+        "id": "C-6",
+        "requirementIds": [
+          "R-5"
+        ],
+        "group": "boundary",
+        "risk": "high",
+        "priority": "high",
+        "preconditions": "Instance stock=5 với now giả; ghi snapshot trước khi thử.",
+        "actions": "Gọi reserve với quantity lần lượt là 0, -1, 1.5, NaN, Infinity, -Infinity, '2', true, null, undefined, 2^53, 1n; sau đó gọi với quantity 1 và 5 (hợp lệ).",
+        "expected": "Mọi giá trị không hợp lệ ném Error code 'INVALID_INPUT' và snapshot không đổi; '2' không được ép thành số 2; quantity 1 và 5 hợp lệ và giảm available đúng số đó.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "Thử từng quantity sai trên instance không đổi; với quantity 1 và 5 hợp lệ dùng các instance stock=5 độc lập để tránh cộng dồn vượt hàng."
+      }
+    },
+    {
+      "caseId": "C-8",
+      "reason": "Separate race for last stock from duplicate success race; latter needs available stock.",
+      "before": {
+        "id": "C-8",
+        "requirementIds": [
+          "R-8"
+        ],
+        "group": "concurrency",
+        "risk": "high",
+        "priority": "high",
+        "preconditions": "Instance stock=5 với now giả.",
+        "actions": "Tạo 20 lời gọi reserve đồng thời qua Promise.allSettled, mỗi lời gọi dùng key khác và quantity từ 1 đến 3; thêm 5 lời gọi cùng cặp (u,k) đồng thời; kiểm tra snapshot sau khi settle.",
+        "expected": "Tổng quantity của các reservation thành công không vượt 5; available luôn >= 0 và bằng stock trừ tổng quantity held/confirmed; mọi lời gọi thất bại đều có code 'OUT_OF_STOCK'; các lời gọi cùng cặp (u,k) cho cùng một id và chỉ trừ hàng một lần.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "Trên instance A stock=5, gọi đồng thời 20 reserve key khác nhau quantity 1..3 rồi kiểm tra bất biến và OUT_OF_STOCK. Trên instance B mới stock=5, gọi đồng thời 5 reserve cùng user/key/quantity=2.",
+        "expected": "A không bao giờ vượt stock, lỗi thiếu hàng có OUT_OF_STOCK; B trả cùng id cho mọi replay và available=3, một reservation duy nhất."
+      }
+    },
+    {
+      "caseId": "C-9",
+      "reason": "Original proposed confirm-then-cancel success contradicts the contract.",
+      "before": {
+        "id": "C-9",
+        "requirementIds": [
+          "R-9"
+        ],
+        "group": "consistency",
+        "risk": "high",
+        "priority": "high",
+        "preconditions": "Instance stock=5 với now giả.",
+        "actions": "Reserve(u,k,2) rồi reserve lại cùng (u,k,2); confirm rồi reserve lại; cancel rồi reserve lại; kiểm tra id và available sau mỗi bước; gửi 5 reserve đồng thời cùng cặp.",
+        "expected": "Mọi lần lặp trả cùng id; available chỉ giảm đúng 2 một lần; sau confirm, reserve lặp trả reservation có status 'confirmed' với cùng id; sau cancel, reserve lặp trả status 'cancelled' với cùng id và không trừ thêm hàng.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "Nhánh A: reserve rồi replay, confirm rồi replay. Nhánh B dùng reservation/instance khác: reserve rồi cancel rồi replay. Cùng user/key/quantity trong mỗi nhánh; kiểm tra id và available.",
+        "expected": "Nhánh A trả cùng id và status confirmed sau confirm, trừ hàng đúng một lần. Nhánh B trả cùng id cancelled sau cancel và không giữ hàng lại; không cancel bản ghi đã confirmed."
+      }
+    },
+    {
+      "caseId": "C-10",
+      "reason": "Resolve explicit replay question from original specification; different users are not the same pair.",
+      "before": {
+        "id": "C-10",
+        "requirementIds": [
+          "R-10"
+        ],
+        "group": "state",
+        "risk": "high",
+        "priority": "high",
+        "preconditions": "Instance stock=5 với now giả. Reservation (u,k) quantity 2 đang held.",
+        "actions": "Gọi reserve(u,k,3); sau đó confirm (u,k) rồi gọi reserve(u,k,1); cũng thử cùng cặp trên user khác với quantity khác; lưu snapshot trước và sau mỗi lần thử.",
+        "expected": "Mỗi lần gọi cùng cặp khác quantity ném Error code 'IDEMPOTENCY_CONFLICT' (cả khi reservation đã confirmed) và snapshot không đổi; reservation gốc vẫn giữ quantity 2.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "Trên các reservation riêng ở held, confirmed, cancelled và expired, replay cùng user/key khác quantity; so snapshot sau khi đã xử lý expiry. User khác cùng key là cặp độc lập, thử với đủ hàng.",
+        "expected": "Cùng cặp khác quantity luôn IDEMPOTENCY_CONFLICT và không đổi dữ liệu ngoài expiry đã quy định. User khác cùng key tạo bản ghi riêng khi đủ hàng."
+      }
+    },
+    {
+      "caseId": "C-20",
+      "reason": "Separate mutually exclusive transitions instead of cancelling a confirmed hold.",
+      "before": {
+        "id": "C-20",
+        "requirementIds": [
+          "R-22"
+        ],
+        "group": "state",
+        "risk": "high",
+        "priority": "high",
+        "preconditions": "Hai instance A và B với stock=3 và now giả riêng biệt; A có reservation held quantity 2.",
+        "actions": "Reserve và confirm trên A; cancel trên A; gọi snapshot của B; gọi confirm/cancel trên B với reservationId của A; đẩy now của A để hết hạn.",
+        "expected": "B giữ nguyên stock 3, available 3 và reservations rỗng sau mọi thao tác trên A; confirm/cancel trên B với id của A ném 'NOT_FOUND'; hết hạn ở A không ảnh hưởng available của B.",
+        "method": "automated",
+        "required": true
+      },
+      "patch": {
+        "actions": "A và B stock=3 độc lập: A reserve rồi confirm một bản ghi; dùng bản ghi held khác để cancel hoặc expire. Quan sát B và thử ID của A trên B.",
+        "expected": "B stock/available vẫn 3, reservations rỗng; ID thuộc A không tồn tại ở B nên NOT_FOUND; các nhánh confirm/cancel/expiry trên A dùng trạng thái hợp lệ và không ảnh hưởng B."
+      }
+    },
+    {
+      "kind": "resolve_questions",
+      "questions": [
+        "Khi người không phải chủ sở hữu gọi confirm/cancel trên reservation đã cancelled, confirmed hoặc expired, kết quả ưu tiên FORBIDDEN hay mã trạng thái (INVALID_STATE/EXPIRED)? Hợp đồng chưa định thứ tự kiểm tra; kế hoạch chưa khẳng định ca này.",
+        "Reserve lặp cùng cặp (userId,key) với cùng quantity sau khi reservation đã expired: có đúng là trả reservation status 'expired' và không cho giữ lại không? Kế hoạch (C-12) theo nghĩa đen của R-9.",
+        "Reserve lặp cùng cặp với quantity khác khi reservation đã expired hoặc cancelled: IDEMPOTENCY_CONFLICT hay trả trạng thái hiện có? Kế hoạch (C-10) mới khẳng định cho trường hợp confirmed và held.",
+        "Thứ tự phần tử trong snapshot().reservations có được quy định không? Kế hoạch chỉ so sánh theo tập id, không theo thứ tự.",
+        "Hành vi khi hàm now ném lỗi hoặc trả giá trị không hợp lệ: theo giả định của hợp đồng nên không kiểm thử; xác nhận có cần thêm ca không?"
+      ],
+      "answers": [
+        "Theo quy tắc 7 của SPEC, ID tồn tại nhưng sai user trả FORBIDDEN, kể cả đã chuyển trạng thái; expiry toàn cục vẫn được xử lý trước thao tác.",
+        "Theo quy tắc 3, replay cùng cặp/cùng quantity trả cùng reservation và trạng thái hiện hành, kể cả expired/cancelled; không giữ lại hàng.",
+        "Theo quy tắc 3, cùng cặp khác quantity luôn IDEMPOTENCY_CONFLICT, không có ngoại lệ theo trạng thái.",
+        "SPEC không quy định thứ tự reservations; so sánh theo tập id.",
+        "Hàm now ném lỗi/trả giá trị không hợp lệ ngoài phạm vi đề bài; không tự thêm assertion cho hành vi đó."
+      ]
+    }
+  ]
+}

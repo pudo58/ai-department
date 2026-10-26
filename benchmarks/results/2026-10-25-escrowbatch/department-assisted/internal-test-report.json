@@ -1,0 +1,385 @@
+{
+  "numTotalTestSuites": 5,
+  "numPassedTestSuites": 3,
+  "numFailedTestSuites": 2,
+  "numPendingTestSuites": 0,
+  "numTotalTests": 27,
+  "numPassedTests": 11,
+  "numFailedTests": 16,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "snapshot": {
+    "added": 0,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0,
+    "didUpdate": false
+  },
+  "startTime": 1792897776216,
+  "success": false,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [
+            "EscrowBatch additional public API checks"
+          ],
+          "fullName": "EscrowBatch additional public API checks [R-12][R-13] restores replay history after expiry",
+          "status": "passed",
+          "title": "[R-12][R-13] restores replay history after expiry",
+          "duration": 2.3069000000000415,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch additional public API checks"
+          ],
+          "fullName": "EscrowBatch additional public API checks [R-14] keeps restored state detached from snapshot mutations",
+          "status": "passed",
+          "title": "[R-14] keeps restored state detached from snapshot mutations",
+          "duration": 0.23849999999998772,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1792897776980,
+      "endTime": 1792897776982.307,
+      "status": "passed",
+      "message": "",
+      "name": "C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/workspaces/run_8cb7d7c4-A/tests/ledger-extra.test.js"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-1][R-2][C-1] initializes balances and sorted detached inspection",
+          "status": "passed",
+          "title": "[R-1][R-2][C-1] initializes balances and sorted detached inspection",
+          "duration": 1.6825000000000045,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-1][R-2][C-2] preserves special account identifiers",
+          "status": "passed",
+          "title": "[R-1][R-2][C-2] preserves special account identifiers",
+          "duration": 0.19919999999996207,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-2][R-6][C-3] sorts active holds and subtracts their amounts from available",
+          "status": "passed",
+          "title": "[R-2][R-6][C-3] sorts active holds and subtracts their amounts from available",
+          "duration": 0.5366999999999962,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-3][R-5][C-4] rejects empty and failed batches without partial effects",
+          "status": "failed",
+          "title": "[R-3][R-5][C-4] rejects empty and failed batches without partial effects",
+          "duration": 6.456199999999967,
+          "failureMessages": [
+            "Error: EMPTY_BATCH\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:34:64)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:29:18\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-3][R-4][C-5] increments once for zero-net batches and checks revisions",
+          "status": "failed",
+          "title": "[R-3][R-4][C-5] increments once for zero-net batches and checks revisions",
+          "duration": 0.7989999999999782,
+          "failureMessages": [
+            "Error: REVISION_CONFLICT\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:33:46)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:39:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-3][R-8][C-6] observes provisional transfers and checks self-transfer funds",
+          "status": "failed",
+          "title": "[R-3][R-8][C-6] observes provisional transfers and checks self-transfer funds",
+          "duration": 0.40200000000004366,
+          "failureMessages": [
+            "Error: INSUFFICIENT_FUNDS\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:65:69)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:47:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-5][R-6][R-7][C-7] rolls back request and hold identifiers after a failed batch",
+          "status": "failed",
+          "title": "[R-5][R-6][R-7][C-7] rolls back request and hold identifiers after a failed batch",
+          "duration": 0.34180000000003474,
+          "failureMessages": [
+            "Error: INSUFFICIENT_FUNDS\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:65:69)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:53:16\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-6][R-7][C-8] validates reserve amount ttl account hold history and availability",
+          "status": "failed",
+          "title": "[R-6][R-7][C-8] validates reserve amount ttl account hold history and availability",
+          "duration": 0.4449999999999932,
+          "failureMessages": [
+            "Error: INVALID_AMOUNT\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:52:46)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:62:18\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-8][C-9] validates transfer amount accounts and held availability",
+          "status": "failed",
+          "title": "[R-8][C-9] validates transfer amount accounts and held availability",
+          "duration": 0.48649999999997817,
+          "failureMessages": [
+            "Error: INVALID_AMOUNT\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:61:46)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:75:318\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-8][R-2][C-10] transfers balances while preserving holds and total balance",
+          "status": "passed",
+          "title": "[R-8][R-2][C-10] transfers balances while preserving holds and total balance",
+          "duration": 0.4520999999999731,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-9][R-10][C-11] settles partially and closes the entire hold",
+          "status": "failed",
+          "title": "[R-9][R-10][C-11] settles partially and closes the entire hold",
+          "duration": 0.36650000000003047,
+          "failureMessages": [
+            "Error: HOLD_CLOSED\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at getHold (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:43:43)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:77:9)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:93:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-9][R-10][C-12] rejects excessive settlement without closing its hold",
+          "status": "failed",
+          "title": "[R-9][R-10][C-12] rejects excessive settlement without closing its hold",
+          "duration": 0.2218000000000302,
+          "failureMessages": [
+            "Error: AMOUNT_EXCEEDED\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:72:44)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:100:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-9][C-13] validates settlement destination and amount while allowing owner destination",
+          "status": "failed",
+          "title": "[R-9][C-13] validates settlement destination and amount while allowing owner destination",
+          "duration": 0.219099999999969,
+          "failureMessages": [
+            "Error: UNKNOWN_ACCOUNT\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at requireAccount (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:47:40)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:70:9)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:109:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-10][C-14] distinguishes unknown expired and closed holds on release",
+          "status": "failed",
+          "title": "[R-10][C-14] distinguishes unknown expired and closed holds on release",
+          "duration": 0.2656999999999812,
+          "failureMessages": [
+            "Error: REVISION_CONFLICT\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:33:46)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:123:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-6][R-11][C-15] expires at the boundary and releases funds once",
+          "status": "passed",
+          "title": "[R-6][R-11][C-15] expires at the boundary and releases funds once",
+          "duration": 0.186300000000017,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-11][C-16] validates monotonic integer time and leaves revision unchanged without expiry",
+          "status": "failed",
+          "title": "[R-11][C-16] validates monotonic integer time and leaves revision unchanged without expiry",
+          "duration": 0.22509999999999764,
+          "failureMessages": [
+            "Error: INVALID_TIME\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.advance (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:94:70)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:143:56\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-11][C-17] expires multiple holds with one revision increment",
+          "status": "passed",
+          "title": "[R-11][C-17] expires multiple holds with one revision increment",
+          "duration": 0.18470000000002074,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-7][R-10][R-6][C-18] permanently consumes released and expired hold identifiers",
+          "status": "failed",
+          "title": "[R-7][R-10][R-6][C-18] permanently consumes released and expired hold identifiers",
+          "duration": 0.21229999999997062,
+          "failureMessages": [
+            "Error: HOLD_EXISTS\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:55:42)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:161:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-12][C-19] replays original result and conflicts before checking revision",
+          "status": "failed",
+          "title": "[R-12][C-19] replays original result and conflicts before checking revision",
+          "duration": 0.38880000000000337,
+          "failureMessages": [
+            "Error: IDEMPOTENCY_CONFLICT\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:30:94)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:177:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-12][R-14][C-20] snapshots request input and compares keys recursively but preserves array order",
+          "status": "failed",
+          "title": "[R-12][R-14][C-20] snapshots request input and compares keys recursively but preserves array order",
+          "duration": 0.39639999999997144,
+          "failureMessages": [
+            "Error: IDEMPOTENCY_CONFLICT\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:30:94)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:189:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-5][R-12][C-21] permits retrying a failed request identifier with valid operations",
+          "status": "failed",
+          "title": "[R-5][R-12][C-21] permits retrying a failed request identifier with valid operations",
+          "duration": 0.24540000000001783,
+          "failureMessages": [
+            "Error: INSUFFICIENT_FUNDS\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:65:69)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:195:16\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-1][R-2][R-14][C-22] detaches inspection snapshot and apply results",
+          "status": "passed",
+          "title": "[R-1][R-2][R-14][C-22] detaches inspection snapshot and apply results",
+          "duration": 0.36660000000000537,
+          "failureMessages": [],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-13][R-14][C-23] restores terminal and replay history with independent evolution",
+          "status": "failed",
+          "title": "[R-13][R-14][C-23] restores terminal and replay history with independent evolution",
+          "duration": 0.4352000000000089,
+          "failureMessages": [
+            "Error: HOLD_EXISTS\n    at fail (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:1:36)\n    at Object.apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\src\\ledger.js:55:42)\n    at apply (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:4:64)\n    at C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:222:16\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/node_modules/.pnpm/@vitest+runner@3.2.4/node_modules/@vitest/runner/dist/chunk-hooks.js:752:20"
+          ],
+          "meta": {}
+        },
+        {
+          "ancestorTitles": [
+            "EscrowBatch acceptance"
+          ],
+          "fullName": "EscrowBatch acceptance [R-13][C-24] round-trips schema time revision balances and active holds",
+          "status": "passed",
+          "title": "[R-13][C-24] round-trips schema time revision balances and active holds",
+          "duration": 0.22000000000002728,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1792897776543,
+      "endTime": 1792897776559.22,
+      "status": "failed",
+      "message": "",
+      "name": "C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/workspaces/run_8cb7d7c4-A/tests/ledger.test.js"
+    },
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [],
+          "fullName": "public exports exist",
+          "status": "passed",
+          "title": "public exports exist",
+          "duration": 0.9265000000000327,
+          "failureMessages": [],
+          "meta": {}
+        }
+      ],
+      "startTime": 1792897777416,
+      "endTime": 1792897777416.9265,
+      "status": "passed",
+      "message": "",
+      "name": "C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/workspaces/run_8cb7d7c4-A/tests/scaffold.test.js"
+    }
+  ]
+}

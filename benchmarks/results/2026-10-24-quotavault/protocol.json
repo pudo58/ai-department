@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-quotavault-20261024",
+  "baseSha": "d3f319c412b795114202580ea3c4626444d83a7a",
+  "specHash": "3106237b1a5a6987327fbbe9b3b07d13cd9330ff45edc0cec0d3801af6e7f2a7",
+  "evaluatorHash": "5eba484a368d260657f1778b095de5cad55fc7b7ffbe68423bfaae478c704ab2",
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "departmentTotalBudgetUsd": 6,
+  "singleBudgetUsd": 6,
+  "deadlineMinutes": 20,
+  "repetitions": 1,
+  "rules": [
+    "No coordinator edits to candidate source or tests after a run starts.",
+    "No hidden-grade feedback to either run.",
+    "The same Node/Vitest/Stryker configuration is used in both clones.",
+    "Native Single mode compared with Department Verify mode.",
+    "Subscription usage is not represented as cash cost; app cost is labeled estimate.",
+    "A single synthetic task is not a general superiority claim."
+  ]
+}

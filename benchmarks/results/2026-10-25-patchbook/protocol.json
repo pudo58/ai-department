@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "lockedAt": "2026-10-25T15:00:43.199Z",
+  "task": "PatchBook",
+  "files": {
+    "SPEC.md": "db4b26f47ffc4c9d4019225e263e1ef68d97f9268f0a643549d50efe18e73893",
+    "grade.mjs": "a21b669d8881f9c92c2f63268e648b372e2993dcb46833db3e506f891637bef3",
+    "reference.mjs": "35c4e4c536ed8da489b6593565da63ffc4fe3eb583e1cc08519b64157278a516",
+    "grader-audit.json": "32af58db3c307cce8fa4057b1183d2e2597cc778b7edea8ba8e7e1b7c34167f1",
+    "setup.mjs": "afc699a9f81a2ea39a81f40d300dba7c47a2f14f272041e73f008b54c01660be",
+    "controller.mjs": "851c8aa6b045a1e90a2b4be52a777810dfe5405c3d73ebeebc92b2ce43a2b182",
+    "source-manifest.json": "6437ba0d3b306ec95ad8a11fc81de14adadb3640fc66a9a5c934554a26965aaf"
+  },
+  "baseSha": "a3b6308a3e65ad27af5fff9ea1ba3d2a4c07085b",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "effectiveCapUsd": 10.8,
+  "automatedLimitMs": 1800000,
+  "repetitions": 1,
+  "order": [
+    "department",
+    "single"
+  ],
+  "singleMeaning": "Framework Single: Planner plus one coding/test/self-review role, possibly multiple turns; no independent Author/Verifier.",
+  "policy": "Two separate repositories cloned from same immutable scaffold before any model call. Same original SPEC/tools/model/effort/cap; run sequentially on one Windows machine. Freeze grader and product including uncommitted changes before first model. No manual candidate source/test/manifest edits, hidden grader feedback, discarded failed run, product/schema change mid-run or arbitrary model retry. Record legitimate contract/test-repair/warning/finding approvals with receipts. Grade every implementation, including blocked runs. Single external mutation same defaults/5-minute bound, timed separately. Only accept/deliver local benchmark branch after mandatory product evidence and frozen grader pass; warning acknowledgement never bypasses a blocker. No claims from test counts or general superiority from one trial."
+}

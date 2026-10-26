@@ -1,0 +1,2043 @@
+{
+  "measurement": "Supplementary tool-only measurement: Single mode does not run mutation automatically. Same local adapter, concurrency 2, 5-minute cap and changed-source scope as Department; no AI, no feedback to Single, no mutation artifact inserted in the original run.",
+  "before": {
+    "checkpoint": "87679413f252f64aeb2575677bff800149ff430a",
+    "status": ""
+  },
+  "after": {
+    "checkpoint": "87679413f252f64aeb2575677bff800149ff430a",
+    "status": ""
+  },
+  "result": {
+    "schemaVersion": 1,
+    "source": "stryker-vitest",
+    "status": "completed",
+    "checkpoint": "87679413f252f64aeb2575677bff800149ff430a",
+    "slot": "A",
+    "contractVersion": 2,
+    "configHash": "da2041f6292315e8c4ad028717882499b7c7731ff038946c97b4d6591e8f3497",
+    "capability": {
+      "adapter": "stryker-vitest",
+      "root": ".",
+      "candidates": [
+        "."
+      ],
+      "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+      "status": "available",
+      "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+      "toolVersion": "9.6.1",
+      "vitestVersion": "3.2.4",
+      "configFile": "vitest.config.js"
+    },
+    "startedAt": "2026-10-25T08:30:09.579Z",
+    "durationMs": 79554,
+    "baseline": "passed",
+    "counts": {
+      "killed": 256,
+      "survived": 59,
+      "no_coverage": 16,
+      "timeout": 1,
+      "errors": 0,
+      "pending": 0
+    },
+    "mutants": [
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "NoCoverage",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "NoCoverage",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "NoCoverage",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "UnaryOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "NoCoverage",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "NoCoverage",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 104,
+        "status": "NoCoverage",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "NoCoverage",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "NoCoverage",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 3,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 3,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 3,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 4,
+        "status": "Killed",
+        "mutator": "ObjectLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 6,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 6,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 6,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 6,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 6,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 6,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 7,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 7,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 7,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 7,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 7,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 7,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 9,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 10,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 12,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 13,
+        "status": "Killed",
+        "mutator": "ObjectLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 13,
+        "status": "Killed",
+        "mutator": "ArrayDeclaration"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 16,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 21,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 22,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 22,
+        "status": "Killed",
+        "mutator": "ArrayDeclaration"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 24,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 25,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 27,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 27,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 27,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 27,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 30,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 31,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 33,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 34,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 35,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 35,
+        "status": "Timeout",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 35,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 35,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 37,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 37,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 37,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 37,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 39,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Survived",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 42,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 43,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 47,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 52,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 54,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 57,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 60,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 60,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 60,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 60,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 60,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 61,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 62,
+        "status": "Killed",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 62,
+        "status": "Survived",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 62,
+        "status": "Killed",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 63,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 64,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 69,
+        "status": "Killed",
+        "mutator": "ObjectLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 70,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 71,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 72,
+        "status": "Killed",
+        "mutator": "ArrayDeclaration"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 73,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 73,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 73,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 73,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 73,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 73,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 74,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 74,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 74,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 75,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 76,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 76,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 76,
+        "status": "Killed",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 76,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 76,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 76,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 77,
+        "status": "Killed",
+        "mutator": "ObjectLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 77,
+        "status": "Killed",
+        "mutator": "UpdateOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 77,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 79,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 79,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 79,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 79,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 80,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 82,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 86,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 87,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 88,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 90,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 90,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 90,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 90,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 90,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 90,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "ArrayDeclaration"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 91,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "Killed",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 92,
+        "status": "Survived",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 93,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 93,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 93,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 94,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 95,
+        "status": "Killed",
+        "mutator": "AssignmentOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 97,
+        "status": "Killed",
+        "mutator": "UpdateOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 98,
+        "status": "Killed",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 101,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 102,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 104,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 104,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 104,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 106,
+        "status": "Killed",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 106,
+        "status": "Killed",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 109,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 110,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 113,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 113,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 113,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 116,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 120,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 121,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 123,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 123,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 123,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 123,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 128,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 130,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 130,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 130,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 132,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 136,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 137,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 137,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 137,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 137,
+        "status": "Killed",
+        "mutator": "BooleanLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 137,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 137,
+        "status": "Survived",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 137,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 137,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "MethodExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "ArrayDeclaration"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Survived",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Survived",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 139,
+        "status": "Killed",
+        "mutator": "EqualityOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 140,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 140,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 140,
+        "status": "Killed",
+        "mutator": "ConditionalExpression"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 140,
+        "status": "Killed",
+        "mutator": "LogicalOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 140,
+        "status": "Killed",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 140,
+        "status": "Survived",
+        "mutator": "ArithmeticOperator"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 141,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 142,
+        "status": "Killed",
+        "mutator": "ObjectLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 142,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 144,
+        "status": "Killed",
+        "mutator": "BlockStatement"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 145,
+        "status": "Killed",
+        "mutator": "ObjectLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 146,
+        "status": "Killed",
+        "mutator": "ArrayDeclaration"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 1,
+        "status": "Killed",
+        "mutator": "ArrayDeclaration"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 1,
+        "status": "Survived",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 1,
+        "status": "Survived",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 1,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 2,
+        "status": "Killed",
+        "mutator": "ArrayDeclaration"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 1,
+        "status": "Survived",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 2,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 2,
+        "status": "Killed",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 3,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 2,
+        "status": "Survived",
+        "mutator": "StringLiteral"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 4,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 5,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 6,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      },
+      {
+        "file": "src/scheduler.js",
+        "line": 7,
+        "status": "Killed",
+        "mutator": "ArrowFunction"
+      }
+    ],
+    "files": [
+      "src/scheduler.js"
+    ],
+    "message": "Đã kiểm tra các mutation trong phạm vi source đã chọn.",
+    "endedAt": "2026-10-25T08:31:29.133Z"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "task": "ReplayGate — transactional webhook outbox",
+  "baseSha": "66808f8f74a4392323d231d8114482ad547219b0",
+  "specSha256": "6dd040cd71f1d9f3b26cd0223ad2f9fdc33bc06fedbe8c8bacebb6e6dfef55b4",
+  "frozenEvaluatorSha256": "8f950ffe78d77ad94c2025154c29f6bb928decd209f3b1d56893c88268bc2674",
+  "auditedEvaluatorSha256": "696e8236e6cd271d718fc73a3cf678736bff78d3ee098de9888e4f7e6023fd1d",
+  "model": "gpt-6-luna",
+  "reasoningEffort": "medium",
+  "timeLimitMs": 720000,
+  "scoreDefinition": "10 * passed hidden behavioral checks / 43; workflow completion reported separately",
+  "single": {
+    "status": "completed",
+    "modelTurns": 1,
+    "durationMs": 70442,
+    "inputTokens": 263765,
+    "cachedInputTokens": 235520,
+    "outputTokens": 5237,
+    "estimatedCostUsd": 0.233946,
+    "ownTests": { "passed": 5, "total": 5 },
+    "hiddenChecks": { "passed": 43, "total": 43, "score": 10 },
+    "postHocProbe": { "passed": false, "expected": "retry", "observed": "leased", "excludedFromScore": true },
+    "candidate": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single"
+  },
+  "department": {
+    "status": "blocked",
+    "stage": "implement",
+    "modelTurns": 3,
+    "roles": ["planner", "author-plan", "author-manifest"],
+    "allAttemptModels": "gpt-6-luna",
+    "modelDurationMs": 242590,
+    "wallDurationMs": 430700,
+    "estimatedAppSpendUsd": 0.8156472,
+    "checkpoint": null,
+    "developerStarted": false,
+    "verifierStarted": false,
+    "codeScore": null,
+    "operatorInterventionEpisodes": 2,
+    "blocker": "Author manifest omitted linked requirement tags in C-5, C-9 and C-16; run stopped before Developer."
+  },
+  "evaluatorAudit": {
+    "originalRunWasInvalid": true,
+    "originalObserved": { "passed": 28, "total": 43 },
+    "issues": ["The harness used assert.rejects for synchronous exceptions.", "A scheduled-time case attempted claims before advancing the test clock."],
+    "originalPreserved": "single-grade.json and grade.mjs",
+    "correctedScoreUsed": "single-grade-audited.json",
+    "correctionScope": "Harness-only corrections; no candidate code, spec behavior or assertions were changed."
+  },
+  "billingNote": "Both use subscription CLIs. Dollar amounts are estimates and are not invoices or an apples-to-apples cash cost comparison.",
+  "limitations": [
+    "One task and one run per arm cannot establish general superiority or average reliability.",
+    "The Department arm produced no code candidate, so its code correctness score is not applicable.",
+    "The post-hoc boundary probe is exploratory and excluded from the frozen score."
+  ]
+}

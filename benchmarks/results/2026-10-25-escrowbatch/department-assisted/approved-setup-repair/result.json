@@ -1,0 +1,15 @@
+{
+  "runId": "run_8cb7d7c4",
+  "endedAt": "2026-10-25T03:19:12.228Z",
+  "status": "failed",
+  "blocker": "Check \"test\" fail (mã thoát 1):\nTest \"EscrowBatch acceptance [R-10][C-14] distinguishes unknown expired and closed holds on release\" fail: AssertionError: expected 'REVISION_CONFLICT' to be 'HOLD_CLOSED' // Object.is equality\n    at code (C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A\\tests\\ledger.test.js:5:137)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5\nJSON report written to C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/workspaces/run_8cb7d7c4-A/.aidept-report.json\n\n",
+  "addedAutomaticMs": 5109,
+  "checkpoint": "32f37a2914555445c6ac1839c464fa811c172f51",
+  "workspace": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A",
+  "assisted": true,
+  "grade": {
+    "passed": 65,
+    "total": 65,
+    "score": 100
+  }
+}

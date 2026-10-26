@@ -1,0 +1,643 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T15:20:27.069Z",
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\test-results\\2026-10-25-patchbook\\spec-audit-reference.mjs",
+  "passed": 94,
+  "failed": 1,
+  "total": 95,
+  "groups": {
+    "shape": {
+      "passed": 6,
+      "total": 6
+    },
+    "validation": {
+      "passed": 27,
+      "total": 28
+    },
+    "edits": {
+      "passed": 3,
+      "total": 3
+    },
+    "arrays": {
+      "passed": 2,
+      "total": 2
+    },
+    "paths": {
+      "passed": 20,
+      "total": 20
+    },
+    "safety": {
+      "passed": 2,
+      "total": 2
+    },
+    "checks": {
+      "passed": 1,
+      "total": 1
+    },
+    "atomicity": {
+      "passed": 3,
+      "total": 3
+    },
+    "precedence": {
+      "passed": 5,
+      "total": 5
+    },
+    "revisions": {
+      "passed": 1,
+      "total": 1
+    },
+    "moves": {
+      "passed": 8,
+      "total": 8
+    },
+    "replay": {
+      "passed": 5,
+      "total": 5
+    },
+    "detachment": {
+      "passed": 1,
+      "total": 1
+    },
+    "snapshot": {
+      "passed": 2,
+      "total": 2
+    },
+    "stateful": {
+      "passed": 8,
+      "total": 8
+    }
+  },
+  "results": [
+    {
+      "id": "D01-exports",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.04499999999999815
+    },
+    {
+      "id": "D02-root-null",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.5327999999999982
+    },
+    {
+      "id": "D02-root-scalar",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.017500000000001847
+    },
+    {
+      "id": "D02-root-array",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.01389999999999958
+    },
+    {
+      "id": "D02-root-object",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.03049999999999997
+    },
+    {
+      "id": "D03-invalid-initial-undefined",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.12900000000000134
+    },
+    {
+      "id": "D03-invalid-initial-NaN",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.01389999999999958
+    },
+    {
+      "id": "D03-invalid-initial-Infinity",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.008800000000000807
+    },
+    {
+      "id": "D03-invalid-initial-hole",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.008500000000001506
+    },
+    {
+      "id": "D03-invalid-initial-nested-undefined",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.015100000000000335
+    },
+    {
+      "id": "D03-invalid-initial-function",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.009599999999998943
+    },
+    {
+      "id": "D03-invalid-initial-cycle",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.016600000000000392
+    },
+    {
+      "id": "D04-request-null",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.23089999999999833
+    },
+    {
+      "id": "D04-request-array",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.032900000000001484
+    },
+    {
+      "id": "D04-request-empty",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.024399999999999977
+    },
+    {
+      "id": "D04-request-extra",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.016799999999999926
+    },
+    {
+      "id": "D04-request-empty-id",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.03160000000000096
+    },
+    {
+      "id": "D04-request-long-id",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.02780000000000271
+    },
+    {
+      "id": "D04-request-negative-revision",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.02050000000000196
+    },
+    {
+      "id": "D04-request-unsafe-revision",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.01279999999999859
+    },
+    {
+      "id": "D04-request-empty-ops",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.011000000000002785
+    },
+    {
+      "id": "D04-request-too-many",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.022800000000000153
+    },
+    {
+      "id": "D04-request-null-op",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.024799999999999045
+    },
+    {
+      "id": "D04-request-unknown-op",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.022599999999997067
+    },
+    {
+      "id": "D04-request-extra-op-field",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.011600000000001387
+    },
+    {
+      "id": "D04-request-missing-value",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.010600000000000165
+    },
+    {
+      "id": "D04-request-null-path",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.040200000000002234
+    },
+    {
+      "id": "D04-request-invalid-json-value",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.09210000000000207
+    },
+    {
+      "id": "D04-request-sparse-ops",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.0146000000000015
+    },
+    {
+      "id": "D05-invalid-restore-null",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.031800000000000495
+    },
+    {
+      "id": "D05-invalid-restore-",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.2298000000000009,
+      "error": "AssertionError [ERR_ASSERTION]: Expected Error\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:68)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:36"
+    },
+    {
+      "id": "D05-invalid-restore-false",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.00730000000000075
+    },
+    {
+      "id": "D06-literal-id-and-max-batch",
+      "group": "validation",
+      "status": "passed",
+      "durationMs": 0.20160000000000267
+    },
+    {
+      "id": "D07-exact-receipt",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.12979999999999947
+    },
+    {
+      "id": "D08-object-replace-and-insert",
+      "group": "edits",
+      "status": "passed",
+      "durationMs": 0.06099999999999994
+    },
+    {
+      "id": "D09-array-inserts-not-overwrites",
+      "group": "arrays",
+      "status": "passed",
+      "durationMs": 0.1051000000000002
+    },
+    {
+      "id": "D10-array-end-and-append",
+      "group": "arrays",
+      "status": "passed",
+      "durationMs": 0.06820000000000093
+    },
+    {
+      "id": "D11-invalid-index-01",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.07380000000000209
+    },
+    {
+      "id": "D11-invalid-index--1",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.027000000000001023
+    },
+    {
+      "id": "D11-invalid-index-1.0",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.019299999999997652
+    },
+    {
+      "id": "D11-invalid-index-+0",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.017499999999998295
+    },
+    {
+      "id": "D11-invalid-index- ",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.017399999999998528
+    },
+    {
+      "id": "D11-invalid-index-foo",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.017300000000002314
+    },
+    {
+      "id": "D11-invalid-index-9007199254740992",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.024200000000000443
+    },
+    {
+      "id": "D12-index-bounds-and-minus-context",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.6407999999999987
+    },
+    {
+      "id": "D13-object-numeric-and-empty-keys",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.0823999999999998
+    },
+    {
+      "id": "D14-single-pass-pointer-decoding",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.05910000000000082
+    },
+    {
+      "id": "D15-malformed-pointer-a",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.04380000000000095
+    },
+    {
+      "id": "D15-malformed-pointer-/~",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.013799999999999812
+    },
+    {
+      "id": "D15-malformed-pointer-/~2",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.012000000000000455
+    },
+    {
+      "id": "D15-malformed-pointer-/a/~3",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.010799999999999699
+    },
+    {
+      "id": "D15-malformed-pointer-/~10~",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.015000000000000568
+    },
+    {
+      "id": "D16-missing-ancestor-not-autocreated",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.0710000000000015
+    },
+    {
+      "id": "D17-traversal-primitive-null",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.03859999999999886
+    },
+    {
+      "id": "D17-traversal-primitive-3",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.01640000000000086
+    },
+    {
+      "id": "D17-traversal-primitive-\"s\"",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.01559999999999917
+    },
+    {
+      "id": "D17-traversal-primitive-true",
+      "group": "paths",
+      "status": "passed",
+      "durationMs": 0.015499999999999403
+    },
+    {
+      "id": "D18-own-properties-only",
+      "group": "safety",
+      "status": "passed",
+      "durationMs": 0.08050000000000068
+    },
+    {
+      "id": "D19-prototype-keys-are-data",
+      "group": "safety",
+      "status": "passed",
+      "durationMs": 0.06500000000000128
+    },
+    {
+      "id": "D20-root-put-remove-and-check-null",
+      "group": "edits",
+      "status": "passed",
+      "durationMs": 0.03580000000000183
+    },
+    {
+      "id": "D21-object-and-array-remove",
+      "group": "edits",
+      "status": "passed",
+      "durationMs": 0.09779999999999944
+    },
+    {
+      "id": "D22-check-deep-equality",
+      "group": "checks",
+      "status": "passed",
+      "durationMs": 0.28000000000000114
+    },
+    {
+      "id": "D23-atomic-earlier-ops-rollback",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.0832000000000015
+    },
+    {
+      "id": "D24-all-syntax-validated-before-execution",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.036300000000000665
+    },
+    {
+      "id": "D25-revision-before-resolution",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.02990000000000137
+    },
+    {
+      "id": "D26-revision-per-batch-not-operation",
+      "group": "revisions",
+      "status": "passed",
+      "durationMs": 0.04320000000000235
+    },
+    {
+      "id": "D27-move-array-post-removal-index",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.067499999999999
+    },
+    {
+      "id": "D28-move-invalid-after-removal-rollback",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.07229999999999848
+    },
+    {
+      "id": "D29-move-append-and-overwrite-key",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.0505000000000031
+    },
+    {
+      "id": "D30-same-path-still-resolves-source",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.0630999999999986
+    },
+    {
+      "id": "D31-decoded-prefix-rejects-descendant",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.05419999999999803
+    },
+    {
+      "id": "D32-text-prefix-is-not-ancestor",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.03229999999999933
+    },
+    {
+      "id": "D33-root-source-descendant-forbidden",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.05069999999999908
+    },
+    {
+      "id": "D34-nested-to-root",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.0694999999999979
+    },
+    {
+      "id": "D35-destination-resolves-after-removal",
+      "group": "moves",
+      "status": "passed",
+      "durationMs": 0.06169999999999831
+    },
+    {
+      "id": "D36-failed-destination-restores-source",
+      "group": "atomicity",
+      "status": "passed",
+      "durationMs": 0.07029999999999959
+    },
+    {
+      "id": "D37-historical-replay-not-current",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.12229999999999919
+    },
+    {
+      "id": "D38-replay-ignores-object-order",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.06169999999999831
+    },
+    {
+      "id": "D39-id-conflict-before-revision-base",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.10309999999999775
+    },
+    {
+      "id": "D39-id-conflict-before-revision-ops",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.040099999999998914
+    },
+    {
+      "id": "D40-shape-and-syntax-before-id-history",
+      "group": "precedence",
+      "status": "passed",
+      "durationMs": 0.10529999999999973
+    },
+    {
+      "id": "D41-replay-does-not-resolve-old-path",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.04589999999999961
+    },
+    {
+      "id": "D42-op-values-do-not-alias-history",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.08289999999999864
+    },
+    {
+      "id": "D43-replay-array-order-matters",
+      "group": "replay",
+      "status": "passed",
+      "durationMs": 0.06210000000000093
+    },
+    {
+      "id": "D44-input-and-return-detachment",
+      "group": "detachment",
+      "status": "passed",
+      "durationMs": 0.0625
+    },
+    {
+      "id": "D45-snapshot-exact-commit-order",
+      "group": "snapshot",
+      "status": "passed",
+      "durationMs": 0.07529999999999859
+    },
+    {
+      "id": "D46-restore-preserves-historical-results",
+      "group": "snapshot",
+      "status": "passed",
+      "durationMs": 0.15770000000000195
+    },
+    {
+      "id": "T1-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 13.907600000000002
+    },
+    {
+      "id": "T2-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 13.299
+    },
+    {
+      "id": "T3-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 10.975699999999996
+    },
+    {
+      "id": "T4-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 11.463499999999996
+    },
+    {
+      "id": "T5-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 13.397800000000004
+    },
+    {
+      "id": "T6-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 10.245499999999993
+    },
+    {
+      "id": "T7-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 13.2838
+    },
+    {
+      "id": "T8-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "passed",
+      "durationMs": 11.771799999999999
+    }
+  ]
+}

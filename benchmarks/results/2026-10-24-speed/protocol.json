@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "lockedAt": "2026-10-24T15:11:00.738Z",
+  "baseSha": "66808f8f74a4392323d231d8114482ad547219b0",
+  "specHash": "6dd040cd71f1d9f3b26cd0223ad2f9fdc33bc06fedbe8c8bacebb6e6dfef55b4",
+  "graderHash": "696e8236e6cd271d718fc73a3cf678736bff78d3ee098de9888e4f7e6023fd1d",
+  "baselineSourceManifestHash": "5c93c1cf4bff5fa0136bc37051ad0a44775ed891584c8fd6c96dac60653803ad",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "repetitionsPerArm": 3,
+  "baseBudgetUsd": 6,
+  "effectiveBudgetUsd": 10.8,
+  "automatedLimitMs": 1800000,
+  "guidance": "SPEC.md is authoritative. No subagents or sibling-project access. Calls may be synchronous or asynchronous; await results. Do not require an unspecified error precedence, numeric-overflow behavior, or validation of reason/retryable types. Duplicate enqueue returns the current original job. Any unresolved business question remains unresolved; do not invent assertions.",
+  "setupHash": "3e4b4da126fff670741581ed31e11382d6e4c2f5b6af716b62805a74b79fe906",
+  "policy": "Sequential runs, no source/test/schema rescue, no retry; valid contract approvals recorded; test repair needs a reviewed decision file. Grader stays outside workspace."
+}

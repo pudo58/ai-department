@@ -1,0 +1,494 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T13:45:22.970Z",
+  "environment": "Windows local, same machine/day, sequential runs; GPT-6 Luna medium all configured roles",
+  "protocol": {
+    "schemaVersion": 1,
+    "lockedAt": "2026-10-25T13:33:46.663Z",
+    "departmentRunId": "run_3973832e",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "mode": "single",
+    "meaning": "AI Department Single mode: Planner + one implementation/test/self-review agent, no independent Author or Verifier.",
+    "budgetUsd": 10.8,
+    "automaticLimitMs": 1800000,
+    "baseSha": "deed43127fd6d0dc806bbe5a0852ecb540ae2553",
+    "specHash": "e214b58b3f2e1699eb33b984f559ae02cc2a698817391e6acbb9ba4e0b353923",
+    "graderHash": "50f40e9ebc69d9d5e99f465d865f47822fd7c94f275249b2b5fb7277f1154209",
+    "projectSnapshotHash": "fcc86f23b536dccd2dbfc044a3ab35d1ad155a0c69c25037eae6ba2646f6d251",
+    "policy": "One Single trial from same untouched scaffold and original SPEC. Same model/effort/project/tools/effective cap as successful Department trial; sequential on same machine. Human contract/test/warning approvals documented, no manual candidate source/test edits, no grader feedback to model, no arbitrary model retry. External mutation uses exact candidate and same tool defaults, timed separately from Single orchestration. Preserve failed prior Department trials; this is one comparison, not statistical superiority."
+  },
+  "department": {
+    "runId": "run_3973832e",
+    "mode": "verify",
+    "status": "completed",
+    "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+    "baseSha": "deed43127fd6d0dc806bbe5a0852ecb540ae2553",
+    "budgetUsd": 10.8,
+    "costUsdEstimated": 1.0269270000000001,
+    "pipelineAutomaticMs": 361825,
+    "externalMutationMs": 0,
+    "automaticIncludingExternalMutationMs": 361825,
+    "rawWaitingMs": 132031,
+    "rawWaitingIncludesExternalMutation": false,
+    "attemptsByRole": {
+      "planner": 1,
+      "author": 3,
+      "developer": 1,
+      "verifier": 1
+    },
+    "modelCallCount": 6,
+    "retries": [
+      {
+        "reason": "invalid_output",
+        "count": 1
+      }
+    ],
+    "usage": {
+      "input": 648746,
+      "output": 33407,
+      "cached": 526080
+    },
+    "checks": [
+      {
+        "status": "passed",
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "counts": {
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0
+        },
+        "issues": []
+      }
+    ],
+    "externalGrader": {
+      "passed": 64,
+      "total": 64,
+      "byGroup": {
+        "shape": {
+          "passed": 1,
+          "total": 1
+        },
+        "validation": {
+          "passed": 18,
+          "total": 18
+        },
+        "holds": {
+          "passed": 3,
+          "total": 3
+        },
+        "atomicity": {
+          "passed": 5,
+          "total": 5
+        },
+        "idempotency": {
+          "passed": 7,
+          "total": 7
+        },
+        "time": {
+          "passed": 5,
+          "total": 5
+        },
+        "versions": {
+          "passed": 4,
+          "total": 4
+        },
+        "authorization": {
+          "passed": 6,
+          "total": 6
+        },
+        "accounting": {
+          "passed": 2,
+          "total": 2
+        },
+        "detachment": {
+          "passed": 2,
+          "total": 2
+        },
+        "restore": {
+          "passed": 3,
+          "total": 3
+        },
+        "stateful": {
+          "passed": 8,
+          "total": 8
+        }
+      }
+    },
+    "mutation": {
+      "external": false,
+      "status": "completed",
+      "baseline": "passed",
+      "durationMs": 58261,
+      "counts": {
+        "killed": 277,
+        "survived": 126,
+        "no_coverage": 47,
+        "timeout": 0,
+        "errors": 0,
+        "pending": 0
+      }
+    },
+    "delivery": {
+      "kind": "branch",
+      "target": "aidept/run_3973832e-A",
+      "status": "succeeded",
+      "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+      "contractVersion": 4,
+      "slot": "A",
+      "startedAt": "2026-10-25T11:28:38.081Z",
+      "endedAt": "2026-10-25T11:28:38.367Z",
+      "result": "Đã tạo branch aidept/run_3973832e-A trong repository gốc"
+    },
+    "manualRequirementIds": []
+  },
+  "single": {
+    "runId": "run_24c7854e",
+    "mode": "single",
+    "status": "awaiting_acceptance",
+    "checkpoint": "87b262644c401c4a1a1ae86ba3598b8b7b070514",
+    "baseSha": "deed43127fd6d0dc806bbe5a0852ecb540ae2553",
+    "budgetUsd": 10.8,
+    "costUsdEstimated": 1.1433114,
+    "pipelineAutomaticMs": 190242,
+    "externalMutationMs": 60696,
+    "automaticIncludingExternalMutationMs": 250938,
+    "rawWaitingMs": 333201,
+    "rawWaitingIncludesExternalMutation": true,
+    "attemptsByRole": {
+      "planner": 1,
+      "developer": 3
+    },
+    "modelCallCount": 4,
+    "retries": [
+      {
+        "reason": "missing_evidence",
+        "count": 1
+      },
+      {
+        "reason": "check_failure",
+        "count": 1
+      }
+    ],
+    "usage": {
+      "input": 1530232,
+      "output": 28591,
+      "cached": 1435648
+    },
+    "checks": [
+      {
+        "status": "passed",
+        "checkpoint": "f861e70facab3a6b89288dea5ae9e953d701c996",
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "issues": []
+      },
+      {
+        "status": "failed",
+        "checkpoint": "8040bd1012d7940a067c14d0a5644c1444770cfc",
+        "counts": {
+          "passed": 15,
+          "failed": 1,
+          "skipped": 0
+        },
+        "issues": [
+          {
+            "kind": "assertion_failed",
+            "testId": "tests/stockroom.contract.test.js::CartStock public contract [R-12] advance validates monotonic safe time and expires on the exact deadline",
+            "message": "tests/stockroom.contract.test.js::CartStock public contract [R-12] advance validates monotonic safe time and expires on the exact deadline: failed"
+          }
+        ]
+      },
+      {
+        "status": "passed",
+        "checkpoint": "87b262644c401c4a1a1ae86ba3598b8b7b070514",
+        "counts": {
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
+        },
+        "issues": []
+      }
+    ],
+    "externalGrader": {
+      "passed": 64,
+      "total": 64,
+      "byGroup": {
+        "shape": {
+          "passed": 1,
+          "total": 1
+        },
+        "validation": {
+          "passed": 18,
+          "total": 18
+        },
+        "holds": {
+          "passed": 3,
+          "total": 3
+        },
+        "atomicity": {
+          "passed": 5,
+          "total": 5
+        },
+        "idempotency": {
+          "passed": 7,
+          "total": 7
+        },
+        "time": {
+          "passed": 5,
+          "total": 5
+        },
+        "versions": {
+          "passed": 4,
+          "total": 4
+        },
+        "authorization": {
+          "passed": 6,
+          "total": 6
+        },
+        "accounting": {
+          "passed": 2,
+          "total": 2
+        },
+        "detachment": {
+          "passed": 2,
+          "total": 2
+        },
+        "restore": {
+          "passed": 3,
+          "total": 3
+        },
+        "stateful": {
+          "passed": 8,
+          "total": 8
+        }
+      }
+    },
+    "mutation": {
+      "external": true,
+      "status": "completed",
+      "baseline": "passed",
+      "durationMs": 60696,
+      "counts": {
+        "killed": 264,
+        "survived": 39,
+        "no_coverage": 7,
+        "timeout": 0,
+        "errors": 0,
+        "pending": 0
+      }
+    },
+    "delivery": null,
+    "manualRequirementIds": [
+      "R-1",
+      "R-17"
+    ]
+  },
+  "postRunDiagnostic": {
+    "schemaVersion": 1,
+    "at": "2026-10-25T13:41:52.759Z",
+    "purpose": "Post-run source-informed diagnostic; added after seeing code. Separate from the frozen 64-case grader, not a held-out score or fair additional benchmark cohort.",
+    "basis": "SPEC clause 1: invalid shapes/scalars throw Error with code INVALID. These probes interpret invalid outer option/request shapes as covered by that clause. No unrelated otherwise-valid command field is varied.",
+    "notFedToAgents": true,
+    "rows": [
+      {
+        "arm": "department",
+        "runId": "run_3973832e",
+        "name": "null-options",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "Expected stockroom options"
+        }
+      },
+      {
+        "arm": "department",
+        "runId": "run_3973832e",
+        "name": "null-stock",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "Expected an object map"
+        }
+      },
+      {
+        "arm": "department",
+        "runId": "run_3973832e",
+        "name": "null-reserve",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "Expected reservation object"
+        }
+      },
+      {
+        "arm": "department",
+        "runId": "run_3973832e",
+        "name": "null-amend",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "Expected command object"
+        }
+      },
+      {
+        "arm": "department",
+        "runId": "run_3973832e",
+        "name": "null-confirm",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "Expected command object"
+        }
+      },
+      {
+        "arm": "department",
+        "runId": "run_3973832e",
+        "name": "null-cancel",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "Expected command object"
+        }
+      },
+      {
+        "arm": "department",
+        "runId": "run_3973832e",
+        "name": "null-get",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "Invalid reservation ID"
+        }
+      },
+      {
+        "arm": "single",
+        "runId": "run_24c7854e",
+        "name": "null-options",
+        "expectedCode": "INVALID",
+        "status": "failed",
+        "actual": {
+          "name": "TypeError",
+          "code": null,
+          "message": "Cannot destructure property 'stock' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        }
+      },
+      {
+        "arm": "single",
+        "runId": "run_24c7854e",
+        "name": "null-stock",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "INVALID"
+        }
+      },
+      {
+        "arm": "single",
+        "runId": "run_24c7854e",
+        "name": "null-reserve",
+        "expectedCode": "INVALID",
+        "status": "failed",
+        "actual": {
+          "name": "TypeError",
+          "code": null,
+          "message": "Cannot destructure property 'id' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        }
+      },
+      {
+        "arm": "single",
+        "runId": "run_24c7854e",
+        "name": "null-amend",
+        "expectedCode": "INVALID",
+        "status": "failed",
+        "actual": {
+          "name": "TypeError",
+          "code": null,
+          "message": "Cannot destructure property 'id' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        }
+      },
+      {
+        "arm": "single",
+        "runId": "run_24c7854e",
+        "name": "null-confirm",
+        "expectedCode": "INVALID",
+        "status": "failed",
+        "actual": {
+          "name": "TypeError",
+          "code": null,
+          "message": "Cannot destructure property 'id' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        }
+      },
+      {
+        "arm": "single",
+        "runId": "run_24c7854e",
+        "name": "null-cancel",
+        "expectedCode": "INVALID",
+        "status": "failed",
+        "actual": {
+          "name": "TypeError",
+          "code": null,
+          "message": "Cannot destructure property 'id' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+        }
+      },
+      {
+        "arm": "single",
+        "runId": "run_24c7854e",
+        "name": "null-get",
+        "expectedCode": "INVALID",
+        "status": "passed",
+        "actual": {
+          "name": "Error",
+          "code": "INVALID",
+          "message": "INVALID"
+        }
+      }
+    ]
+  },
+  "analysis": {
+    "frozenGrader": "Both 64/64; no universal quality winner follows.",
+    "time": "Single reached its public acceptance gate in less automated time, including its separately measured external mutation. Department includes Author plan/test/lock/mutation/independent Verifier steps.",
+    "cost": "Single was slightly more expensive in this one observed run despite fewer role calls; costs are flat-rate estimates, not invoices.",
+    "tests": "Single needed one round to supply missing report evidence and one to repair a wrong test expectation for time going backwards. No implementation edits in its final correction, confirmed by Git diff. Its final tests were 16/16.",
+    "mutation": "Single had fewer surviving/uncovered mutations in its own program. The two candidate source structures and mutant populations differ (310 vs 450), so raw counts or scores do not isolate test quality.",
+    "diagnostic": "One null-envelope error-handling group affects Single factory/reserve/amend/confirm/cancel; default parameter destructuring runs before validation. Department returns INVALID in all 7 identical probes. These probes were source-informed and added after the run, kept separate from frozen grading.",
+    "acceptance": "Single app reports completion.ready=true and awaiting_acceptance, not an orchestration failure. Operator did not accept/deliver because additional diagnostics found a contract error-code issue. Department remains completed from its original acceptance."
+  },
+  "interventions": {
+    "contractRevision": 1,
+    "contractApproval": 1,
+    "manualCandidateSourceOrTestEdits": 0,
+    "modelFeedbackFromExternalGraderOrEdgeAudit": 0,
+    "preDeveloperGitMetadataIsolation": true,
+    "accepted": false
+  },
+  "limitations": [
+    "N=1 per successful current arm, no statistical superiority claim. Earlier failed Department trials are preserved and are not erased by this comparison.",
+    "Planner contracts and acceptance examples are authored separately from the same original SPEC; each received recorded human review.",
+    "Single means framework Single (Planner plus one coding/test/self-review role across three turns), not a single total model call.",
+    "Post-run edge audit uses an explicit interpretation of SPEC invalid shapes/scalars to include null outer request/options; it is not part of the locked 64-case grader.",
+    "No candidate was fixed after external grading; all failing/repair attempts retained.",
+    "Single mutation ran externally, not as an automatic product gate; app waiting time includes it.",
+    "Provider sandbox npm test commands reported Access is denied; host-run configured checks and external Stryker ran successfully. Neither host preflight nor runner results prove agent sandbox permissions."
+  ],
+  "sourceAndGraderHashesVerified": true
+}

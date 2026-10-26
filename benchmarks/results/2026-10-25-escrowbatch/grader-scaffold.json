@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\base\\src\\ledger.js",
+  "at": "2026-10-25T02:53:24.574Z",
+  "passed": 0,
+  "failed": 65,
+  "total": 65,
+  "score": 0,
+  "byGroup": {
+    "public-api": {
+      "passed": 0,
+      "total": 2
+    },
+    "time": {
+      "passed": 0,
+      "total": 6
+    },
+    "money": {
+      "passed": 0,
+      "total": 3
+    },
+    "holds": {
+      "passed": 0,
+      "total": 5
+    },
+    "boundary": {
+      "passed": 0,
+      "total": 1
+    },
+    "history": {
+      "passed": 0,
+      "total": 6
+    },
+    "errors": {
+      "passed": 0,
+      "total": 1
+    },
+    "atomicity": {
+      "passed": 0,
+      "total": 5
+    },
+    "validation": {
+      "passed": 0,
+      "total": 10
+    },
+    "revision": {
+      "passed": 0,
+      "total": 2
+    },
+    "idempotency": {
+      "passed": 0,
+      "total": 5
+    },
+    "aliasing": {
+      "passed": 0,
+      "total": 4
+    },
+    "snapshot": {
+      "passed": 0,
+      "total": 3
+    },
+    "stateful": {
+      "passed": 0,
+      "total": 12
+    }
+  },
+  "results": [
+    {
+      "id": "D01-initial-state",
+      "group": "public-api",
+      "status": "FAILED",
+      "ms": 0.11769999999999925,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:21:69\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:21:7"
+    },
+    {
+      "id": "D02-initial-time",
+      "group": "time",
+      "status": "FAILED",
+      "ms": 0.032900000000001484,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:22:81\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:22:7"
+    },
+    {
+      "id": "D03-transfer",
+      "group": "money",
+      "status": "FAILED",
+      "ms": 0.03200000000000003,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:23:59\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:23:7"
+    },
+    {
+      "id": "D04-reserve-does-not-debit",
+      "group": "holds",
+      "status": "FAILED",
+      "ms": 0.02740000000000009,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:24:73\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:24:7"
+    },
+    {
+      "id": "D05-exact-available",
+      "group": "boundary",
+      "status": "FAILED",
+      "ms": 0.03579999999999828,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:25:69\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:25:7"
+    },
+    {
+      "id": "D06-held-funds-block-transfer",
+      "group": "holds",
+      "status": "FAILED",
+      "ms": 0.05030000000000001,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:26:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:26:7"
+    },
+    {
+      "id": "D07-partial-settle-releases-remainder",
+      "group": "holds",
+      "status": "FAILED",
+      "ms": 0.037700000000000955,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:27:84\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:27:7"
+    },
+    {
+      "id": "D08-full-settle",
+      "group": "holds",
+      "status": "FAILED",
+      "ms": 0.023499999999998522,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:28:62\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:28:7"
+    },
+    {
+      "id": "D09-release",
+      "group": "holds",
+      "status": "FAILED",
+      "ms": 0.02319999999999922,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:29:58\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:29:7"
+    },
+    {
+      "id": "D10-closed-settle",
+      "group": "history",
+      "status": "FAILED",
+      "ms": 0.04550000000000054,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:30:206\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:30:149"
+    },
+    {
+      "id": "D10-closed-release",
+      "group": "history",
+      "status": "FAILED",
+      "ms": 0.01320000000000121,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:30:206\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:30:149"
+    },
+    {
+      "id": "D10-closed-reserve",
+      "group": "history",
+      "status": "FAILED",
+      "ms": 0.008499999999997954,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:30:206\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:30:149"
+    },
+    {
+      "id": "D11-unknown-hold",
+      "group": "errors",
+      "status": "FAILED",
+      "ms": 0.01950000000000074,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:31:64\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:31:7"
+    },
+    {
+      "id": "D12-excess-settle-leaves-hold-live",
+      "group": "atomicity",
+      "status": "FAILED",
+      "ms": 0.02319999999999922,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:32:85\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:32:7"
+    },
+    {
+      "id": "D13-expiry-exact-boundary",
+      "group": "time",
+      "status": "FAILED",
+      "ms": 0.026299999999999102,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:33:71\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:33:7"
+    },
+    {
+      "id": "D14-many-expiries-one-revision",
+      "group": "time",
+      "status": "FAILED",
+      "ms": 0.019999999999999574,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:34:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:34:7"
+    },
+    {
+      "id": "D15-mixed-expiries",
+      "group": "time",
+      "status": "FAILED",
+      "ms": 0.028299999999997993,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:35:64\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:35:7"
+    },
+    {
+      "id": "D16-time-without-expiry",
+      "group": "time",
+      "status": "FAILED",
+      "ms": 0.01810000000000045,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:36:69\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:36:7"
+    },
+    {
+      "id": "D17-invalid-time--1",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.023299999999998988,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:37:107\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:37:35"
+    },
+    {
+      "id": "D17-invalid-time-1.5",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.006299999999999528,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:37:107\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:37:35"
+    },
+    {
+      "id": "D17-invalid-time-NaN",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.00590000000000046,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:37:107\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:37:35"
+    },
+    {
+      "id": "D18-time-cannot-rewind",
+      "group": "time",
+      "status": "FAILED",
+      "ms": 0.01640000000000086,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:38:68\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:38:7"
+    },
+    {
+      "id": "D19-expired-release",
+      "group": "history",
+      "status": "FAILED",
+      "ms": 0.020800000000001262,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:39:120\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:39:51"
+    },
+    {
+      "id": "D19-expired-settle",
+      "group": "history",
+      "status": "FAILED",
+      "ms": 0.007199999999997431,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:39:120\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:39:51"
+    },
+    {
+      "id": "D20-expired-ID-not-reusable",
+      "group": "history",
+      "status": "FAILED",
+      "ms": 0.018400000000003303,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:40:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:40:7"
+    },
+    {
+      "id": "D21-ordered-provisional-effects",
+      "group": "atomicity",
+      "status": "FAILED",
+      "ms": 0.024099999999997124,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:41:82\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:41:7"
+    },
+    {
+      "id": "D22-rollback-all-ops",
+      "group": "atomicity",
+      "status": "FAILED",
+      "ms": 0.020199999999999108,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:42:71\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:42:7"
+    },
+    {
+      "id": "D23-rollback-does-not-consume-IDs",
+      "group": "atomicity",
+      "status": "FAILED",
+      "ms": 0.019200000000001438,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:43:84\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:43:7"
+    },
+    {
+      "id": "D24-rollback-terminal-status",
+      "group": "atomicity",
+      "status": "FAILED",
+      "ms": 0.021999999999998465,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:44:79\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:44:7"
+    },
+    {
+      "id": "D25-revision-CAS",
+      "group": "revision",
+      "status": "FAILED",
+      "ms": 0.020000000000003126,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:45:66\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:45:7"
+    },
+    {
+      "id": "D26-zero-net-batch-increments-once",
+      "group": "revision",
+      "status": "FAILED",
+      "ms": 0.018200000000000216,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:46:84\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:46:7"
+    },
+    {
+      "id": "D27-self-transfer-validates-available",
+      "group": "money",
+      "status": "FAILED",
+      "ms": 0.020700000000001495,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:47:84\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:47:7"
+    },
+    {
+      "id": "D28-self-settle",
+      "group": "money",
+      "status": "FAILED",
+      "ms": 0.019999999999999574,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:48:62\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:48:7"
+    },
+    {
+      "id": "D29-replay-precedes-CAS",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.023500000000002075,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:49:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:49:7"
+    },
+    {
+      "id": "D30-id-conflict-precedes-CAS",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.02050000000000196,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:50:81\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:50:7"
+    },
+    {
+      "id": "D31-key-order-independent-replay",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.018599999999999284,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:51:85\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:51:7"
+    },
+    {
+      "id": "D32-array-order-matters",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.016500000000000625,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:52:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:52:7"
+    },
+    {
+      "id": "D33-replay-does-not-resurrect-expired-hold",
+      "group": "idempotency",
+      "status": "FAILED",
+      "ms": 0.021000000000000796,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:53:95\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:53:7"
+    },
+    {
+      "id": "D34-request-detached",
+      "group": "aliasing",
+      "status": "FAILED",
+      "ms": 0.025500000000000966,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:54:70\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:54:7"
+    },
+    {
+      "id": "D35-result-detached",
+      "group": "aliasing",
+      "status": "FAILED",
+      "ms": 0.022500000000000853,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:55:69\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:55:7"
+    },
+    {
+      "id": "D36-inspect-detached",
+      "group": "aliasing",
+      "status": "FAILED",
+      "ms": 0.025600000000000733,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:56:70\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:56:7"
+    },
+    {
+      "id": "D37-snapshot-roundtrip",
+      "group": "snapshot",
+      "status": "FAILED",
+      "ms": 0.02680000000000149,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:57:72\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:57:7"
+    },
+    {
+      "id": "D38-restored-replay-and-closed-history",
+      "group": "snapshot",
+      "status": "FAILED",
+      "ms": 0.041499999999999204,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:58:88\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:58:7"
+    },
+    {
+      "id": "D39-restored-expired-history",
+      "group": "snapshot",
+      "status": "FAILED",
+      "ms": 0.030100000000000904,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:59:78\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:59:7"
+    },
+    {
+      "id": "D40-snapshot-and-restore-independent",
+      "group": "aliasing",
+      "status": "FAILED",
+      "ms": 0.048399999999997334,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:60:86\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:60:7"
+    },
+    {
+      "id": "D41-invalid-amount-0",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.08050000000000068,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:61:109\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:61:38"
+    },
+    {
+      "id": "D41-invalid-amount--1",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.00999999999999801,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:61:109\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:61:38"
+    },
+    {
+      "id": "D41-invalid-amount-1.5",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.006600000000002382,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:61:109\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:61:38"
+    },
+    {
+      "id": "D42-invalid-ttl-0",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.024200000000000443,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:62:100\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:62:35"
+    },
+    {
+      "id": "D42-invalid-ttl--1",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.006500000000002615,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:62:100\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:62:35"
+    },
+    {
+      "id": "D42-invalid-ttl-1.5",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.006000000000000227,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:62:100\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:62:35"
+    },
+    {
+      "id": "D43-unknown-account",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.024399999999999977,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:63:71\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:63:7"
+    },
+    {
+      "id": "D44-special-IDs",
+      "group": "public-api",
+      "status": "FAILED",
+      "ms": 0.054400000000001114,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:64:67\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:64:7"
+    },
+    {
+      "id": "T01-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.1524000000000001,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T02-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.007900000000002905,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T03-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.49010000000000176,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T04-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.012399999999999523,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T05-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.00840000000000174,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T06-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.008000000000002672,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T07-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.006399999999999295,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T08-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.006399999999999295,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T09-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.018299999999999983,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T10-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.011099999999999,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T11-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.009299999999999642,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    },
+    {
+      "id": "T12-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.006999999999997897,
+      "error": "Error: Not implemented\n    at Module.createLedger (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/base/src/ledger.js:1:40)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:14:87)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:68:20\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:38"
+    }
+  ]
+}

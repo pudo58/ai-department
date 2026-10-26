@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-outboxpilot-20261024\\single",
+  "generatedAt": "2026-10-24T14:13:34.459Z",
+  "total": 43,
+  "passed": 43,
+  "failed": 0,
+  "score": 10,
+  "cases": [
+    {
+      "name": "schema and default row",
+      "passed": true
+    },
+    {
+      "name": "constructor validation",
+      "passed": true
+    },
+    {
+      "name": "invalid enqueue does not reserve id",
+      "passed": true
+    },
+    {
+      "name": "invalid claim leaves queue untouched",
+      "passed": true
+    },
+    {
+      "name": "input and output payloads are detached",
+      "passed": true
+    },
+    {
+      "name": "duplicate JSON object key order is irrelevant",
+      "passed": true
+    },
+    {
+      "name": "duplicate payload or priority conflict is atomic",
+      "passed": true
+    },
+    {
+      "name": "priority descending",
+      "passed": true
+    },
+    {
+      "name": "not-due job is skipped",
+      "passed": true
+    },
+    {
+      "name": "availableAt then enqueue order tie break",
+      "passed": true
+    },
+    {
+      "name": "concurrent claims lease distinct jobs and tokens",
+      "passed": true
+    },
+    {
+      "name": "lease metadata and attempt count",
+      "passed": true
+    },
+    {
+      "name": "acked item cannot be claimed again",
+      "passed": true
+    },
+    {
+      "name": "exact ack replay is idempotent",
+      "passed": true
+    },
+    {
+      "name": "wrong worker forbidden without mutation",
+      "passed": true
+    },
+    {
+      "name": "stale token cannot ack",
+      "passed": true
+    },
+    {
+      "name": "unknown event not found",
+      "passed": true
+    },
+    {
+      "name": "lease valid immediately before expiry",
+      "passed": true
+    },
+    {
+      "name": "expiry boundary schedules retry",
+      "passed": true
+    },
+    {
+      "name": "sweep returns expired jobs in enqueue order",
+      "passed": true
+    },
+    {
+      "name": "last expired attempt becomes dead",
+      "passed": true
+    },
+    {
+      "name": "first failure uses base backoff",
+      "passed": true
+    },
+    {
+      "name": "retry backoff grows exponentially",
+      "passed": true
+    },
+    {
+      "name": "non-retryable failure dies immediately",
+      "passed": true
+    },
+    {
+      "name": "retryable failure on final attempt dies",
+      "passed": true
+    },
+    {
+      "name": "consumed lease cannot fail twice",
+      "passed": true
+    },
+    {
+      "name": "cancel pending and replay",
+      "passed": true
+    },
+    {
+      "name": "cancel retry job",
+      "passed": true
+    },
+    {
+      "name": "cancel active lease is busy",
+      "passed": true
+    },
+    {
+      "name": "cancel acked job is invalid",
+      "passed": true
+    },
+    {
+      "name": "terminal states are never claimable",
+      "passed": true
+    },
+    {
+      "name": "idempotency survives terminal state",
+      "passed": true
+    },
+    {
+      "name": "instances are isolated",
+      "passed": true
+    },
+    {
+      "name": "snapshot lazily expires leases",
+      "passed": true
+    },
+    {
+      "name": "snapshot order remains enqueue order",
+      "passed": true
+    },
+    {
+      "name": "special exact identifiers are preserved",
+      "passed": true
+    },
+    {
+      "name": "invalid identifiers and numeric fields rejected",
+      "passed": true
+    },
+    {
+      "name": "non-JSON payload rejected",
+      "passed": true
+    },
+    {
+      "name": "failed job does not consume another job",
+      "passed": true
+    },
+    {
+      "name": "attempts are monotone over retry and lease expiry",
+      "passed": true
+    },
+    {
+      "name": "wrong worker cannot fail active lease",
+      "passed": true
+    },
+    {
+      "name": "cancel unknown ID not found",
+      "passed": true
+    },
+    {
+      "name": "claim returns null when only future retry exists",
+      "passed": true
+    }
+  ]
+}

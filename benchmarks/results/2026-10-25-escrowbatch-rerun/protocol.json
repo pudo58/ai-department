@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "lockedAt": "2026-10-25T03:27:33.114Z",
+  "task": "EscrowBatch",
+  "base": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-rerun-20261025\\base",
+  "baseSha": "5828ca3c7ac1af57f7a91851c51da75c40948c32",
+  "specHash": "20a3e06aba72b6a7bc65b04233ca620556f9f012ea7db4f316825feb526f15ac",
+  "graderHash": "829dd7c7d4930f078fdb09c33becfa06902be8a44d9ebe2ad30f04d1da40d34c",
+  "referenceHash": "f97656f16aee67752ac8473b1217d5101a4b2edf2866244c0bf8ee41aa31914a",
+  "sourceManifestHash": "89910dadf1b6b69c03d548a505f7ab98d0091327ef739729f99d1b0f48637ee2",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "arms": [
+    "department",
+    "single"
+  ],
+  "singleMeans": "AI Department Single mode: Planner plus one implementation/self-review agent, no independent Author or Verifier",
+  "effectiveCapUsd": 10.8,
+  "baseBudget": {
+    "department": 6,
+    "single": 10.8
+  },
+  "automatedLimitMs": 1800000,
+  "repetitions": 1,
+  "policy": "Sequential; same scaffold/spec/tools/effective budget. No model retry, source/test/schema rescue or hidden-grader feedback. Human contract and test-repair decisions recorded with hashes. Grade any implementation even when pipeline is blocked. No acceptance/delivery. Grader outside workspace; no sibling access. Current AI Department source snapshot; fresh database and workspaces; preserve earlier cohorts.",
+  "rerunOf": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\test-results\\2026-10-25-escrowbatch\\protocol.json"
+}

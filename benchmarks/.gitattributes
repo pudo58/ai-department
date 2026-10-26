@@ -1,0 +1,2 @@
+# Preserve historical benchmark bytes and their SHA-256 hashes across platforms.
+results/** -text

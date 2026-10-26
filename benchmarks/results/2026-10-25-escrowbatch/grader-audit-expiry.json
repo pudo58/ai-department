@@ -1,0 +1,474 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\test-results\\2026-10-25-escrowbatch\\audit-broken-expiry.mjs",
+  "at": "2026-10-25T02:52:34.923Z",
+  "passed": 50,
+  "failed": 15,
+  "total": 65,
+  "score": 76.9,
+  "byGroup": {
+    "public-api": {
+      "passed": 2,
+      "total": 2
+    },
+    "time": {
+      "passed": 4,
+      "total": 6
+    },
+    "money": {
+      "passed": 3,
+      "total": 3
+    },
+    "holds": {
+      "passed": 5,
+      "total": 5
+    },
+    "boundary": {
+      "passed": 1,
+      "total": 1
+    },
+    "history": {
+      "passed": 6,
+      "total": 6
+    },
+    "errors": {
+      "passed": 1,
+      "total": 1
+    },
+    "atomicity": {
+      "passed": 5,
+      "total": 5
+    },
+    "validation": {
+      "passed": 9,
+      "total": 10
+    },
+    "revision": {
+      "passed": 2,
+      "total": 2
+    },
+    "idempotency": {
+      "passed": 5,
+      "total": 5
+    },
+    "aliasing": {
+      "passed": 4,
+      "total": 4
+    },
+    "snapshot": {
+      "passed": 3,
+      "total": 3
+    },
+    "stateful": {
+      "passed": 0,
+      "total": 12
+    }
+  },
+  "results": [
+    {
+      "id": "D01-initial-state",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.7192000000000007
+    },
+    {
+      "id": "D02-initial-time",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.0998999999999981
+    },
+    {
+      "id": "D03-transfer",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.33899999999999864
+    },
+    {
+      "id": "D04-reserve-does-not-debit",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.19709999999999894
+    },
+    {
+      "id": "D05-exact-available",
+      "group": "boundary",
+      "status": "PASSED",
+      "ms": 0.09699999999999775
+    },
+    {
+      "id": "D06-held-funds-block-transfer",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.2336999999999989
+    },
+    {
+      "id": "D07-partial-settle-releases-remainder",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.2002999999999986
+    },
+    {
+      "id": "D08-full-settle",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.0926000000000009
+    },
+    {
+      "id": "D09-release",
+      "group": "holds",
+      "status": "PASSED",
+      "ms": 0.11310000000000286
+    },
+    {
+      "id": "D10-closed-settle",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.12950000000000017
+    },
+    {
+      "id": "D10-closed-release",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.08459999999999823
+    },
+    {
+      "id": "D10-closed-reserve",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.08580000000000254
+    },
+    {
+      "id": "D11-unknown-hold",
+      "group": "errors",
+      "status": "PASSED",
+      "ms": 0.05339999999999989
+    },
+    {
+      "id": "D12-excess-settle-leaves-hold-live",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.6033000000000008
+    },
+    {
+      "id": "D13-expiry-exact-boundary",
+      "group": "time",
+      "status": "FAILED",
+      "ms": 0.5755999999999979,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n100 !== 40\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:33:136\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:33:1"
+    },
+    {
+      "id": "D14-many-expiries-one-revision",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.08079999999999998
+    },
+    {
+      "id": "D15-mixed-expiries",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.09679999999999822
+    },
+    {
+      "id": "D16-time-without-expiry",
+      "group": "time",
+      "status": "FAILED",
+      "ms": 0.12379999999999924,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n100 !== 99\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:36:168\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:36:1"
+    },
+    {
+      "id": "D17-invalid-time--1",
+      "group": "validation",
+      "status": "FAILED",
+      "ms": 0.07760000000000034,
+      "error": "AssertionError [ERR_ASSERTION]: Expected Error\n    at error (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:19:66)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:37:115\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:37:29"
+    },
+    {
+      "id": "D17-invalid-time-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.02790000000000248
+    },
+    {
+      "id": "D17-invalid-time-NaN",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.02039999999999864
+    },
+    {
+      "id": "D18-time-cannot-rewind",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.04350000000000165
+    },
+    {
+      "id": "D19-expired-release",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.09520000000000195
+    },
+    {
+      "id": "D19-expired-settle",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.0517000000000003
+    },
+    {
+      "id": "D20-expired-ID-not-reusable",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.07069999999999865
+    },
+    {
+      "id": "D21-ordered-provisional-effects",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.09500000000000242
+    },
+    {
+      "id": "D22-rollback-all-ops",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.13210000000000122
+    },
+    {
+      "id": "D23-rollback-does-not-consume-IDs",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.0840999999999994
+    },
+    {
+      "id": "D24-rollback-terminal-status",
+      "group": "atomicity",
+      "status": "PASSED",
+      "ms": 0.0931999999999995
+    },
+    {
+      "id": "D25-revision-CAS",
+      "group": "revision",
+      "status": "PASSED",
+      "ms": 0.07129999999999725
+    },
+    {
+      "id": "D26-zero-net-batch-increments-once",
+      "group": "revision",
+      "status": "PASSED",
+      "ms": 0.04860000000000042
+    },
+    {
+      "id": "D27-self-transfer-validates-available",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.08269999999999911
+    },
+    {
+      "id": "D28-self-settle",
+      "group": "money",
+      "status": "PASSED",
+      "ms": 0.06819999999999737
+    },
+    {
+      "id": "D29-replay-precedes-CAS",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.09890000000000043
+    },
+    {
+      "id": "D30-id-conflict-precedes-CAS",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.06500000000000128
+    },
+    {
+      "id": "D31-key-order-independent-replay",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.0818000000000012
+    },
+    {
+      "id": "D32-array-order-matters",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.09159999999999968
+    },
+    {
+      "id": "D33-replay-does-not-resurrect-expired-hold",
+      "group": "idempotency",
+      "status": "PASSED",
+      "ms": 0.07139999999999702
+    },
+    {
+      "id": "D34-request-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.0799999999999983
+    },
+    {
+      "id": "D35-result-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.045999999999999375
+    },
+    {
+      "id": "D36-inspect-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.0777000000000001
+    },
+    {
+      "id": "D37-snapshot-roundtrip",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.15549999999999997
+    },
+    {
+      "id": "D38-restored-replay-and-closed-history",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.6335000000000015
+    },
+    {
+      "id": "D39-restored-expired-history",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.18200000000000216
+    },
+    {
+      "id": "D40-snapshot-and-restore-independent",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.18049999999999855
+    },
+    {
+      "id": "D41-invalid-amount-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.13189999999999813
+    },
+    {
+      "id": "D41-invalid-amount--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.043199999999998795
+    },
+    {
+      "id": "D41-invalid-amount-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.035599999999998744
+    },
+    {
+      "id": "D42-invalid-ttl-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.04949999999999832
+    },
+    {
+      "id": "D42-invalid-ttl--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.022999999999999687
+    },
+    {
+      "id": "D42-invalid-ttl-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.019999999999999574
+    },
+    {
+      "id": "D43-unknown-account",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.06340000000000146
+    },
+    {
+      "id": "D44-special-IDs",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.11440000000000339
+    },
+    {
+      "id": "T01-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 1.0752999999999986,
+      "error": "AssertionError [ERR_ASSERTION]: state step4\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 100,\n        balance: 100,\n...\n    holds: [],\n+   now: 4,\n-   now: 3,\n    revision: 0\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T02-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.8216999999999999,
+      "error": "AssertionError [ERR_ASSERTION]: state step6\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 71,\n        balance: 100,\n...\n    ],\n+   now: 2,\n-   now: 1,\n    revision: 3\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T03-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.715600000000002,
+      "error": "AssertionError [ERR_ASSERTION]: state step7\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 100,\n        balance: 100,\n...\n    holds: [],\n+   now: 4,\n-   now: 3,\n    revision: 3\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T04-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.5060000000000002,
+      "error": "AssertionError [ERR_ASSERTION]: state step3\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 91,\n        balance: 100,\n...\n    ],\n+   now: 2,\n-   now: 1,\n    revision: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T05-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.4731000000000023,
+      "error": "AssertionError [ERR_ASSERTION]: state step5\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 100,\n        balance: 100,\n...\n    ],\n+   now: 4,\n-   now: 3,\n    revision: 3\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T06-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.265900000000002,
+      "error": "AssertionError [ERR_ASSERTION]: state step2\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 100,\n        balance: 100,\n...\n      {\n+       available: 30,\n-       available: 9,\n        balance: 30,\n        id: 'c'\n      }\n    ],\n+   holds: [],\n+   now: 4,\n+   revision: 2\n-   holds: [\n-     {\n-       account: 'c',\n-       amount: 21,\n-       expiresAt: 4,\n-       id: 'h15'\n-     }\n-   ],\n-   now: 3,\n-   revision: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T07-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 1.3659000000000034,
+      "error": "AssertionError [ERR_ASSERTION]: state step12\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 89,\n        balance: 115,\n...\n    ],\n+   now: 4,\n-   now: 3,\n    revision: 6\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T08-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.5178000000000011,
+      "error": "AssertionError [ERR_ASSERTION]: state step4\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n+       available: 100,\n-       available: 67,\n        balance: 100,\n        id: 'a'\n      },\n      {\n        available: 70,\n...\n    ],\n+   holds: [],\n+   now: 2,\n-   holds: [\n-     {\n-       account: 'a',\n-       amount: 33,\n-       expiresAt: 2,\n-       id: 'h11'\n-     }\n-   ],\n-   now: 1,\n    revision: 3\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T09-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.21280000000000143,
+      "error": "AssertionError [ERR_ASSERTION]: state step1\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 100,\n        balance: 100,\n...\n    holds: [],\n+   now: 4,\n-   now: 3,\n    revision: 0\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T10-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.5401000000000025,
+      "error": "AssertionError [ERR_ASSERTION]: state step5\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 100,\n        balance: 100,\n...\n      {\n+       available: 30,\n-       available: 1,\n        balance: 70,\n        id: 'b'\n      },\n      {\n        available: 30,\n...\n        account: 'b',\n-       amount: 29,\n-       expiresAt: 4,\n-       id: 'h0'\n-     },\n-     {\n-       account: 'b',\n        amount: 40,\n        expiresAt: 5,\n        id: 'h8'\n      }\n    ],\n+   now: 4,\n-   now: 3,\n    revision: 4\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T11-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 2.6314999999999955,
+      "error": "AssertionError [ERR_ASSERTION]: state step28\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 43,\n        balance: 43,\n...\n    ],\n+   now: 4,\n-   now: 3,\n    revision: 11\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    },
+    {
+      "id": "T12-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 0.2220000000000013,
+      "error": "AssertionError [ERR_ASSERTION]: state step1\n+ actual - expected\n... Skipped lines\n\n  {\n    accounts: [\n      {\n        available: 100,\n        balance: 100,\n...\n    ],\n+   now: 2,\n-   now: 1,\n    revision: 1\n  }\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:83:45\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:66:32"
+    }
+  ]
+}

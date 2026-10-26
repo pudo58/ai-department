@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "lockedAt": "2026-10-25T13:33:46.663Z",
+  "departmentRunId": "run_3973832e",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "mode": "single",
+  "meaning": "AI Department Single mode: Planner + one implementation/test/self-review agent, no independent Author or Verifier.",
+  "budgetUsd": 10.8,
+  "automaticLimitMs": 1800000,
+  "baseSha": "deed43127fd6d0dc806bbe5a0852ecb540ae2553",
+  "specHash": "e214b58b3f2e1699eb33b984f559ae02cc2a698817391e6acbb9ba4e0b353923",
+  "graderHash": "50f40e9ebc69d9d5e99f465d865f47822fd7c94f275249b2b5fb7277f1154209",
+  "projectSnapshotHash": "fcc86f23b536dccd2dbfc044a3ab35d1ad155a0c69c25037eae6ba2646f6d251",
+  "policy": "One Single trial from same untouched scaffold and original SPEC. Same model/effort/project/tools/effective cap as successful Department trial; sequential on same machine. Human contract/test/warning approvals documented, no manual candidate source/test edits, no grader feedback to model, no arbitrary model retry. External mutation uses exact candidate and same tool defaults, timed separately from Single orchestration. Preserve failed prior Department trials; this is one comparison, not statistical superiority."
+}

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "benchmark": "ReplayGate — transactional webhook outbox",
+  "baseSha": "66808f8f74a4392323d231d8114482ad547219b0",
+  "grader": "grade-audited.mjs",
+  "scoreDefinition": "10 * passed hidden behavioral checks / 43",
+  "model": "gpt-6-luna",
+  "reasoningEffort": "medium",
+  "single": {
+    "candidate": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024/single",
+    "score": 10,
+    "hiddenChecks": { "passed": 43, "total": 43 },
+    "graderRerun": "single-grade-audited-rerun.json",
+    "ownTests": { "passed": 5, "total": 5 },
+    "modelAttempts": 1,
+    "durationMs": 70442,
+    "postHocProbe": {
+      "passed": false,
+      "expected": "retry",
+      "observed": "leased",
+      "excludedFromScore": true,
+      "case": "Invalid public call at exact lease expiry should trigger lazy expiry before rejecting input"
+    }
+  },
+  "department": {
+    "candidate": "C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/workspaces/run_f7c3e2a3-A",
+    "runId": "run_f7c3e2a3",
+    "score": 10,
+    "hiddenChecks": { "passed": 43, "total": 43 },
+    "graderRerun": "department-grade-audited.json",
+    "ownTests": { "passed": 16, "failed": 0, "skipped": 0 },
+    "modelAttempts": 9,
+    "model": "gpt-6-luna",
+    "durationMs": 1708500,
+    "inputTokens": 2245474,
+    "outputTokens": 55368,
+    "status": "awaiting_acceptance",
+    "checkpoint": "00985be12c2ddb525bc8c94262523a1628a0986f",
+    "testRepair": { "approved": true, "kind": "setup", "caseIds": ["C-11", "C-14"] },
+    "verifier": {
+      "decision": "pass",
+      "findingCount": 0,
+      "limitation": "Verifier's own Vitest invocation failed to load the workspace config with Access is denied; the separate run check and external grader succeeded."
+    },
+    "mutation": {
+      "status": "completed",
+      "killed": 316,
+      "survived": 82,
+      "noCoverage": 9,
+      "timeout": 0,
+      "errors": 0,
+      "total": 407
+    },
+    "operatorInterventions": [
+      "Repaired the invalid test plan structure and documented unsupported questions.",
+      "Corrected manifest requirement mappings and clarified test-name tags.",
+      "Fixed raw JSON manifest parsing/prompt contract and reapproved the contract.",
+      "Restored the workspace dependency junction after the first check could not find Vitest.",
+      "Reviewed and approved the test-only repair proposal for C-11 and C-14."
+    ]
+  },
+  "comparison": {
+    "correctnessResult": "tie",
+    "departmentWorkflowCompletedThroughVerifier": true,
+    "departmentDeliveredOrAccepted": false,
+    "interpretation": "Both candidates passed all 43 frozen external checks. This one task does not establish general superiority. Department produced a complete plan/test/check/mutation/Verifier workflow, but required substantially more time, tokens and operator interventions. Its Verifier's own test command failed in its environment, so the independent-review evidence is weaker than the pass label alone suggests."
+  },
+  "limitations": [
+    "One benchmark task and one candidate per arm cannot establish average reliability or general superiority.",
+    "The 43-check grader is not exhaustive; the post-hoc Single probe is excluded from the frozen score.",
+    "Usage costs are not reported as actual billed amounts; both arms use subscription CLI access.",
+    "Department is awaiting acceptance in the app; acceptance/delivery was not part of this score run.",
+    "GitHub CI was not run as part of this local benchmark."
+  ]
+}

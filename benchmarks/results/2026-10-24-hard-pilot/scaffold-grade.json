@@ -1,0 +1,305 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-leasequeue-20261024\\base",
+  "total": 42,
+  "passed": 0,
+  "failed": 42,
+  "score": 0,
+  "results": [
+    {
+      "id": "B01",
+      "group": "basic",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.2530000000000001
+    },
+    {
+      "id": "B02",
+      "group": "basic",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.13749999999999574
+    },
+    {
+      "id": "V01",
+      "group": "validation",
+      "status": "failed",
+      "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: NOT_IMPLEMENTED",
+      "code": "ERR_ASSERTION",
+      "durationMs": 0.7785999999999973
+    },
+    {
+      "id": "V02",
+      "group": "validation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.1132999999999953
+    },
+    {
+      "id": "V03",
+      "group": "validation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.12469999999999715
+    },
+    {
+      "id": "V04",
+      "group": "validation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.06900000000000261
+    },
+    {
+      "id": "I01",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.04240000000000066
+    },
+    {
+      "id": "I02",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.036599999999999966
+    },
+    {
+      "id": "I03",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.05750000000000455
+    },
+    {
+      "id": "I04",
+      "group": "idempotency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.05740000000000123
+    },
+    {
+      "id": "A01",
+      "group": "tenants",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.06680000000000064
+    },
+    {
+      "id": "A02",
+      "group": "tenants",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.03529999999999944
+    },
+    {
+      "id": "S01",
+      "group": "scheduling",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.024200000000000443
+    },
+    {
+      "id": "S02",
+      "group": "scheduling",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.022200000000005105
+    },
+    {
+      "id": "S03",
+      "group": "scheduling",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.035799999999994725
+    },
+    {
+      "id": "S04",
+      "group": "scheduling",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.026299999999999102
+    },
+    {
+      "id": "L01",
+      "group": "leases",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.03219999999999601
+    },
+    {
+      "id": "L02",
+      "group": "leases",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.022700000000000387
+    },
+    {
+      "id": "L03",
+      "group": "leases",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02300000000000324
+    },
+    {
+      "id": "L04",
+      "group": "leases",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.031399999999997874
+    },
+    {
+      "id": "L05",
+      "group": "leases",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.027499999999996305
+    },
+    {
+      "id": "L06",
+      "group": "leases",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.027200000000000557
+    },
+    {
+      "id": "K01",
+      "group": "ack",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.0327000000000055
+    },
+    {
+      "id": "K02",
+      "group": "ack",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.019300000000001205
+    },
+    {
+      "id": "F01",
+      "group": "retry",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.04009999999999536
+    },
+    {
+      "id": "F02",
+      "group": "retry",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.03990000000000293
+    },
+    {
+      "id": "X01",
+      "group": "cancel",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02779999999999916
+    },
+    {
+      "id": "X02",
+      "group": "cancel",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.023399999999995202
+    },
+    {
+      "id": "X03",
+      "group": "cancel",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.01910000000000167
+    },
+    {
+      "id": "C01",
+      "group": "concurrency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.033300000000004104
+    },
+    {
+      "id": "C02",
+      "group": "concurrency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.034199999999998454
+    },
+    {
+      "id": "C03",
+      "group": "concurrency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02680000000000149
+    },
+    {
+      "id": "C04",
+      "group": "concurrency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.022500000000000853
+    },
+    {
+      "id": "C05",
+      "group": "concurrency",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02319999999999567
+    },
+    {
+      "id": "E01",
+      "group": "storage",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.019899999999999807
+    },
+    {
+      "id": "E02",
+      "group": "storage",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02659999999999485
+    },
+    {
+      "id": "E03",
+      "group": "storage",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.02389999999999759
+    },
+    {
+      "id": "E04",
+      "group": "storage",
+      "status": "failed",
+      "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: NOT_IMPLEMENTED",
+      "code": "ERR_ASSERTION",
+      "durationMs": 0.1266999999999996
+    },
+    {
+      "id": "P01",
+      "group": "persistence",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.038800000000001944
+    },
+    {
+      "id": "P02",
+      "group": "persistence",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 1.7622
+    },
+    {
+      "id": "D01",
+      "group": "isolation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.11469999999999914
+    },
+    {
+      "id": "D02",
+      "group": "isolation",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "durationMs": 0.06929999999999836
+    }
+  ]
+}

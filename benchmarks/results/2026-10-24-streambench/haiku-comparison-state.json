@@ -1,0 +1,18 @@
+{
+  "createdAt": "2026-10-24T05:08:57.302Z",
+  "startingCheckpoint": "991203e63ccd88be2c4e781e7baf98f12a29599a",
+  "model": "claude-haiku-5-5",
+  "effort": "medium",
+  "department": {
+    "projectId": "prj_b8e392fc",
+    "runId": "run_8b9f6fff",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-streamfold-20261024\\department-haiku-all"
+  },
+  "single": {
+    "projectId": "prj_e2533ee1",
+    "runId": "run_81d1dc0f",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-streamfold-20261024\\single-haiku"
+  },
+  "sameBudgetUsd": 6,
+  "specHash": 5642
+}

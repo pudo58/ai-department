@@ -1,0 +1,736 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T14:58:55.046Z",
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\base\\src\\patchbook.js",
+  "passed": 1,
+  "failed": 94,
+  "total": 95,
+  "groups": {
+    "shape": {
+      "passed": 1,
+      "total": 6
+    },
+    "validation": {
+      "passed": 0,
+      "total": 28
+    },
+    "edits": {
+      "passed": 0,
+      "total": 3
+    },
+    "arrays": {
+      "passed": 0,
+      "total": 2
+    },
+    "paths": {
+      "passed": 0,
+      "total": 20
+    },
+    "safety": {
+      "passed": 0,
+      "total": 2
+    },
+    "checks": {
+      "passed": 0,
+      "total": 1
+    },
+    "atomicity": {
+      "passed": 0,
+      "total": 3
+    },
+    "precedence": {
+      "passed": 0,
+      "total": 5
+    },
+    "revisions": {
+      "passed": 0,
+      "total": 1
+    },
+    "moves": {
+      "passed": 0,
+      "total": 8
+    },
+    "replay": {
+      "passed": 0,
+      "total": 5
+    },
+    "detachment": {
+      "passed": 0,
+      "total": 1
+    },
+    "snapshot": {
+      "passed": 0,
+      "total": 2
+    },
+    "stateful": {
+      "passed": 0,
+      "total": 8
+    }
+  },
+  "results": [
+    {
+      "id": "D01-exports",
+      "group": "shape",
+      "status": "passed",
+      "durationMs": 0.049900000000000944
+    },
+    {
+      "id": "D02-root-null",
+      "group": "shape",
+      "status": "failed",
+      "durationMs": 0.0812000000000026,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:8:145\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:8:91"
+    },
+    {
+      "id": "D02-root-scalar",
+      "group": "shape",
+      "status": "failed",
+      "durationMs": 0.012700000000002376,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:8:145\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:8:91"
+    },
+    {
+      "id": "D02-root-array",
+      "group": "shape",
+      "status": "failed",
+      "durationMs": 0.007500000000000284,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:8:145\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:8:91"
+    },
+    {
+      "id": "D02-root-object",
+      "group": "shape",
+      "status": "failed",
+      "durationMs": 0.009399999999999409,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:8:145\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:8:91"
+    },
+    {
+      "id": "D03-invalid-initial-undefined",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.8128999999999991,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:9:205"
+    },
+    {
+      "id": "D03-invalid-initial-NaN",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.1413999999999973,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:9:205"
+    },
+    {
+      "id": "D03-invalid-initial-Infinity",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.060600000000000875,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:9:205"
+    },
+    {
+      "id": "D03-invalid-initial-hole",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.034799999999997056,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:9:205"
+    },
+    {
+      "id": "D03-invalid-initial-nested-undefined",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.06419999999999959,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:9:205"
+    },
+    {
+      "id": "D03-invalid-initial-function",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.05830000000000268,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:9:205"
+    },
+    {
+      "id": "D03-invalid-initial-cycle",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.07759999999999678,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:9:205"
+    },
+    {
+      "id": "D04-request-null",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.052300000000002456,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-array",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.008899999999997021,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-empty",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.004800000000003024,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-extra",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.008699999999997488,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-empty-id",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.004599999999996385,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-long-id",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.004300000000000637,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-negative-revision",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.004399999999996851,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-unsafe-revision",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.0045000000000001705,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-empty-ops",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.007999999999995566,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-too-many",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.007199999999997431,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-null-op",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.006100000000003547,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-unknown-op",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.006599999999998829,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-extra-op-field",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.006399999999999295,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-missing-value",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.006800000000005468,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-null-path",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.006699999999995043,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-invalid-json-value",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.006100000000003547,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D04-request-sparse-ops",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.006199999999999761,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:736\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:10:674"
+    },
+    {
+      "id": "D05-invalid-restore-null",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.1389999999999958,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:101\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:42"
+    },
+    {
+      "id": "D05-invalid-restore-",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.0887999999999991,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:101\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:42"
+    },
+    {
+      "id": "D05-invalid-restore-false",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.07339999999999947,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:119)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:101\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:42"
+    },
+    {
+      "id": "D06-literal-id-and-max-batch",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.06400000000000006,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:12:80\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:12:7"
+    },
+    {
+      "id": "D07-exact-receipt",
+      "group": "shape",
+      "status": "failed",
+      "durationMs": 0.03810000000000002,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:13:64\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:13:7"
+    },
+    {
+      "id": "D08-object-replace-and-insert",
+      "group": "edits",
+      "status": "failed",
+      "durationMs": 0.03009999999999735,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:14:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:14:7"
+    },
+    {
+      "id": "D09-array-inserts-not-overwrites",
+      "group": "arrays",
+      "status": "failed",
+      "durationMs": 0.02499999999999858,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:15:80\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:15:7"
+    },
+    {
+      "id": "D10-array-end-and-append",
+      "group": "arrays",
+      "status": "failed",
+      "durationMs": 0.02719999999999345,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:16:72\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:16:7"
+    },
+    {
+      "id": "D11-invalid-index-01",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.03119999999999834,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:138\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:76"
+    },
+    {
+      "id": "D11-invalid-index--1",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.0073999999999969646,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:138\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:76"
+    },
+    {
+      "id": "D11-invalid-index-1.0",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.00730000000000075,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:138\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:76"
+    },
+    {
+      "id": "D11-invalid-index-+0",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.0071000000000012164,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:138\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:76"
+    },
+    {
+      "id": "D11-invalid-index- ",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.006999999999997897,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:138\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:76"
+    },
+    {
+      "id": "D11-invalid-index-foo",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.007000000000005002,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:138\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:76"
+    },
+    {
+      "id": "D11-invalid-index-9007199254740992",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.006199999999999761,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:138\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:17:76"
+    },
+    {
+      "id": "D12-index-bounds-and-minus-context",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.14930000000000376,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:18:81\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:18:7"
+    },
+    {
+      "id": "D13-object-numeric-and-empty-keys",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.05310000000000059,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:19:80\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:19:7"
+    },
+    {
+      "id": "D14-single-pass-pointer-decoding",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.03580000000000183,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:20:79\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:20:7"
+    },
+    {
+      "id": "D15-malformed-pointer-a",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.04619999999999891,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:131\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:61"
+    },
+    {
+      "id": "D15-malformed-pointer-/~",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.0073999999999969646,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:131\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:61"
+    },
+    {
+      "id": "D15-malformed-pointer-/~2",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.0071000000000012164,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:131\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:61"
+    },
+    {
+      "id": "D15-malformed-pointer-/a/~3",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.006700000000002149,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:131\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:61"
+    },
+    {
+      "id": "D15-malformed-pointer-/~10~",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.006799999999998363,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:131\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:21:61"
+    },
+    {
+      "id": "D16-missing-ancestor-not-autocreated",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.03710000000000235,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:22:83\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:22:7"
+    },
+    {
+      "id": "D17-traversal-primitive-null",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.03249999999999886,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:23:130\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:23:44"
+    },
+    {
+      "id": "D17-traversal-primitive-3",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.0062999999999959755,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:23:130\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:23:44"
+    },
+    {
+      "id": "D17-traversal-primitive-\"s\"",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.006500000000002615,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:23:130\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:23:44"
+    },
+    {
+      "id": "D17-traversal-primitive-true",
+      "group": "paths",
+      "status": "failed",
+      "durationMs": 0.0069000000000016826,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:23:130\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:23:44"
+    },
+    {
+      "id": "D18-own-properties-only",
+      "group": "safety",
+      "status": "failed",
+      "durationMs": 0.033900000000002706,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:24:71\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:24:7"
+    },
+    {
+      "id": "D19-prototype-keys-are-data",
+      "group": "safety",
+      "status": "failed",
+      "durationMs": 0.03709999999999525,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:25:75\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:25:7"
+    },
+    {
+      "id": "D20-root-put-remove-and-check-null",
+      "group": "edits",
+      "status": "failed",
+      "durationMs": 0.7018000000000058,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:26:81\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:26:7"
+    },
+    {
+      "id": "D21-object-and-array-remove",
+      "group": "edits",
+      "status": "failed",
+      "durationMs": 0.07900000000000063,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:27:74\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:27:7"
+    },
+    {
+      "id": "D22-check-deep-equality",
+      "group": "checks",
+      "status": "failed",
+      "durationMs": 0.04339999999999833,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:28:71\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:28:7"
+    },
+    {
+      "id": "D23-atomic-earlier-ops-rollback",
+      "group": "atomicity",
+      "status": "failed",
+      "durationMs": 0.031500000000001194,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:29:82\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:29:7"
+    },
+    {
+      "id": "D24-all-syntax-validated-before-execution",
+      "group": "precedence",
+      "status": "failed",
+      "durationMs": 0.016500000000000625,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:30:93\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:30:7"
+    },
+    {
+      "id": "D25-revision-before-resolution",
+      "group": "precedence",
+      "status": "failed",
+      "durationMs": 0.014399999999994861,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:31:82\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:31:7"
+    },
+    {
+      "id": "D26-revision-per-batch-not-operation",
+      "group": "revisions",
+      "status": "failed",
+      "durationMs": 0.028900000000000148,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:32:87\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:32:7"
+    },
+    {
+      "id": "D27-move-array-post-removal-index",
+      "group": "moves",
+      "status": "failed",
+      "durationMs": 0.03280000000000172,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:33:80\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:33:7"
+    },
+    {
+      "id": "D28-move-invalid-after-removal-rollback",
+      "group": "atomicity",
+      "status": "failed",
+      "durationMs": 0.02179999999999893,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:34:90\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:34:7"
+    },
+    {
+      "id": "D29-move-append-and-overwrite-key",
+      "group": "moves",
+      "status": "failed",
+      "durationMs": 0.029299999999999216,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:35:80\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:35:7"
+    },
+    {
+      "id": "D30-same-path-still-resolves-source",
+      "group": "moves",
+      "status": "failed",
+      "durationMs": 0.02400000000000091,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:36:82\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:36:7"
+    },
+    {
+      "id": "D31-decoded-prefix-rejects-descendant",
+      "group": "moves",
+      "status": "failed",
+      "durationMs": 0.01630000000000109,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:37:84\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:37:7"
+    },
+    {
+      "id": "D32-text-prefix-is-not-ancestor",
+      "group": "moves",
+      "status": "failed",
+      "durationMs": 0.019599999999996953,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:38:78\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:38:7"
+    },
+    {
+      "id": "D33-root-source-descendant-forbidden",
+      "group": "moves",
+      "status": "failed",
+      "durationMs": 0.017900000000004468,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:39:83\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:39:7"
+    },
+    {
+      "id": "D34-nested-to-root",
+      "group": "moves",
+      "status": "failed",
+      "durationMs": 0.016299999999993986,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:40:65\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:40:7"
+    },
+    {
+      "id": "D35-destination-resolves-after-removal",
+      "group": "moves",
+      "status": "failed",
+      "durationMs": 0.023299999999998988,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:41:85\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:41:7"
+    },
+    {
+      "id": "D36-failed-destination-restores-source",
+      "group": "atomicity",
+      "status": "failed",
+      "durationMs": 0.015900000000002024,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:42:89\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:42:7"
+    },
+    {
+      "id": "D37-historical-replay-not-current",
+      "group": "replay",
+      "status": "failed",
+      "durationMs": 0.03100000000000591,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:43:81\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:43:7"
+    },
+    {
+      "id": "D38-replay-ignores-object-order",
+      "group": "replay",
+      "status": "failed",
+      "durationMs": 0.025500000000000966,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:44:79\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:44:7"
+    },
+    {
+      "id": "D39-id-conflict-before-revision-base",
+      "group": "precedence",
+      "status": "failed",
+      "durationMs": 0.027000000000001023,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:45:173\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:45:91"
+    },
+    {
+      "id": "D39-id-conflict-before-revision-ops",
+      "group": "precedence",
+      "status": "failed",
+      "durationMs": 0.004799999999995919,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:45:173\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:45:91"
+    },
+    {
+      "id": "D40-shape-and-syntax-before-id-history",
+      "group": "precedence",
+      "status": "failed",
+      "durationMs": 0.021899999999995146,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:46:90\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:46:7"
+    },
+    {
+      "id": "D41-replay-does-not-resolve-old-path",
+      "group": "replay",
+      "status": "failed",
+      "durationMs": 0.017900000000004468,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:47:84\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:47:7"
+    },
+    {
+      "id": "D42-op-values-do-not-alias-history",
+      "group": "replay",
+      "status": "failed",
+      "durationMs": 0.022800000000003706,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:48:82\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:48:7"
+    },
+    {
+      "id": "D43-replay-array-order-matters",
+      "group": "replay",
+      "status": "failed",
+      "durationMs": 0.022800000000003706,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:49:78\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:49:7"
+    },
+    {
+      "id": "D44-input-and-return-detachment",
+      "group": "detachment",
+      "status": "failed",
+      "durationMs": 0.039699999999996294,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:50:98\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:50:7"
+    },
+    {
+      "id": "D45-snapshot-exact-commit-order",
+      "group": "snapshot",
+      "status": "failed",
+      "durationMs": 0.03730000000000189,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:51:81\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:51:7"
+    },
+    {
+      "id": "D46-restore-preserves-historical-results",
+      "group": "snapshot",
+      "status": "failed",
+      "durationMs": 0.04720000000000368,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:52:90\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:52:7"
+    },
+    {
+      "id": "T1-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.19650000000000034,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:56:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:55:37"
+    },
+    {
+      "id": "T2-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.007999999999995566,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:56:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:55:37"
+    },
+    {
+      "id": "T3-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.004800000000003024,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:56:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:55:37"
+    },
+    {
+      "id": "T4-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.007500000000000284,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:56:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:55:37"
+    },
+    {
+      "id": "T5-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.005599999999994054,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:56:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:55:37"
+    },
+    {
+      "id": "T6-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.008099999999998886,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:56:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:55:37"
+    },
+    {
+      "id": "T7-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.005500000000004945,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:56:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:55:37"
+    },
+    {
+      "id": "T8-80-step-independent-array-model",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.0045000000000001705,
+      "error": "Error: Not implemented\n    at Module.createPatchBook (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/patchbook-20261025/base/src/patchbook.js:1:41)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:3:180)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:56:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:74)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:55:37"
+    }
+  ]
+}

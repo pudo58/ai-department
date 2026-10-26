@@ -1,0 +1,428 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-25T08:34:29.105Z",
+  "measurement": "Operator-assisted continuation of original Department run; original Single candidate reused without further AI. Both candidates regraded.",
+  "protocol": {
+    "schemaVersion": 1,
+    "startedAt": "2026-10-25T08:18:28.980Z",
+    "runId": "run_dfd3d309",
+    "singleRunId": "run_2419cf0c",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "budgetUsd": 10.8,
+    "priorSpentUsd": 0.31495439999999997,
+    "priorAutomaticMs": 113113,
+    "priorAttempts": 3,
+    "limitMs": 1800000,
+    "assisted": true,
+    "originalBenchmarkPreserved": true,
+    "contractBefore": "3397bcc7800a9209a26956c99cbd0c5b324bb5bc39c4bb880ca298ba3cf1d693",
+    "changes": [
+      "Remove authorization from notApplicable because C-6 already covers that risk group.",
+      "C-16: explicitly advance to retry availability, claim each retry with leaseFor 1, then expire at 6; add existing R-5 oracle for the new-claim deadline."
+    ],
+    "graderHash": "3aedc16488b42885d91b67419795dd60c14db1c07c1de414de56187a6a1ed246",
+    "specHash": "6039a7dc2603758ad1ca389ab5212655645e1f8ac8a51fff443a948a93a4aa98",
+    "policy": "User delegated contract/test-repair/warning approvals and full completion. Continue the existing Department run, retain original spent/time and cap. No manual candidate source/test edits, no hidden-grader feedback or Single implementation sent to agents. Regrade both candidates with the same spec-audited grader; save raw grades and all approval receipts."
+  },
+  "result": {
+    "endedAt": "2026-10-25T08:31:52.597Z",
+    "assisted": true,
+    "runId": "run_dfd3d309",
+    "addedAutomaticMs": 359706,
+    "totalAutomaticMs": 474964,
+    "departmentStatus": "completed",
+    "departmentDelivery": {
+      "kind": "branch",
+      "target": "aidept/run_dfd3d309-A",
+      "status": "succeeded",
+      "checkpoint": "b54cfcc0c980063ba7d16c0423c529281fdd929d",
+      "contractVersion": 4,
+      "slot": "A",
+      "startedAt": "2026-10-25T08:30:52.985Z",
+      "endedAt": "2026-10-25T08:30:53.531Z",
+      "result": "Đã tạo branch aidept/run_dfd3d309-A trong repository gốc"
+    },
+    "singleStatus": "blocked",
+    "departmentAttempts": 11,
+    "singleAttempts": 3,
+    "departmentCostUsd": 1.9765542,
+    "singleCostUsd": 0.6996396
+  },
+  "summaries": [
+    {
+      "arm": "department",
+      "runId": "run_dfd3d309",
+      "status": "completed",
+      "checkpoint": "b54cfcc0c980063ba7d16c0423c529281fdd929d",
+      "delivery": {
+        "kind": "branch",
+        "target": "aidept/run_dfd3d309-A",
+        "status": "succeeded",
+        "checkpoint": "b54cfcc0c980063ba7d16c0423c529281fdd929d",
+        "contractVersion": 4,
+        "slot": "A",
+        "startedAt": "2026-10-25T08:30:52.985Z",
+        "endedAt": "2026-10-25T08:30:53.531Z",
+        "result": "Đã tạo branch aidept/run_dfd3d309-A trong repository gốc"
+      },
+      "automaticMs": 474964,
+      "appWaitingMs": 2856575,
+      "waitingLimit": "Includes gaps between user turns and operator review; do not compare as execution speed.",
+      "attempts": 11,
+      "roles": {
+        "planner": 1,
+        "author": 4,
+        "developer": 4,
+        "verifier": 2
+      },
+      "models": [
+        "gpt-6-luna"
+      ],
+      "inputTokens": 2178364,
+      "cachedTokens": 1940864,
+      "outputTokens": 45453,
+      "estimatedCostUsd": 1.9765542,
+      "effectiveCapUsd": 10.8,
+      "grade": {
+        "passed": 75,
+        "total": 75,
+        "groups": {
+          "public-api": {
+            "passed": 1,
+            "total": 1
+          },
+          "time": {
+            "passed": 5,
+            "total": 5
+          },
+          "validation": {
+            "passed": 10,
+            "total": 10
+          },
+          "states": {
+            "passed": 1,
+            "total": 1
+          },
+          "dependencies": {
+            "passed": 10,
+            "total": 10
+          },
+          "ordering": {
+            "passed": 3,
+            "total": 3
+          },
+          "lease": {
+            "passed": 10,
+            "total": 10
+          },
+          "aliasing": {
+            "passed": 4,
+            "total": 4
+          },
+          "retry": {
+            "passed": 8,
+            "total": 8
+          },
+          "cancel": {
+            "passed": 5,
+            "total": 5
+          },
+          "history": {
+            "passed": 1,
+            "total": 1
+          },
+          "snapshot": {
+            "passed": 4,
+            "total": 4
+          },
+          "ids": {
+            "passed": 1,
+            "total": 1
+          },
+          "stateful": {
+            "passed": 12,
+            "total": 12
+          }
+        }
+      },
+      "newProbe": {
+        "label": "department",
+        "steps": [
+          "submit A,B,C with C dependsOn [A,B]",
+          "cancel B",
+          "cancel A"
+        ],
+        "afterB": {
+          "id": "C",
+          "dependsOn": [
+            "A",
+            "B"
+          ],
+          "priority": 0,
+          "sequence": 2,
+          "status": "blocked",
+          "attempt": 0,
+          "availableAt": 0,
+          "blockedBy": "B"
+        },
+        "afterA": {
+          "id": "C",
+          "dependsOn": [
+            "A",
+            "B"
+          ],
+          "priority": 0,
+          "sequence": 2,
+          "status": "blocked",
+          "attempt": 0,
+          "availableAt": 0,
+          "blockedBy": "A"
+        },
+        "expected": {
+          "status": "blocked",
+          "blockedBy": "A"
+        },
+        "passed": true
+      },
+      "checks": [
+        {
+          "id": "chk_cefd53fb",
+          "status": "passed",
+          "counts": {
+            "passed": 18,
+            "failed": 0,
+            "skipped": 0
+          },
+          "checkpoint": "b54cfcc0c980063ba7d16c0423c529281fdd929d",
+          "contractVersion": 4
+        }
+      ],
+      "declaredCaseCounts": {
+        "passed": 16
+      },
+      "mutation": {
+        "measurement": "Default Verify pipeline; latest checkpoint",
+        "status": "completed",
+        "baseline": "passed",
+        "counts": {
+          "killed": 225,
+          "survived": 45,
+          "no_coverage": 12,
+          "timeout": 0,
+          "errors": 0,
+          "pending": 0
+        },
+        "durationMs": 72590
+      },
+      "sourceUnchangedByOperator": true
+    },
+    {
+      "arm": "single",
+      "runId": "run_2419cf0c",
+      "status": "blocked",
+      "checkpoint": "87679413f252f64aeb2575677bff800149ff430a",
+      "delivery": null,
+      "automaticMs": 171210,
+      "appWaitingMs": 3105885,
+      "waitingLimit": "Includes gaps between user turns and operator review; do not compare as execution speed.",
+      "attempts": 3,
+      "roles": {
+        "planner": 1,
+        "developer": 2
+      },
+      "models": [
+        "gpt-6-luna"
+      ],
+      "inputTokens": 886472,
+      "cachedTokens": 828032,
+      "outputTokens": 18394,
+      "estimatedCostUsd": 0.6996396,
+      "effectiveCapUsd": 10.8,
+      "grade": {
+        "passed": 75,
+        "total": 75,
+        "groups": {
+          "public-api": {
+            "passed": 1,
+            "total": 1
+          },
+          "time": {
+            "passed": 5,
+            "total": 5
+          },
+          "validation": {
+            "passed": 10,
+            "total": 10
+          },
+          "states": {
+            "passed": 1,
+            "total": 1
+          },
+          "dependencies": {
+            "passed": 10,
+            "total": 10
+          },
+          "ordering": {
+            "passed": 3,
+            "total": 3
+          },
+          "lease": {
+            "passed": 10,
+            "total": 10
+          },
+          "aliasing": {
+            "passed": 4,
+            "total": 4
+          },
+          "retry": {
+            "passed": 8,
+            "total": 8
+          },
+          "cancel": {
+            "passed": 5,
+            "total": 5
+          },
+          "history": {
+            "passed": 1,
+            "total": 1
+          },
+          "snapshot": {
+            "passed": 4,
+            "total": 4
+          },
+          "ids": {
+            "passed": 1,
+            "total": 1
+          },
+          "stateful": {
+            "passed": 12,
+            "total": 12
+          }
+        }
+      },
+      "newProbe": {
+        "label": "single",
+        "steps": [
+          "submit A,B,C with C dependsOn [A,B]",
+          "cancel B",
+          "cancel A"
+        ],
+        "afterB": {
+          "id": "C",
+          "dependsOn": [
+            "A",
+            "B"
+          ],
+          "priority": 0,
+          "sequence": 2,
+          "status": "blocked",
+          "attempt": 0,
+          "availableAt": 0,
+          "blockedBy": "B"
+        },
+        "afterA": {
+          "id": "C",
+          "dependsOn": [
+            "A",
+            "B"
+          ],
+          "priority": 0,
+          "sequence": 2,
+          "status": "blocked",
+          "attempt": 0,
+          "availableAt": 0,
+          "blockedBy": "B"
+        },
+        "expected": {
+          "status": "blocked",
+          "blockedBy": "A"
+        },
+        "passed": false
+      },
+      "checks": [
+        {
+          "id": "chk_b6ad4da6",
+          "status": "passed",
+          "counts": {
+            "passed": 15,
+            "failed": 0,
+            "skipped": 0
+          },
+          "checkpoint": "87679413f252f64aeb2575677bff800149ff430a",
+          "contractVersion": 2
+        }
+      ],
+      "declaredCaseCounts": {},
+      "mutation": {
+        "measurement": "Supplementary tool-only run; outside Single workflow and app automatic time",
+        "status": "completed",
+        "baseline": "passed",
+        "counts": {
+          "killed": 256,
+          "survived": 59,
+          "no_coverage": 16,
+          "timeout": 1,
+          "errors": 0,
+          "pending": 0
+        },
+        "durationMs": 79554
+      },
+      "sourceUnchangedByOperator": true
+    }
+  ],
+  "interventions": [
+    {
+      "type": "contract_edit_and_approval",
+      "files": [
+        "plan-repair.json",
+        "contract-approval.json"
+      ],
+      "changes": [
+        "Remove authorization from notApplicable because C-6 already covers that risk group.",
+        "C-16: explicitly advance to retry availability, claim each retry with leaseFor 1, then expire at 6; add existing R-5 oracle for the new-claim deadline."
+      ]
+    },
+    {
+      "type": "operator_test_proposal_and_approval",
+      "files": [
+        "operator-c5-proposal.json",
+        "operator-c5.patch",
+        "receipt-1.json"
+      ],
+      "reason": "Author test asserted null on third claim while B remained ready. Author diagnosis described the wrong assertion but selected implementation; two Developer calls produced no patch. One operator test-only proposal was applied through standard API approval/hash, relock and fresh checks."
+    },
+    {
+      "type": "confirm_verifier_finding_and_repair",
+      "files": [
+        "blockedby-before-repair.json",
+        "receipt-3.json"
+      ],
+      "reason": "Verified the finding on both candidates and confirmed via the app API. Developer fixed source and added regression test; no manual source edit."
+    },
+    {
+      "type": "accept_department_and_reject_single",
+      "files": [
+        "receipt-4.json",
+        "receipt-5.json"
+      ],
+      "reason": "Accepted Department only after current-checkpoint checks, Verifier pass, supplementary probe and external grader pass. Single retains the confirmed defect and was rejected."
+    }
+  ],
+  "novelProbeOrigin": "Verifier role identified this counterexample without receiving external grader or Single output. Supplementary probe was added after discovery and is separate from the original 75 tests.",
+  "referenceLimitation": "Reference also fails the new blockedBy counterexample. The 75-item grader is a limited tool, not a complete semantic oracle.",
+  "harnessNotes": [
+    "Two initial API requests were rejected with CSRF 403, causing no state changes; successful requests used the normal session token.",
+    "Controller synchronization actions 2 and 3 logged Unsupported decision: external and then resumed monitoring. These are harness events; they caused no extra model attempt or evidence bypass."
+  ],
+  "limitations": [
+    "One synthetic task and one original run per mode.",
+    "Department used operator assistance on the plan and one test assertion; completion does not demonstrate full autonomy.",
+    "Single was not rerun with AI in this continuation and did not receive the Department finding as model feedback.",
+    "The new counterexample is a post-run discovery; its result is separate from the locked 75-item suite, not a retroactively altered benchmark score.",
+    "Mutation counts come from different implementations and test suites; raw killed counts are not a controlled ranking of test quality.",
+    "Surviving/no-coverage mutants remain warnings; the one Single timeout is not a demonstrated behavioral kill.",
+    "Dollar figures are application estimates, not independently measured API invoices.",
+    "Verifier supplied static review and cited current runner reports; it did not independently execute the test suite."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-outboxpilot-20261024",
+  "baseSha": "66808f8f74a4392323d231d8114482ad547219b0",
+  "specHash": "6dd040cd71f1d9f3b26cd0223ad2f9fdc33bc06fedbe8c8bacebb6e6dfef55b4",
+  "evaluatorHash": "8f950ffe78d77ad94c2025154c29f6bb928decd209f3b1d56893c88268bc2674",
+  "lockedAt": "2026-10-24T14:00:39.256Z",
+  "models": {
+    "planner": "gpt-6-luna",
+    "author": "gpt-6-luna",
+    "developer": "gpt-6-luna",
+    "verifier": "gpt-6-luna",
+    "single": "gpt-6-luna"
+  },
+  "reasoningEffort": "medium",
+  "timeLimitMs": 720000,
+  "departmentBudgetUsd": 6,
+  "repetitions": 1,
+  "score": "10 * passed hidden behavioral checks / total checks; workflow completion/interventions reported separately",
+  "notes": [
+    "All AI roles on both arms use GPT-6 Luna via Codex subscription CLI.",
+    "No evaluator feedback or human code/test fixes before scoring.",
+    "One difficult task is a pilot, not statistical evidence of general superiority.",
+    "Only src/outbox.js is graded; common scaffold is frozen and identical.",
+    "Mutation outputs are reported separately and do not affect correctness score."
+  ]
+}

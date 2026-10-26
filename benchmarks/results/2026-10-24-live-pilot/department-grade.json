@@ -1,0 +1,207 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\workspaces\\run_c35ae023-A",
+  "total": 33,
+  "passed": 33,
+  "failed": 0,
+  "score": 10,
+  "results": [
+    {
+      "id": "H01",
+      "group": "happy",
+      "status": "passed",
+      "durationMs": 0.42350000000000065
+    },
+    {
+      "id": "H02",
+      "group": "happy",
+      "status": "passed",
+      "durationMs": 0.03640000000000043
+    },
+    {
+      "id": "V01",
+      "group": "invalid",
+      "status": "passed",
+      "durationMs": 0.3809999999999967
+    },
+    {
+      "id": "V02",
+      "group": "invalid",
+      "status": "passed",
+      "durationMs": 0.12849999999999895
+    },
+    {
+      "id": "V03",
+      "group": "invalid",
+      "status": "passed",
+      "durationMs": 0.28319999999999723
+    },
+    {
+      "id": "V04",
+      "group": "invalid",
+      "status": "passed",
+      "durationMs": 0.19690000000000296
+    },
+    {
+      "id": "V05",
+      "group": "invalid",
+      "status": "passed",
+      "durationMs": 0.14329999999999998
+    },
+    {
+      "id": "I01",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.051600000000000534
+    },
+    {
+      "id": "I02",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.04840000000000089
+    },
+    {
+      "id": "I03",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.0691999999999986
+    },
+    {
+      "id": "I04",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.039400000000000546
+    },
+    {
+      "id": "I05",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.11819999999999808
+    },
+    {
+      "id": "I06",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.03289999999999793
+    },
+    {
+      "id": "I07",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.02909999999999968
+    },
+    {
+      "id": "I08",
+      "group": "idempotency",
+      "status": "passed",
+      "durationMs": 0.027599999999999625
+    },
+    {
+      "id": "A01",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.04690000000000083
+    },
+    {
+      "id": "A02",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.03160000000000096
+    },
+    {
+      "id": "A03",
+      "group": "authorization",
+      "status": "passed",
+      "durationMs": 0.041499999999999204
+    },
+    {
+      "id": "S01",
+      "group": "state",
+      "status": "passed",
+      "durationMs": 0.02359999999999829
+    },
+    {
+      "id": "S02",
+      "group": "state",
+      "status": "passed",
+      "durationMs": 0.018599999999999284
+    },
+    {
+      "id": "S03",
+      "group": "state",
+      "status": "passed",
+      "durationMs": 0.0365000000000002
+    },
+    {
+      "id": "S04",
+      "group": "state",
+      "status": "passed",
+      "durationMs": 0.03340000000000032
+    },
+    {
+      "id": "T01",
+      "group": "expiry",
+      "status": "passed",
+      "durationMs": 0.026099999999999568
+    },
+    {
+      "id": "T02",
+      "group": "expiry",
+      "status": "passed",
+      "durationMs": 0.029599999999998516
+    },
+    {
+      "id": "T03",
+      "group": "expiry",
+      "status": "passed",
+      "durationMs": 0.028900000000000148
+    },
+    {
+      "id": "T04",
+      "group": "expiry",
+      "status": "passed",
+      "durationMs": 0.019200000000001438
+    },
+    {
+      "id": "T05",
+      "group": "expiry",
+      "status": "passed",
+      "durationMs": 0.03249999999999886
+    },
+    {
+      "id": "C01",
+      "group": "concurrency",
+      "status": "passed",
+      "durationMs": 0.1863000000000028
+    },
+    {
+      "id": "C02",
+      "group": "concurrency",
+      "status": "passed",
+      "durationMs": 0.06899999999999906
+    },
+    {
+      "id": "D01",
+      "group": "isolation",
+      "status": "passed",
+      "durationMs": 0.039400000000000546
+    },
+    {
+      "id": "D02",
+      "group": "isolation",
+      "status": "passed",
+      "durationMs": 0.023200000000002774
+    },
+    {
+      "id": "D03",
+      "group": "isolation",
+      "status": "passed",
+      "durationMs": 0.01899999999999835
+    },
+    {
+      "id": "D04",
+      "group": "isolation",
+      "status": "passed",
+      "durationMs": 0.022099999999998232
+    }
+  ]
+}

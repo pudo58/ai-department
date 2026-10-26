@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-pilot-20261024",
+  "baseSha": "82844293d04203b84b1f1579b8980b51c1c19a62",
+  "specHash": "a8b5ecb9a7a053a3c5c4c29df5de221361191ea4723823666f60dc2e2ce83035",
+  "evaluatorHash": "a8d74b203e64503cedb5cdf9729cbaae0725474feb2d36c3b2431f5a0515027e",
+  "lockedAt": "2026-10-24T02:46:08.871Z",
+  "models": {
+    "planner": "gpt-6-luna",
+    "developer": "gpt-6-luna",
+    "author": "claude-haiku-5-5",
+    "verifier": "claude-haiku-5-5",
+    "single": "gpt-6-luna"
+  },
+  "reasoningEffort": "medium",
+  "timeLimitMs": 900000,
+  "departmentBudgetUsd": 6,
+  "repetitions": 1,
+  "nativeSingleAgent": true,
+  "score": "10 * external passed cases / total cases; workflow acceptance reported separately",
+  "notes": [
+    "Subscription CLI; cost is provider-reported or explicitly estimated, not a subscription invoice.",
+    "No evaluator feedback or human source fixes before scoring.",
+    "No claim of statistical superiority from one task.",
+    "Only business engine written by competing agents; identical HTTP/UI scaffold.",
+    "Mutation output excluded from blind correctness score."
+  ]
+}

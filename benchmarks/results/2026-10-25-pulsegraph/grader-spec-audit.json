@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-25T07:41:51.644Z",
+  "originalGraderHash": "9d18872567fc728bba3c4dd223d5b4b0ee0f9042651b4d421b3ac71d29dace00",
+  "corrections": [
+    {
+      "test": "D01-empty-defaults",
+      "reason": "SPEC specifies the next-sequence field but does not specify its initial offset."
+    },
+    {
+      "test": "D03-invalid-options",
+      "reason": "Invalid initial now values must be rejected, but SPEC does not assign their error code; retain exact codes only for other invalid options."
+    },
+    {
+      "test": "D04-submit-ready and stateful traces",
+      "reason": "Sequence values must preserve submission order; their numeric origin is unspecified."
+    },
+    {
+      "test": "D60-fail-rejects-empty-error",
+      "reason": "The contract requires a nonempty string and does not define whitespace-only strings as empty; probe changed to the empty string."
+    }
+  ],
+  "outputs": [
+    "reference-grade-spec-audit.json",
+    "single-grade-spec-audit.json"
+  ]
+}

@@ -1,0 +1,518 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\test-results\\2026-10-25-pulsegraph\\reference.mjs",
+  "at": "2026-10-25T07:34:29.482Z",
+  "passed": 75,
+  "failed": 0,
+  "total": 75,
+  "byGroup": {
+    "public-api": {
+      "passed": 1,
+      "total": 1
+    },
+    "time": {
+      "passed": 5,
+      "total": 5
+    },
+    "validation": {
+      "passed": 10,
+      "total": 10
+    },
+    "states": {
+      "passed": 1,
+      "total": 1
+    },
+    "dependencies": {
+      "passed": 10,
+      "total": 10
+    },
+    "ordering": {
+      "passed": 3,
+      "total": 3
+    },
+    "lease": {
+      "passed": 10,
+      "total": 10
+    },
+    "aliasing": {
+      "passed": 4,
+      "total": 4
+    },
+    "retry": {
+      "passed": 8,
+      "total": 8
+    },
+    "cancel": {
+      "passed": 5,
+      "total": 5
+    },
+    "history": {
+      "passed": 1,
+      "total": 1
+    },
+    "snapshot": {
+      "passed": 4,
+      "total": 4
+    },
+    "ids": {
+      "passed": 1,
+      "total": 1
+    },
+    "stateful": {
+      "passed": 12,
+      "total": 12
+    }
+  },
+  "results": [
+    {
+      "id": "D01-empty-defaults",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.6661000000000001
+    },
+    {
+      "id": "D02-custom-options",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.050200000000000244
+    },
+    {
+      "id": "D03-invalid-options-INVALID_TIME--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.1268000000000029
+    },
+    {
+      "id": "D03-invalid-options-INVALID_TIME-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.013600000000000279
+    },
+    {
+      "id": "D03-invalid-options-INVALID_INPUT-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.021599999999999397
+    },
+    {
+      "id": "D03-invalid-options-INVALID_INPUT-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.008399999999998187
+    },
+    {
+      "id": "D04-submit-ready",
+      "group": "states",
+      "status": "PASSED",
+      "ms": 0.17139999999999844
+    },
+    {
+      "id": "D05-submit-waits-for-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.14620000000000033
+    },
+    {
+      "id": "D06-completion-readies-child",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.1819000000000024
+    },
+    {
+      "id": "D07-transitive-readiness",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.13330000000000197
+    },
+    {
+      "id": "D08-unknown-dependency-atomic",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.08670000000000044
+    },
+    {
+      "id": "D09-invalid-dependency-list",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.07160000000000011
+    },
+    {
+      "id": "D10-existing-job-id",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.05180000000000007
+    },
+    {
+      "id": "D11-invalid-job-scalars",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.06169999999999831
+    },
+    {
+      "id": "D12-priority-descending",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.06439999999999912
+    },
+    {
+      "id": "D13-fifo-within-priority",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.028999999999999915
+    },
+    {
+      "id": "D14-negative-priorities",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.05239999999999867
+    },
+    {
+      "id": "D15-claim-increments-token-and-attempt",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.023499999999998522
+    },
+    {
+      "id": "D16-global-fencing-token",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.056400000000000006
+    },
+    {
+      "id": "D17-renew-extends",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.10589999999999833
+    },
+    {
+      "id": "D18-renew-does-not-shorten",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.03249999999999886
+    },
+    {
+      "id": "D19-wrong-worker-loses-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.03999999999999915
+    },
+    {
+      "id": "D20-wrong-token-loses-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.05180000000000007
+    },
+    {
+      "id": "D21-boundary-expires-before-return",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.11929999999999907
+    },
+    {
+      "id": "D22-lease-remains-current-before-boundary",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.04400000000000048
+    },
+    {
+      "id": "D23-complete-detaches-result",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.08709999999999951
+    },
+    {
+      "id": "D24-success-unblocks-dependent",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.07199999999999918
+    },
+    {
+      "id": "D25-fail-retry-base-delay",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.5284000000000013
+    },
+    {
+      "id": "D26-exponential-retry-delay",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.07099999999999795
+    },
+    {
+      "id": "D27-attempt-limit-includes-first-claim",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.1615000000000002
+    },
+    {
+      "id": "D28-expiry-boundary-retries",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.2713000000000001
+    },
+    {
+      "id": "D29-expiry-order-deadline-then-sequence",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.10090000000000288
+    },
+    {
+      "id": "D30-expiry-exhausts-to-dead",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.04320000000000235
+    },
+    {
+      "id": "D31-expiry-blocks-descendants",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.05930000000000035
+    },
+    {
+      "id": "D32-failure-does-not-yet-block-child",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.07039999999999935
+    },
+    {
+      "id": "D33-exhausted-failure-blocks-transitively",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.0929000000000002
+    },
+    {
+      "id": "D34-blockedBy-uses-first-failed-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.11589999999999989
+    },
+    {
+      "id": "D35-cancel-ready-blocks-child",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.047999999999998266
+    },
+    {
+      "id": "D36-cancel-waiting-blocks-transitive",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.0691999999999986
+    },
+    {
+      "id": "D37-cancel-leased-invalidates-token",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.09120000000000061
+    },
+    {
+      "id": "D38-cancel-terminal-is-error",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.054999999999999716
+    },
+    {
+      "id": "D39-cancel-unknown-is-error",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.02430000000000021
+    },
+    {
+      "id": "D40-unknown-get-is-error",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.017099999999999227
+    },
+    {
+      "id": "D41-duplicate-id-after-cancel",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.03310000000000102
+    },
+    {
+      "id": "D42-invalid-time-does-not-mutate",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.045199999999997686
+    },
+    {
+      "id": "D43-same-time-advance-no-double-expiry",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.033399999999996766
+    },
+    {
+      "id": "D44-advance-without-expiry-updates-time",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.012699999999998823
+    },
+    {
+      "id": "D45-snapshot-restores-live-lease",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.1474999999999973
+    },
+    {
+      "id": "D46-restored-claim-token-never-repeats",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.0768000000000022
+    },
+    {
+      "id": "D47-restores-delayed-retry",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.07870000000000132
+    },
+    {
+      "id": "D48-original-and-restored-are-independent",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.04180000000000206
+    },
+    {
+      "id": "D49-snapshot-and-view-are-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.04469999999999885
+    },
+    {
+      "id": "D50-input-dependencies-are-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.03570000000000206
+    },
+    {
+      "id": "D51-get-result-is-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.05659999999999954
+    },
+    {
+      "id": "D52-special-string-IDs",
+      "group": "ids",
+      "status": "PASSED",
+      "ms": 0.03330000000000055
+    },
+    {
+      "id": "D53-expired-matching-lease-before-advance",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.04779999999999873
+    },
+    {
+      "id": "D54-claim-never-overrides-live-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.0251000000000019
+    },
+    {
+      "id": "D55-retry-clears-active-lease-and-preserves-error",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.05099999999999838
+    },
+    {
+      "id": "D56-completion-clears-last-error",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.06259999999999977
+    },
+    {
+      "id": "D57-claim-does-not-expire-implicitly",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.030800000000002825
+    },
+    {
+      "id": "D58-submit-from-already-done-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.043199999999998795
+    },
+    {
+      "id": "D59-submit-from-dead-dependency-is-blocked",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.04059999999999775
+    },
+    {
+      "id": "D60-fail-rejects-empty-error",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.05339999999999989
+    },
+    {
+      "id": "T01-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 11.267199999999999
+    },
+    {
+      "id": "T02-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 9.327999999999996
+    },
+    {
+      "id": "T03-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.1074000000000055
+    },
+    {
+      "id": "T04-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 4.961300000000001
+    },
+    {
+      "id": "T05-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 4.197800000000001
+    },
+    {
+      "id": "T06-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.253599999999992
+    },
+    {
+      "id": "T07-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.781099999999995
+    },
+    {
+      "id": "T08-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 4.765799999999999
+    },
+    {
+      "id": "T09-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.837500000000006
+    },
+    {
+      "id": "T10-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 8.051299999999998
+    },
+    {
+      "id": "T11-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.781800000000004
+    },
+    {
+      "id": "T12-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 6.124899999999997
+    }
+  ]
+}

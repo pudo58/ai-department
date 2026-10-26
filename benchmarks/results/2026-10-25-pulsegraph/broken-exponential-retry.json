@@ -1,0 +1,521 @@
+{
+  "schemaVersion": 1,
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\test-results\\2026-10-25-pulsegraph\\mutants\\broken-exponential-retry.mjs",
+  "at": "2026-10-25T07:34:29.804Z",
+  "passed": 72,
+  "failed": 3,
+  "total": 75,
+  "byGroup": {
+    "public-api": {
+      "passed": 1,
+      "total": 1
+    },
+    "time": {
+      "passed": 5,
+      "total": 5
+    },
+    "validation": {
+      "passed": 10,
+      "total": 10
+    },
+    "states": {
+      "passed": 1,
+      "total": 1
+    },
+    "dependencies": {
+      "passed": 10,
+      "total": 10
+    },
+    "ordering": {
+      "passed": 3,
+      "total": 3
+    },
+    "lease": {
+      "passed": 10,
+      "total": 10
+    },
+    "aliasing": {
+      "passed": 4,
+      "total": 4
+    },
+    "retry": {
+      "passed": 7,
+      "total": 8
+    },
+    "cancel": {
+      "passed": 5,
+      "total": 5
+    },
+    "history": {
+      "passed": 1,
+      "total": 1
+    },
+    "snapshot": {
+      "passed": 4,
+      "total": 4
+    },
+    "ids": {
+      "passed": 1,
+      "total": 1
+    },
+    "stateful": {
+      "passed": 10,
+      "total": 12
+    }
+  },
+  "results": [
+    {
+      "id": "D01-empty-defaults",
+      "group": "public-api",
+      "status": "PASSED",
+      "ms": 0.6496999999999993
+    },
+    {
+      "id": "D02-custom-options",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.0481999999999978
+    },
+    {
+      "id": "D03-invalid-options-INVALID_TIME--1",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.126100000000001
+    },
+    {
+      "id": "D03-invalid-options-INVALID_TIME-1.5",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.014400000000001967
+    },
+    {
+      "id": "D03-invalid-options-INVALID_INPUT-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.01389999999999958
+    },
+    {
+      "id": "D03-invalid-options-INVALID_INPUT-0",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.009399999999999409
+    },
+    {
+      "id": "D04-submit-ready",
+      "group": "states",
+      "status": "PASSED",
+      "ms": 0.16729999999999734
+    },
+    {
+      "id": "D05-submit-waits-for-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.15719999999999956
+    },
+    {
+      "id": "D06-completion-readies-child",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.19290000000000163
+    },
+    {
+      "id": "D07-transitive-readiness",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.1440000000000019
+    },
+    {
+      "id": "D08-unknown-dependency-atomic",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.08609999999999829
+    },
+    {
+      "id": "D09-invalid-dependency-list",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.09420000000000073
+    },
+    {
+      "id": "D10-existing-job-id",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.051199999999997914
+    },
+    {
+      "id": "D11-invalid-job-scalars",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.06869999999999976
+    },
+    {
+      "id": "D12-priority-descending",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.05600000000000094
+    },
+    {
+      "id": "D13-fifo-within-priority",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.03190000000000026
+    },
+    {
+      "id": "D14-negative-priorities",
+      "group": "ordering",
+      "status": "PASSED",
+      "ms": 0.03909999999999769
+    },
+    {
+      "id": "D15-claim-increments-token-and-attempt",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.022099999999998232
+    },
+    {
+      "id": "D16-global-fencing-token",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.055399999999998784
+    },
+    {
+      "id": "D17-renew-extends",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.11309999999999931
+    },
+    {
+      "id": "D18-renew-does-not-shorten",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.03830000000000311
+    },
+    {
+      "id": "D19-wrong-worker-loses-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.03930000000000078
+    },
+    {
+      "id": "D20-wrong-token-loses-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.04840000000000089
+    },
+    {
+      "id": "D21-boundary-expires-before-return",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.09580000000000055
+    },
+    {
+      "id": "D22-lease-remains-current-before-boundary",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.035599999999998744
+    },
+    {
+      "id": "D23-complete-detaches-result",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.07370000000000232
+    },
+    {
+      "id": "D24-success-unblocks-dependent",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.6175999999999995
+    },
+    {
+      "id": "D25-fail-retry-base-delay",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.12790000000000035
+    },
+    {
+      "id": "D26-exponential-retry-delay",
+      "group": "retry",
+      "status": "FAILED",
+      "ms": 0.5422000000000011,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n4 !== 6\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:44:235\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:44:1"
+    },
+    {
+      "id": "D27-attempt-limit-includes-first-claim",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.0823999999999998
+    },
+    {
+      "id": "D28-expiry-boundary-retries",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.08370000000000033
+    },
+    {
+      "id": "D29-expiry-order-deadline-then-sequence",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.09030000000000271
+    },
+    {
+      "id": "D30-expiry-exhausts-to-dead",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.03369999999999962
+    },
+    {
+      "id": "D31-expiry-blocks-descendants",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.049399999999998556
+    },
+    {
+      "id": "D32-failure-does-not-yet-block-child",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.04770000000000252
+    },
+    {
+      "id": "D33-exhausted-failure-blocks-transitively",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.06680000000000064
+    },
+    {
+      "id": "D34-blockedBy-uses-first-failed-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.0727000000000011
+    },
+    {
+      "id": "D35-cancel-ready-blocks-child",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.03260000000000218
+    },
+    {
+      "id": "D36-cancel-waiting-blocks-transitive",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.04520000000000124
+    },
+    {
+      "id": "D37-cancel-leased-invalidates-token",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.05730000000000146
+    },
+    {
+      "id": "D38-cancel-terminal-is-error",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.03960000000000008
+    },
+    {
+      "id": "D39-cancel-unknown-is-error",
+      "group": "cancel",
+      "status": "PASSED",
+      "ms": 0.021599999999999397
+    },
+    {
+      "id": "D40-unknown-get-is-error",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.01810000000000045
+    },
+    {
+      "id": "D41-duplicate-id-after-cancel",
+      "group": "history",
+      "status": "PASSED",
+      "ms": 0.030400000000000205
+    },
+    {
+      "id": "D42-invalid-time-does-not-mutate",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.04279999999999973
+    },
+    {
+      "id": "D43-same-time-advance-no-double-expiry",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.03130000000000166
+    },
+    {
+      "id": "D44-advance-without-expiry-updates-time",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.012599999999999056
+    },
+    {
+      "id": "D45-snapshot-restores-live-lease",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.15009999999999835
+    },
+    {
+      "id": "D46-restored-claim-token-never-repeats",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.08299999999999841
+    },
+    {
+      "id": "D47-restores-delayed-retry",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.0987000000000009
+    },
+    {
+      "id": "D48-original-and-restored-are-independent",
+      "group": "snapshot",
+      "status": "PASSED",
+      "ms": 0.04739999999999611
+    },
+    {
+      "id": "D49-snapshot-and-view-are-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.03900000000000148
+    },
+    {
+      "id": "D50-input-dependencies-are-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.0362000000000009
+    },
+    {
+      "id": "D51-get-result-is-detached",
+      "group": "aliasing",
+      "status": "PASSED",
+      "ms": 0.06069999999999709
+    },
+    {
+      "id": "D52-special-string-IDs",
+      "group": "ids",
+      "status": "PASSED",
+      "ms": 0.033799999999999386
+    },
+    {
+      "id": "D53-expired-matching-lease-before-advance",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.0519999999999996
+    },
+    {
+      "id": "D54-claim-never-overrides-live-lease",
+      "group": "lease",
+      "status": "PASSED",
+      "ms": 0.021299999999996544
+    },
+    {
+      "id": "D55-retry-clears-active-lease-and-preserves-error",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.03889999999999816
+    },
+    {
+      "id": "D56-completion-clears-last-error",
+      "group": "retry",
+      "status": "PASSED",
+      "ms": 0.05299999999999727
+    },
+    {
+      "id": "D57-claim-does-not-expire-implicitly",
+      "group": "time",
+      "status": "PASSED",
+      "ms": 0.024399999999999977
+    },
+    {
+      "id": "D58-submit-from-already-done-dependency",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.03370000000000317
+    },
+    {
+      "id": "D59-submit-from-dead-dependency-is-blocked",
+      "group": "dependencies",
+      "status": "PASSED",
+      "ms": 0.038900000000005264
+    },
+    {
+      "id": "D60-fail-rejects-empty-error",
+      "group": "validation",
+      "status": "PASSED",
+      "ms": 0.05509999999999593
+    },
+    {
+      "id": "T01-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 7.756699999999995,
+      "error": "AssertionError [ERR_ASSERTION]: state seed=1 step=61\n+ actual - expected\n... Skipped lines\n\n  {\n    jobs: [\n      {\n        attempt: 1,\n        availableAt: 0,\n...\n        attempt: 2,\n+       availableAt: 10,\n-       availableAt: 12,\n        dependsOn: [],\n        id: 's1-24',\n        lastError: 'LEASE_EXPIRED',\n        priority: 1,\n        sequence: 8,\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    },
+    {
+      "id": "T02-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 8.973599999999998
+    },
+    {
+      "id": "T03-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.565599999999996
+    },
+    {
+      "id": "T04-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.784500000000001
+    },
+    {
+      "id": "T05-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 3.9607000000000028
+    },
+    {
+      "id": "T06-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 7.013000000000005
+    },
+    {
+      "id": "T07-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 6.382799999999989
+    },
+    {
+      "id": "T08-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 4.842399999999998
+    },
+    {
+      "id": "T09-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.5367999999999995
+    },
+    {
+      "id": "T10-100-step-trace",
+      "group": "stateful",
+      "status": "FAILED",
+      "ms": 4.235699999999994,
+      "error": "AssertionError [ERR_ASSERTION]: state seed=10 step=64\n+ actual - expected\n... Skipped lines\n\n  {\n    jobs: [\n      {\n        attempt: 1,\n        availableAt: 0,\n...\n        attempt: 2,\n+       availableAt: 9,\n-       availableAt: 11,\n        dependsOn: [],\n        id: 's10-23',\n        lastError: 'LEASE_EXPIRED',\n        priority: -2,\n        sequence: 7,\n\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:96:146\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:11:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-pulsegraph/grade.mjs:82:32"
+    },
+    {
+      "id": "T11-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.952600000000004
+    },
+    {
+      "id": "T12-100-step-trace",
+      "group": "stateful",
+      "status": "PASSED",
+      "ms": 5.781700000000001
+    }
+  ]
+}

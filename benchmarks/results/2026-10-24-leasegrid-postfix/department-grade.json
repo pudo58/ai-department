@@ -1,0 +1,217 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\leasegrid-postfix\\workspaces\\run_d90095df-A",
+  "total": 52,
+  "passed": 52,
+  "failed": 0,
+  "score": 10,
+  "results": [
+    {
+      "id": "CFG01",
+      "status": "passed"
+    },
+    {
+      "id": "CFG02",
+      "status": "passed"
+    },
+    {
+      "id": "CFG03",
+      "status": "passed"
+    },
+    {
+      "id": "CFG04",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ01",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ02",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ03",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ04",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ05",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ06",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ07",
+      "status": "passed"
+    },
+    {
+      "id": "ENQ08",
+      "status": "passed"
+    },
+    {
+      "id": "CL01",
+      "status": "passed"
+    },
+    {
+      "id": "CL02",
+      "status": "passed"
+    },
+    {
+      "id": "CL03",
+      "status": "passed"
+    },
+    {
+      "id": "CL04",
+      "status": "passed"
+    },
+    {
+      "id": "CL05",
+      "status": "passed"
+    },
+    {
+      "id": "CL06",
+      "status": "passed"
+    },
+    {
+      "id": "CL07",
+      "status": "passed"
+    },
+    {
+      "id": "CL08",
+      "status": "passed"
+    },
+    {
+      "id": "LS01",
+      "status": "passed"
+    },
+    {
+      "id": "LS02",
+      "status": "passed"
+    },
+    {
+      "id": "LS03",
+      "status": "passed"
+    },
+    {
+      "id": "LS04",
+      "status": "passed"
+    },
+    {
+      "id": "LS05",
+      "status": "passed"
+    },
+    {
+      "id": "LS06",
+      "status": "passed"
+    },
+    {
+      "id": "LS07",
+      "status": "passed"
+    },
+    {
+      "id": "LS08",
+      "status": "passed"
+    },
+    {
+      "id": "EX01",
+      "status": "passed"
+    },
+    {
+      "id": "EX02",
+      "status": "passed"
+    },
+    {
+      "id": "EX03",
+      "status": "passed"
+    },
+    {
+      "id": "EX04",
+      "status": "passed"
+    },
+    {
+      "id": "EX05",
+      "status": "passed"
+    },
+    {
+      "id": "CA01",
+      "status": "passed"
+    },
+    {
+      "id": "CA02",
+      "status": "passed"
+    },
+    {
+      "id": "CA03",
+      "status": "passed"
+    },
+    {
+      "id": "CA04",
+      "status": "passed"
+    },
+    {
+      "id": "RD01",
+      "status": "passed"
+    },
+    {
+      "id": "RD02",
+      "status": "passed"
+    },
+    {
+      "id": "RD03",
+      "status": "passed"
+    },
+    {
+      "id": "RD04",
+      "status": "passed"
+    },
+    {
+      "id": "RD05",
+      "status": "passed"
+    },
+    {
+      "id": "CC01",
+      "status": "passed"
+    },
+    {
+      "id": "CC02",
+      "status": "passed"
+    },
+    {
+      "id": "CC03",
+      "status": "passed"
+    },
+    {
+      "id": "CC04",
+      "status": "passed"
+    },
+    {
+      "id": "CC05",
+      "status": "passed"
+    },
+    {
+      "id": "CC06",
+      "status": "passed"
+    },
+    {
+      "id": "DU01",
+      "status": "passed"
+    },
+    {
+      "id": "DU02",
+      "status": "passed"
+    },
+    {
+      "id": "DU03",
+      "status": "passed"
+    },
+    {
+      "id": "DU04",
+      "status": "passed"
+    }
+  ]
+}

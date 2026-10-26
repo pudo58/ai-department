@@ -1,0 +1,7 @@
+{
+  "classification": "ENVIRONMENT / experiment setup",
+  "description": "The pilot's link-dependencies helper ignored EEXIST, while GitWorkspaces precreates an empty node_modules directory. Department Author therefore saw no tools and self-installed declared dependencies with npm --no-save --no-package-lock. Native received an actual dependency junction from setup.",
+  "evidence": "Department agent:author logs at 2026-10-24T02:51:05Z; installed directory timestamps around 02:51:16-35Z.",
+  "intervention": "No runtime or source edit was made to rescue this. Author completed its own package installation. Wall time includes this provisioning difference and must not be attributed entirely to multi-agent overhead.",
+  "limits": "Same declared tool versions, different installation layout. This pilot is not a rigorously equal-environment benchmark."
+}

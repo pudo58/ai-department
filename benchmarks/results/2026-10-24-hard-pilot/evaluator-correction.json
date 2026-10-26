@@ -1,0 +1,8 @@
+{
+  "classification": "TEST_SCRIPT / unsupported timing assumption",
+  "case": "E04 corrupt storage",
+  "original": "Required openQueue itself to reject corrupted state before any method call.",
+  "reason": "SPEC requires CORRUPT_STORE and no reset/overwrite but does not explicitly require eager constructor-time I/O. Lazy opening with rejection on first load is also valid. Author independently asked this exact timing question before Developer.",
+  "correction": "grade-v2.mjs accepts rejection during openQueue OR first list, using the same four garbage states, expected error code and case count. No source/test implementation was repaired.",
+  "preservation": "Original grade.mjs, preregistered hash and native-grade-original.json retained. Revised evaluator applied identically to both frozen candidate outputs. One task, one original outcome, assisted Department continuation labeled separately."
+}

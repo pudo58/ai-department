@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-leasegrid-20261024-postfix",
+  "baseSha": "4bacc33bf6761b2d271d1ae101f37b511627cf84",
+  "specHash": "11a88111dbbb2fe12818ccaa57d11b2a8b3c56b98da79868e37ad99ebac1b04c",
+  "evaluatorHash": "8700575c987a2d95f97b32a2c0d90ada5fbc6ce215cf8c59e398cd32b02d476c",
+  "lockedAt": "2026-10-24T09:48:12.8936939Z",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "departmentBudgetUsd": 6,
+  "singleBudgetUsd": 6,
+  "repetitions": 1,
+  "evaluatorCases": 52,
+  "grade": "100 * passed external cases / total; workflow completion and human intervention reported separately",
+  "rules": [
+    "No source/test rescue edits by coordinator.",
+    "Only answer questions directly answered by the frozen specification; record each intervention.",
+    "Same Node/Vitest/Stryker and configuration in both clones.",
+    "Do not share hidden evaluator output or single-agent candidate with either run.",
+    "Native Single mode and Department Verify mode.",
+    "Subscription usage is not treated as comparable cash cost.",
+    "One synthetic benchmark does not establish general superiority."
+  ]
+}

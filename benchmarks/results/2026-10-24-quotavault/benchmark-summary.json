@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "task": "QuotaVault",
+  "date": "2026-10-24",
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "budgetCapUsdPerArm": 6,
+  "node": "24.12.0",
+  "pnpm": "11.25.0",
+  "vitest": "3.2.4",
+  "evaluatorCases": 50,
+  "baseSha": "d3f319c412b795114202580ea3c4626444d83a7a",
+  "specSha256": "3106237b1a5a6987327fbbe9b3b07d13cd9330ff45edc0cec0d3801af6e7f2a7",
+  "frozenEvaluatorSha256": "5eba484a368d260657f1778b095de5cad55fc7b7ffbe68423bfaae478c704ab2",
+  "auditedEvaluatorSha256": "dfc146957b5f9ac7a9eeb74fe8baa5e44fe0849ced8fa722ac660555e78a9c3f",
+  "runs": {
+    "department": {
+      "runId": "run_b41a6e1c",
+      "projectId": "prj_8c7795a1",
+      "mode": "verify",
+      "status": "failed",
+      "startedAt": "2026-10-24T10:33:47.363Z",
+      "endedAt": "2026-10-24T10:55:07.415Z",
+      "durationMinutes": 21.33,
+      "attempts": 5,
+      "roles": [
+        "planner",
+        "author",
+        "author",
+        "developer",
+        "developer"
+      ],
+      "allModel": true,
+      "estimatedSpendUsd": 1.2241643999999998,
+      "budgetCapUsd": 6,
+      "internalChecks": [
+        {
+          "status": "failed",
+          "recipe": null
+        },
+        {
+          "status": "failed",
+          "recipe": null
+        }
+      ],
+      "ready": false,
+      "frozenScore": 9.4,
+      "frozenPassed": 47,
+      "frozenFailed": [
+        "STORE01",
+        "WIN04",
+        "SWP01"
+      ],
+      "auditedScore": 10,
+      "auditedPassed": 50,
+      "auditedFailed": [],
+      "candidateCommit": "728186d81a13d7a393b869be3959b74ce09a95af",
+      "operatorInterventionEpisodes": 3
+    },
+    "single": {
+      "runId": "run_4a6601b5",
+      "projectId": "prj_2f89fb7e",
+      "mode": "single",
+      "status": "awaiting_acceptance",
+      "startedAt": "2026-10-24T10:33:47.383Z",
+      "endedAt": "2026-10-24T10:52:38.981Z",
+      "durationMinutes": 18.86,
+      "attempts": 3,
+      "roles": [
+        "planner",
+        "developer",
+        "developer"
+      ],
+      "allModel": true,
+      "estimatedSpendUsd": 1.3299528,
+      "budgetCapUsd": 6,
+      "internalChecks": [
+        {
+          "status": "passed",
+          "recipe": null
+        },
+        {
+          "status": "passed",
+          "recipe": null
+        }
+      ],
+      "ready": true,
+      "frozenScore": 9.6,
+      "frozenPassed": 48,
+      "frozenFailed": [
+        "STORE01",
+        "WIN04"
+      ],
+      "auditedScore": 10,
+      "auditedPassed": 50,
+      "auditedFailed": [],
+      "candidateCommit": "32b783b41df7cc4d5e09220133835ff9a8d6a3c0",
+      "operatorInterventionEpisodes": 1
+    }
+  },
+  "sharedHarnessRecovery": "Before model work, both cloned workspaces lacked node_modules; setup was repaired and both arms resumed. Counted as common infrastructure intervention, not attributed to either model.",
+  "auditAdjustments": [
+    "STORE01 accepted corruption at either open or first use; both are permitted by SPEC.",
+    "WIN04 test started at time 10 with windowMs 10, then labeled time 29 same window though boundary is 20.",
+    "SWP01 asserted cancel error after sweep-expiry, which SPEC does not define; assertions retained only for explicit contract behavior."
+  ],
+  "caveats": [
+    "Single synthetic task, one repetition; no general superiority claim.",
+    "Frozen grader was found to encode 3 unsupported assumptions after both runs ended. Preserve its original score for audit trail; audited grader only corrects those assumptions.",
+    "Department locked-test report treated all 18 expected IDs as missing although executed JSON report contained corresponding tests; likely path normalization mismatch, needs separate product regression.",
+    "Department-generated C-13 and C-17 assertions conflict with explicit SPEC; no reviewer/AI intervention was used to fix candidate code after evaluation.",
+    "Mutation did not run for Department because checks failed; not enabled for Single.",
+    "No result delivered/accepted; benchmark compares candidate snapshots, not delivery."
+  ]
+}

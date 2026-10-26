@@ -1,0 +1,297 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-streamfold-20261024\\base",
+  "total": 48,
+  "passed": 0,
+  "failed": 48,
+  "score": 0,
+  "results": [
+    {
+      "id": "CFG01",
+      "status": "failed",
+      "message": "expected INVALID_INPUT",
+      "code": "ERR_ASSERTION"
+    },
+    {
+      "id": "CFG02",
+      "status": "failed",
+      "message": "expected INVALID_INPUT",
+      "code": "ERR_ASSERTION"
+    },
+    {
+      "id": "CFG03",
+      "status": "failed",
+      "message": "expected INVALID_INPUT",
+      "code": "ERR_ASSERTION"
+    },
+    {
+      "id": "CFG04",
+      "status": "failed",
+      "message": "expected INVALID_INPUT",
+      "code": "ERR_ASSERTION"
+    },
+    {
+      "id": "CFG05",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ST01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ST02",
+      "status": "failed",
+      "message": "expected CORRUPT_STORE",
+      "code": "ERR_ASSERTION"
+    },
+    {
+      "id": "ST03",
+      "status": "failed",
+      "message": "expected CORRUPT_STORE",
+      "code": "ERR_ASSERTION"
+    },
+    {
+      "id": "IN01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IN02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IN03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IN04",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IN05",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IN06",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IV01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IV02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IV03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IV04",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "IV05",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ID01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ID02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ID03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ID04",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM04",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM05",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM06",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM07",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM08",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "WM09",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "Q01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "Q02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "Q03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "TN01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "TN02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "TN03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "CC01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "CC02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "CC03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "CC04",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ER01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ER02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "ER03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "DU01",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "DU02",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "DU03",
+      "status": "failed",
+      "message": "NOT_IMPLEMENTED",
+      "code": "NOT_IMPLEMENTED"
+    }
+  ]
+}

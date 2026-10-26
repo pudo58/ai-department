@@ -1,0 +1,508 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-25T10:46:42.292Z",
+  "target": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\base\\src\\stockroom.js",
+  "passed": 0,
+  "failed": 64,
+  "total": 64,
+  "byGroup": {
+    "shape": {
+      "passed": 0,
+      "total": 1
+    },
+    "validation": {
+      "passed": 0,
+      "total": 18
+    },
+    "holds": {
+      "passed": 0,
+      "total": 3
+    },
+    "atomicity": {
+      "passed": 0,
+      "total": 5
+    },
+    "idempotency": {
+      "passed": 0,
+      "total": 7
+    },
+    "time": {
+      "passed": 0,
+      "total": 5
+    },
+    "versions": {
+      "passed": 0,
+      "total": 4
+    },
+    "authorization": {
+      "passed": 0,
+      "total": 6
+    },
+    "accounting": {
+      "passed": 0,
+      "total": 2
+    },
+    "detachment": {
+      "passed": 0,
+      "total": 2
+    },
+    "restore": {
+      "passed": 0,
+      "total": 3
+    },
+    "stateful": {
+      "passed": 0,
+      "total": 8
+    }
+  },
+  "results": [
+    {
+      "id": "D01-initial-shape",
+      "group": "shape",
+      "status": "failed",
+      "durationMs": 0.15169999999999817,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:17:64\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:17:7"
+    },
+    {
+      "id": "D02-constructor-{\"stock\":{}}",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.8244000000000042,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:9:132)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:18:87"
+    },
+    {
+      "id": "D02-constructor-{\"stock\":{\"A\":-1}}",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.11220000000000141,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:9:132)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:18:87"
+    },
+    {
+      "id": "D02-constructor-{\"stock\":{\"A\":1.5}}",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.06700000000000017,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:9:132)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:18:87"
+    },
+    {
+      "id": "D02-constructor-{\"stock\":{\"A\":1},\"now\":-1}",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.07870000000000488,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'INVALID'\n\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:9:132)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:18:87"
+    },
+    {
+      "id": "D03-reserve-exact-view",
+      "group": "holds",
+      "status": "failed",
+      "durationMs": 0.07600000000000051,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:19:69\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:19:7"
+    },
+    {
+      "id": "D04-multi-sku",
+      "group": "holds",
+      "status": "failed",
+      "durationMs": 0.035799999999994725,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:20:60\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:20:7"
+    },
+    {
+      "id": "D05-capacity-equality",
+      "group": "holds",
+      "status": "failed",
+      "durationMs": 0.01950000000000074,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:21:68\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:21:7"
+    },
+    {
+      "id": "D06-reserve-atomic-failure",
+      "group": "atomicity",
+      "status": "failed",
+      "durationMs": 0.025500000000000966,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:22:77\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:22:7"
+    },
+    {
+      "id": "D07-empty-items",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.04480000000000217,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:446\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:391"
+    },
+    {
+      "id": "D07-zero-item",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.017300000000005866,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:446\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:391"
+    },
+    {
+      "id": "D07-negative-item",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.009300000000003195,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:446\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:391"
+    },
+    {
+      "id": "D07-fractional-item",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.0058000000000006935,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:446\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:391"
+    },
+    {
+      "id": "D07-unknown-sku",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.004800000000003024,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:446\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:391"
+    },
+    {
+      "id": "D07-empty-owner",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.0045000000000001705,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:446\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:391"
+    },
+    {
+      "id": "D07-empty-id",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.004399999999996851,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:446\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:391"
+    },
+    {
+      "id": "D07-zero-ttl",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.005299999999998306,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:446\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:23:391"
+    },
+    {
+      "id": "D08-replay-key-order",
+      "group": "idempotency",
+      "status": "failed",
+      "durationMs": 0.03030000000000399,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:24:73\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:24:7"
+    },
+    {
+      "id": "D09-replay-conflict-owner",
+      "group": "idempotency",
+      "status": "failed",
+      "durationMs": 0.01939999999999742,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:25:206\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:25:134"
+    },
+    {
+      "id": "D09-replay-conflict-ttl",
+      "group": "idempotency",
+      "status": "failed",
+      "durationMs": 0.004599999999996385,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:25:206\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:25:134"
+    },
+    {
+      "id": "D09-replay-conflict-items",
+      "group": "idempotency",
+      "status": "failed",
+      "durationMs": 0.0045000000000001705,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:25:206\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:25:134"
+    },
+    {
+      "id": "D10-replay-current-after-amend",
+      "group": "idempotency",
+      "status": "failed",
+      "durationMs": 0.031399999999997874,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:26:83\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:26:7"
+    },
+    {
+      "id": "D11-replay-does-not-renew",
+      "group": "idempotency",
+      "status": "failed",
+      "durationMs": 0.029299999999999216,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:27:78\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:27:7"
+    },
+    {
+      "id": "D12-amend-credits-own-hold",
+      "group": "atomicity",
+      "status": "failed",
+      "durationMs": 0.026600000000001955,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:28:77\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:28:7"
+    },
+    {
+      "id": "D13-amend-replaces-items",
+      "group": "atomicity",
+      "status": "failed",
+      "durationMs": 0.022100000000001785,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:29:75\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:29:7"
+    },
+    {
+      "id": "D14-amend-rollback-every-field",
+      "group": "atomicity",
+      "status": "failed",
+      "durationMs": 0.02740000000000009,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:30:81\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:30:7"
+    },
+    {
+      "id": "D15-amend-must-not-credit-other-hold",
+      "group": "atomicity",
+      "status": "failed",
+      "durationMs": 0.024500000000003297,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:31:87\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:31:7"
+    },
+    {
+      "id": "D16-amend-expiry-kept-or-replaced",
+      "group": "time",
+      "status": "failed",
+      "durationMs": 0.02389999999999759,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:32:79\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:32:7"
+    },
+    {
+      "id": "D17-identical-amend-increments-once",
+      "group": "versions",
+      "status": "failed",
+      "durationMs": 0.016600000000003945,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:33:85\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:33:7"
+    },
+    {
+      "id": "D18-owner-before-version-amend",
+      "group": "authorization",
+      "status": "failed",
+      "durationMs": 0.021899999999995146,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:35:88\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:35:8"
+    },
+    {
+      "id": "D19-stale-version-amend",
+      "group": "versions",
+      "status": "failed",
+      "durationMs": 0.03509999999999991,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:36:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:36:8"
+    },
+    {
+      "id": "D18-owner-before-version-confirm",
+      "group": "authorization",
+      "status": "failed",
+      "durationMs": 0.006699999999995043,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:35:88\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:35:8"
+    },
+    {
+      "id": "D19-stale-version-confirm",
+      "group": "versions",
+      "status": "failed",
+      "durationMs": 0.005699999999997374,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:36:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:36:8"
+    },
+    {
+      "id": "D18-owner-before-version-cancel",
+      "group": "authorization",
+      "status": "failed",
+      "durationMs": 0.008900000000004127,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:35:88\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:35:8"
+    },
+    {
+      "id": "D19-stale-version-cancel",
+      "group": "versions",
+      "status": "failed",
+      "durationMs": 0.005000000000002558,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:36:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:36:8"
+    },
+    {
+      "id": "D20-confirm-preserves-availability",
+      "group": "accounting",
+      "status": "failed",
+      "durationMs": 0.03509999999999991,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:38:86\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:38:7"
+    },
+    {
+      "id": "D21-cancel-releases-no-purchase",
+      "group": "accounting",
+      "status": "failed",
+      "durationMs": 0.028999999999996362,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:39:83\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:39:7"
+    },
+    {
+      "id": "D22-terminal-precedence-confirmed",
+      "group": "authorization",
+      "status": "failed",
+      "durationMs": 0.05559999999999832,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:40:146\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:40:65"
+    },
+    {
+      "id": "D22-terminal-precedence-cancelled",
+      "group": "authorization",
+      "status": "failed",
+      "durationMs": 0.005199999999994986,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:40:146\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:40:65"
+    },
+    {
+      "id": "D22-terminal-precedence-expired",
+      "group": "authorization",
+      "status": "failed",
+      "durationMs": 0.004800000000003024,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:40:146\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:40:65"
+    },
+    {
+      "id": "D23-expiry-exact-boundary",
+      "group": "time",
+      "status": "failed",
+      "durationMs": 0.03119999999999834,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:41:71\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:41:7"
+    },
+    {
+      "id": "D24-expiry-order-and-repeat",
+      "group": "time",
+      "status": "failed",
+      "durationMs": 0.03999999999999915,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:42:73\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:42:7"
+    },
+    {
+      "id": "D25-terminal-never-expires",
+      "group": "time",
+      "status": "failed",
+      "durationMs": 0.026499999999998636,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:43:72\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:43:7"
+    },
+    {
+      "id": "D26-invalid-time--1",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.01670000000000016,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:44:129\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:44:61"
+    },
+    {
+      "id": "D26-invalid-time-1.5",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.0049999999999954525,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:44:129\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:44:61"
+    },
+    {
+      "id": "D26-invalid-time-9007199254740992",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.004799999999995919,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:44:129\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:44:61"
+    },
+    {
+      "id": "D27-time-cannot-go-back",
+      "group": "time",
+      "status": "failed",
+      "durationMs": 0.016399999999997306,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:45:69\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:45:7"
+    },
+    {
+      "id": "D28-unknown-id-and-invalid-id",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.01950000000000074,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:46:81\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:46:7"
+    },
+    {
+      "id": "D29-safe-deadline",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.026899999999997704,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:47:69\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:47:7"
+    },
+    {
+      "id": "D30-terminal-replay-does-not-recompute-deadline",
+      "group": "idempotency",
+      "status": "failed",
+      "durationMs": 0.018699999999995498,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:48:100\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:48:7"
+    },
+    {
+      "id": "D31-literal-owner-and-prototype-name-sku",
+      "group": "validation",
+      "status": "failed",
+      "durationMs": 0.021399999999999864,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:49:92\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:49:7"
+    },
+    {
+      "id": "D32-input-detachment",
+      "group": "detachment",
+      "status": "failed",
+      "durationMs": 0.026600000000001955,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:50:84\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:50:7"
+    },
+    {
+      "id": "D33-output-detachment",
+      "group": "detachment",
+      "status": "failed",
+      "durationMs": 0.03960000000000008,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:51:73\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:51:7"
+    },
+    {
+      "id": "D34-snapshot-shape-sorted-history",
+      "group": "restore",
+      "status": "failed",
+      "durationMs": 0.05830000000000268,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:52:82\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:52:7"
+    },
+    {
+      "id": "D35-restore-full-history-and-initial-replay",
+      "group": "restore",
+      "status": "failed",
+      "durationMs": 0.08039999999999736,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:53:92\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:53:7"
+    },
+    {
+      "id": "D36-restored-expiry-version",
+      "group": "restore",
+      "status": "failed",
+      "durationMs": 0.041200000000003456,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:54:76\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:54:7"
+    },
+    {
+      "id": "T1-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.2693999999999974,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:58:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:57:37"
+    },
+    {
+      "id": "T2-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.0069000000000016826,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:58:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:57:37"
+    },
+    {
+      "id": "T3-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.005299999999998306,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:58:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:57:37"
+    },
+    {
+      "id": "T4-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.005000000000002558,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:58:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:57:37"
+    },
+    {
+      "id": "T5-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.005299999999998306,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:58:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:57:37"
+    },
+    {
+      "id": "T6-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.005099999999998772,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:58:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:57:37"
+    },
+    {
+      "id": "T7-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.005200000000002092,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:58:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:57:37"
+    },
+    {
+      "id": "T8-80-step-ledger-invariants",
+      "group": "stateful",
+      "status": "failed",
+      "durationMs": 0.004799999999995919,
+      "error": "Error: Not implemented\n    at Module.createStockroom (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/cartstock-v3-20261025/base/src/stockroom.js:1:43)\n    at fresh (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:7:139)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:58:14\n    at test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:8:73)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-cartstock-v3/grade.mjs:57:37"
+    }
+  ]
+}

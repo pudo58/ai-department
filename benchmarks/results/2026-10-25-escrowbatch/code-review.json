@@ -1,0 +1,44 @@
+{
+  "reviewedAt": "2026-10-25T02:58:21.029Z",
+  "summary": "Code Single gọn, tên nghiệp vụ rõ và nhiều cơ chế đúng, nhưng sai nguồn dữ liệu khi tính available trong transaction. Đây là lỗi correctness mức cao, không phải vấn đề phong cách. Department chưa có code nên không chấm điểm code cho nhánh đó.",
+  "strengths": [
+    "Dùng Map/Set, xử lý được account và ID đặc biệt như __proto__; không thêm dependency.",
+    "Tách state tạm trước commit giúp các lỗi thông thường rollback; lịch sử terminal hold và replay được giữ qua snapshot.",
+    "Canonical hóa object key order và trả kết quả mới cho replay; các ca expiry, snapshot, aliasing và idempotency trong bộ chấm đã đạt.",
+    "Có 14 test do agent viết cộng 1 smoke test scaffold; phủ cả lỗi đầu vào và trạng thái, không chỉ ca thuận."
+  ],
+  "concerns": [
+    {
+      "severity": "HIGH",
+      "title": "Batch tính available từ số dư đã commit",
+      "detail": "getAvailable truyền nextHolds nhưng available vẫn đọc accounts thay vì nextAccounts. Hậu quả: không dùng được tiền vừa nhận và có thể chi hai lần trong cùng batch. D21 trượt; probe P02 tạo số dư a=-60 từ a=100.",
+      "evidence": "candidate-single/src/ledger.js:24-27,48-51,67-69; single-grade.json D21; single-failure-diagnosis.json P01/P02"
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "Bộ test tự viết thiếu chuỗi thao tác hợp lệ trong cùng batch",
+      "detail": "Ca rollback có transfer rồi reserve không đủ tiền, nhưng không có ca nhận tiền rồi reserve/transfer tiếp và hai debit liên tiếp cùng nguồn. Một test cho mỗi R-x chưa kiểm tra được các tương tác giữa thao tác.",
+      "evidence": "candidate-single/tests/ledger.test.js:30; single-detail.json checks=15 passed; D21/P02 fail"
+    },
+    {
+      "severity": "LOW",
+      "title": "Một số assertion không khớp đầy đủ tên test",
+      "detail": "R-2 sửa accounts[0] nhưng lại xác nhận account a, trong khi phần tử đầu là __proto__; R-7 nêu rollback ID nhưng chỉ kiểm tra tái sử dụng ID sau release; R-10 nêu closed nhưng chỉ kiểm tra missing/expired. Tên test và tag không đủ làm bằng chứng cho mọi nhánh.",
+      "evidence": "candidate-single/tests/ledger.test.js:12-20,56-62,77-83"
+    },
+    {
+      "severity": "INFO",
+      "title": "Hiệu năng và mức độ đầy đủ chưa được chứng minh",
+      "detail": "Mỗi lần kiểm tra available quét holds, mỗi apply copy toàn bộ accounts/holds/history liên quan. Không benchmark tải lớn, không coverage/mutation cho candidate này. Không suy luận khả năng production từ 65 mục chấm.",
+      "evidence": "candidate-single/src/ledger.js:24-27,48-50; protocol.json"
+    }
+  ],
+  "releaseDecision": "Không nghiệm thu code Single theo SPEC hiện tại. Department: quy trình chưa qua duyệt kế hoạch, chưa có candidate để quyết định code.",
+  "environmentEvidence": "Host preflight và check cuối đạt. Trong sandbox agent, npm test và Vitest mặc định lỗi tải config/esbuild; agent dùng --configLoader native để chạy test, tự sửa một assertion sai account do thứ tự sort rồi chạy đạt. Không thay config hoặc recipe; mọi lệnh được lưu ở single-command-evidence.json.",
+  "recommendations": [
+    "Ưu tiên tạo oracle reference/link/quote từ dữ liệu đã chọn thay vì để Author viết lại tự do; vẫn giữ kiểm tra exact quote, không nới cổng.",
+    "Sinh khung đầy đủ nhóm rủi ro và trường steps/invariants cho từng ca ngay từ schema; không dựa vào prompt để nhớ tất cả.",
+    "Bổ sung kế hoạch chuỗi có nhiều op thành công trong cùng transaction, kiểm tra available không âm sau từng op và kết quả rollback.",
+    "Không lấy phần trăm test đạt làm quyết định cuối khi còn lỗi invariant mức cao."
+  ]
+}

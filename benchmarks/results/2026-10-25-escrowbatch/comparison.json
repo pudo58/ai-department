@@ -1,0 +1,454 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-25T02:58:38.155Z",
+  "protocol": {
+    "schemaVersion": 1,
+    "lockedAt": "2026-10-25T02:52:35.779Z",
+    "task": "EscrowBatch",
+    "base": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\base",
+    "baseSha": "5828ca3c7ac1af57f7a91851c51da75c40948c32",
+    "specHash": "20a3e06aba72b6a7bc65b04233ca620556f9f012ea7db4f316825feb526f15ac",
+    "graderHash": "829dd7c7d4930f078fdb09c33becfa06902be8a44d9ebe2ad30f04d1da40d34c",
+    "referenceHash": "f97656f16aee67752ac8473b1217d5101a4b2edf2866244c0bf8ee41aa31914a",
+    "sourceManifestHash": "bdb883c919f9bbd663c63075e2097718e1ec5a859c2e64465b5c5ccfc9e96e56",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "arms": [
+      "department",
+      "single"
+    ],
+    "singleMeans": "AI Department Single mode: Planner plus one implementation/self-review agent, no independent Author or Verifier",
+    "effectiveCapUsd": 10.8,
+    "baseBudget": {
+      "department": 6,
+      "single": 10.8
+    },
+    "automatedLimitMs": 1800000,
+    "repetitions": 1,
+    "policy": "Sequential; same scaffold/spec/tools/effective budget. No model retry, source/test/schema rescue or hidden-grader feedback. Human contract and test-repair decisions recorded with hashes. Grade any implementation even when pipeline is blocked. No acceptance/delivery. Grader outside workspace; no sibling access."
+  },
+  "audit": {
+    "at": "2026-10-25T02:53:47.008Z",
+    "directedCases": 53,
+    "statefulTraces": 12,
+    "stepsPerTrace": 100,
+    "selfCheck": {
+      "passed": 65,
+      "total": 65
+    },
+    "brokenCAS": {
+      "failed": 19,
+      "caught": [
+        "D29-replay-precedes-CAS",
+        "D30-id-conflict-precedes-CAS",
+        "D31-key-order-independent-replay",
+        "D33-replay-does-not-resurrect-expired-hold",
+        "D34-request-detached",
+        "D35-result-detached",
+        "D38-restored-replay-and-closed-history",
+        "T01-100-step-trace",
+        "T02-100-step-trace",
+        "T03-100-step-trace",
+        "T04-100-step-trace",
+        "T05-100-step-trace",
+        "T06-100-step-trace",
+        "T07-100-step-trace",
+        "T08-100-step-trace",
+        "T09-100-step-trace",
+        "T10-100-step-trace",
+        "T11-100-step-trace",
+        "T12-100-step-trace"
+      ]
+    },
+    "brokenExpiry": {
+      "failed": 15,
+      "caught": [
+        "D13-expiry-exact-boundary",
+        "D16-time-without-expiry",
+        "D17-invalid-time--1",
+        "T01-100-step-trace",
+        "T02-100-step-trace",
+        "T03-100-step-trace",
+        "T04-100-step-trace",
+        "T05-100-step-trace",
+        "T06-100-step-trace",
+        "T07-100-step-trace",
+        "T08-100-step-trace",
+        "T09-100-step-trace",
+        "T10-100-step-trace",
+        "T11-100-step-trace",
+        "T12-100-step-trace"
+      ]
+    },
+    "scaffold": {
+      "passed": 0,
+      "total": 65
+    },
+    "scope": "Directed expectations reviewed against SPEC; executable model separately represented as arrays. Differential traces are not proof the oracle is bug-free. Test counts do not imply all business behavior is covered."
+  },
+  "summaries": [
+    {
+      "arm": "department",
+      "runId": "run_8cb7d7c4",
+      "status": "awaiting_approval",
+      "checkpoint": null,
+      "candidateProduced": false,
+      "automaticMs": 86823,
+      "waitingMs": 222,
+      "agentMs": null,
+      "attempts": 2,
+      "roles": {
+        "planner": 1,
+        "author": 1
+      },
+      "models": [
+        "gpt-6-luna"
+      ],
+      "inputTokens": 37521,
+      "cachedTokens": 23552,
+      "outputTokens": 10725,
+      "estimatedUsd": 0.2098476,
+      "interventions": [],
+      "blocker": null,
+      "contractProblems": [
+        "C-7: Trích dẫn R-6 không có trong điều khoản hiện tại.",
+        "C-10: Căn cứ R-2 không thuộc ca.",
+        "C-18: Căn cứ R-6 không thuộc ca.",
+        "C-20: ca Nhất quán dữ liệu bắt buộc phải mô tả chuỗi ít nhất hai bước.",
+        "C-20: ca Nhất quán dữ liệu bắt buộc phải nêu bất biến cần giữ sau từng bước.",
+        "C-21: Trích dẫn R-12 không có trong điều khoản hiện tại.",
+        "Chưa xét nhóm Lặp và đồng thời hoặc nêu lý do không áp dụng."
+      ],
+      "testPlanCases": 24,
+      "checks": [],
+      "mutation": null,
+      "grade": null
+    },
+    {
+      "arm": "single",
+      "runId": "run_c814fa27",
+      "status": "awaiting_acceptance",
+      "checkpoint": "a31e49df552b875c8da6b34eea091336c6bc7c29",
+      "candidateProduced": true,
+      "automaticMs": 119198,
+      "waitingMs": 13260,
+      "agentMs": null,
+      "attempts": 2,
+      "roles": {
+        "planner": 1,
+        "developer": 1
+      },
+      "models": [
+        "gpt-6-luna"
+      ],
+      "inputTokens": 375883,
+      "cachedTokens": 347520,
+      "outputTokens": 9928,
+      "estimatedUsd": 0.33826500000000004,
+      "interventions": [
+        {
+          "type": "contract_review",
+          "approve": true,
+          "contractHash": "104db969f7a8ca215d2d92d9619bd379a160687bab02fced2973b455c647a3dc",
+          "acknowledgedWarnings": [
+            "assumptions_present"
+          ],
+          "reason": "Reviewed against frozen SPEC: atomicity, availability, terminal hold history, expiry boundary, replay precedence, snapshot and aliasing preserved. Assumptions restate SPEC. Export API and forbidden-scope requirements marked manual; frozen external grader still independently tests exports. No contract edits or business clarification supplied.",
+          "at": "2026-10-25T02:54:37.340Z"
+        }
+      ],
+      "blocker": null,
+      "contractProblems": [],
+      "testPlanCases": 0,
+      "checks": [
+        {
+          "recipeId": "test",
+          "status": "passed",
+          "counts": {
+            "passed": 15,
+            "failed": 0,
+            "skipped": 0
+          },
+          "checkpoint": "a31e49df552b875c8da6b34eea091336c6bc7c29"
+        }
+      ],
+      "mutation": null,
+      "grade": {
+        "passed": 64,
+        "total": 65,
+        "score": 98.5,
+        "byGroup": {
+          "public-api": {
+            "passed": 2,
+            "total": 2
+          },
+          "time": {
+            "passed": 6,
+            "total": 6
+          },
+          "money": {
+            "passed": 3,
+            "total": 3
+          },
+          "holds": {
+            "passed": 5,
+            "total": 5
+          },
+          "boundary": {
+            "passed": 1,
+            "total": 1
+          },
+          "history": {
+            "passed": 6,
+            "total": 6
+          },
+          "errors": {
+            "passed": 1,
+            "total": 1
+          },
+          "atomicity": {
+            "passed": 4,
+            "total": 5
+          },
+          "validation": {
+            "passed": 10,
+            "total": 10
+          },
+          "revision": {
+            "passed": 2,
+            "total": 2
+          },
+          "idempotency": {
+            "passed": 5,
+            "total": 5
+          },
+          "aliasing": {
+            "passed": 4,
+            "total": 4
+          },
+          "snapshot": {
+            "passed": 3,
+            "total": 3
+          },
+          "stateful": {
+            "passed": 12,
+            "total": 12
+          }
+        },
+        "failures": [
+          {
+            "id": "D21-ordered-provisional-effects",
+            "group": "atomicity",
+            "status": "FAILED",
+            "ms": 0.06709999999999994,
+            "error": "Error: INSUFFICIENT_FUNDS\n    at fail (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/workspaces/run_c814fa27-A/src/ledger.js:2:40)\n    at Object.apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/escrowbatch-20261025/workspaces/run_c814fa27-A/src/ledger.js:59:53)\n    at apply (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:16:45)\n    at file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:41:96\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:20:67)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-escrowbatch/grade.mjs:41:1"
+          }
+        ]
+      },
+      "sourceLines": 125,
+      "sourceBytes": 5654,
+      "sourceHash": "8755f8d3b264b1aa9ee05d314424ec506286dde18090d519a35ddb145bc7f9a4"
+    }
+  ],
+  "review": {
+    "reviewedAt": "2026-10-25T02:58:21.029Z",
+    "summary": "Code Single gọn, tên nghiệp vụ rõ và nhiều cơ chế đúng, nhưng sai nguồn dữ liệu khi tính available trong transaction. Đây là lỗi correctness mức cao, không phải vấn đề phong cách. Department chưa có code nên không chấm điểm code cho nhánh đó.",
+    "strengths": [
+      "Dùng Map/Set, xử lý được account và ID đặc biệt như __proto__; không thêm dependency.",
+      "Tách state tạm trước commit giúp các lỗi thông thường rollback; lịch sử terminal hold và replay được giữ qua snapshot.",
+      "Canonical hóa object key order và trả kết quả mới cho replay; các ca expiry, snapshot, aliasing và idempotency trong bộ chấm đã đạt.",
+      "Có 14 test do agent viết cộng 1 smoke test scaffold; phủ cả lỗi đầu vào và trạng thái, không chỉ ca thuận."
+    ],
+    "concerns": [
+      {
+        "severity": "HIGH",
+        "title": "Batch tính available từ số dư đã commit",
+        "detail": "getAvailable truyền nextHolds nhưng available vẫn đọc accounts thay vì nextAccounts. Hậu quả: không dùng được tiền vừa nhận và có thể chi hai lần trong cùng batch. D21 trượt; probe P02 tạo số dư a=-60 từ a=100.",
+        "evidence": "candidate-single/src/ledger.js:24-27,48-51,67-69; single-grade.json D21; single-failure-diagnosis.json P01/P02"
+      },
+      {
+        "severity": "MEDIUM",
+        "title": "Bộ test tự viết thiếu chuỗi thao tác hợp lệ trong cùng batch",
+        "detail": "Ca rollback có transfer rồi reserve không đủ tiền, nhưng không có ca nhận tiền rồi reserve/transfer tiếp và hai debit liên tiếp cùng nguồn. Một test cho mỗi R-x chưa kiểm tra được các tương tác giữa thao tác.",
+        "evidence": "candidate-single/tests/ledger.test.js:30; single-detail.json checks=15 passed; D21/P02 fail"
+      },
+      {
+        "severity": "LOW",
+        "title": "Một số assertion không khớp đầy đủ tên test",
+        "detail": "R-2 sửa accounts[0] nhưng lại xác nhận account a, trong khi phần tử đầu là __proto__; R-7 nêu rollback ID nhưng chỉ kiểm tra tái sử dụng ID sau release; R-10 nêu closed nhưng chỉ kiểm tra missing/expired. Tên test và tag không đủ làm bằng chứng cho mọi nhánh.",
+        "evidence": "candidate-single/tests/ledger.test.js:12-20,56-62,77-83"
+      },
+      {
+        "severity": "INFO",
+        "title": "Hiệu năng và mức độ đầy đủ chưa được chứng minh",
+        "detail": "Mỗi lần kiểm tra available quét holds, mỗi apply copy toàn bộ accounts/holds/history liên quan. Không benchmark tải lớn, không coverage/mutation cho candidate này. Không suy luận khả năng production từ 65 mục chấm.",
+        "evidence": "candidate-single/src/ledger.js:24-27,48-50; protocol.json"
+      }
+    ],
+    "releaseDecision": "Không nghiệm thu code Single theo SPEC hiện tại. Department: quy trình chưa qua duyệt kế hoạch, chưa có candidate để quyết định code.",
+    "environmentEvidence": "Host preflight và check cuối đạt. Trong sandbox agent, npm test và Vitest mặc định lỗi tải config/esbuild; agent dùng --configLoader native để chạy test, tự sửa một assertion sai account do thứ tự sort rồi chạy đạt. Không thay config hoặc recipe; mọi lệnh được lưu ở single-command-evidence.json.",
+    "recommendations": [
+      "Ưu tiên tạo oracle reference/link/quote từ dữ liệu đã chọn thay vì để Author viết lại tự do; vẫn giữ kiểm tra exact quote, không nới cổng.",
+      "Sinh khung đầy đủ nhóm rủi ro và trường steps/invariants cho từng ca ngay từ schema; không dựa vào prompt để nhớ tất cả.",
+      "Bổ sung kế hoạch chuỗi có nhiều op thành công trong cùng transaction, kiểm tra available không âm sau từng op và kết quả rollback.",
+      "Không lấy phần trăm test đạt làm quyết định cuối khi còn lỗi invariant mức cao."
+    ]
+  },
+  "diagnosis": {
+    "at": "2026-10-25T02:56:48.780Z",
+    "kind": "post-run diagnosis; not included in frozen 65-item score",
+    "candidateCheckpoint": "a31e49df552b875c8da6b34eea091336c6bc7c29",
+    "probes": [
+      {
+        "id": "P01-provisional-credit",
+        "request": {
+          "id": "x",
+          "expectedRevision": 0,
+          "ops": [
+            {
+              "type": "transfer",
+              "from": "a",
+              "to": "b",
+              "amount": 80
+            },
+            {
+              "type": "reserve",
+              "hold": "h",
+              "account": "b",
+              "amount": 70,
+              "ttl": 5
+            },
+            {
+              "type": "settle",
+              "hold": "h",
+              "to": "a",
+              "amount": 30
+            }
+          ]
+        },
+        "expected": {
+          "result": {
+            "revision": 1
+          },
+          "state": {
+            "now": 0,
+            "revision": 1,
+            "accounts": [
+              {
+                "id": "a",
+                "balance": 50,
+                "available": 50
+              },
+              {
+                "id": "b",
+                "balance": 50,
+                "available": 50
+              }
+            ],
+            "holds": []
+          }
+        },
+        "actual": {
+          "error": "INSUFFICIENT_FUNDS",
+          "state": {
+            "now": 0,
+            "revision": 0,
+            "accounts": [
+              {
+                "id": "a",
+                "balance": 100,
+                "available": 100
+              },
+              {
+                "id": "b",
+                "balance": 0,
+                "available": 0
+              }
+            ],
+            "holds": []
+          }
+        },
+        "matches": false
+      },
+      {
+        "id": "P02-double-spend-in-one-batch",
+        "request": {
+          "id": "x",
+          "expectedRevision": 0,
+          "ops": [
+            {
+              "type": "transfer",
+              "from": "a",
+              "to": "b",
+              "amount": 80
+            },
+            {
+              "type": "transfer",
+              "from": "a",
+              "to": "b",
+              "amount": 80
+            }
+          ]
+        },
+        "expected": {
+          "error": "INSUFFICIENT_FUNDS",
+          "state": {
+            "now": 0,
+            "revision": 0,
+            "accounts": [
+              {
+                "id": "a",
+                "balance": 100,
+                "available": 100
+              },
+              {
+                "id": "b",
+                "balance": 0,
+                "available": 0
+              }
+            ],
+            "holds": []
+          }
+        },
+        "actual": {
+          "result": {
+            "revision": 1
+          },
+          "state": {
+            "now": 0,
+            "revision": 1,
+            "accounts": [
+              {
+                "id": "a",
+                "balance": -60,
+                "available": -60
+              },
+              {
+                "id": "b",
+                "balance": 160,
+                "available": 160
+              }
+            ],
+            "holds": []
+          }
+        },
+        "matches": false
+      }
+    ],
+    "rootCause": "getAvailable calls available(account,nextHolds), but available reads committed accounts instead of nextAccounts. Earlier provisional credits and debits are invisible.",
+    "source": "src/ledger.js",
+    "severity": "high",
+    "releaseDecision": "reject until corrected and independently verified",
+    "operatorChangedCandidate": false
+  },
+  "limitations": [
+    "One attempt per mode on one synthetic task; no population-level reliability or speed conclusion.",
+    "Single means application Single mode, with Planner and self review; not one raw CLI call.",
+    "Both modes share model family/provider and local host; independent role sessions do not prove independent model errors.",
+    "Dollar figures are application estimates for subscription usage, not measured API bills.",
+    "53 directed cases plus 12 fixed-seed stateful traces do not establish exhaustive correctness.",
+    "A missing candidate has no code score, not a fabricated 0/65.",
+    "No failed run was retried, no contract/test/source was repaired by benchmark operator, and external grader output was never fed to agents.",
+    "Local runtime uses CLI sandbox and scope enforcement; external grader remains outside workspace but is not hidden behind a container security boundary."
+  ]
+}

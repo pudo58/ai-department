@@ -1,0 +1,8 @@
+{
+  "case": "invalid public call at exact lease expiry should trigger lazy expiry before rejecting input",
+  "modelOutputScoreIncludes": false,
+  "error": "INVALID_INPUT",
+  "observed": "leased",
+  "expected": "retry",
+  "pass": false
+}

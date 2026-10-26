@@ -1,0 +1,211 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\workspaces\\run_4a6601b5-A",
+  "total": 50,
+  "passed": 48,
+  "failed": 2,
+  "score": 9.6,
+  "results": [
+    {
+      "id": "CFG01",
+      "status": "passed"
+    },
+    {
+      "id": "CFG02",
+      "status": "passed"
+    },
+    {
+      "id": "CFG03",
+      "status": "passed"
+    },
+    {
+      "id": "CFG04",
+      "status": "passed"
+    },
+    {
+      "id": "STORE01",
+      "status": "failed",
+      "error": "Error: CORRUPT_STORE\n    at fail (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/workspaces/run_4a6601b5-A/src/quota.js:5:59)\n    at validateState (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/workspaces/run_4a6601b5-A/src/quota.js:39:170)\n    at decodeState (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/workspaces/run_4a6601b5-A/src/quota.js:52:138)\n    at Module.openVault (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/.data/workspaces/run_4a6601b5-A/src/quota.js:59:31)\n    at async env (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-quotavault/grade.mjs:9:298)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-quotavault/grade.mjs:16:40\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-quotavault/grade.mjs:7:32)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-quotavault/grade.mjs:16:1"
+    },
+    {
+      "id": "STORE02",
+      "status": "passed"
+    },
+    {
+      "id": "STORE03",
+      "status": "passed"
+    },
+    {
+      "id": "READ01",
+      "status": "passed"
+    },
+    {
+      "id": "READ02",
+      "status": "passed"
+    },
+    {
+      "id": "RES01",
+      "status": "passed"
+    },
+    {
+      "id": "RES02",
+      "status": "passed"
+    },
+    {
+      "id": "RES03",
+      "status": "passed"
+    },
+    {
+      "id": "RES04",
+      "status": "passed"
+    },
+    {
+      "id": "RES05",
+      "status": "passed"
+    },
+    {
+      "id": "RES06",
+      "status": "passed"
+    },
+    {
+      "id": "RES07",
+      "status": "passed"
+    },
+    {
+      "id": "COM01",
+      "status": "passed"
+    },
+    {
+      "id": "COM02",
+      "status": "passed"
+    },
+    {
+      "id": "COM03",
+      "status": "passed"
+    },
+    {
+      "id": "COM04",
+      "status": "passed"
+    },
+    {
+      "id": "COM05",
+      "status": "passed"
+    },
+    {
+      "id": "CAN01",
+      "status": "passed"
+    },
+    {
+      "id": "CAN02",
+      "status": "passed"
+    },
+    {
+      "id": "CAN03",
+      "status": "passed"
+    },
+    {
+      "id": "CAN04",
+      "status": "passed"
+    },
+    {
+      "id": "EXP01",
+      "status": "passed"
+    },
+    {
+      "id": "EXP02",
+      "status": "passed"
+    },
+    {
+      "id": "EXP03",
+      "status": "passed"
+    },
+    {
+      "id": "EXP04",
+      "status": "passed"
+    },
+    {
+      "id": "EXP05",
+      "status": "passed"
+    },
+    {
+      "id": "WIN01",
+      "status": "passed"
+    },
+    {
+      "id": "WIN02",
+      "status": "passed"
+    },
+    {
+      "id": "WIN03",
+      "status": "passed"
+    },
+    {
+      "id": "WIN04",
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Missing expected rejection: expected IDEMPOTENCY_CONFLICT\n    at async code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-quotavault/grade.mjs:10:25)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-quotavault/grade.mjs:45:116\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-quotavault/grade.mjs:7:32)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-24-quotavault/grade.mjs:45:1"
+    },
+    {
+      "id": "TEN01",
+      "status": "passed"
+    },
+    {
+      "id": "TEN02",
+      "status": "passed"
+    },
+    {
+      "id": "TEN03",
+      "status": "passed"
+    },
+    {
+      "id": "CAS01",
+      "status": "passed"
+    },
+    {
+      "id": "CAS02",
+      "status": "passed"
+    },
+    {
+      "id": "CAS03",
+      "status": "passed"
+    },
+    {
+      "id": "VAL01",
+      "status": "passed"
+    },
+    {
+      "id": "VAL02",
+      "status": "passed"
+    },
+    {
+      "id": "VAL03",
+      "status": "passed"
+    },
+    {
+      "id": "VAL04",
+      "status": "passed"
+    },
+    {
+      "id": "USG01",
+      "status": "passed"
+    },
+    {
+      "id": "USG02",
+      "status": "passed"
+    },
+    {
+      "id": "SWP01",
+      "status": "passed"
+    },
+    {
+      "id": "API01",
+      "status": "passed"
+    },
+    {
+      "id": "DUR01",
+      "status": "passed"
+    },
+    {
+      "id": "DUR02",
+      "status": "passed"
+    }
+  ]
+}

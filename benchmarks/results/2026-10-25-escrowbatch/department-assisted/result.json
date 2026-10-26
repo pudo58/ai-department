@@ -1,0 +1,10 @@
+{
+  "runId": "run_8cb7d7c4",
+  "endedAt": "2026-10-25T03:03:20.258Z",
+  "status": "blocked",
+  "blocker": "Author chỉ được thêm file test (tests/, *.test.ts, *.spec.ts) trong module cho phép. Vi phạm: tests/scaffold.test.js",
+  "addedAutomaticMs": 79034,
+  "checkpoint": null,
+  "workspace": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\escrowbatch-20261025\\workspaces\\run_8cb7d7c4-A",
+  "assisted": true
+}

@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T15:25:49.873Z",
+  "userFacingTimezone": "Asia/Bangkok",
+  "task": "PatchBook",
+  "environment": "Windows local, Node 24.12.0, Vitest 3.2.4, Stryker 9.6.1; all actual agents GPT-6 Luna medium",
+  "protocol": {
+    "schemaVersion": 1,
+    "lockedAt": "2026-10-25T15:00:43.199Z",
+    "task": "PatchBook",
+    "files": {
+      "SPEC.md": "db4b26f47ffc4c9d4019225e263e1ef68d97f9268f0a643549d50efe18e73893",
+      "grade.mjs": "a21b669d8881f9c92c2f63268e648b372e2993dcb46833db3e506f891637bef3",
+      "reference.mjs": "35c4e4c536ed8da489b6593565da63ffc4fe3eb583e1cc08519b64157278a516",
+      "grader-audit.json": "32af58db3c307cce8fa4057b1183d2e2597cc778b7edea8ba8e7e1b7c34167f1",
+      "setup.mjs": "afc699a9f81a2ea39a81f40d300dba7c47a2f14f272041e73f008b54c01660be",
+      "controller.mjs": "851c8aa6b045a1e90a2b4be52a777810dfe5405c3d73ebeebc92b2ce43a2b182",
+      "source-manifest.json": "6437ba0d3b306ec95ad8a11fc81de14adadb3640fc66a9a5c934554a26965aaf"
+    },
+    "baseSha": "a3b6308a3e65ad27af5fff9ea1ba3d2a4c07085b",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "effectiveCapUsd": 10.8,
+    "automatedLimitMs": 1800000,
+    "repetitions": 1,
+    "order": [
+      "department",
+      "single"
+    ],
+    "singleMeaning": "Framework Single: Planner plus one coding/test/self-review role, possibly multiple turns; no independent Author/Verifier.",
+    "policy": "Two separate repositories cloned from same immutable scaffold before any model call. Same original SPEC/tools/model/effort/cap; run sequentially on one Windows machine. Freeze grader and product including uncommitted changes before first model. No manual candidate source/test/manifest edits, hidden grader feedback, discarded failed run, product/schema change mid-run or arbitrary model retry. Record legitimate contract/test-repair/warning/finding approvals with receipts. Grade every implementation, including blocked runs. Single external mutation same defaults/5-minute bound, timed separately. Only accept/deliver local benchmark branch after mandatory product evidence and frozen grader pass; warning acknowledgement never bypasses a blocker. No claims from test counts or general superiority from one trial."
+  },
+  "department": {
+    "runId": "run_627ff9de",
+    "mode": "verify",
+    "status": "completed",
+    "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+    "baseSha": "a3b6308a3e65ad27af5fff9ea1ba3d2a4c07085b",
+    "reachedAcceptanceGate": true,
+    "budgetUsd": 10.8,
+    "costUsdEstimated": 1.2091326,
+    "pipelineAutomaticMs": 453560,
+    "externalMutationMs": 0,
+    "automaticIncludingExternalMutationMs": 453560,
+    "rawWaitingMs": 260879,
+    "rawWaitingIncludesExternalDiagnostics": false,
+    "attemptCount": 6,
+    "attemptsByRole": {
+      "planner": 1,
+      "author": 3,
+      "developer": 1,
+      "verifier": 1
+    },
+    "agentWallMsByRole": {
+      "planner": 20179,
+      "author": 281766,
+      "developer": 60774,
+      "verifier": 20407
+    },
+    "retries": [
+      {
+        "reason": "invalid_output",
+        "count": 1
+      }
+    ],
+    "usage": {
+      "input": 1006544,
+      "cached": 870272,
+      "output": 35949
+    },
+    "checks": [
+      {
+        "id": "chk_4cd1d57b",
+        "status": "passed",
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "counts": {
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0
+        },
+        "issues": []
+      }
+    ],
+    "frozenGrade": {
+      "passed": 95,
+      "total": 95,
+      "failed": 0
+    },
+    "specFoundedGrade": {
+      "passed": 94,
+      "total": 94,
+      "failed": 0
+    },
+    "unscoredCase": "D05-invalid-restore-",
+    "mutation": {
+      "external": false,
+      "status": "completed",
+      "baseline": "passed",
+      "durationMs": 63103,
+      "counts": {
+        "killed": 395,
+        "survived": 60,
+        "no_coverage": 8,
+        "timeout": 2,
+        "errors": 0,
+        "pending": 0
+      },
+      "population": 465
+    },
+    "delivery": {
+      "kind": "branch",
+      "target": "aidept/run_627ff9de-A",
+      "status": "succeeded",
+      "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+      "contractVersion": 4,
+      "slot": "A",
+      "startedAt": "2026-10-25T15:12:45.381Z",
+      "endedAt": "2026-10-25T15:12:45.673Z",
+      "result": "Đã tạo branch aidept/run_627ff9de-A trong repository gốc"
+    },
+    "manualRequirementIds": [
+      "R-16"
+    ]
+  },
+  "single": {
+    "runId": "run_509fd9fe",
+    "mode": "single",
+    "status": "awaiting_acceptance",
+    "checkpoint": "12141d1e162919d9601716742a1e437adc49b1df",
+    "baseSha": "a3b6308a3e65ad27af5fff9ea1ba3d2a4c07085b",
+    "reachedAcceptanceGate": true,
+    "budgetUsd": 10.8,
+    "costUsdEstimated": 0.6405342,
+    "pipelineAutomaticMs": 147000,
+    "externalMutationMs": 82645,
+    "automaticIncludingExternalMutationMs": 229645,
+    "rawWaitingMs": 353892,
+    "rawWaitingIncludesExternalDiagnostics": true,
+    "attemptCount": 3,
+    "attemptsByRole": {
+      "planner": 1,
+      "developer": 2
+    },
+    "agentWallMsByRole": {
+      "planner": 20908,
+      "developer": 117170
+    },
+    "retries": [
+      {
+        "reason": "missing_evidence",
+        "count": 1
+      }
+    ],
+    "usage": {
+      "input": 760152,
+      "cached": 697984,
+      "output": 16309
+    },
+    "checks": [
+      {
+        "id": "chk_9b0e1e4c",
+        "status": "passed",
+        "checkpoint": "ea843202343c2e264e9258bf4df9374abd937c24",
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "issues": []
+      },
+      {
+        "id": "chk_0701e4ab",
+        "status": "passed",
+        "checkpoint": "12141d1e162919d9601716742a1e437adc49b1df",
+        "counts": {
+          "passed": 13,
+          "failed": 0,
+          "skipped": 0
+        },
+        "issues": []
+      }
+    ],
+    "frozenGrade": {
+      "passed": 94,
+      "total": 95,
+      "failed": 1
+    },
+    "specFoundedGrade": {
+      "passed": 94,
+      "total": 94,
+      "failed": 0
+    },
+    "unscoredCase": "D05-invalid-restore-",
+    "mutation": {
+      "external": true,
+      "status": "completed",
+      "baseline": "passed",
+      "durationMs": 82645,
+      "counts": {
+        "killed": 392,
+        "survived": 100,
+        "no_coverage": 10,
+        "timeout": 2,
+        "errors": 0,
+        "pending": 0
+      },
+      "population": 504
+    },
+    "delivery": null,
+    "manualRequirementIds": [
+      "R-13",
+      "R-14"
+    ]
+  },
+  "adjudication": {
+    "schemaVersion": 1,
+    "at": "2026-10-25T15:20:27.081Z",
+    "kind": "Post-run grader defect adjudication, not a new model trial or discarded failure",
+    "originalSpecHash": "db4b26f47ffc4c9d4019225e263e1ef68d97f9268f0a643549d50efe18e73893",
+    "originalGraderHash": "a21b669d8881f9c92c2f63268e648b372e2993dcb46833db3e506f891637bef3",
+    "caseId": "D05-invalid-restore-",
+    "input": "restorePatchBook([])",
+    "finding": "The frozen grader assumed arrays must throw INVALID. SPEC clause 8 requires INVALID for null/non-object outer arguments, and only defines correct restoration for implementation-produced snapshots. An Array is a non-null JavaScript object, is not a produced snapshot, and its response is otherwise unspecified. The grader did not establish a required INVALID response.",
+    "attribution": "Benchmark TEST_SCRIPT defect, not a demonstrated Single application defect.",
+    "alternativeReference": {
+      "passed": 94,
+      "total": 95,
+      "onlyFailure": "D05-invalid-restore-"
+    },
+    "decision": "Keep original SPEC/grader and every raw result unchanged. Exclude this single unsupported assertion from the spec-founded comparison for BOTH arms; retain it as unscored with observed output. Do not alter candidate code, feed this result to model or claim a 95/95 Single score.",
+    "arms": {
+      "department": {
+        "raw": {
+          "passed": 95,
+          "total": 95,
+          "failed": 0
+        },
+        "specFounded": {
+          "passed": 94,
+          "total": 94,
+          "failed": 0
+        },
+        "unscored": [
+          {
+            "id": "D05-invalid-restore-",
+            "group": "validation",
+            "status": "passed",
+            "durationMs": 0.004599999999996385
+          }
+        ]
+      },
+      "single": {
+        "raw": {
+          "passed": 94,
+          "total": 95,
+          "failed": 1
+        },
+        "specFounded": {
+          "passed": 94,
+          "total": 94,
+          "failed": 0
+        },
+        "unscored": [
+          {
+            "id": "D05-invalid-restore-",
+            "group": "validation",
+            "status": "failed",
+            "durationMs": 0.23629999999999995,
+            "error": "AssertionError [ERR_ASSERTION]: Expected Error\n    at code (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:5:68)\n    at async test (file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:4:68)\n    at async file:///C:/Users/ADMIN/OneDrive/Desktop/ai-department/test-results/2026-10-25-patchbook/grade.mjs:11:36"
+          }
+        ]
+      }
+    },
+    "acceptance": "Original frozen protocol required all grader assertions pass. Department was already accepted under it. Single remains awaiting_acceptance and is not delivered; this is an operator protocol hold, not a pipeline blocker or evidence of inferior program behavior."
+  },
+  "comparisons": {
+    "sameSpec": true,
+    "sameScaffold": true,
+    "sameEffectiveBudget": true,
+    "sourceAndGraderHashesVerified": true,
+    "singleLessAutomaticTimeIncludingMutationPercent": 49.36833054061205,
+    "singleLessEstimatedCostPercent": 47.02531384895254,
+    "singleFirstAndFinalImplementationIdentical": true,
+    "singleRepairDiff": "tests/patchbook.test.js | 171 ++++++++++++++++++++++++++++++++++++++++++++++++\n 1 file changed, 171 insertions(+)"
+  },
+  "interventions": {
+    "department": {
+      "contractRevision": 1,
+      "contractApproval": 1,
+      "acceptance": 1,
+      "candidateSourceTestManifestEdits": 0
+    },
+    "single": {
+      "contractRevision": 0,
+      "contractApproval": 1,
+      "acceptance": 0,
+      "protocolHold": true,
+      "candidateSourceTestManifestEdits": 0
+    },
+    "postRunGraderAdjudication": 1,
+    "graderOrAuditFeedbackToAgents": 0,
+    "arbitraryModelRetries": 0
+  },
+  "limits": [
+    "One run per arm, fixed Department-first order, same machine but not counterbalanced or repeated. No statistical/general superiority claim.",
+    "95 original checks include one unsupported restore([]) assertion; raw Department 95/95 and Single 94/95 are preserved. Compare the other 94 equally for both, rather than silently adjusting grader or declaring an application bug.",
+    "Single reached the acceptance gate and is not blocked; operator held delivery because original protocol required full raw grader pass. Do not score this as a pipeline completion failure.",
+    "Single mutation was external to product pipeline and included separately for timing. Its app waiting time includes mutation/adjudication/report work.",
+    "Mutation populations differ between implementations; timeout is separate from killed and no universal mutation-score threshold is used.",
+    "Author had a semantic check-only-revision error fixed during human contract review; independent roles do not guarantee a correct oracle.",
+    "Department Verifier pass was code review/current runner reference, not an independent extra test run; no finding reproduction was exercised.",
+    "No manual candidate rescue, no production code/dependency/lockfile changes, no GitHub CI result in this benchmark."
+  ]
+}

@@ -1,0 +1,434 @@
+{
+  "task": "StreamFold event-time engine",
+  "protocol": {
+    "schemaVersion": 1,
+    "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-streamfold-20261024",
+    "baseSha": "991203e63ccd88be2c4e781e7baf98f12a29599a",
+    "specHash": "d87de8359eabba8b8ab1d6626536c2e509773482a47303af8471724bea466cae",
+    "evaluatorHash": "0f8e7105eaf6bb94c6b9e6fe4f23cdfb5b333943cab4ef703b809b1d2a40ff11",
+    "lockedAt": "2026-10-24T04:18:54.061Z",
+    "modelPair": {
+      "single": "gpt-6-luna",
+      "planner": "gpt-6-luna",
+      "developer": "gpt-6-luna",
+      "author": "claude-haiku-5-5",
+      "verifier": "claude-haiku-5-5"
+    },
+    "effort": "medium",
+    "timeLimitMs": 1200000,
+    "departmentBudgetUsd": 6,
+    "repetitions": 1,
+    "grade": "100 * passed external cases / total; report workflow and human interventions separately",
+    "rules": [
+      "No source/test rescue edits by coordinator.",
+      "Do not rewrite Author plan to silently improve arm; answer exact questions only with intervention receipt.",
+      "Same Node/Vitest/Stryker and configLoader runner.",
+      "No hidden-score feedback or repair calls after terminal workflow.",
+      "Native one agent; Department production Verify workflow.",
+      "Cash estimates are not comparable across subscription providers.",
+      "One hard synthetic task does not establish general superiority."
+    ],
+    "evaluatorCorrection": {
+      "previousRevisionHash": "0f196814c8b9afe6dc08f65216310c01a7c818ab32832bd293f838fe940a8cd9",
+      "revisionHash": "0f8e7105eaf6bb94c6b9e6fe4f23cdfb5b333943cab4ef703b809b1d2a40ff11",
+      "corrections": [
+        {
+          "cases": [
+            "WM10",
+            "CC03",
+            "ER01",
+            "ER02"
+          ],
+          "reason": "WM10 placed the second window below its close boundary; moved watermarks to 220 so both windows are actually closed. Failure/no-commit cases now compare the post-error store with its pre-error snapshot, allowing either valid lazy or eager initialization while proving the failed mutation did not persist."
+        },
+        {
+          "cases": [
+            "CFG05",
+            "CFG07",
+            "WM03"
+          ],
+          "reason": "CFG05/CFG07 now first persist an event so they truly test reopening a nonempty store; a lazy open of a null store need not persist initialization. WM03 now creates an aggregate before asserting one newly closed window."
+        }
+      ]
+    }
+  },
+  "baseCommit": "991203e63ccd88be2c4e781e7baf98f12a29599a",
+  "single": {
+    "model": "gpt-6-luna",
+    "durationMs": 110930,
+    "usage": {
+      "inputTokens": 416557,
+      "cachedTokens": 389632,
+      "outputTokens": 7863,
+      "costUsd": null
+    },
+    "selfCheck": {
+      "exitCode": 0,
+      "durationMs": 1051,
+      "timedOut": false,
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "checkpoint": "54b97da36e7de10c10d1afeb3c397e8b0aedfc00",
+    "grade": {
+      "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-streamfold-20261024\\single",
+      "total": 53,
+      "passed": 53,
+      "failed": 0,
+      "score": 10,
+      "results": [
+        {
+          "id": "CFG01",
+          "status": "passed"
+        },
+        {
+          "id": "CFG02",
+          "status": "passed"
+        },
+        {
+          "id": "CFG03",
+          "status": "passed"
+        },
+        {
+          "id": "CFG04",
+          "status": "passed"
+        },
+        {
+          "id": "CFG05",
+          "status": "passed"
+        },
+        {
+          "id": "CFG06",
+          "status": "passed"
+        },
+        {
+          "id": "CFG07",
+          "status": "passed"
+        },
+        {
+          "id": "ST01",
+          "status": "passed"
+        },
+        {
+          "id": "ST02",
+          "status": "passed"
+        },
+        {
+          "id": "ST03",
+          "status": "passed"
+        },
+        {
+          "id": "IN01",
+          "status": "passed"
+        },
+        {
+          "id": "IN02",
+          "status": "passed"
+        },
+        {
+          "id": "IN03",
+          "status": "passed"
+        },
+        {
+          "id": "IN04",
+          "status": "passed"
+        },
+        {
+          "id": "IN05",
+          "status": "passed"
+        },
+        {
+          "id": "IN06",
+          "status": "passed"
+        },
+        {
+          "id": "IV01",
+          "status": "passed"
+        },
+        {
+          "id": "IV02",
+          "status": "passed"
+        },
+        {
+          "id": "IV03",
+          "status": "passed"
+        },
+        {
+          "id": "IV04",
+          "status": "passed"
+        },
+        {
+          "id": "IV05",
+          "status": "passed"
+        },
+        {
+          "id": "ID01",
+          "status": "passed"
+        },
+        {
+          "id": "ID02",
+          "status": "passed"
+        },
+        {
+          "id": "ID03",
+          "status": "passed"
+        },
+        {
+          "id": "ID04",
+          "status": "passed"
+        },
+        {
+          "id": "WM01",
+          "status": "passed"
+        },
+        {
+          "id": "WM02",
+          "status": "passed"
+        },
+        {
+          "id": "WM03",
+          "status": "passed"
+        },
+        {
+          "id": "WM04",
+          "status": "passed"
+        },
+        {
+          "id": "WM05",
+          "status": "passed"
+        },
+        {
+          "id": "WM06",
+          "status": "passed"
+        },
+        {
+          "id": "WM07",
+          "status": "passed"
+        },
+        {
+          "id": "WM08",
+          "status": "passed"
+        },
+        {
+          "id": "WM09",
+          "status": "passed"
+        },
+        {
+          "id": "WM10",
+          "status": "passed"
+        },
+        {
+          "id": "WM11",
+          "status": "passed"
+        },
+        {
+          "id": "Q01",
+          "status": "passed"
+        },
+        {
+          "id": "Q02",
+          "status": "passed"
+        },
+        {
+          "id": "Q03",
+          "status": "passed"
+        },
+        {
+          "id": "Q04",
+          "status": "passed"
+        },
+        {
+          "id": "TN01",
+          "status": "passed"
+        },
+        {
+          "id": "TN02",
+          "status": "passed"
+        },
+        {
+          "id": "TN03",
+          "status": "passed"
+        },
+        {
+          "id": "CC01",
+          "status": "passed"
+        },
+        {
+          "id": "CC02",
+          "status": "passed"
+        },
+        {
+          "id": "CC03",
+          "status": "passed"
+        },
+        {
+          "id": "CC04",
+          "status": "passed"
+        },
+        {
+          "id": "ER01",
+          "status": "passed"
+        },
+        {
+          "id": "ER02",
+          "status": "passed"
+        },
+        {
+          "id": "ER03",
+          "status": "passed"
+        },
+        {
+          "id": "DU01",
+          "status": "passed"
+        },
+        {
+          "id": "DU02",
+          "status": "passed"
+        },
+        {
+          "id": "DU03",
+          "status": "passed"
+        }
+      ]
+    }
+  },
+  "department": {
+    "runId": "run_52a8385f",
+    "projectId": "prj_e839a7b4",
+    "status": "blocked",
+    "blocker": "Manifest Author không hợp lệ: C-28: ca tự động không tồn tại.",
+    "wallMs": 595664,
+    "attempts": [
+      {
+        "role": "planner",
+        "stage": "prepare",
+        "model": "gpt-6-luna",
+        "status": "completed",
+        "startedAt": "2026-10-24T04:19:42.260Z",
+        "endedAt": "2026-10-24T04:20:00.267Z"
+      },
+      {
+        "role": "author",
+        "stage": "prepare",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T04:20:00.450Z",
+        "endedAt": "2026-10-24T04:21:45.015Z"
+      },
+      {
+        "role": "author",
+        "stage": "implement",
+        "model": "claude-haiku-5-5",
+        "status": "completed",
+        "startedAt": "2026-10-24T04:23:19.123Z",
+        "endedAt": "2026-10-24T04:29:36.864Z"
+      }
+    ],
+    "usage": {
+      "inputTokens": 1099741,
+      "cachedTokens": 963379,
+      "outputTokens": 118165
+    },
+    "budget": {
+      "capUsd": 6,
+      "spentUsd": 0.053350800000000004,
+      "estimated": true,
+      "phases": {
+        "prepare": {
+          "allocatedUsd": 1.2000000000000002,
+          "spentUsd": 0.053350800000000004
+        },
+        "implement": {
+          "allocatedUsd": 2.4000000000000004,
+          "spentUsd": 0
+        },
+        "repair": {
+          "allocatedUsd": 0.6000000000000001,
+          "spentUsd": 0
+        },
+        "verify": {
+          "allocatedUsd": 1.7999999999999998,
+          "spentUsd": 0
+        }
+      }
+    },
+    "noDeliverable": true
+  },
+  "interventionReceipt": {
+    "at": "2026-10-24T04:23:19.049Z",
+    "source": "Frozen SPEC.md; no implementation or external grader output used",
+    "questions": [
+      {
+        "question": "Q-1",
+        "answer": "INVALID_INPUT cho cấu hình openStream không hợp lệ; đúng với danh sách mã lỗi và quy tắc validation input."
+      },
+      {
+        "question": "Q-2",
+        "answer": "Từ chối khóa cấu hình ngoài store, windowSize, allowedLateness, partitionIds bằng INVALID_INPUT; đây là các khóa duy nhất trong chữ ký công khai."
+      },
+      {
+        "question": "Q-3",
+        "answer": "Với replay chính xác, aggregate trong kết quả là snapshot aggregate hiện tại của tenant/key/window; status là duplicate và không gọi CAS."
+      },
+      {
+        "question": "Q-4",
+        "answer": "Kiểm tra event identity trước trạng thái đóng cửa sổ: cùng tenant/eventId nhưng khác trường luôn là IDEMPOTENCY_CONFLICT; replay chính xác vẫn duplicate sau khi đóng."
+      },
+      {
+        "question": "Q-5",
+        "answer": "Bắt buộc validation trước CAS; store.load có thể được gọi để lấy/kiểm tra state. Không yêu cầu load=0 cho input sai."
+      },
+      {
+        "question": "Q-6",
+        "answer": "Nếu windowEnd hợp lệ nhưng windowEnd+allowedLateness lớn hơn MAX_SAFE_INTEGER thì không có watermark hợp lệ nào đóng được cửa sổ; giữ cửa sổ mở và tránh phép cộng Number tràn. Nếu chính windowEnd tràn thì AGGREGATE_OVERFLOW."
+      },
+      {
+        "question": "Q-7",
+        "answer": "Khóa key hiện diện nhưng có giá trị undefined là INVALID_INPUT; chỉ khi bỏ hẳn khóa thì key mới là tùy chọn."
+      },
+      {
+        "question": "Q-8",
+        "answer": "Có thể khởi tạo eager hoặc lazy. query trên state null vẫn phải trả watermark 0 cho mọi partition và aggregates []; query không được ghi hay khởi tạo state."
+      },
+      {
+        "question": "Q-9",
+        "answer": "Đúng: query trên store null trả globalWatermark 0, từng partition 0 và aggregates rỗng; state malformed/unsupported luôn CORRUPT_STORE, không ghi đè."
+      },
+      {
+        "question": "Clarification — cardinality",
+        "answer": "Aggregate row có đúng chín trường được liệt kê cụ thể: tenantId, key, windowStart, windowEnd, count, sum, min, max, closed. Danh sách trường tường minh được ưu tiên hơn lỗi đếm “tám” ở một câu."
+      }
+    ],
+    "changedTestPlan": [
+      "Removed resolved questions from the Author plan.",
+      "Corrected the explicit cardinality typo from eight to nine fields in C-9 and C-19.",
+      "Resolved C-12 conflict precedence as IDEMPOTENCY_CONFLICT."
+    ],
+    "sourceOrTestCodeEditedByCoordinator": false,
+    "hiddenScoreFeedbackGiven": false
+  },
+  "evaluatorCorrection": {
+    "previousRevisionHash": "0f196814c8b9afe6dc08f65216310c01a7c818ab32832bd293f838fe940a8cd9",
+    "revisionHash": "0f8e7105eaf6bb94c6b9e6fe4f23cdfb5b333943cab4ef703b809b1d2a40ff11",
+    "corrections": [
+      {
+        "cases": [
+          "WM10",
+          "CC03",
+          "ER01",
+          "ER02"
+        ],
+        "reason": "WM10 placed the second window below its close boundary; moved watermarks to 220 so both windows are actually closed. Failure/no-commit cases now compare the post-error store with its pre-error snapshot, allowing either valid lazy or eager initialization while proving the failed mutation did not persist."
+      },
+      {
+        "cases": [
+          "CFG05",
+          "CFG07",
+          "WM03"
+        ],
+        "reason": "CFG05/CFG07 now first persist an event so they truly test reopening a nonempty store; a lazy open of a null store need not persist initialization. WM03 now creates an aggregate before asserting one newly closed window."
+      }
+    ]
+  }
+}

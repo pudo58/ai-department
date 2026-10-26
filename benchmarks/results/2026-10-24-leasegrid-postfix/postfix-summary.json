@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-24",
+  "protocol": {
+    "schemaVersion": 1,
+    "root": "C:/Users/ADMIN/OneDrive/Desktop/ai-department-leasegrid-20261024-postfix",
+    "baseSha": "4bacc33bf6761b2d271d1ae101f37b511627cf84",
+    "specHash": "11a88111dbbb2fe12818ccaa57d11b2a8b3c56b98da79868e37ad99ebac1b04c",
+    "evaluatorHash": "8700575c987a2d95f97b32a2c0d90ada5fbc6ce215cf8c59e398cd32b02d476c",
+    "lockedAt": "2026-10-24T09:48:12.8936939Z",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "departmentBudgetUsd": 6,
+    "singleBudgetUsd": 6,
+    "repetitions": 1,
+    "evaluatorCases": 52,
+    "grade": "100 * passed external cases / total; workflow completion and human intervention reported separately",
+    "rules": [
+      "No source/test rescue edits by coordinator.",
+      "Only answer questions directly answered by the frozen specification; record each intervention.",
+      "Same Node/Vitest/Stryker and configuration in both clones.",
+      "Do not share hidden evaluator output or single-agent candidate with either run.",
+      "Native Single mode and Department Verify mode.",
+      "Subscription usage is not treated as comparable cash cost.",
+      "One synthetic benchmark does not establish general superiority."
+    ]
+  },
+  "specSha256": "11a88111dbbb2fe12818ccaa57d11b2a8b3c56b98da79868e37ad99ebac1b04c",
+  "evaluatorSha256": "8700575c987a2d95f97b32a2c0d90ada5fbc6ce215cf8c59e398cd32b02d476c",
+  "department": {
+    "runId": "run_d90095df",
+    "status": "blocked",
+    "checkpointBeforeRepair": "3b206a82bdef4a39f9000e1e53039ba6dfaf1bca",
+    "checkpointAfterRepair": "e7bc771e9da9631f0486e47e908ac52dfafa0338",
+    "commit": "e7bc771e9da9631f0486e47e908ac52dfafa0338",
+    "externalScore": "52/52",
+    "spentUsdEstimate": 1.289517,
+    "checks": [
+      "initial passed",
+      "post-repair failed"
+    ],
+    "requiredCasesInitially": "18/18 passed",
+    "mutation": "baseline passed; 565 killed, 153 survived, 34 no coverage, 3 timeout",
+    "humanInterventions": 7
+  },
+  "single": {
+    "runId": "run_9079fff6",
+    "status": "awaiting_acceptance",
+    "checkpoint": "6540c6a11836c50609b267f0753da0f3849e445d",
+    "commit": "6540c6a11836c50609b267f0753da0f3849e445d",
+    "externalScore": "52/52",
+    "spentUsdEstimate": 0.8296596,
+    "checks": [
+      "passed",
+      "passed"
+    ],
+    "completionReady": true,
+    "humanInterventions": 1
+  },
+  "interpretation": "The frozen 52-case external evaluator scores both candidates 10/10. Operationally, Single reached awaiting_acceptance with passing checks; Department blocked after a confirmed finding triggered repair and the generated acceptance test failed. The failing generated test requires createQueue to return before a permanently failing initial store.load, although the spec does not require that error to be deferred until enqueue. Treat the finding/test pair as a likely oracle-timing overconstraint pending explicit product clarification, not as evidence that the benchmarked candidate failed the 52-case contract."
+}

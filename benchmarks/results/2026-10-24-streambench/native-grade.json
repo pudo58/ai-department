@@ -1,0 +1,221 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-streamfold-20261024\\single",
+  "total": 53,
+  "passed": 53,
+  "failed": 0,
+  "score": 10,
+  "results": [
+    {
+      "id": "CFG01",
+      "status": "passed"
+    },
+    {
+      "id": "CFG02",
+      "status": "passed"
+    },
+    {
+      "id": "CFG03",
+      "status": "passed"
+    },
+    {
+      "id": "CFG04",
+      "status": "passed"
+    },
+    {
+      "id": "CFG05",
+      "status": "passed"
+    },
+    {
+      "id": "CFG06",
+      "status": "passed"
+    },
+    {
+      "id": "CFG07",
+      "status": "passed"
+    },
+    {
+      "id": "ST01",
+      "status": "passed"
+    },
+    {
+      "id": "ST02",
+      "status": "passed"
+    },
+    {
+      "id": "ST03",
+      "status": "passed"
+    },
+    {
+      "id": "IN01",
+      "status": "passed"
+    },
+    {
+      "id": "IN02",
+      "status": "passed"
+    },
+    {
+      "id": "IN03",
+      "status": "passed"
+    },
+    {
+      "id": "IN04",
+      "status": "passed"
+    },
+    {
+      "id": "IN05",
+      "status": "passed"
+    },
+    {
+      "id": "IN06",
+      "status": "passed"
+    },
+    {
+      "id": "IV01",
+      "status": "passed"
+    },
+    {
+      "id": "IV02",
+      "status": "passed"
+    },
+    {
+      "id": "IV03",
+      "status": "passed"
+    },
+    {
+      "id": "IV04",
+      "status": "passed"
+    },
+    {
+      "id": "IV05",
+      "status": "passed"
+    },
+    {
+      "id": "ID01",
+      "status": "passed"
+    },
+    {
+      "id": "ID02",
+      "status": "passed"
+    },
+    {
+      "id": "ID03",
+      "status": "passed"
+    },
+    {
+      "id": "ID04",
+      "status": "passed"
+    },
+    {
+      "id": "WM01",
+      "status": "passed"
+    },
+    {
+      "id": "WM02",
+      "status": "passed"
+    },
+    {
+      "id": "WM03",
+      "status": "passed"
+    },
+    {
+      "id": "WM04",
+      "status": "passed"
+    },
+    {
+      "id": "WM05",
+      "status": "passed"
+    },
+    {
+      "id": "WM06",
+      "status": "passed"
+    },
+    {
+      "id": "WM07",
+      "status": "passed"
+    },
+    {
+      "id": "WM08",
+      "status": "passed"
+    },
+    {
+      "id": "WM09",
+      "status": "passed"
+    },
+    {
+      "id": "WM10",
+      "status": "passed"
+    },
+    {
+      "id": "WM11",
+      "status": "passed"
+    },
+    {
+      "id": "Q01",
+      "status": "passed"
+    },
+    {
+      "id": "Q02",
+      "status": "passed"
+    },
+    {
+      "id": "Q03",
+      "status": "passed"
+    },
+    {
+      "id": "Q04",
+      "status": "passed"
+    },
+    {
+      "id": "TN01",
+      "status": "passed"
+    },
+    {
+      "id": "TN02",
+      "status": "passed"
+    },
+    {
+      "id": "TN03",
+      "status": "passed"
+    },
+    {
+      "id": "CC01",
+      "status": "passed"
+    },
+    {
+      "id": "CC02",
+      "status": "passed"
+    },
+    {
+      "id": "CC03",
+      "status": "passed"
+    },
+    {
+      "id": "CC04",
+      "status": "passed"
+    },
+    {
+      "id": "ER01",
+      "status": "passed"
+    },
+    {
+      "id": "ER02",
+      "status": "passed"
+    },
+    {
+      "id": "ER03",
+      "status": "passed"
+    },
+    {
+      "id": "DU01",
+      "status": "passed"
+    },
+    {
+      "id": "DU02",
+      "status": "passed"
+    },
+    {
+      "id": "DU03",
+      "status": "passed"
+    }
+  ]
+}

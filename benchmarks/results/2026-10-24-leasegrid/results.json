@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "benchmark": "LeaseGrid durable multi-tenant job queue",
+  "model": "gpt-6-luna",
+  "effort": "medium",
+  "startingCheckpoint": "4bacc33bf6761b2d271d1ae101f37b511627cf84",
+  "evaluatorCases": 52,
+  "environment": {
+    "os": "Windows local workspace",
+    "node": "v24.12.0",
+    "vitest": "3.2.4",
+    "strykerCore": "9.6.1",
+    "strykerVitestRunner": "9.6.1",
+    "execution": "AI Department LocalRuntime"
+  },
+  "controls": {
+    "sameSpec": true,
+    "sameStartingCommit": true,
+    "sameEffectiveBudgetUsd": 6,
+    "evaluatorFrozenBeforeRuns": true,
+    "evaluatorShownToAgents": false,
+    "coordinatorEditedCandidate": false,
+    "deliveryPerformed": false,
+    "protocol": "protocol.json"
+  },
+  "arms": {
+    "department": {
+      "runId": "run_bbb1b591",
+      "projectId": "prj_b85552b7",
+      "mode": "verify",
+      "status": "failed",
+      "independentEvaluator": {"passed": 52, "total": 52, "score10": 10},
+      "appCheck": {"passed": 19, "failed": 1, "skipped": 0},
+      "plannedCases": 20,
+      "attemptCount": 4,
+      "activeModelMs": 242909,
+      "estimatedAppCostUsd": 0.7940358,
+      "blocker": "Author-generated test C-19 expects a third job after two concurrent claims consumed the two queued jobs.",
+      "mutation": "not reached",
+      "verifier": "not reached"
+    },
+    "single": {
+      "runId": "run_6b48b7f9",
+      "projectId": "prj_46fb244b",
+      "mode": "single",
+      "status": "blocked",
+      "independentEvaluator": {
+        "passed": 50,
+        "total": 52,
+        "rawScore10": 9.62,
+        "unambiguousPassed": 50,
+        "unambiguousTotal": 50,
+        "unambiguousScore10": 10,
+        "inconclusiveCases": ["LS01", "LS05"]
+      },
+      "appCheck": {"passed": 10, "failed": 0, "skipped": 0},
+      "attemptCount": 2,
+      "activeModelMs": 126950,
+      "estimatedAppCostUsd": 0.4556988,
+      "blocker": "No app evidence for R-5, R-8, R-11, R-13, R-14, R-16, R-17, R-18 and R-19.",
+      "mutation": "not run in Single mode",
+      "verifier": "not run in Single mode"
+    }
+  },
+  "inconclusiveEvaluatorCases": [
+    {
+      "id": "LS01",
+      "expected": "job.lease is undefined after successful ack",
+      "actual": "job.lease is null",
+      "reason": "The spec says the lease is cleared but does not specify omitted property versus null."
+    },
+    {
+      "id": "LS05",
+      "expected": "job.lease is undefined after successful nack",
+      "actual": "job.lease is null",
+      "reason": "The spec says the lease is cleared but does not specify omitted property versus null."
+    }
+  ],
+  "excludedPilot": {
+    "runs": ["run_d4704842", "run_08acbc35"],
+    "reason": "Initial draft had ambiguous workerId persistence and an incorrect retry-expiry test sequence; neither score is used in the comparison."
+  },
+  "interventions": {
+    "departmentClarifications": 2,
+    "singleWarningAcknowledged": true,
+    "receipts": ["v3-intervention-receipt.json", "v3-single-contract-receipt.json"]
+  },
+  "delivery": "Neither run was accepted or delivered."
+}

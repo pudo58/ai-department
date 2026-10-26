@@ -1,0 +1,554 @@
+{
+  "findingReplays": [],
+  "execution": {
+    "available": true,
+    "automaticMs": 190242,
+    "waitingMs": 188673,
+    "agentQueueMs": 6,
+    "spans": [
+      {
+        "id": "0e67c750-361a-4dcd-8061-a19a806b605d",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T13:33:46.683Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:33:46.686Z"
+      },
+      {
+        "id": "2f78a003-ef4c-4764-90b9-caa690689759",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T13:33:46.685Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:34:12.905Z"
+      },
+      {
+        "id": "dd5480d4-1773-4356-9f98-0b0e2d1c664c",
+        "kind": "setup",
+        "label": "Chuẩn bị bản sao/cài dependency",
+        "startedAt": "2026-10-25T13:33:46.694Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:33:47.167Z"
+      },
+      {
+        "id": "4a879045-1903-49c4-944c-440f9da85618",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T13:33:47.181Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:33:52.510Z"
+      },
+      {
+        "attemptId": "att_634300da",
+        "role": "planner",
+        "id": "617e28fe-9b5e-4608-9eeb-eacda3dcd2f8",
+        "kind": "agent_queue",
+        "label": "planner chờ slot",
+        "startedAt": "2026-10-25T13:33:52.528Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:33:52.530Z"
+      },
+      {
+        "attemptId": "att_634300da",
+        "role": "planner",
+        "id": "8ff5e5d3-30e6-45dd-bf99-5f89c57eace2",
+        "kind": "agent",
+        "label": "planner (A)",
+        "startedAt": "2026-10-25T13:33:52.532Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:34:12.739Z"
+      },
+      {
+        "id": "a531af2d-0014-44c8-8bf0-1a6aabf64f83",
+        "kind": "approval",
+        "label": "awaiting_approval",
+        "startedAt": "2026-10-25T13:34:12.900Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:36:20.426Z"
+      },
+      {
+        "id": "3ab9c403-da6d-4bf5-8f0a-8099c51cedad",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T13:36:20.426Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:36:20.430Z"
+      },
+      {
+        "id": "e26bd529-d644-4211-87e0-25d39f5b1de7",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T13:36:20.428Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:39:04.450Z"
+      },
+      {
+        "id": "5f61c977-b3a6-4cd5-a808-91d5286deefa",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T13:36:20.433Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:36:21.578Z"
+      },
+      {
+        "attemptId": "att_11a5805c",
+        "role": "developer",
+        "id": "c37a905f-67e8-462e-a3c8-6ef89fd64904",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T13:36:21.595Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:36:21.596Z"
+      },
+      {
+        "attemptId": "att_11a5805c",
+        "role": "developer",
+        "id": "d98e11db-9cab-4d0d-aafa-ce6706bdf692",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T13:36:21.598Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:37:27.315Z"
+      },
+      {
+        "id": "082e3e1c-5324-4e17-b201-0a8586f92122",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T13:37:27.634Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:37:28.575Z"
+      },
+      {
+        "retryReason": "missing_evidence",
+        "id": "1a93ecf5-51c0-4ae5-990d-48cc466f8254",
+        "kind": "tool",
+        "label": "Bổ sung bằng chứng cho R-2, R-3, R-4, R-5, R-6, R-7, R-8, R-9, R-10, R-11, R-12, R-13, R-14, R-15, R-16.",
+        "startedAt": "2026-10-25T13:37:28.586Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:37:28.588Z"
+      },
+      {
+        "attemptId": "att_89ebac14",
+        "role": "developer",
+        "id": "5074d0dc-e3ff-4fcd-b310-10db3bbe2206",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T13:37:28.606Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:37:28.608Z"
+      },
+      {
+        "attemptId": "att_89ebac14",
+        "role": "developer",
+        "id": "226c250e-43a4-42b2-8483-9169b9f3d847",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T13:37:28.610Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:38:38.006Z"
+      },
+      {
+        "id": "161e6ed0-873d-4f62-a91e-7fcde8c1281a",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T13:38:38.332Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:38:39.522Z"
+      },
+      {
+        "retryReason": "check_failure",
+        "id": "c1430a44-c4e7-4215-bd2f-c07f032b6cee",
+        "kind": "tool",
+        "label": "Chạy lại check test một lần để kiểm tra flaky; chưa quy lỗi cho source hay test.",
+        "startedAt": "2026-10-25T13:38:39.525Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:38:39.527Z"
+      },
+      {
+        "id": "ab6da395-4fd4-4df0-9ccd-74ec16ee1599",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T13:38:39.534Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:38:40.723Z"
+      },
+      {
+        "attemptId": "att_b03ea2e1",
+        "role": "developer",
+        "id": "b287a5b4-146a-465e-a7f3-24574bd11459",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T13:38:40.743Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:38:40.744Z"
+      },
+      {
+        "attemptId": "att_b03ea2e1",
+        "role": "developer",
+        "id": "be151a92-6ce1-44e4-b985-7070981d3fb2",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T13:38:40.746Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:39:02.919Z"
+      },
+      {
+        "id": "4e5c26bd-ecec-4e9f-8f18-2753b5c0c00b",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T13:39:03.243Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T13:39:04.418Z"
+      },
+      {
+        "id": "59d0ff09-b0e5-45e1-a0b0-3058b67c6b12",
+        "kind": "approval",
+        "label": "awaiting_acceptance",
+        "startedAt": "2026-10-25T13:39:04.445Z",
+        "status": "running"
+      }
+    ],
+    "attemptsByRole": {
+      "planner": 1,
+      "developer": 3
+    },
+    "retries": [
+      {
+        "reason": "missing_evidence",
+        "count": 1
+      },
+      {
+        "reason": "check_failure",
+        "count": 1
+      }
+    ]
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "runtime": "local",
+    "workspace": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\workspaces\\run_24c7854e-A",
+    "configHash": "57f7b32f6025aaeef8d63a1d88e8eed8b1eee50d060be397fddfe5049e004a40",
+    "checkpoint": null,
+    "startedAt": "2026-10-25T13:36:20.436Z",
+    "endedAt": "2026-10-25T13:36:21.578Z",
+    "checks": [
+      {
+        "recipeId": "test",
+        "runner": "vitest",
+        "version": "vitest/3.2.4 win32-x64 node-v24.12.0",
+        "status": "passed",
+        "message": "Runner tải cấu hình và discovery thành công; chưa chứng minh test nghiệp vụ đạt."
+      }
+    ],
+    "limitation": "Kiểm tra trên runtime chạy checks; không xác nhận quyền thực thi trong sandbox riêng của agent. Không phải bằng chứng nghiệm thu."
+  },
+  "quality": {
+    "enabled": false,
+    "manifestHash": "982833dcf47d248fd92b72cf88ee4d18da7a60fd03d03c326c26b29989004538",
+    "manifestProblems": [],
+    "capability": {
+      "status": "unsupported",
+      "reason": "Chưa nhận diện khả năng mutation trên checkpoint này."
+    },
+    "mutation": null,
+    "testMs": 1127,
+    "cases": []
+  },
+  "generatedAt": "2026-10-25T13:40:05.585Z",
+  "runId": "run_24c7854e",
+  "title": "CartStock / Single / GPT-6 Luna medium",
+  "requirement": "# CartStock — inventory holds with atomic cart edits\n\nBuild a compact in-memory JavaScript ES module in `src/stockroom.js`. Export `createStockroom({stock, now=0})` and `restoreStockroom(snapshot)`. All methods may be synchronous or asynchronous; callers may await every call. Inputs and results are JSON values. Use no wall clock, persistence, network, external dependency, or background timer. Add a short README usage example.\n\nAPI: `reserve({id,owner,items,ttl})`, `amend({id,owner,version,items,ttl?})`, `confirm({id,owner,version})`, `cancel({id,owner,version})`, `get(id)`, `availability()`, `advance(time)`, `snapshot()`.\n\n1. `stock` is a nonempty object mapping SKU to nonnegative safe integer on-hand quantity. SKU matches `/^[A-Za-z][A-Za-z0-9_-]{0,31}$/`; `constructor` is a valid SKU. `items` is a nonempty SKU-to-positive-safe-integer object containing only known SKUs. IDs and owners are strings of length 1–64, used literally without trimming. Logical `now` is a nonnegative safe integer. `ttl` is a positive safe integer and `now+ttl` must be safe whenever a new deadline is computed. Versions supplied to commands are positive safe integers. Invalid shapes/scalars throw Error with `code='INVALID'`; an unknown SKU throws `UNKNOWN_SKU`. No need to define precedence for several unrelated invalid fields.\n2. `reserve` atomically creates a `held` reservation at version 1 and `expiresAt=now+ttl`, provided every item fits current availability. Insufficient quantity throws `INSUFFICIENT` with no state change. A view has exactly `{id,owner,items,expiresAt,state,version}`. Every successful reservation-changing method returns its new detached view. `get(id)` returns that same detached view; missing ID throws `UNKNOWN_RESERVATION`. IDs are never removed or reused.\n3. Reserve is idempotent by ID and its **initial** request `{owner,items,ttl}`. The order of keys in `items` is irrelevant. Repeating the same initial request returns the **current** reservation view without changing version, inventory or expiry—even after an amend, confirm, cancel, expiry, or restore. Any different initial-request value using that ID throws `ID_CONFLICT`. A replay at a later logical time does not extend the original expiry. Replay validates the literal fields but does not recompute a deadline or recheck capacity.\n4. `amend`, `confirm` and `cancel` require the existing owner and `held` state, then an exact version. For otherwise valid inputs, check owner **before state and version**: wrong owner throws `FORBIDDEN`; correct owner on a terminal state throws `STATE`; held with stale version throws `VERSION_CONFLICT`. Successful commands increment version by exactly 1. Failed commands change nothing. `amend` replaces the entire item map and credits its old hold before checking capacity. It is all-or-nothing across every SKU, version and expiry. If ttl is omitted, keep the old expiry; if supplied, replace expiry with `now+ttl`. An identical successful amend still increments version.\n5. `availability()` returns every SKU's on-hand quantity minus quantities in **held** reservations. `confirm` reduces on-hand quantities by the held items and changes state to `confirmed`, so availability immediately before/after confirm is equal. `cancel` changes state to `cancelled`, releasing the hold without changing on-hand stock. Terminal reservations retain their items and expiresAt in their views; confirm/cancel on a terminal reservation is not an idempotent command and follows STATE above.\n6. Only `advance(time)` changes logical time. It requires a nonnegative safe integer >= current time; otherwise throw `INVALID_TIME` without state changes. Before returning it expires all held reservations with `expiresAt <= time`, changing state to `expired` and incrementing each version once. Return exactly `{now:time,expired:[ids]}`, ordered by expiry then ID using JavaScript string comparison. Repeating advance at the same time does not expire them again. Terminal reservations never expire. No other method implicitly advances or expires anything.\n7. `snapshot()` returns exactly `{schemaVersion:1,now,onHand,reservations}`. `onHand` is current stock after confirmed purchases. Reservations are sorted by ID using JavaScript string comparison; each entry contains its six view fields plus `initialRequest:{owner,items,ttl}` for reserve replay. Snapshot/JSON-clone/restore preserves every reservation, version, terminal history, expiry, stock and initial replay request. Original and restored copies evolve independently. Only this implementation's produced snapshots are required restore inputs.\n8. Mutating submitted stock/items, returned views, availability maps or snapshots must never mutate internal state. Do not add behaviors not specified here. Tests should exercise public API sequences, especially failed multi-SKU edits, repeated requests after amendments, owner/version precedence, exact expiry boundaries, confirm/release accounting and restore. Undefined behavior is not a reason to invent an acceptance assertion.",
+  "mode": "single",
+  "provider": "codex",
+  "readiness": "ready_with_warnings",
+  "notReadyReasons": [],
+  "checkpoint": "87b262644c401c4a1a1ae86ba3598b8b7b070514",
+  "baseSha": "deed43127fd6d0dc806bbe5a0852ecb540ae2553",
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "Export exactly the documented public API: createStockroom({stock, now=0}), restoreStockroom(snapshot), and the specified stockroom methods.",
+      "required": true,
+      "manual": true,
+      "kind": "expected",
+      "status": "manual_pending",
+      "tests": []
+    },
+    {
+      "id": "R-2",
+      "text": "Validate stock, item maps, identifiers, owners, logical time, TTLs, and supplied versions as specified. Invalid shapes or scalars throw Error with code INVALID; unknown item SKUs throw UNKNOWN_SKU.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-2] validates stock, item maps, identifiers, owners, time, TTL, and versions"
+      ]
+    },
+    {
+      "id": "R-3",
+      "text": "reserve atomically creates a held version-1 reservation with expiry now+ttl when all requested quantities are available; otherwise it throws INSUFFICIENT without changing state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-3] reserves atomically at version one and leaves state unchanged when capacity is insufficient"
+      ]
+    },
+    {
+      "id": "R-4",
+      "text": "Reservation views contain exactly id, owner, items, expiresAt, state, and version; successful reservation-changing calls and get return detached views. A missing ID throws UNKNOWN_RESERVATION.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-4] returns exact detached views and reports missing reservations"
+      ]
+    },
+    {
+      "id": "R-5",
+      "text": "reserve is idempotent by ID and initial owner, items, and TTL, with item key order ignored. A matching replay returns the current view without changing state, version, inventory, or expiry; a different initial request for that ID throws ID_CONFLICT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-5] reserve replays match the initial request independent of item key order"
+      ]
+    },
+    {
+      "id": "R-6",
+      "text": "Matching reserve replays validate literal fields but do not recompute a deadline, recheck capacity, or extend the original expiry, including after amendment, terminal transitions, expiry, and restore.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-6] replay validates fields but keeps the original deadline across terminal state and restore"
+      ]
+    },
+    {
+      "id": "R-7",
+      "text": "amend, confirm, and cancel require the matching owner and held state before checking the supplied version: wrong owner throws FORBIDDEN, correct owner on a terminal reservation throws STATE, and a stale version on a held reservation throws VERSION_CONFLICT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-7] checks owner, then terminal state, then version"
+      ]
+    },
+    {
+      "id": "R-8",
+      "text": "Successful amend, confirm, and cancel increment version by exactly one; failed commands leave state unchanged.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-8] successful edits increment once and failed commands preserve the full snapshot"
+      ]
+    },
+    {
+      "id": "R-9",
+      "text": "amend atomically replaces the full item map, credits the old hold when checking capacity, and keeps the old expiry when TTL is omitted or sets expiry to now+ttl when supplied. An identical successful amend still increments version.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-9] amend credits the old hold, replaces all items atomically, and applies expiry rules"
+      ]
+    },
+    {
+      "id": "R-10",
+      "text": "availability reports each SKU's on-hand quantity less quantities in held reservations. confirm deducts held quantities from on-hand stock and preserves availability across confirmation; cancel releases the hold without changing on-hand stock.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-10] confirm preserves availability and cancel releases holds without changing on-hand stock"
+      ]
+    },
+    {
+      "id": "R-11",
+      "text": "Terminal reservations retain their items and expiry. Confirm or cancel on a terminal reservation throws STATE rather than acting idempotently.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-11] terminal reservations retain items and expiry and reject repeat commands"
+      ]
+    },
+    {
+      "id": "R-12",
+      "text": "advance accepts only a nonnegative safe integer not earlier than current logical time; invalid input throws INVALID_TIME without changing state. It expires held reservations at expiresAt <= time, increments each version once, and returns exactly {now,expired}.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-12] advance validates monotonic safe time and expires on the exact deadline"
+      ]
+    },
+    {
+      "id": "R-13",
+      "text": "advance orders expired IDs by expiry and then JavaScript string comparison, does not expire them again on repeated same-time calls, and never expires terminal reservations.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-13] expiration ordering uses expiry then JavaScript string order and runs once"
+      ]
+    },
+    {
+      "id": "R-14",
+      "text": "snapshot returns exactly {schemaVersion:1,now,onHand,reservations}; reservations are sorted by ID using JavaScript string comparison and include their six view fields plus initialRequest:{owner,items,ttl}.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-14] snapshots have the exact shape and sorted reservation history"
+      ]
+    },
+    {
+      "id": "R-15",
+      "text": "Restoring an implementation-produced snapshot, including a JSON-cloned snapshot, preserves stock, logical time, every reservation field and history, and initial replay requests; original and restored instances evolve independently.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-15] JSON snapshot restore preserves history and replay while instances evolve independently"
+      ]
+    },
+    {
+      "id": "R-16",
+      "text": "Mutating submitted stock/items, returned views, availability maps, or snapshots does not mutate internal state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "CartStock public contract [R-16] caller mutations to inputs, views, availability, and snapshots do not change internal state"
+      ]
+    },
+    {
+      "id": "R-17",
+      "text": "Do not add behavior outside the documented API and requirements.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden",
+      "status": "manual_pending",
+      "tests": []
+    }
+  ],
+  "assumptions": [
+    "The requirement that implementation-produced snapshots are the only required restore inputs means malformed or hand-authored snapshots have no acceptance behavior unless separately specified.",
+    "No error precedence is required when multiple unrelated input fields are invalid.",
+    "No particular synchronous or asynchronous implementation style is required; callers may await every method."
+  ],
+  "changes": {
+    "available": true,
+    "files": [
+      {
+        "path": "README.md",
+        "status": "modified",
+        "added": 13,
+        "removed": 1
+      },
+      {
+        "path": "src/stockroom.js",
+        "status": "modified",
+        "added": 200,
+        "removed": 2
+      },
+      {
+        "path": "tests/stockroom.contract.test.js",
+        "status": "added",
+        "added": 214,
+        "removed": 0
+      }
+    ],
+    "added": 427,
+    "removed": 3,
+    "testFiles": [
+      "tests/stockroom.contract.test.js"
+    ],
+    "patch": "diff --git a/README.md b/README.md\nindex 1ea4bfd..45eec4c 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,14 @@\n # CartStock\n-Implement the public API specified in SPEC.md.\n+\n+In-memory inventory holds with atomic cart edits. The logical clock advances only\n+when `advance` is called.\n+\n+```js\n+import { createStockroom } from './src/stockroom.js';\n+\n+const stockroom = createStockroom({ stock: { BOOK: 5, PEN: 12 } });\n+const hold = stockroom.reserve({\n+  id: 'cart-1', owner: 'customer-7', items: { BOOK: 2, PEN: 3 }, ttl: 300,\n+});\n+console.log(hold.expiresAt, stockroom.availability());\n+```\ndiff --git a/src/stockroom.js b/src/stockroom.js\nindex b0bb026..f09e85c 100644\n--- a/src/stockroom.js\n+++ b/src/stockroom.js\n@@ -1,2 +1,200 @@\n-export function createStockroom() { throw new Error('Not implemented'); }\n-export function restoreStockroom() { throw new Error('Not implemented'); }\n+const SKU = /^[A-Za-z][A-Za-z0-9_-]{0,31}$/;\n+\n+function fail(code, message = code) {\n+  const error = new Error(message);\n+  error.code = code;\n+  throw error;\n+}\n+\n+function record(value) {\n+  return value !== null && typeof value === 'object' && !Array.isArray(value);\n+}\n+\n+function safeInteger(value, minimum) {\n+  return Number.isSafeInteger(value) && value >= minimum;\n+}\n+\n+function cloneMap(map) {\n+  return Object.assign({}, map);\n+}\n+\n+function sameItems(left, right) {\n+  const a = Object.keys(left);\n+  const b = Object.keys(right);\n+  return a.length === b.length && a.every((key) => Object.hasOwn(right, key) && left[key] === right[key]);\n+}\n+\n+function makeStockroom(onHand, now, reservations = new Map()) {\n+  function view(reservation) {\n+    return {\n+      id: reservation.id,\n+      owner: reservation.owner,\n+      items: cloneMap(reservation.items),\n+      expiresAt: reservation.expiresAt,\n+      state: reservation.state,\n+      version: reservation.version,\n+    };\n+  }\n+\n+  function validateIdentity(id, owner) {\n+    if (typeof id !== 'string' || id.length < 1 || id.length > 64 ||\n+        typeof owner !== 'string' || owner.length < 1 || owner.length > 64) fail('INVALID');\n+  }\n+\n+  function validateItems(items) {\n+    if (!record(items) || Object.keys(items).length === 0) fail('INVALID');\n+    const copied = {};\n+    for (const sku of Object.keys(items)) {\n+      if (!SKU.test(sku)) fail('INVALID');\n+      if (!Object.hasOwn(onHand, sku)) fail('UNKNOWN_SKU');\n+      if (!safeInteger(items[sku], 1)) fail('INVALID');\n+      Object.defineProperty(copied, sku, { value: items[sku], enumerable: true, writable: true, configurable: true });\n+    }\n+    return copied;\n+  }\n+\n+  function deadline(ttl) {\n+    if (!safeInteger(ttl, 1) || !Number.isSafeInteger(now + ttl)) fail('INVALID');\n+    return now + ttl;\n+  }\n+\n+  function availableWithCredit(items = null) {\n+    const result = cloneMap(onHand);\n+    for (const reservation of reservations.values()) {\n+      if (reservation.state !== 'held') continue;\n+      for (const sku of Object.keys(reservation.items)) result[sku] -= reservation.items[sku];\n+    }\n+    if (items) for (const sku of Object.keys(items)) result[sku] += items[sku];\n+    return result;\n+  }\n+\n+  function requireReservation(id) {\n+    if (typeof id !== 'string' || id.length < 1 || id.length > 64) fail('INVALID');\n+    const reservation = reservations.get(id);\n+    if (!reservation) fail('UNKNOWN_RESERVATION');\n+    return reservation;\n+  }\n+\n+  function authorize(reservation, owner, version) {\n+    if (typeof owner !== 'string' || owner.length < 1 || owner.length > 64) fail('INVALID');\n+    if (reservation.owner !== owner) fail('FORBIDDEN');\n+    if (reservation.state !== 'held') fail('STATE');\n+    if (!safeInteger(version, 1)) fail('INVALID');\n+    if (reservation.version !== version) fail('VERSION_CONFLICT');\n+  }\n+\n+  return {\n+    reserve({ id, owner, items, ttl } = {}) {\n+      validateIdentity(id, owner);\n+      const requestedItems = validateItems(items);\n+      if (!safeInteger(ttl, 1)) fail('INVALID');\n+      const existing = reservations.get(id);\n+      if (existing) {\n+        if (existing.initialRequest.owner !== owner || existing.initialRequest.ttl !== ttl ||\n+            !sameItems(existing.initialRequest.items, requestedItems)) fail('ID_CONFLICT');\n+        return view(existing);\n+      }\n+      const expiresAt = deadline(ttl);\n+      const available = availableWithCredit();\n+      if (Object.keys(requestedItems).some((sku) => requestedItems[sku] > available[sku])) fail('INSUFFICIENT');\n+      const reservation = {\n+        id, owner, items: requestedItems, expiresAt, state: 'held', version: 1,\n+        initialRequest: { owner, items: cloneMap(requestedItems), ttl },\n+      };\n+      reservations.set(id, reservation);\n+      return view(reservation);\n+    },\n+\n+    amend({ id, owner, version, items, ttl } = {}) {\n+      const reservation = requireReservation(id);\n+      authorize(reservation, owner, version);\n+      const replacement = validateItems(items);\n+      const expiresAt = ttl === undefined ? reservation.expiresAt : deadline(ttl);\n+      const available = availableWithCredit(reservation.items);\n+      if (Object.keys(replacement).some((sku) => replacement[sku] > available[sku])) fail('INSUFFICIENT');\n+      reservation.items = replacement;\n+      reservation.expiresAt = expiresAt;\n+      reservation.version += 1;\n+      return view(reservation);\n+    },\n+\n+    confirm({ id, owner, version } = {}) {\n+      const reservation = requireReservation(id);\n+      authorize(reservation, owner, version);\n+      for (const sku of Object.keys(reservation.items)) onHand[sku] -= reservation.items[sku];\n+      reservation.state = 'confirmed';\n+      reservation.version += 1;\n+      return view(reservation);\n+    },\n+\n+    cancel({ id, owner, version } = {}) {\n+      const reservation = requireReservation(id);\n+      authorize(reservation, owner, version);\n+      reservation.state = 'cancelled';\n+      reservation.version += 1;\n+      return view(reservation);\n+    },\n+\n+    get(id) { return view(requireReservation(id)); },\n+\n+    availability() { return availableWithCredit(); },\n+\n+    advance(time) {\n+      if (!safeInteger(time, 0) || time < now) fail('INVALID_TIME');\n+      now = time;\n+      const expired = [...reservations.values()]\n+        .filter((reservation) => reservation.state === 'held' && reservation.expiresAt <= time)\n+        .sort((a, b) => a.expiresAt - b.expiresAt || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));\n+      for (const reservation of expired) {\n+        reservation.state = 'expired';\n+        reservation.version += 1;\n+      }\n+      return { now, expired: expired.map(({ id }) => id) };\n+    },\n+\n+    snapshot() {\n+      const ordered = [...reservations.values()].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);\n+      return {\n+        schemaVersion: 1,\n+        now,\n+        onHand: cloneMap(onHand),\n+        reservations: ordered.map((reservation) => ({\n+          ...view(reservation),\n+          initialRequest: {\n+            owner: reservation.initialRequest.owner,\n+            items: cloneMap(reservation.initialRequest.items),\n+            ttl: reservation.initialRequest.ttl,\n+          },\n+        })),\n+      };\n+    },\n+  };\n+}\n+\n+export function createStockroom({ stock, now = 0 } = {}) {\n+  if (!record(stock) || Object.keys(stock).length === 0 || !safeInteger(now, 0)) fail('INVALID');\n+  const onHand = {};\n+  for (const sku of Object.keys(stock)) {\n+    if (!SKU.test(sku) || !safeInteger(stock[sku], 0)) fail('INVALID');\n+    Object.defineProperty(onHand, sku, { value: stock[sku], enumerable: true, writable: true, configurable: true });\n+  }\n+  return makeStockroom(onHand, now);\n+}\n+\n+export function restoreStockroom(snapshot) {\n+  // Restore only snapshots produced by this module, as required by the contract.\n+  const reservations = new Map(snapshot.reservations.map((entry) => [entry.id, {\n+    id: entry.id,\n+    owner: entry.owner,\n+    items: cloneMap(entry.items),\n+    expiresAt: entry.expiresAt,\n+    state: entry.state,\n+    version: entry.version,\n+    initialRequest: {\n+      owner: entry.initialRequest.owner,\n+      items: cloneMap(entry.initialRequest.items),\n+      ttl: entry.initialRequest.ttl,\n+    },\n+  }]));\n+  return makeStockroom(cloneMap(snapshot.onHand), snapshot.now, reservations);\n+}\ndiff --git a/tests/stockroom.contract.test.js b/tests/stockroom.contract.test.js\nnew file mode 100644\nindex 0000000..483c74a\n--- /dev/null\n+++ b/tests/stockroom.contract.test.js\n@@ -0,0 +1,214 @@\n+import { describe, expect, test } from 'vitest';\n+import { createStockroom, restoreStockroom } from '../src/stockroom.js';\n+\n+function expectCode(action, code) {\n+  try {\n+    action();\n+    throw new Error(`Expected error code ${code}`);\n+  } catch (error) {\n+    expect(error).toBeInstanceOf(Error);\n+    expect(error.code).toBe(code);\n+  }\n+}\n+\n+describe('CartStock public contract', () => {\n+  test('[R-2] validates stock, item maps, identifiers, owners, time, TTL, and versions', () => {\n+    for (const stock of [{}, { '1bad': 1 }, { A: -1 }, { A: Number.MAX_SAFE_INTEGER + 1 }, null]) {\n+      expectCode(() => createStockroom({ stock }), 'INVALID');\n+    }\n+    expect(createStockroom({ stock: { constructor: 2 } }).availability()).toEqual({ constructor: 2 });\n+    expectCode(() => createStockroom({ stock: { A: 1 }, now: -1 }), 'INVALID');\n+    const room = createStockroom({ stock: { A: 2 } });\n+    for (const items of [null, {}, { A: 0 }, { A: 1.5 }, { Missing: 1 }]) {\n+      expectCode(() => room.reserve({ id: 'x', owner: 'u', items, ttl: 1 }), items?.Missing ? 'UNKNOWN_SKU' : 'INVALID');\n+    }\n+    expectCode(() => room.reserve({ id: '', owner: 'u', items: { A: 1 }, ttl: 1 }), 'INVALID');\n+    expectCode(() => room.reserve({ id: 'x', owner: '', items: { A: 1 }, ttl: 1 }), 'INVALID');\n+    expectCode(() => room.reserve({ id: 'x', owner: 'u', items: { A: 1 }, ttl: 0 }), 'INVALID');\n+    expectCode(() => createStockroom({ stock: { A: 1 }, now: Number.MAX_SAFE_INTEGER }).reserve({ id: 'x', owner: 'u', items: { A: 1 }, ttl: 1 }), 'INVALID');\n+    room.reserve({ id: 'v', owner: 'u', items: { A: 1 }, ttl: 2 });\n+    for (const version of [0, 1.1, Number.MAX_SAFE_INTEGER + 1]) {\n+      expectCode(() => room.cancel({ id: 'v', owner: 'u', version }), 'INVALID');\n+    }\n+  });\n+\n+  test('[R-3] reserves atomically at version one and leaves state unchanged when capacity is insufficient', () => {\n+    const room = createStockroom({ stock: { A: 2, B: 1 } });\n+    const held = room.reserve({ id: 'first', owner: 'u', items: { A: 2, B: 1 }, ttl: 5 });\n+    expect(held).toMatchObject({ expiresAt: 5, state: 'held', version: 1 });\n+    const before = room.snapshot();\n+    expectCode(() => room.reserve({ id: 'second', owner: 'v', items: { A: 1, B: 1 }, ttl: 5 }), 'INSUFFICIENT');\n+    expect(room.snapshot()).toEqual(before);\n+  });\n+\n+  test('[R-4] returns exact detached views and reports missing reservations', () => {\n+    const room = createStockroom({ stock: { A: 3 } });\n+    const submitted = { A: 1 };\n+    const created = room.reserve({ id: 'r', owner: 'u', items: submitted, ttl: 3 });\n+    submitted.A = 3;\n+    expect(Object.keys(created)).toEqual(['id', 'owner', 'items', 'expiresAt', 'state', 'version']);\n+    created.items.A = 3;\n+    expect(room.get('r').items).toEqual({ A: 1 });\n+    expectCode(() => room.get('missing'), 'UNKNOWN_RESERVATION');\n+    const amended = room.amend({ id: 'r', owner: 'u', version: 1, items: { A: 2 } });\n+    expect(Object.keys(amended)).toEqual(['id', 'owner', 'items', 'expiresAt', 'state', 'version']);\n+    amended.items.A = 1;\n+    expect(room.get('r').items).toEqual({ A: 2 });\n+  });\n+\n+  test('[R-5] reserve replays match the initial request independent of item key order', () => {\n+    const room = createStockroom({ stock: { A: 5, B: 5 } });\n+    room.reserve({ id: 'r', owner: 'u', items: { A: 1, B: 2 }, ttl: 8 });\n+    const amended = room.amend({ id: 'r', owner: 'u', version: 1, items: { A: 3 } });\n+    const before = room.snapshot();\n+    expect(room.reserve({ id: 'r', owner: 'u', items: { B: 2, A: 1 }, ttl: 8 })).toEqual(amended);\n+    expect(room.snapshot()).toEqual(before);\n+    for (const changed of [\n+      { owner: 'other', items: { A: 1, B: 2 }, ttl: 8 },\n+      { owner: 'u', items: { A: 2, B: 2 }, ttl: 8 },\n+      { owner: 'u', items: { A: 1, B: 2 }, ttl: 9 },\n+    ]) expectCode(() => room.reserve({ id: 'r', ...changed }), 'ID_CONFLICT');\n+  });\n+\n+  test('[R-6] replay validates fields but keeps the original deadline across terminal state and restore', () => {\n+    const room = createStockroom({ stock: { A: 4 } });\n+    room.reserve({ id: 'r', owner: 'u', items: { A: 1 }, ttl: 2 });\n+    room.advance(1);\n+    room.confirm({ id: 'r', owner: 'u', version: 1 });\n+    const restored = restoreStockroom(JSON.parse(JSON.stringify(room.snapshot())));\n+    expect(restored.reserve({ id: 'r', owner: 'u', items: { A: 1 }, ttl: 2 })).toEqual({\n+      id: 'r', owner: 'u', items: { A: 1 }, expiresAt: 2, state: 'confirmed', version: 2,\n+    });\n+    expectCode(() => restored.reserve({ id: 'r', owner: 'u', items: { A: 1 }, ttl: 3 }), 'ID_CONFLICT');\n+\n+    const expiredRoom = createStockroom({ stock: { A: 1 } });\n+    expiredRoom.reserve({ id: 'old', owner: 'u', items: { A: 1 }, ttl: 1 });\n+    expiredRoom.advance(1);\n+    expiredRoom.reserve({ id: 'replacement', owner: 'v', items: { A: 1 }, ttl: 5 });\n+    expect(expiredRoom.reserve({ id: 'old', owner: 'u', items: { A: 1 }, ttl: 1 }))\n+      .toMatchObject({ state: 'expired', expiresAt: 1, version: 2 });\n+  });\n+\n+  test('[R-7] checks owner, then terminal state, then version', () => {\n+    const room = createStockroom({ stock: { A: 3 } });\n+    room.reserve({ id: 'held', owner: 'u', items: { A: 1 }, ttl: 5 });\n+    expectCode(() => room.cancel({ id: 'held', owner: 'wrong', version: 99 }), 'FORBIDDEN');\n+    expectCode(() => room.cancel({ id: 'held', owner: 'u', version: 99 }), 'VERSION_CONFLICT');\n+    room.cancel({ id: 'held', owner: 'u', version: 1 });\n+    expectCode(() => room.confirm({ id: 'held', owner: 'wrong', version: 1 }), 'FORBIDDEN');\n+    expectCode(() => room.confirm({ id: 'held', owner: 'u', version: 1 }), 'STATE');\n+  });\n+\n+  test('[R-8] successful edits increment once and failed commands preserve the full snapshot', () => {\n+    const room = createStockroom({ stock: { A: 4 } });\n+    room.reserve({ id: 'r', owner: 'u', items: { A: 1 }, ttl: 5 });\n+    expect(room.amend({ id: 'r', owner: 'u', version: 1, items: { A: 1 } }).version).toBe(2);\n+    const before = room.snapshot();\n+    expectCode(() => room.confirm({ id: 'r', owner: 'u', version: 1 }), 'VERSION_CONFLICT');\n+    expect(room.snapshot()).toEqual(before);\n+    expect(room.cancel({ id: 'r', owner: 'u', version: 2 }).version).toBe(3);\n+  });\n+\n+  test('[R-9] amend credits the old hold, replaces all items atomically, and applies expiry rules', () => {\n+    const room = createStockroom({ stock: { A: 5, B: 2 } });\n+    room.reserve({ id: 'r', owner: 'u', items: { A: 2 }, ttl: 10 });\n+    const failedState = room.snapshot();\n+    expectCode(() => room.amend({ id: 'r', owner: 'u', version: 1, items: { A: 4, B: 3 }, ttl: 20 }), 'INSUFFICIENT');\n+    expect(room.snapshot()).toEqual(failedState);\n+    const same = room.amend({ id: 'r', owner: 'u', version: 1, items: { A: 2 } });\n+    expect(same).toMatchObject({ version: 2, expiresAt: 10, items: { A: 2 } });\n+    expect(room.amend({ id: 'r', owner: 'u', version: 2, items: { B: 2 }, ttl: 4 })).toMatchObject({ version: 3, expiresAt: 4, items: { B: 2 } });\n+    expect(room.availability()).toEqual({ A: 5, B: 0 });\n+  });\n+\n+  test('[R-10] confirm preserves availability and cancel releases holds without changing on-hand stock', () => {\n+    const room = createStockroom({ stock: { A: 5, B: 3 } });\n+    room.reserve({ id: 'confirm', owner: 'u', items: { A: 2 }, ttl: 5 });\n+    const beforeConfirm = room.availability();\n+    room.confirm({ id: 'confirm', owner: 'u', version: 1 });\n+    expect(room.availability()).toEqual(beforeConfirm);\n+    const onHandAfterConfirm = room.snapshot().onHand;\n+    room.reserve({ id: 'cancel', owner: 'v', items: { B: 2 }, ttl: 5 });\n+    room.cancel({ id: 'cancel', owner: 'v', version: 1 });\n+    expect(room.availability()).toEqual({ A: 3, B: 3 });\n+    expect(room.snapshot().onHand).toEqual(onHandAfterConfirm);\n+  });\n+\n+  test('[R-11] terminal reservations retain items and expiry and reject repeat commands', () => {\n+    const room = createStockroom({ stock: { A: 2 } });\n+    const held = room.reserve({ id: 'r', owner: 'u', items: { A: 1 }, ttl: 3 });\n+    const terminal = room.confirm({ id: 'r', owner: 'u', version: 1 });\n+    expect(terminal.items).toEqual(held.items);\n+    expect(terminal.expiresAt).toBe(held.expiresAt);\n+    expectCode(() => room.confirm({ id: 'r', owner: 'u', version: 2 }), 'STATE');\n+    expectCode(() => room.cancel({ id: 'r', owner: 'u', version: 2 }), 'STATE');\n+  });\n+\n+  test('[R-12] advance validates monotonic safe time and expires on the exact deadline', () => {\n+    const room = createStockroom({ stock: { A: 2 } });\n+    room.reserve({ id: 'r', owner: 'u', items: { A: 1 }, ttl: 2 });\n+    room.advance(1);\n+    const before = room.snapshot();\n+    for (const time of [-1, 1.5, Number.MAX_SAFE_INTEGER + 1]) expectCode(() => room.advance(time), 'INVALID_TIME');\n+    expectCode(() => room.advance(0), 'INVALID_TIME');\n+    expect(room.snapshot()).toEqual(before);\n+    expect(room.advance(2)).toEqual({ now: 2, expired: ['r'] });\n+    expect(room.get('r')).toMatchObject({ state: 'expired', version: 2 });\n+  });\n+\n+  test('[R-13] expiration ordering uses expiry then JavaScript string order and runs once', () => {\n+    const room = createStockroom({ stock: { A: 6 } });\n+    room.reserve({ id: 'z', owner: 'u', items: { A: 1 }, ttl: 3 });\n+    room.reserve({ id: 'a', owner: 'u', items: { A: 1 }, ttl: 3 });\n+    room.reserve({ id: 'early', owner: 'u', items: { A: 1 }, ttl: 2 });\n+    room.reserve({ id: 'terminal', owner: 'u', items: { A: 1 }, ttl: 1 });\n+    room.confirm({ id: 'terminal', owner: 'u', version: 1 });\n+    expect(room.advance(3)).toEqual({ now: 3, expired: ['early', 'a', 'z'] });\n+    expect(room.advance(3)).toEqual({ now: 3, expired: [] });\n+  });\n+\n+  test('[R-14] snapshots have the exact shape and sorted reservation history', () => {\n+    const room = createStockroom({ stock: { A: 4 } });\n+    room.reserve({ id: 'z', owner: 'u', items: { A: 1 }, ttl: 5 });\n+    room.reserve({ id: 'a', owner: 'u', items: { A: 1 }, ttl: 5 });\n+    room.cancel({ id: 'a', owner: 'u', version: 1 });\n+    const snapshot = room.snapshot();\n+    expect(Object.keys(snapshot)).toEqual(['schemaVersion', 'now', 'onHand', 'reservations']);\n+    expect(snapshot.reservations.map((entry) => entry.id)).toEqual(['a', 'z']);\n+    expect(Object.keys(snapshot.reservations[0])).toEqual(['id', 'owner', 'items', 'expiresAt', 'state', 'version', 'initialRequest']);\n+    expect(snapshot.reservations[0].initialRequest).toEqual({ owner: 'u', items: { A: 1 }, ttl: 5 });\n+  });\n+\n+  test('[R-15] JSON snapshot restore preserves history and replay while instances evolve independently', () => {\n+    const original = createStockroom({ stock: { A: 5 } });\n+    original.reserve({ id: 'held', owner: 'u', items: { A: 1 }, ttl: 5 });\n+    original.reserve({ id: 'done', owner: 'u', items: { A: 1 }, ttl: 5 });\n+    original.confirm({ id: 'done', owner: 'u', version: 1 });\n+    const restored = restoreStockroom(JSON.parse(JSON.stringify(original.snapshot())));\n+    expect(restored.snapshot()).toEqual(original.snapshot());\n+    expect(restored.reserve({ id: 'done', owner: 'u', items: { A: 1 }, ttl: 5 })).toEqual(original.get('done'));\n+    restored.cancel({ id: 'held', owner: 'u', version: 1 });\n+    expect(restored.get('held').state).toBe('cancelled');\n+    expect(original.get('held').state).toBe('held');\n+  });\n+\n+  test('[R-16] caller mutations to inputs, views, availability, and snapshots do not change internal state', () => {\n+    const stock = { A: 4 };\n+    const items = { A: 1 };\n+    const room = createStockroom({ stock });\n+    room.reserve({ id: 'r', owner: 'u', items, ttl: 5 });\n+    stock.A = 100;\n+    items.A = 100;\n+    const view = room.get('r');\n+    view.items.A = 100;\n+    room.availability().A = 100;\n+    const snapshot = room.snapshot();\n+    snapshot.onHand.A = 100;\n+    snapshot.reservations[0].items.A = 100;\n+    snapshot.reservations[0].initialRequest.items.A = 100;\n+    expect(room.get('r').items).toEqual({ A: 1 });\n+    expect(room.availability()).toEqual({ A: 3 });\n+    expect(room.snapshot().onHand).toEqual({ A: 4 });\n+    expect(room.reserve({ id: 'r', owner: 'u', items: { A: 1 }, ttl: 5 }).items).toEqual({ A: 1 });\n+  });\n+});\n"
+  },
+  "checks": [
+    {
+      "id": "test",
+      "command": "node node_modules/vitest/vitest.mjs run --reporter=json --outputFile=.aidept-report.json",
+      "status": "passed",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "skippedNames": [],
+      "durationMs": 1127,
+      "runs": 1,
+      "quarantined": false,
+      "issues": []
+    }
+  ],
+  "verifier": {
+    "expected": false,
+    "ran": false,
+    "verdict": null,
+    "findings": []
+  },
+  "effort": {
+    "costUsd": 1.1433114,
+    "estimated": true,
+    "tokens": 1558823,
+    "aiMs": 177577,
+    "humanMs": 0,
+    "attempts": 4,
+    "repairs": 2
+  },
+  "scopeApprovals": [],
+  "skills": [],
+  "warnings": [
+    {
+      "level": "info",
+      "text": "Chưa áp dụng kiểm thử sâu cho run này."
+    },
+    {
+      "level": "info",
+      "text": "Single: Planner, viết test và review do cùng một agent làm. Đây là tự review, không phải kiểm chứng độc lập."
+    },
+    {
+      "level": "warn",
+      "text": "Cần bạn tự kiểm tra: R-1, R-17 (tiêu chí thủ công, hệ thống không kiểm được)."
+    },
+    {
+      "level": "info",
+      "text": "Công cụ phân tích mã (knip, jscpd, dependency-cruiser) chưa chạy: chưa có đánh giá về mã chết, trùng lặp hay vi phạm ranh giới module."
+    },
+    {
+      "level": "info",
+      "text": "Task đã qua 2 vòng sửa."
+    }
+  ],
+  "delivery": {
+    "kind": "branch",
+    "target": "aidept/run_24c7854e-A",
+    "branch": "aidept/run_24c7854e-A",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\project",
+    "delivered": false,
+    "status": "unconfirmed",
+    "commands": [
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\project\" log --oneline HEAD..aidept/run_24c7854e-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\project\" diff HEAD..aidept/run_24c7854e-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\project\" merge aidept/run_24c7854e-A"
+    ]
+  }
+}

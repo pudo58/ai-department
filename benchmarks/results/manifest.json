@@ -1,0 +1,1184 @@
+{
+  "schemaVersion": 1,
+  "archivedOn": "2026-10-26",
+  "timezone": "Asia/Bangkok",
+  "scope": "Task benchmark results and interpretation metadata only; historical bytes preserved",
+  "entries": [
+    {
+      "path": "2026-10-24-hard-pilot/comparison.json",
+      "source": "test-results/2026-10-24-hard-pilot/comparison.json",
+      "bytes": 219892,
+      "sha256": "c62ba748cc0aa6c818a29449458325eca57c89d88ad1a98b56f256b80e87a287"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/department-grade.json",
+      "source": "test-results/2026-10-24-hard-pilot/department-grade.json",
+      "bytes": 5412,
+      "sha256": "34e00afab9328fb5d0ba3ddca2d6583dc9ea7b3e12d729568caffd4b8de24b06"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/department-report.json",
+      "source": "test-results/2026-10-24-hard-pilot/department-report.json",
+      "bytes": 129471,
+      "sha256": "9f3797503370d96b9cd42efd681fbb1ae282b021609795c4b1fc18fe00feda38"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/department-report.md",
+      "source": "test-results/2026-10-24-hard-pilot/department-report.md",
+      "bytes": 14805,
+      "sha256": "9f5ab88dd27730724ff6646f8797ff3204da5a9bc9a46a7534e3b55de145dc83"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/department-unassisted-grade.json",
+      "source": "test-results/2026-10-24-hard-pilot/department-unassisted-grade.json",
+      "bytes": 7223,
+      "sha256": "1de8bbc5fd05ff255effdb786c4d5924354b8ba507d3aaa2ae9569f906fba5cc"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/evaluator-correction.json",
+      "source": "test-results/2026-10-24-hard-pilot/evaluator-correction.json",
+      "bytes": 907,
+      "sha256": "78f83d545f438640cb13b3733de7fa39217e7826a8a97731db6267d7a53ed302"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/native-grade-original.json",
+      "source": "test-results/2026-10-24-hard-pilot/native-grade-original.json",
+      "bytes": 5568,
+      "sha256": "e1029cba524fab9c7586f7beac2b8aa4bc9f2807433d09ffec16e3aa249ae7c2"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/native-grade.json",
+      "source": "test-results/2026-10-24-hard-pilot/native-grade.json",
+      "bytes": 5487,
+      "sha256": "f6892755a4f97cd96acdc78f3353db9379a3e6ff56dff38571bd1d2983cbe2c2"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/native-result.json",
+      "source": "test-results/2026-10-24-hard-pilot/native-result.json",
+      "bytes": 3055,
+      "sha256": "e1268b48623c47059ff8d1067ff6f45235b72a2c4b262bd85c1dacd8b8c9129d"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/protocol.json",
+      "source": "test-results/2026-10-24-hard-pilot/protocol.json",
+      "bytes": 1362,
+      "sha256": "537b8fe9e217d664e25264dbe9151d426ab70f87eab3a0bc09a489430e67f7fc"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/report.md",
+      "source": "test-results/2026-10-24-hard-pilot/report.md",
+      "bytes": 14209,
+      "sha256": "e9f9fd4100b6431a78031961121eaea85c85c437e14231ac60886ef50b6c33da"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/scaffold-grade.json",
+      "source": "test-results/2026-10-24-hard-pilot/scaffold-grade.json",
+      "bytes": 7199,
+      "sha256": "e384247e04c87b16043cfbf2e58012953504aeb1dbfb123c34493c0d4af1d877"
+    },
+    {
+      "path": "2026-10-24-hard-pilot/SPEC.md",
+      "source": "test-results/2026-10-24-hard-pilot/SPEC.md",
+      "bytes": 7502,
+      "sha256": "ff5a272b2e514dcbd4970cf6d38d781d4d73ac9c6fde3c36ccf2081a8a65940f"
+    },
+    {
+      "path": "2026-10-24-leasegrid/comparison-state.json",
+      "source": "test-results/2026-10-24-leasegrid/comparison-state.json",
+      "bytes": 786,
+      "sha256": "d4fe7ba43f628fa2c31888c5ce3c0819e393be7d6b78ce28021f09802a371195"
+    },
+    {
+      "path": "2026-10-24-leasegrid/department-grade.json",
+      "source": "test-results/2026-10-24-leasegrid/department-grade.json",
+      "bytes": 3896,
+      "sha256": "7563774e6fcab16c1144aac954fba43f12e7427104c61c8063e486cca3b262e5"
+    },
+    {
+      "path": "2026-10-24-leasegrid/department-grade2.json",
+      "source": "test-results/2026-10-24-leasegrid/department-grade2.json",
+      "bytes": 3896,
+      "sha256": "7563774e6fcab16c1144aac954fba43f12e7427104c61c8063e486cca3b262e5"
+    },
+    {
+      "path": "2026-10-24-leasegrid/protocol.json",
+      "source": "test-results/2026-10-24-leasegrid/protocol.json",
+      "bytes": 1144,
+      "sha256": "4667e2291946f66d87e7a776c5bd9e0d82f909c544e729d5ede7acd692a6d78c"
+    },
+    {
+      "path": "2026-10-24-leasegrid/report.md",
+      "source": "test-results/2026-10-24-leasegrid/report.md",
+      "bytes": 4400,
+      "sha256": "b3867c9e8685cdde2b53452fb3c663f377ae89f86ebca16990f4680a61625f17"
+    },
+    {
+      "path": "2026-10-24-leasegrid/results.json",
+      "source": "test-results/2026-10-24-leasegrid/results.json",
+      "bytes": 3052,
+      "sha256": "da87a154974c68f6cd52e084cde072fc0138bc3592d5bb44a9bbc3bb9fc1c1f2"
+    },
+    {
+      "path": "2026-10-24-leasegrid/SPEC.md",
+      "source": "test-results/2026-10-24-leasegrid/SPEC.md",
+      "bytes": 7155,
+      "sha256": "11a88111dbbb2fe12818ccaa57d11b2a8b3c56b98da79868e37ad99ebac1b04c"
+    },
+    {
+      "path": "2026-10-24-leasegrid/v3-department-grade.json",
+      "source": "test-results/2026-10-24-leasegrid/v3-department-grade.json",
+      "bytes": 3214,
+      "sha256": "d4d8df19d1858c921e89618872e1c28d9d14aa102c25037eea3096667aa2b6e4"
+    },
+    {
+      "path": "2026-10-24-leasegrid/v3-single-grade.json",
+      "source": "test-results/2026-10-24-leasegrid/v3-single-grade.json",
+      "bytes": 3486,
+      "sha256": "cb61bc940e1f2a3825bd54e90ae7ce32743ac7f8bb2d69cc0bf717ff912fe1c8"
+    },
+    {
+      "path": "2026-10-24-leasegrid-postfix/comparison-state.json",
+      "source": "test-results/2026-10-24-leasegrid-postfix/comparison-state.json",
+      "bytes": 796,
+      "sha256": "d7447e9645420372632f3a3d5cb1ea5d8c29619ffa4b446dd7e0ed474087f5b2"
+    },
+    {
+      "path": "2026-10-24-leasegrid-postfix/department-grade.json",
+      "source": "test-results/2026-10-24-leasegrid-postfix/department-grade.json",
+      "bytes": 3233,
+      "sha256": "dfe0ad29df7a33aefb2f39b6a742cee5ad9c54a33c33b4bbfc3b0f9b1f5c5b30"
+    },
+    {
+      "path": "2026-10-24-leasegrid-postfix/postfix-summary.json",
+      "source": "test-results/2026-10-24-leasegrid-postfix/postfix-summary.json",
+      "bytes": 3072,
+      "sha256": "47f4f4a51778e85ab6c27109e956a026e20ba19c76438aa1b81144e4fb9b6c53"
+    },
+    {
+      "path": "2026-10-24-leasegrid-postfix/protocol.json",
+      "source": "test-results/2026-10-24-leasegrid-postfix/protocol.json",
+      "bytes": 1178,
+      "sha256": "f6eb71133daf8bc4766ac69caf4ed585831dce069e93e316809c5ccce51c6fd6"
+    },
+    {
+      "path": "2026-10-24-leasegrid-postfix/report.md",
+      "source": "test-results/2026-10-24-leasegrid-postfix/report.md",
+      "bytes": 4416,
+      "sha256": "e45cfa8ab9cea3b2cc6239cf2590135a64634d0d301301ce9a1550ff9eb4c86f"
+    },
+    {
+      "path": "2026-10-24-leasegrid-postfix/single-grade.json",
+      "source": "test-results/2026-10-24-leasegrid-postfix/single-grade.json",
+      "bytes": 3233,
+      "sha256": "9ca4e0ca82c9b979f2a8572215ece97a3bcb2df116a5e84d9306bd65c92b4612"
+    },
+    {
+      "path": "2026-10-24-leasegrid-postfix/SPEC.md",
+      "source": "test-results/2026-10-24-leasegrid-postfix/SPEC.md",
+      "bytes": 7155,
+      "sha256": "11a88111dbbb2fe12818ccaa57d11b2a8b3c56b98da79868e37ad99ebac1b04c"
+    },
+    {
+      "path": "2026-10-24-live-pilot/comparison.json",
+      "source": "test-results/2026-10-24-live-pilot/comparison.json",
+      "bytes": 78115,
+      "sha256": "8b03060b3367969642c5dbe9e82c5bbbce4f8874bd585b361b6f92b5783a7c15"
+    },
+    {
+      "path": "2026-10-24-live-pilot/department-exploratory.json",
+      "source": "test-results/2026-10-24-live-pilot/department-exploratory.json",
+      "bytes": 1761,
+      "sha256": "69c2eac7922a4587884baf3e3c7af52a08f1b78c1ff359852404b42a633cdc43"
+    },
+    {
+      "path": "2026-10-24-live-pilot/department-grade-original-invalid.json",
+      "source": "test-results/2026-10-24-live-pilot/department-grade-original-invalid.json",
+      "bytes": 4376,
+      "sha256": "c8971e35d1a0e3553c7a2c342ce563e7034383e9c6ef97b9391f8688b55989b4"
+    },
+    {
+      "path": "2026-10-24-live-pilot/department-grade.json",
+      "source": "test-results/2026-10-24-live-pilot/department-grade.json",
+      "bytes": 4335,
+      "sha256": "d5569d982545a1c599dc271612ca260502406dd3be6e86ff41b5bd3b35598e39"
+    },
+    {
+      "path": "2026-10-24-live-pilot/evaluator-correction.json",
+      "source": "test-results/2026-10-24-live-pilot/evaluator-correction.json",
+      "bytes": 982,
+      "sha256": "8b2ff529dd06ea22d3f3792649149b8503d34435aee52190b0858f0ef200cbcc"
+    },
+    {
+      "path": "2026-10-24-live-pilot/native-exploratory.json",
+      "source": "test-results/2026-10-24-live-pilot/native-exploratory.json",
+      "bytes": 1749,
+      "sha256": "2b29e647252b950a943219a9aa8f31c7d8b6c7bfc490afb1724b774d3a22f739"
+    },
+    {
+      "path": "2026-10-24-live-pilot/native-grade-original.json",
+      "source": "test-results/2026-10-24-live-pilot/native-grade-original.json",
+      "bytes": 4320,
+      "sha256": "f1126c46bfeb547ffd0e9bb58fed12465f06d437bfbd228259a77e5c3a543a26"
+    },
+    {
+      "path": "2026-10-24-live-pilot/native-grade.json",
+      "source": "test-results/2026-10-24-live-pilot/native-grade.json",
+      "bytes": 4318,
+      "sha256": "89dcd9ddf9f93cae5413b53cbf4d7fa61cb3bfe2af8ed6fc1e63a53d1f82c3dd"
+    },
+    {
+      "path": "2026-10-24-live-pilot/native-result.json",
+      "source": "test-results/2026-10-24-live-pilot/native-result.json",
+      "bytes": 2945,
+      "sha256": "94476f3f82c0649fdc5d348ffca6ac98ea414b729d90e9fb375c0eb9056b47f6"
+    },
+    {
+      "path": "2026-10-24-live-pilot/plan-review-interventions.json",
+      "source": "test-results/2026-10-24-live-pilot/plan-review-interventions.json",
+      "bytes": 14058,
+      "sha256": "d97ec2e3a522841e8d039b57d7c09a9e38dc51cb396d104a586155d1191fa674"
+    },
+    {
+      "path": "2026-10-24-live-pilot/protocol.json",
+      "source": "test-results/2026-10-24-live-pilot/protocol.json",
+      "bytes": 1164,
+      "sha256": "9beca8b0f46db1587e23a0e02dd7b01adaea228b24b202a8909ddd03e872604f"
+    },
+    {
+      "path": "2026-10-24-live-pilot/provisioning-deviation.json",
+      "source": "test-results/2026-10-24-live-pilot/provisioning-deviation.json",
+      "bytes": 858,
+      "sha256": "5fc655b5220e45be4f6cad7b07fffa79d189132c9815d1e7360895752081ae4b"
+    },
+    {
+      "path": "2026-10-24-live-pilot/report.md",
+      "source": "test-results/2026-10-24-live-pilot/report.md",
+      "bytes": 9546,
+      "sha256": "cbfb374b6cafca53c9458e29d77b468873293e497190d8a729ffe1b405d4051c"
+    },
+    {
+      "path": "2026-10-24-live-pilot/scaffold-grade.json",
+      "source": "test-results/2026-10-24-live-pilot/scaffold-grade.json",
+      "bytes": 5708,
+      "sha256": "698426811d5a7fd79524deeaf2b8677a3f4eda4b88896188d242a46e7c8d8180"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/comparison-final.json",
+      "source": "test-results/2026-10-24-outboxpilot/comparison-final.json",
+      "bytes": 3498,
+      "sha256": "ac1e2945569480fbc231581cbc72c987cc7b7097310daaa0c98562922fc1fd1c"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/comparison.json",
+      "source": "test-results/2026-10-24-outboxpilot/comparison.json",
+      "bytes": 2634,
+      "sha256": "b3827d4773fa782508504e23a87ab7f057f1e2a31203814c77dc3cad626a79a8"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/department-grade-audited.json",
+      "source": "test-results/2026-10-24-outboxpilot/department-grade-audited.json",
+      "bytes": 3923,
+      "sha256": "752f694d95153a90d946711c77e703dc9ce8689e17ffd7cd5a1f52f5f3a9003f"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/native-result.json",
+      "source": "test-results/2026-10-24-outboxpilot/native-result.json",
+      "bytes": 2032,
+      "sha256": "87036acffe0f3ced541778e8efe3565cf98de82e60e89a0762c19f2b671a6fe6"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/protocol.json",
+      "source": "test-results/2026-10-24-outboxpilot/protocol.json",
+      "bytes": 1174,
+      "sha256": "ec73e1c9fb2ea7c0a517bd1134e0dca0fabbb4adbc59d936d0a333d99c4fcdc0"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/report-final.md",
+      "source": "test-results/2026-10-24-outboxpilot/report-final.md",
+      "bytes": 3312,
+      "sha256": "4fbee2163885dba0581cb8c4e91de5afe697a6cf0c06a12bc81675b085400890"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/report.md",
+      "source": "test-results/2026-10-24-outboxpilot/report.md",
+      "bytes": 5428,
+      "sha256": "36b6e5d5811c102cb4ce5b18f85e3199f4c21f1642d8eefc32733978930be809"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/single-exploratory.json",
+      "source": "test-results/2026-10-24-outboxpilot/single-exploratory.json",
+      "bytes": 236,
+      "sha256": "6a9b96f73c6dbf6748d1ce7eac70f539b29ee712bf265cd497175050dfd98f7a"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/single-grade-audited-rerun.json",
+      "source": "test-results/2026-10-24-outboxpilot/single-grade-audited-rerun.json",
+      "bytes": 3917,
+      "sha256": "02168524c023c1bb0cb4652d9bfaf520fc2fc8a5614304492c9d25b127bbd02b"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/single-grade-audited.json",
+      "source": "test-results/2026-10-24-outboxpilot/single-grade-audited.json",
+      "bytes": 3917,
+      "sha256": "cbfcf1d8454a2bffc1c7c2f529bf5e19efd2a0123e791120292d20973d9865f2"
+    },
+    {
+      "path": "2026-10-24-outboxpilot/single-grade.json",
+      "source": "test-results/2026-10-24-outboxpilot/single-grade.json",
+      "bytes": 18226,
+      "sha256": "5f0c8c079c46cc7e9f4a673f9927b2dff14771a428069ad19c005599761bdfdd"
+    },
+    {
+      "path": "2026-10-24-quotavault/benchmark-summary.json",
+      "source": "test-results/2026-10-24-quotavault/benchmark-summary.json",
+      "bytes": 4137,
+      "sha256": "28d44e12a0cad80433c65aa2a2a8b5d1a1775a93e99dab28f07634a94ae2cfe1"
+    },
+    {
+      "path": "2026-10-24-quotavault/department-grade-audited.json",
+      "source": "test-results/2026-10-24-quotavault/department-grade-audited.json",
+      "bytes": 3144,
+      "sha256": "53936ad53117190aceb6acbe57eeff0c5a1805a9ab06b744165a4708d7c0d3f3"
+    },
+    {
+      "path": "2026-10-24-quotavault/department-grade.json",
+      "source": "test-results/2026-10-24-quotavault/department-grade.json",
+      "bytes": 5333,
+      "sha256": "a87a5811a83ee1f14c3095626b7af306f5c9245c33f9b4a4648b30130a1d6835"
+    },
+    {
+      "path": "2026-10-24-quotavault/protocol.json",
+      "source": "test-results/2026-10-24-quotavault/protocol.json",
+      "bytes": 938,
+      "sha256": "0e131f5e6f281de64376fbe042572e56bb5c43b7e80d71a7c3169b5be61be1f5"
+    },
+    {
+      "path": "2026-10-24-quotavault/report.md",
+      "source": "test-results/2026-10-24-quotavault/report.md",
+      "bytes": 6807,
+      "sha256": "6f6c5e88e8f73cb33f7fafdc968353862ee9c33f9cdf2d5944df39c569ba2174"
+    },
+    {
+      "path": "2026-10-24-quotavault/single-grade-audited.json",
+      "source": "test-results/2026-10-24-quotavault/single-grade-audited.json",
+      "bytes": 3144,
+      "sha256": "dd141fe50dbeab17a8bb681c2f8aac9310b3852600075e65d05f2b10d216dd80"
+    },
+    {
+      "path": "2026-10-24-quotavault/single-grade.json",
+      "source": "test-results/2026-10-24-quotavault/single-grade.json",
+      "bytes": 4777,
+      "sha256": "0a201196bbd97f2a6008c5339c4126521a2407300cb40219762a357ed70f79f6"
+    },
+    {
+      "path": "2026-10-24-quotavault/SPEC.md",
+      "source": "test-results/2026-10-24-quotavault/SPEC.md",
+      "bytes": 6182,
+      "sha256": "3106237b1a5a6987327fbbe9b3b07d13cd9330ff45edc0cec0d3801af6e7f2a7"
+    },
+    {
+      "path": "2026-10-24-speed/comparison.json",
+      "source": "test-results/2026-10-24-speed/comparison.json",
+      "bytes": 31784,
+      "sha256": "c847101899b1713cdcc6bc90bde49164f23723978ceb161d84a3d61d1f48d08e"
+    },
+    {
+      "path": "2026-10-24-speed/protocol.json",
+      "source": "test-results/2026-10-24-speed/protocol.json",
+      "bytes": 1198,
+      "sha256": "e8db9599fbaee41393b9b2d22e40197ffca7eb1d89507feffc128a65699365d8"
+    },
+    {
+      "path": "2026-10-24-speed/report.md",
+      "source": "test-results/2026-10-24-speed/report.md",
+      "bytes": 10507,
+      "sha256": "0e332329c5bd2a2526b55b3d57b410fbdc42b5d8d4c1efa5017787ef911f690a"
+    },
+    {
+      "path": "2026-10-24-speed/source-change-audit.json",
+      "source": "test-results/2026-10-24-speed/source-change-audit.json",
+      "bytes": 1261,
+      "sha256": "7a5193ed48fc505de6d40f719eacf3b8f133fcf77f084057069b96432448eedd"
+    },
+    {
+      "path": "2026-10-24-streambench/comparison.json",
+      "source": "test-results/2026-10-24-streambench/comparison.json",
+      "bytes": 12722,
+      "sha256": "f8cb0c2b449ab6b2cd820142e7c7f36e624ee135b306d9fc0345d665ccc3cfaa"
+    },
+    {
+      "path": "2026-10-24-streambench/department-rerun-app-report.json",
+      "source": "test-results/2026-10-24-streambench/department-rerun-app-report.json",
+      "bytes": 236120,
+      "sha256": "880c09a9f6ab4d6159c64c154b1c202919cb18e523bdb2bda2a9967b180ea1e6"
+    },
+    {
+      "path": "2026-10-24-streambench/department-rerun-grade.json",
+      "source": "test-results/2026-10-24-streambench/department-rerun-grade.json",
+      "bytes": 3263,
+      "sha256": "a3588878c825f2e27330872995432fefb5c6b0dd754e319007c923597f91e220"
+    },
+    {
+      "path": "2026-10-24-streambench/department-rerun-report.md",
+      "source": "test-results/2026-10-24-streambench/department-rerun-report.md",
+      "bytes": 1870,
+      "sha256": "fc1c503cbf21dfc898cd8b42828bfbb5fb1136ec5be597565d06ad4163809f4f"
+    },
+    {
+      "path": "2026-10-24-streambench/evaluator-correction.json",
+      "source": "test-results/2026-10-24-streambench/evaluator-correction.json",
+      "bytes": 955,
+      "sha256": "9b31909d86e1353cd75b64acba3e1e1c97e92ece7d226d44af13d048488ba67a"
+    },
+    {
+      "path": "2026-10-24-streambench/haiku-comparison-report.json",
+      "source": "test-results/2026-10-24-streambench/haiku-comparison-report.json",
+      "bytes": 7360,
+      "sha256": "1ace6621460a6d272d2c226916582cdd894e1119958fb7edb86e803c26bf6388"
+    },
+    {
+      "path": "2026-10-24-streambench/haiku-comparison-report.md",
+      "source": "test-results/2026-10-24-streambench/haiku-comparison-report.md",
+      "bytes": 1988,
+      "sha256": "a9d2b014725c5275e82a5c7b404e44263d8a231f333705dc68b26a971020a6a0"
+    },
+    {
+      "path": "2026-10-24-streambench/haiku-comparison-state.json",
+      "source": "test-results/2026-10-24-streambench/haiku-comparison-state.json",
+      "bytes": 592,
+      "sha256": "3e594ec9c319334fa31be1c2fd0c9f702cee31e76038410211b7ac5f30c60a69"
+    },
+    {
+      "path": "2026-10-24-streambench/haiku-single-grade.json",
+      "source": "test-results/2026-10-24-streambench/haiku-single-grade.json",
+      "bytes": 3263,
+      "sha256": "c8b312b9345403843756642cf96c36ba4bd6cbf84badd52d78550e403e27a3ad"
+    },
+    {
+      "path": "2026-10-24-streambench/native-grade.json",
+      "source": "test-results/2026-10-24-streambench/native-grade.json",
+      "bytes": 3256,
+      "sha256": "da9c02be6bd30f1da234bdc5c48491193b2555d5b132185fcd97c2438db70952"
+    },
+    {
+      "path": "2026-10-24-streambench/native-result.json",
+      "source": "test-results/2026-10-24-streambench/native-result.json",
+      "bytes": 2464,
+      "sha256": "b25b16b783d5e61a77249e401a2defcab816ad31fc51989a133924a85ea0a254"
+    },
+    {
+      "path": "2026-10-24-streambench/protocol.json",
+      "source": "test-results/2026-10-24-streambench/protocol.json",
+      "bytes": 2293,
+      "sha256": "7b4290e0e824a5dd01982db097088b1bbfa4b61b94c85ac11f87d2a9b8fa6f24"
+    },
+    {
+      "path": "2026-10-24-streambench/report.md",
+      "source": "test-results/2026-10-24-streambench/report.md",
+      "bytes": 5345,
+      "sha256": "56a2488934fb7578620059003b98d0ae6d1c11ccaba4e57201b2f3c3cf471621"
+    },
+    {
+      "path": "2026-10-24-streambench/scaffold-grade.json",
+      "source": "test-results/2026-10-24-streambench/scaffold-grade.json",
+      "bytes": 6304,
+      "sha256": "838a99cb815b80285d08cb1382bf20a98a57ad566b9eb84281d66efdefc30f51"
+    },
+    {
+      "path": "2026-10-24-streambench/SPEC.md",
+      "source": "test-results/2026-10-24-streambench/SPEC.md",
+      "bytes": 5646,
+      "sha256": "d87de8359eabba8b8ab1d6626536c2e509773482a47303af8471724bea466cae"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/comparison.json",
+      "source": "test-results/2026-10-25-cartstock-single/comparison.json",
+      "bytes": 15650,
+      "sha256": "41714a1e0f468763629e1f4d9285b7f15f62df68212398ebe8b76c7183e75c92"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/COMPARISON.md",
+      "source": "test-results/2026-10-25-cartstock-single/COMPARISON.md",
+      "bytes": 7162,
+      "sha256": "05a45993fed4616596d07502bb3ac3944647773c17ce153b3c3c0e4935f73095"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/edge-audit.json",
+      "source": "test-results/2026-10-25-cartstock-single/edge-audit.json",
+      "bytes": 4839,
+      "sha256": "f553420fb285af57555cfd4596a400570fc85e4e76d42c007041501beac2dd57"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/external-mutation.json",
+      "source": "test-results/2026-10-25-cartstock-single/external-mutation.json",
+      "bytes": 41025,
+      "sha256": "815cd98c8c144be4a973c8ff94b8d68b8a70e6fce00f7d8368b656bd58e966ff"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/final-report.json",
+      "source": "test-results/2026-10-25-cartstock-single/final-report.json",
+      "bytes": 46287,
+      "sha256": "aee8bb9e1d7b332cc74295479581114ced0df881aa1eaf550162975e75406633"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/grade-1.json",
+      "source": "test-results/2026-10-25-cartstock-single/grade-1.json",
+      "bytes": 10609,
+      "sha256": "abcbc85403fe184214c600924140a32f7535e2452e79967bcd7b649bbd4e3b4a"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/grade-2.json",
+      "source": "test-results/2026-10-25-cartstock-single/grade-2.json",
+      "bytes": 10606,
+      "sha256": "3aa188dd469f5c4e46d8008ff23e7c10cf10f6eae98435886998aef835d349dc"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/latest-grade.json",
+      "source": "test-results/2026-10-25-cartstock-single/latest-grade.json",
+      "bytes": 10606,
+      "sha256": "3aa188dd469f5c4e46d8008ff23e7c10cf10f6eae98435886998aef835d349dc"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/protocol.json",
+      "source": "test-results/2026-10-25-cartstock-single/protocol.json",
+      "bytes": 1200,
+      "sha256": "53e4c37d751311d3854dba0a6645b2ab58eeffbf3975f093e6ed121c1ef28639"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/report-3.json",
+      "source": "test-results/2026-10-25-cartstock-single/report-3.json",
+      "bytes": 46287,
+      "sha256": "02e4e3aa1042a631ffa476c6738179e2bf2fe1537864d4e3c701076ad5e08ea1"
+    },
+    {
+      "path": "2026-10-25-cartstock-single/result.json",
+      "source": "test-results/2026-10-25-cartstock-single/result.json",
+      "bytes": 7837,
+      "sha256": "9954810a857c81af9d093814b1d8a766da676926f0fdf7602fdafe99483b2808"
+    },
+    {
+      "path": "2026-10-25-cartstock-source-bindings/final-report.json",
+      "source": "test-results/2026-10-25-cartstock-source-bindings/final-report.json",
+      "bytes": 180314,
+      "sha256": "b46aad3c4973f3dacaadfd3df6e8082ef2610ea0f0f1faeb9b917ce51c899ed1"
+    },
+    {
+      "path": "2026-10-25-cartstock-source-bindings/grade-1.json",
+      "source": "test-results/2026-10-25-cartstock-source-bindings/grade-1.json",
+      "bytes": 10607,
+      "sha256": "06980522f63eb8483265ab408070779bf4c7fa70440d932274dc861653be7a82"
+    },
+    {
+      "path": "2026-10-25-cartstock-source-bindings/grade-2.json",
+      "source": "test-results/2026-10-25-cartstock-source-bindings/grade-2.json",
+      "bytes": 10610,
+      "sha256": "5be7bd18e6faf7e54192515c889fb782f97d31720c74b69c43c8a94cc3de269e"
+    },
+    {
+      "path": "2026-10-25-cartstock-source-bindings/latest-grade.json",
+      "source": "test-results/2026-10-25-cartstock-source-bindings/latest-grade.json",
+      "bytes": 10610,
+      "sha256": "5be7bd18e6faf7e54192515c889fb782f97d31720c74b69c43c8a94cc3de269e"
+    },
+    {
+      "path": "2026-10-25-cartstock-source-bindings/report-3.json",
+      "source": "test-results/2026-10-25-cartstock-source-bindings/report-3.json",
+      "bytes": 180267,
+      "sha256": "61cdaa4133bbaa4a7f7663e5bc3fa8856f75f5f6d3f4e04e580a6a38b90225d6"
+    },
+    {
+      "path": "2026-10-25-cartstock-source-bindings/result.json",
+      "source": "test-results/2026-10-25-cartstock-source-bindings/result.json",
+      "bytes": 8631,
+      "sha256": "55f3bc0cbc97055dd120dd186b02f98ecbd614e1d15c93697f10a0b402421200"
+    },
+    {
+      "path": "2026-10-25-cartstock-source-bindings/UPGRADE-REPORT.md",
+      "source": "test-results/2026-10-25-cartstock-source-bindings/UPGRADE-REPORT.md",
+      "bytes": 6090,
+      "sha256": "d56250c318f679fe11e4d8f42ebc2e90b007f603d82bdc9534e860d3383dcc64"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/benchmark.json",
+      "source": "test-results/2026-10-25-cartstock-v3/benchmark.json",
+      "bytes": 2209,
+      "sha256": "4a3e0d8d74b5bd4e7a5d644aed5c75ac14e53165114323347eb4c9372a40c641"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/draft-diagnostic.json",
+      "source": "test-results/2026-10-25-cartstock-v3/draft-diagnostic.json",
+      "bytes": 8464,
+      "sha256": "f8e66a039e74bd0f6a938f4d39afaa4e0f1530a5b5ccc4883db0b7a4c1250d75"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/grader-audit.json",
+      "source": "test-results/2026-10-25-cartstock-v3/grader-audit.json",
+      "bytes": 13837,
+      "sha256": "7b18c7a2cef7486d1997dc1618195421e81b669d5f9fcd615c2ceb3718bc9624"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/protocol.json",
+      "source": "test-results/2026-10-25-cartstock-v3/protocol.json",
+      "bytes": 1650,
+      "sha256": "141e505aa06517b6fec4cee541523469112add646d97618ad918f34f29894019"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/reference-grade.json",
+      "source": "test-results/2026-10-25-cartstock-v3/reference-grade.json",
+      "bytes": 10571,
+      "sha256": "2428b05495984a968f86d2cc78ea1b1188ef010f0656fc400993b8b37b1a2257"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/REPORT.md",
+      "source": "test-results/2026-10-25-cartstock-v3/REPORT.md",
+      "bytes": 5213,
+      "sha256": "11336e39b3b896f1ccc5833114386b0a099377e5e73383482113afcd792ecbba"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/result.json",
+      "source": "test-results/2026-10-25-cartstock-v3/result.json",
+      "bytes": 11233,
+      "sha256": "a3fe4c5f2d92da7ac8b6ca8956531e59493cadd127fa65a3bb5888295f9f4b48"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/scaffold-grade.json",
+      "source": "test-results/2026-10-25-cartstock-v3/scaffold-grade.json",
+      "bytes": 52081,
+      "sha256": "c48bbe2b7c656d26c37f91d124481cfa52dde27c9dd6fe302a57f804fe219219"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3/SPEC.md",
+      "source": "test-results/2026-10-25-cartstock-v3/SPEC.md",
+      "bytes": 5044,
+      "sha256": "e214b58b3f2e1699eb33b984f559ae02cc2a698817391e6acbb9ba4e0b353923"
+    },
+    {
+      "path": "2026-10-25-cartstock-v3-assisted/result.json",
+      "source": "test-results/2026-10-25-cartstock-v3-assisted/result.json",
+      "bytes": 22415,
+      "sha256": "b31020e3ca9e725e12826922538a9ee2ba1a3bfcf770b602ae729e4f8c7d00b7"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/code-review.json",
+      "source": "test-results/2026-10-25-escrowbatch/code-review.json",
+      "bytes": 4173,
+      "sha256": "97867b668762fe9ec36b218f194c7b42f80f7076fcc62187bd6b3952ce116e76"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/comparison.json",
+      "source": "test-results/2026-10-25-escrowbatch/comparison.json",
+      "bytes": 17383,
+      "sha256": "be9dec26a6df4b53a10861d25088ed8ced45a6f72e7f4e38dd07a63a81e54b7e"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/grader-audit-cas.json",
+      "source": "test-results/2026-10-25-escrowbatch/grader-audit-cas.json",
+      "bytes": 22526,
+      "sha256": "214295e22c2c8a57b9f27aa6f6b9578607d92d312b5bcfce6727fb4cce2791df"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/grader-audit-expiry.json",
+      "source": "test-results/2026-10-25-escrowbatch/grader-audit-expiry.json",
+      "bytes": 19577,
+      "sha256": "f1cd93831cd30e7c8a909d534b474ffac2e6e558bb42cc11d6f556b795293dd4"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/grader-audit.json",
+      "source": "test-results/2026-10-25-escrowbatch/grader-audit.json",
+      "bytes": 1612,
+      "sha256": "bab2a073e343e47efea77cc38b4caaa0ad29c08cd26b5dc6841e0909b9e440d7"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/grader-scaffold.json",
+      "source": "test-results/2026-10-25-escrowbatch/grader-scaffold.json",
+      "bytes": 52036,
+      "sha256": "79c3de4132561d62d6c5fc388d82eb5300f3cd4e76ba7daf9e18481cb0ea229d"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/grader-selfcheck.json",
+      "source": "test-results/2026-10-25-escrowbatch/grader-selfcheck.json",
+      "bytes": 9934,
+      "sha256": "915e1bc2678a6a2d59c3bf6f34afcc986abbb7804f1894cded9dc9cb30cf7a1d"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/protocol.json",
+      "source": "test-results/2026-10-25-escrowbatch/protocol.json",
+      "bytes": 1287,
+      "sha256": "7ff9753183c8d493c96c9dd05472f45a503ff462a3138fa3212ac82fa4c7a5aa"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/report.md",
+      "source": "test-results/2026-10-25-escrowbatch/report.md",
+      "bytes": 12114,
+      "sha256": "58236936d2861738d21f50f30f8abe8614c979b7c8d3fbb6b4dd4845abe3b424"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/single-command-evidence.json",
+      "source": "test-results/2026-10-25-escrowbatch/single-command-evidence.json",
+      "bytes": 9728,
+      "sha256": "ba5e28a6b9d0a55e45e7969639e4ba956bf00054d2d4d53d11588e6143418078"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/single-failure-diagnosis.json",
+      "source": "test-results/2026-10-25-escrowbatch/single-failure-diagnosis.json",
+      "bytes": 3315,
+      "sha256": "b4b4bf6b8a3b1e3a1c896b82b85d8b034a8f42af1ab525921197adc5faf13ce4"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/single-grade.json",
+      "source": "test-results/2026-10-25-escrowbatch/single-grade.json",
+      "bytes": 10778,
+      "sha256": "d20120c767f83680149f67434a993edfdd7a33f37823d2cf1749d91947e2bc7f"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/SPEC.md",
+      "source": "test-results/2026-10-25-escrowbatch/SPEC.md",
+      "bytes": 4523,
+      "sha256": "20a3e06aba72b6a7bc65b04233ca620556f9f012ea7db4f316825feb526f15ac"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/comparison.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/comparison.json",
+      "bytes": 1221,
+      "sha256": "d80501e4572af0d3d9842aea969058421685ccd71f32a1f37f811d8da0b3e6e8"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/final-acceptance-report.md",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/final-acceptance-report.md",
+      "bytes": 38915,
+      "sha256": "658676719d34cec580e01916e184ac06e3d789d74da2b3ffb544d8704ef12d1d"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/final-comparison.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/final-comparison.json",
+      "bytes": 7089,
+      "sha256": "9f17af7db97557f37af93c143cd5643004ebd933bb9d5959d788abbbe4be706e"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/final-report.md",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/final-report.md",
+      "bytes": 2362,
+      "sha256": "580d7873b43ec97dfa0ce896a944eda7b8fc04b2cfd310b3bc3c2deb16dabc3f"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/internal-test-report.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/internal-test-report.json",
+      "bytes": 30792,
+      "sha256": "663226cf9bbe2403686c664a2ab5c85a0466b24f3dcd17e45ab6ef477fb3faea"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/report.md",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/report.md",
+      "bytes": 2849,
+      "sha256": "523e4e41bac7672d6f069da9aa5b06657ec7ca1f03012fc525f2e44fe48032ed"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/result.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/result.json",
+      "bytes": 433,
+      "sha256": "16aa47a792aa33913aba1e45691ff3c3df51d959830376de8c7a10120cb0c0e6"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/approved-revision-repair/grade.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/approved-revision-repair/grade.json",
+      "bytes": 9940,
+      "sha256": "7492833f74736207e287a9568825149e6d5adee6166dc2f582493bdc820bd4c9"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/approved-revision-repair/result.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/approved-revision-repair/result.json",
+      "bytes": 430,
+      "sha256": "f12e2fa0814c1be125e6b522794ea806b4f7835ba23b81c632cd4f2625256549"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/approved-setup-repair/grade.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/approved-setup-repair/grade.json",
+      "bytes": 9956,
+      "sha256": "4a9fe7b67f3cb4d1d1ffb82294078a34918a133dcf760ec6d7fdaa8b374d4a74"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/approved-setup-repair/result.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/approved-setup-repair/result.json",
+      "bytes": 1019,
+      "sha256": "cc182f659677473a6fc2817a0ee1d22844ee0ad2d9e7fca37f96078311e0de45"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/scope-retry/grade.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/scope-retry/grade.json",
+      "bytes": 9942,
+      "sha256": "6ec26e88be7f88ad75a5a0ece74b493950afc6ae52c087487404f79481a94f93"
+    },
+    {
+      "path": "2026-10-25-escrowbatch/department-assisted/scope-retry/result.json",
+      "source": "test-results/2026-10-25-escrowbatch/department-assisted/scope-retry/result.json",
+      "bytes": 504,
+      "sha256": "3f5a1b0573ac58db4bab430d14be79ef3a2239dca8d73c3f79b4e233639e3228"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/comparison.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/comparison.json",
+      "bytes": 11662,
+      "sha256": "bfd1876521a26e3621d2f1a2ac5ebc689a1eef26ffb34c63098fc467bd795e77"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/grader-audit-cas.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/grader-audit-cas.json",
+      "bytes": 22526,
+      "sha256": "214295e22c2c8a57b9f27aa6f6b9578607d92d312b5bcfce6727fb4cce2791df"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/grader-audit-expiry.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/grader-audit-expiry.json",
+      "bytes": 19577,
+      "sha256": "f1cd93831cd30e7c8a909d534b474ffac2e6e558bb42cc11d6f556b795293dd4"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/grader-audit.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/grader-audit.json",
+      "bytes": 1612,
+      "sha256": "bab2a073e343e47efea77cc38b4caaa0ad29c08cd26b5dc6841e0909b9e440d7"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/grader-scaffold.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/grader-scaffold.json",
+      "bytes": 52036,
+      "sha256": "79c3de4132561d62d6c5fc388d82eb5300f3cd4e76ba7daf9e18481cb0ea229d"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/grader-selfcheck.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/grader-selfcheck.json",
+      "bytes": 9934,
+      "sha256": "915e1bc2678a6a2d59c3bf6f34afcc986abbb7804f1894cded9dc9cb30cf7a1d"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/preflight-failure.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/preflight-failure.json",
+      "bytes": 278,
+      "sha256": "023de461a513cb9791d7525e279d863e09eb24859acbae9b39a35de6b16434dc"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/protocol.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/protocol.json",
+      "bytes": 1509,
+      "sha256": "3f535849c762d140d6f66105f11cfc9a41cd1c5c9be1bb0a4b7f719eb61892ee"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/report-generator-output.md",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/report-generator-output.md",
+      "bytes": 9198,
+      "sha256": "af38fc555c93afc6cbeb971fae6226a3598f5d1a94a03d635518e5d93700345e"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/report.md",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/report.md",
+      "bytes": 4333,
+      "sha256": "c34b3dbeba6b10c30e023405295981c2044967f26357ec1830fd825c52c01ab3"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/single-grade.json",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/single-grade.json",
+      "bytes": 9944,
+      "sha256": "855399385bdb818af91cdecf818bca05579ab32d89a547c10f4ebcfe19927fd1"
+    },
+    {
+      "path": "2026-10-25-escrowbatch-rerun/SPEC.md",
+      "source": "test-results/2026-10-25-escrowbatch-rerun/SPEC.md",
+      "bytes": 4523,
+      "sha256": "20a3e06aba72b6a7bc65b04233ca620556f9f012ea7db4f316825feb526f15ac"
+    },
+    {
+      "path": "2026-10-25-patchbook/BENCHMARK.md",
+      "source": "test-results/2026-10-25-patchbook/BENCHMARK.md",
+      "bytes": 10095,
+      "sha256": "242899d543ed19eb08e24bf4abd746b0e4a9d3c2419d101516d4fa10adc94955"
+    },
+    {
+      "path": "2026-10-25-patchbook/comparison.json",
+      "source": "test-results/2026-10-25-patchbook/comparison.json",
+      "bytes": 11746,
+      "sha256": "ed7168659b7ec22fdec04fd7eca463f28678c88e4802f04719b3c262a73fbc33"
+    },
+    {
+      "path": "2026-10-25-patchbook/department-final-report.json",
+      "source": "test-results/2026-10-25-patchbook/department-final-report.json",
+      "bytes": 178009,
+      "sha256": "4e0331575847149560b3ff657e87a4276e8c25200416a7b0cf6e7cea40665902"
+    },
+    {
+      "path": "2026-10-25-patchbook/department-grade-1.json",
+      "source": "test-results/2026-10-25-patchbook/department-grade-1.json",
+      "bytes": 15334,
+      "sha256": "f4caf513817955d1d4d7712d54cd195aca7511557af1c60bea443395cea8ba11"
+    },
+    {
+      "path": "2026-10-25-patchbook/department-grade-2.json",
+      "source": "test-results/2026-10-25-patchbook/department-grade-2.json",
+      "bytes": 15323,
+      "sha256": "c7603cf7d1ba5b96b8b172186eea8f25482b031564d3e8889f2321b048cb40e4"
+    },
+    {
+      "path": "2026-10-25-patchbook/department-latest-grade.json",
+      "source": "test-results/2026-10-25-patchbook/department-latest-grade.json",
+      "bytes": 15323,
+      "sha256": "c7603cf7d1ba5b96b8b172186eea8f25482b031564d3e8889f2321b048cb40e4"
+    },
+    {
+      "path": "2026-10-25-patchbook/department-report-3.json",
+      "source": "test-results/2026-10-25-patchbook/department-report-3.json",
+      "bytes": 177963,
+      "sha256": "a975cc345e826f0b76ad008aa83af42146e60d1f9d827b0901f5143da4d0bd0f"
+    },
+    {
+      "path": "2026-10-25-patchbook/grader-adjudication.json",
+      "source": "test-results/2026-10-25-patchbook/grader-adjudication.json",
+      "bytes": 2821,
+      "sha256": "10d9a5a75ce6fc29741e2c94077451f144c2cf11e0081a81d0145e6ec7979b1a"
+    },
+    {
+      "path": "2026-10-25-patchbook/grader-audit.json",
+      "source": "test-results/2026-10-25-patchbook/grader-audit.json",
+      "bytes": 20956,
+      "sha256": "32af58db3c307cce8fa4057b1183d2e2597cc778b7edea8ba8e7e1b7c34167f1"
+    },
+    {
+      "path": "2026-10-25-patchbook/protocol.json",
+      "source": "test-results/2026-10-25-patchbook/protocol.json",
+      "bytes": 1933,
+      "sha256": "5af2b7d3dffa08ec9e24bc212d5df644d2903e24ac061e946fd94a9bdd2f60f6"
+    },
+    {
+      "path": "2026-10-25-patchbook/reference-grade.json",
+      "source": "test-results/2026-10-25-patchbook/reference-grade.json",
+      "bytes": 15323,
+      "sha256": "a9beb8047ab03d96eb79d8ade041488b3afac922d13acfbc747964049fc580c9"
+    },
+    {
+      "path": "2026-10-25-patchbook/results.json",
+      "source": "test-results/2026-10-25-patchbook/results.json",
+      "bytes": 15515,
+      "sha256": "e4aa8167c5a5f2500a77883935cb60446f4ebe59421127587bbd4dc358f7d572"
+    },
+    {
+      "path": "2026-10-25-patchbook/scaffold-grade.json",
+      "source": "test-results/2026-10-25-patchbook/scaffold-grade.json",
+      "bytes": 74613,
+      "sha256": "da1a2dac8e46933e3982ef7f6ed6f8d05b71c8d89718595987eec8d715f236de"
+    },
+    {
+      "path": "2026-10-25-patchbook/single-external-mutation.json",
+      "source": "test-results/2026-10-25-patchbook/single-external-mutation.json",
+      "bytes": 65960,
+      "sha256": "527cc2d00d9c31afeb56ab494043659db369ff96edbfb90a9daacc58425ab608"
+    },
+    {
+      "path": "2026-10-25-patchbook/single-final-report.json",
+      "source": "test-results/2026-10-25-patchbook/single-final-report.json",
+      "bytes": 43294,
+      "sha256": "18ba5e40bbe5fb1bc1573a04ccf857dfe6dc7c9d63f616ee8486d0b4ace90634"
+    },
+    {
+      "path": "2026-10-25-patchbook/single-grade-1.json",
+      "source": "test-results/2026-10-25-patchbook/single-grade-1.json",
+      "bytes": 15703,
+      "sha256": "31e17a744ab07340e29671efdfa64c99be1aae1239d5a91bfced662a9a6c583c"
+    },
+    {
+      "path": "2026-10-25-patchbook/single-grade-2.json",
+      "source": "test-results/2026-10-25-patchbook/single-grade-2.json",
+      "bytes": 15740,
+      "sha256": "91b1fcdb26d879cf2171744c2a2cd5ffad2fdd369eed3dc06b990ee814d312c9"
+    },
+    {
+      "path": "2026-10-25-patchbook/single-latest-grade.json",
+      "source": "test-results/2026-10-25-patchbook/single-latest-grade.json",
+      "bytes": 15740,
+      "sha256": "91b1fcdb26d879cf2171744c2a2cd5ffad2fdd369eed3dc06b990ee814d312c9"
+    },
+    {
+      "path": "2026-10-25-patchbook/single-report-2.json",
+      "source": "test-results/2026-10-25-patchbook/single-report-2.json",
+      "bytes": 43294,
+      "sha256": "4313c779907800e0a9cecc9930825bd382d1e6dd0d2545644d6352fd9a845c02"
+    },
+    {
+      "path": "2026-10-25-patchbook/spec-audit-reference-grade.json",
+      "source": "test-results/2026-10-25-patchbook/spec-audit-reference-grade.json",
+      "bytes": 15718,
+      "sha256": "71ccbae6bc7de62f39ce619bd022197ec79126a226edc2e3f808869551c132db"
+    },
+    {
+      "path": "2026-10-25-patchbook/SPEC.md",
+      "source": "test-results/2026-10-25-patchbook/SPEC.md",
+      "bytes": 6533,
+      "sha256": "db4b26f47ffc4c9d4019225e263e1ef68d97f9268f0a643549d50efe18e73893"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/broken-expiry-boundary.json",
+      "source": "test-results/2026-10-25-pulsegraph/broken-expiry-boundary.json",
+      "bytes": 19007,
+      "sha256": "bbf52a0a4bd89226030d4532e64bf0b0273f775f447e6a83e18dd1d053dfc808"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/broken-exponential-retry.json",
+      "source": "test-results/2026-10-25-pulsegraph/broken-exponential-retry.json",
+      "bytes": 13759,
+      "sha256": "27fabaab68abb28713881a5bc75b63b2caa886e85103f8e7307ab1a22c2172db"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/comparison.json",
+      "source": "test-results/2026-10-25-pulsegraph/comparison.json",
+      "bytes": 18915,
+      "sha256": "48b8d997373dad65a6f67a8dc8e032cdbeee2c4fed3ca2feb47112453761d9a6"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/grader-audit.json",
+      "source": "test-results/2026-10-25-pulsegraph/grader-audit.json",
+      "bytes": 612,
+      "sha256": "af19c600798e9f6ab7d4ceb101277fb87801b8457214267cba1411b1a8576c28"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/grader-spec-audit.json",
+      "source": "test-results/2026-10-25-pulsegraph/grader-spec-audit.json",
+      "bytes": 1006,
+      "sha256": "5152071ed009ad05e6219c1f1b9f44c2120dc1629caa290779ffc645a380f5a9"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/protocol.json",
+      "source": "test-results/2026-10-25-pulsegraph/protocol.json",
+      "bytes": 1452,
+      "sha256": "b2c882376ec521f3a0dbe567571c491b0157eed6988b9305d6b002f2b695f5d5"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/reference-grade-spec-audit.json",
+      "source": "test-results/2026-10-25-pulsegraph/reference-grade-spec-audit.json",
+      "bytes": 11707,
+      "sha256": "232c36eac8aead48f7870997879c961743eb5ff92e8e17438eddd8ffea2ca6b9"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/reference-selfcheck.json",
+      "source": "test-results/2026-10-25-pulsegraph/reference-selfcheck.json",
+      "bytes": 11772,
+      "sha256": "5df4ee59fbb031be9bcb14ac4a33b89d6ca2f054860a5dcd1c31defa2b1476dc"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/report.md",
+      "source": "test-results/2026-10-25-pulsegraph/report.md",
+      "bytes": 4415,
+      "sha256": "8b2a48ac6b6aa0993abfab667259afe972e1f79d71c2cd62b3fcb7d5647e5d22"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/single-grade-spec-audit.json",
+      "source": "test-results/2026-10-25-pulsegraph/single-grade-spec-audit.json",
+      "bytes": 11722,
+      "sha256": "b5bde49f0571f4a411ececb9bfdbbe0eeefc0c5dd9a3ff32473280569b0780f4"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/single-grade.json",
+      "source": "test-results/2026-10-25-pulsegraph/single-grade.json",
+      "bytes": 21675,
+      "sha256": "945c445a612a2f0e466c1a7ec25695d6c124c089d3218af6b9a8aa7fde7b215c"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/SPEC.md",
+      "source": "test-results/2026-10-25-pulsegraph/SPEC.md",
+      "bytes": 5082,
+      "sha256": "6039a7dc2603758ad1ca389ab5212655645e1f8ac8a51fff443a948a93a4aa98"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/audit-bad-backoff.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/audit-bad-backoff.json",
+      "bytes": 13786,
+      "sha256": "4225554771d5b04dcf97014fec087e81c56714f859a51fc83e1bd85571b7b370"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/audit-bad-expiry.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/audit-bad-expiry.json",
+      "bytes": 19399,
+      "sha256": "1ec32805dad178b9c235c0bc518245c814fdf0bc53784693fead6f2aa650f60e"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/audit-reference.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/audit-reference.json",
+      "bytes": 11695,
+      "sha256": "100822f431efdab2c0dfafadf6fd403e984e8da7edab6c606d50b10fe94d7986"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/blockedby-after-repair.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/blockedby-after-repair.json",
+      "bytes": 2502,
+      "sha256": "ceace6a72763878bf8dfc5eea1b2efac52a07e2ef9d0c061386aae7a7298ca85"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/blockedby-before-repair.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/blockedby-before-repair.json",
+      "bytes": 2503,
+      "sha256": "2da110049155d5da6f6921c49ffa48b2fda12d3efd318e2c0570d41f7eed3bc4"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/comparison.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/comparison.json",
+      "bytes": 13238,
+      "sha256": "efdd8458aeca46beae9c7b56327901ddc45af098f7e231d606b8b456bdfedf16"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/department-grade.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/department-grade.json",
+      "bytes": 11699,
+      "sha256": "1b3e1c9a93d8d0cc86c1f82f46ea14c089e5a5fc6a375f2e23db24e58ea1c41f"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/report-1.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/report-1.json",
+      "bytes": 90418,
+      "sha256": "9cf9321d5bfe4900cf32499cc3366357aec97026e684fd29077891b866e66894"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/report-2.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/report-2.json",
+      "bytes": 140913,
+      "sha256": "97a118823c6f5414475ba3c3ce98e7383169bca6d20b180255cae396204ecacb"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/report-3.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/report-3.json",
+      "bytes": 140913,
+      "sha256": "7699abe50234ed7475831e6a7d5d016c8e984db696b104ad6b1a9b2e981b8bd0"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/report-4.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/report-4.json",
+      "bytes": 147015,
+      "sha256": "8208a80de7c4867ec91bf1fbefd1640abb8ef22c96d35dea7707f868de797543"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/report-5.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/report-5.json",
+      "bytes": 45335,
+      "sha256": "3c85b672c14714299ae2200a7829d88bdb443ed3ebfcc3a92554590ec722a81d"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/report.md",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/report.md",
+      "bytes": 7659,
+      "sha256": "5fc313d864605a6f9a2850c85886cd831a7f533e4e25e24b01d1ce19d6adce78"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/result.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/result.json",
+      "bytes": 720,
+      "sha256": "f2c9ee9ad3ad0e6c4b0918bca18ad2db8615360c236b09e88bcf397a290a6ebb"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/single-grade.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/single-grade.json",
+      "bytes": 11736,
+      "sha256": "3897b1ff5ded06a0d5b7630ac75449b14943df17780a63ef55373a726a958e2e"
+    },
+    {
+      "path": "2026-10-25-pulsegraph/department-full/single-mutation.json",
+      "source": "test-results/2026-10-25-pulsegraph/department-full/single-mutation.json",
+      "bytes": 48402,
+      "sha256": "af5eabb2ae2781e8e2112b9d24005a1e15c68693a543c8bba70a124f065b815b"
+    }
+  ]
+}

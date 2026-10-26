@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-25T07:34:29.892Z",
+  "oracleSelfCheck": {
+    "passed": 75,
+    "total": 75
+  },
+  "unimplementedScaffold": {
+    "passed": 0,
+    "failed": 75,
+    "total": 75
+  },
+  "mutants": [
+    {
+      "name": "broken-expiry-boundary",
+      "expectedFailure": "D21-boundary-expires-before-return",
+      "caught": true,
+      "passed": 62,
+      "failed": 13,
+      "total": 75
+    },
+    {
+      "name": "broken-exponential-retry",
+      "expectedFailure": "D26-exponential-retry-delay",
+      "caught": true,
+      "passed": 72,
+      "failed": 3,
+      "total": 75
+    }
+  ]
+}

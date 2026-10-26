@@ -1,0 +1,244 @@
+{
+  "at": "2026-10-25T10:58:02.369Z",
+  "runId": "run_743c5eb3",
+  "status": "blocked",
+  "blocker": "Draft vẫn chưa hợp lệ: C-1.S-1: assertion không khớp kết quả của bước đã duyệt. C-1.S-1: assertion không khớp kết quả của bước đã duyệt. C-1.S-1: assertion không khớp kết quả của bước đã duyệt. C-3.S-2: assertion không khớp kết quả của bước đã duyệt. C-3.S-2: assertion không khớp kết quả của bước đã duyệt. C-4.S-1: assertion không khớp kết quả của bước đã duyệt. C-4.S-2: assertion không khớp kết quả của bước đã duyệt. C-5.S-1: assertion không khớp kết quả của bước đã duyệt. C-5.S-1: assertion không khớp kết quả của bước đã duyệt. C-5.S-2: assertion không khớp kết quả của bước đã duyệt. C-6.S-2: assertion không khớp kết quả của bước đã duyệt. C-7.S-3: assertion không khớp kết quả của bước đã duyệt. C-7.S-3: assertion không khớp kết quả của bước đã duyệt. C-7.S-3: assertion không khớp kết quả của bước đã duyệt. C-7.S-3: assertion không khớp kết quả của bước đã duyệt. C-8.S-2: assertion không khớp kết quả của bước đã duyệt. C-8.S-5: assertion không khớp kết quả của bước đã duyệt. C-9.S-4: assertion không khớp kết quả của bước đã duyệt. C-10.S-2: assertion không khớp kết quả của bước đã duyệt. C-10.S-2: assertion không khớp kết quả của bước đã duyệt. C-10.S-3: assertion không khớp kết quả của bước đã duyệt. C-10.S-4: assertion không khớp kết quả của bước đã duyệt. C-11.S-1: assertion không khớp kết quả của bước đã duyệt. C-11.S-1: assertion không khớp kết quả của bước đã duyệt. C-12.S-1: assertion không khớp kết quả của bước đã duyệt. C-12.S-2: assertion không khớp kết quả của bước đã duyệt. C-12.S-3: assertion không khớp kết quả của bước đã duyệt. C-13.S-3: assertion không khớp kết quả của bước đã duyệt. C-13.S-3: assertion không khớp kết quả của bước đã duyệt. C-13.S-3: assertion không khớp kết quả của bước đã duyệt. C-13.S-4: assertion không khớp kết quả của bước đã duyệt. C-13.S-5: assertion không khớp kết quả của bước đã duyệt. C-14.S-1: assertion không khớp kết quả của bước đã duyệt. C-14.S-1: assertion không khớp kết quả của bước đã duyệt. C-14.S-1: assertion không khớp kết quả của bước đã duyệt. C-14.S-2: assertion không khớp kết quả của bước đã duyệt. C-15.S-1: assertion không khớp kết quả của bước đã duyệt. C-15.S-2: assertion không khớp kết quả của bước đã duyệt. C-15.S-2: assertion không khớp kết quả của bước đã duyệt. C-15.S-2: assertion không khớp kết quả của bước đã duyệt. C-15.S-2: assertion không khớp kết quả của bước đã duyệt. C-15.S-3: assertion không khớp kết quả của bước đã duyệt. C-15.S-3: assertion không khớp kết quả của bước đã duyệt. C-17.S-2: assertion không khớp kết quả của bước đã duyệt. C-17.S-2: assertion không khớp kết quả của bước đã duyệt. C-17.S-2: assertion không khớp kết quả của bước đã duyệt. C-17.S-2: assertion không khớp kết quả của bước đã duyệt. C-17.S-2: assertion không khớp kết quả của bước đã duyệt. C-7.S-1: bước bắt buộc chưa có assertion khai báo. C-8.S-1: bước bắt buộc chưa có assertion khai báo. C-10.S-1: bước bắt buộc chưa có assertion khai báo. C-13.S-1: bước bắt buộc chưa có assertion khai báo. C-17.S-1: bước bắt buộc chưa có assertion khai báo.",
+  "automaticMs": 224937,
+  "execution": {
+    "available": true,
+    "automaticMs": 226049,
+    "waitingMs": 401329,
+    "agentQueueMs": 8,
+    "spans": [
+      {
+        "id": "930eea14-a7ad-41ec-b51f-55c55d7c34a6",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T10:47:35.007Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:47:35.011Z"
+      },
+      {
+        "id": "e5e0f485-ceac-4d37-82de-7248e3086406",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T10:47:35.009Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:50:07.760Z"
+      },
+      {
+        "id": "19e79944-3308-495d-b5b0-d1402d1591dc",
+        "kind": "setup",
+        "label": "Chuẩn bị bản sao/cài dependency",
+        "startedAt": "2026-10-25T10:47:35.019Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:47:35.702Z"
+      },
+      {
+        "id": "04264233-2295-416f-861f-762267e40588",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T10:47:35.714Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:47:37.269Z"
+      },
+      {
+        "attemptId": "att_92a0448f",
+        "role": "planner",
+        "id": "a98304f3-287b-4dc3-9cc1-271fc0f03bda",
+        "kind": "agent_queue",
+        "label": "planner chờ slot",
+        "startedAt": "2026-10-25T10:47:37.289Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:47:37.291Z"
+      },
+      {
+        "attemptId": "att_92a0448f",
+        "role": "planner",
+        "id": "6b62b3b2-c2ac-4d36-9e27-eedbcd2535ed",
+        "kind": "agent",
+        "label": "planner (A)",
+        "startedAt": "2026-10-25T10:47:37.294Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:47:58.568Z"
+      },
+      {
+        "attemptId": "att_4321172b",
+        "role": "author",
+        "id": "c82e0560-7e1a-4f01-b8e8-0634d1ea156d",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T10:47:58.728Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:47:58.730Z"
+      },
+      {
+        "attemptId": "att_4321172b",
+        "role": "author",
+        "id": "64228ee9-e8b6-4bc1-8852-33d396a7f0de",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T10:47:58.732Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:49:08.763Z"
+      },
+      {
+        "retryReason": "invalid_output",
+        "id": "a651277e-e2f3-4126-adf2-977b87c52755",
+        "kind": "tool",
+        "label": "Author sửa kế hoạch ca một lần theo 6 lỗi kiểm tra; chưa duyệt hợp đồng.",
+        "startedAt": "2026-10-25T10:49:08.916Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:49:08.918Z"
+      },
+      {
+        "attemptId": "att_b7c1f713",
+        "role": "author",
+        "id": "bc72a332-77c4-485a-ae0a-bbb6128d53ff",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T10:49:08.933Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:49:08.935Z"
+      },
+      {
+        "attemptId": "att_b7c1f713",
+        "role": "author",
+        "id": "228cabde-efcb-4ad5-9c87-91ae3fb40972",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T10:49:08.936Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:50:07.603Z"
+      },
+      {
+        "id": "7b48a36d-67b8-4936-a6dd-4643740a00e1",
+        "kind": "approval",
+        "label": "awaiting_approval",
+        "startedAt": "2026-10-25T10:50:07.754Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:51:55.119Z"
+      },
+      {
+        "id": "4dc0dc2b-f923-41b5-a041-080ab3d547a3",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T10:51:55.119Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:51:55.123Z"
+      },
+      {
+        "id": "26582c9a-d7ef-4d84-866e-8b66416d3141",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T10:51:55.121Z",
+        "status": "failed",
+        "endedAt": "2026-10-25T10:53:08.392Z"
+      },
+      {
+        "id": "5afa7cce-0d27-4414-a1c8-2419ad4970f6",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T10:51:55.130Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:51:56.252Z"
+      },
+      {
+        "attemptId": "att_4aced4e5",
+        "role": "author",
+        "id": "411800f6-94a7-4693-90e6-c707d74bc5b3",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T10:51:56.277Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:51:56.279Z"
+      },
+      {
+        "attemptId": "att_4aced4e5",
+        "role": "author",
+        "id": "967cb550-7849-4d35-9bac-661c9fcf8161",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T10:51:56.281Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:53:08.059Z"
+      },
+      {
+        "id": "e20c672a-f7c7-41ae-a41a-5c9359d4d630",
+        "kind": "approval",
+        "label": "blocked",
+        "startedAt": "2026-10-25T10:53:08.385Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:57:00.621Z"
+      },
+      {
+        "id": "db244039-b7f9-459f-8365-68fdc9dcd8a7",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T10:57:00.621Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:57:00.625Z"
+      },
+      {
+        "id": "9ac5d5a7-8a89-4417-b024-d1d6cef8eeec",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T10:57:00.623Z",
+        "status": "failed",
+        "endedAt": "2026-10-25T10:57:00.650Z"
+      },
+      {
+        "retryReason": "invalid_output",
+        "id": "0baee9be-09f2-4675-a52c-183b3967d549",
+        "kind": "tool",
+        "label": "Kiểm tra lại output Author đã lưu, không gọi AI.",
+        "startedAt": "2026-10-25T10:57:00.630Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T10:57:00.632Z"
+      },
+      {
+        "id": "2bad4f61-6e95-47be-9049-987668c9a895",
+        "kind": "approval",
+        "label": "blocked",
+        "startedAt": "2026-10-25T10:57:00.645Z",
+        "status": "running"
+      }
+    ],
+    "attemptsByRole": {
+      "planner": 1,
+      "author": 3
+    },
+    "retries": [
+      {
+        "reason": "invalid_output",
+        "count": 2
+      }
+    ]
+  },
+  "budget": {
+    "capUsd": 10.8,
+    "spentUsd": 0.7319327999999999,
+    "estimated": true,
+    "phases": {
+      "prepare": {
+        "allocatedUsd": 2.16,
+        "spentUsd": 0.45990239999999993
+      },
+      "implement": {
+        "allocatedUsd": 4.32,
+        "spentUsd": 0.2720304
+      },
+      "repair": {
+        "allocatedUsd": 1.08,
+        "spentUsd": 0
+      },
+      "verify": {
+        "allocatedUsd": 3.24,
+        "spentUsd": 0
+      }
+    }
+  },
+  "attempts": 4,
+  "grade": null,
+  "interventions": 4
+}

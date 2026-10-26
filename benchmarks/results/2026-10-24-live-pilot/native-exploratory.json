@@ -1,0 +1,33 @@
+{
+  "candidate": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department-pilot-20261024\\single",
+  "classification": "Exploratory / post-hoc / source-guided; outside preregistered score",
+  "reason": "SPEC requires invalid configuration/input to throw Error.code INVALID_INPUT. Whole-argument null is distinct from null fields and was omitted from locked cases.",
+  "total": 4,
+  "passed": 0,
+  "results": [
+    {
+      "id": "X01",
+      "title": "null constructor options",
+      "status": "failed",
+      "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'stock' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+    },
+    {
+      "id": "X02",
+      "title": "null reserve input",
+      "status": "failed",
+      "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+    },
+    {
+      "id": "X03",
+      "title": "null confirm input",
+      "status": "failed",
+      "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+    },
+    {
+      "id": "X04",
+      "title": "null cancel input",
+      "status": "failed",
+      "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nTypeError: Cannot destructure property 'userId' of '(intermediate value)(intermediate value)(intermediate value)' as it is null."
+    }
+  ]
+}

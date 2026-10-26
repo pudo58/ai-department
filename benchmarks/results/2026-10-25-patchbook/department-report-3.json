@@ -1,0 +1,4403 @@
+{
+  "findingReplays": [],
+  "execution": {
+    "available": true,
+    "automaticMs": 453560,
+    "waitingMs": 208917,
+    "agentQueueMs": 12,
+    "spans": [
+      {
+        "id": "cc48dc18-18fb-4b14-9ba6-cbeaa52c0bba",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T15:00:51.250Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:00:51.255Z"
+      },
+      {
+        "id": "e8d45052-70ca-4320-9eb1-5ea82d4b8a98",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T15:00:51.253Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:03:40.395Z"
+      },
+      {
+        "id": "3ae2b39b-2fc7-4211-ba91-0b33f02565ac",
+        "kind": "setup",
+        "label": "Chuẩn bị bản sao/cài dependency",
+        "startedAt": "2026-10-25T15:00:51.265Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:00:52.083Z"
+      },
+      {
+        "id": "7e31ef58-7d86-4d49-b9ca-b05aa24f95f6",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T15:00:52.098Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:00:54.121Z"
+      },
+      {
+        "attemptId": "att_62c08e0f",
+        "role": "planner",
+        "id": "2aad7a10-48f2-4c64-b97c-e399f889c306",
+        "kind": "agent_queue",
+        "label": "planner chờ slot",
+        "startedAt": "2026-10-25T15:00:54.143Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:00:54.146Z"
+      },
+      {
+        "attemptId": "att_62c08e0f",
+        "role": "planner",
+        "id": "a14b2e24-31d6-4ff1-9160-593993cd715d",
+        "kind": "agent",
+        "label": "planner (A)",
+        "startedAt": "2026-10-25T15:00:54.148Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:01:14.327Z"
+      },
+      {
+        "attemptId": "att_9d109b60",
+        "role": "author",
+        "id": "0673e094-d67b-4577-b1fc-f6af69f47c90",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T15:01:14.513Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:01:14.514Z"
+      },
+      {
+        "attemptId": "att_9d109b60",
+        "role": "author",
+        "id": "a66d31b5-8d1f-4ad1-8311-b1e1289e473b",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T15:01:14.516Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:02:48.884Z"
+      },
+      {
+        "retryReason": "invalid_output",
+        "id": "d6499744-5a4c-4d67-a6b1-d39f1bce47b9",
+        "kind": "tool",
+        "label": "Author sửa kế hoạch ca một lần theo 1 lỗi kiểm tra; chưa duyệt hợp đồng.",
+        "startedAt": "2026-10-25T15:02:49.057Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:02:49.059Z"
+      },
+      {
+        "attemptId": "att_5a3b367c",
+        "role": "author",
+        "id": "ae6216f9-d128-4cb4-afdb-07d42d13c1c0",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T15:02:49.076Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:02:49.078Z"
+      },
+      {
+        "attemptId": "att_5a3b367c",
+        "role": "author",
+        "id": "2419b76b-232c-467f-bb5d-dc2ae8bfc620",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T15:02:49.080Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:03:40.200Z"
+      },
+      {
+        "id": "9dcb2380-d475-45d5-97aa-4a3a4c001ef6",
+        "kind": "approval",
+        "label": "awaiting_approval",
+        "startedAt": "2026-10-25T15:03:40.389Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:07:08.523Z"
+      },
+      {
+        "id": "ddd0be22-8efa-4c21-ad97-8f6a29d32d1e",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T15:07:08.523Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:07:08.528Z"
+      },
+      {
+        "id": "6e9de54f-fe92-49da-976a-b1c142c052f0",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T15:07:08.526Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:11:52.944Z"
+      },
+      {
+        "id": "9d9bf66f-2dc8-4fbe-bb07-eb07658e86af",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T15:07:08.536Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:07:10.006Z"
+      },
+      {
+        "attemptId": "att_faa59015",
+        "role": "author",
+        "id": "b16c2cb2-f9a5-4b7c-aa02-3b12efb355a8",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T15:07:10.040Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:07:10.042Z"
+      },
+      {
+        "attemptId": "att_faa59015",
+        "role": "author",
+        "id": "f2120963-ae42-4cff-9126-4814bbe43482",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T15:07:10.045Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:09:26.323Z"
+      },
+      {
+        "attemptId": "att_fb96a101",
+        "role": "developer",
+        "id": "bb67a3f7-4c86-4519-812d-dafea1ba8c6d",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T15:09:26.749Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:09:26.751Z"
+      },
+      {
+        "attemptId": "att_fb96a101",
+        "role": "developer",
+        "id": "7aba253c-94b9-4dfb-975b-0dbd4cd8f333",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T15:09:26.753Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:10:27.527Z"
+      },
+      {
+        "id": "04921ba6-b069-42c4-94dc-1091fa74ea88",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T15:10:27.855Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:10:29.060Z"
+      },
+      {
+        "id": "8c91d5a5-0663-45c2-950b-8bbd4bd28027",
+        "kind": "mutation",
+        "label": "Kiểm tra khả năng bắt lỗi của test (tối đa 5 phút)",
+        "startedAt": "2026-10-25T15:10:29.099Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:11:32.216Z"
+      },
+      {
+        "attemptId": "att_64c3c8f8",
+        "role": "verifier",
+        "id": "8cfcaf89-1d83-4824-a365-1721e53632a0",
+        "kind": "agent_queue",
+        "label": "verifier chờ slot",
+        "startedAt": "2026-10-25T15:11:32.372Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:11:32.374Z"
+      },
+      {
+        "attemptId": "att_64c3c8f8",
+        "role": "verifier",
+        "id": "c3d32cb3-0e71-4555-913b-b6645e750bed",
+        "kind": "agent",
+        "label": "verifier (A)",
+        "startedAt": "2026-10-25T15:11:32.376Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T15:11:52.783Z"
+      },
+      {
+        "id": "1045b800-c991-49c6-bbce-f54f83fa7bcb",
+        "kind": "approval",
+        "label": "awaiting_acceptance",
+        "startedAt": "2026-10-25T15:11:52.939Z",
+        "status": "running"
+      }
+    ],
+    "attemptsByRole": {
+      "planner": 1,
+      "author": 3,
+      "developer": 1,
+      "verifier": 1
+    },
+    "retries": [
+      {
+        "reason": "invalid_output",
+        "count": 1
+      }
+    ]
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "runtime": "local",
+    "workspace": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\workspaces\\run_627ff9de-A",
+    "configHash": "33304fb25d989ec2095c8e0813670149d80fe1de4bc7fe7caa0a518fd5e4d25d",
+    "checkpoint": null,
+    "startedAt": "2026-10-25T15:07:08.541Z",
+    "endedAt": "2026-10-25T15:07:10.006Z",
+    "checks": [
+      {
+        "recipeId": "test",
+        "runner": "vitest",
+        "version": "vitest/3.2.4 win32-x64 node-v24.12.0",
+        "status": "passed",
+        "message": "Runner tải cấu hình và discovery thành công; chưa chứng minh test nghiệp vụ đạt."
+      }
+    ],
+    "limitation": "Kiểm tra trên runtime chạy checks; không xác nhận quyền thực thi trong sandbox riêng của agent. Không phải bằng chứng nghiệm thu."
+  },
+  "quality": {
+    "enabled": true,
+    "plan": {
+      "schemaVersion": 2,
+      "statefulModelVersion": 1,
+      "reasoningVersion": 1,
+      "cases": [
+        {
+          "id": "C-1",
+          "group": "happy",
+          "risk": "Exports, root null handling, revision initialization, and detached reads may be incorrect.",
+          "priority": "high",
+          "preconditions": "Có thể import module và gọi public API.",
+          "actions": "Kiểm tra hai export; tạo book từ null; đọc và sửa giá trị trả về.",
+          "expected": "Module có đúng hai named exports được yêu cầu. Book bắt đầu revision 0 với document null; read trả đúng hai khóa revision, document. Sửa kết quả đọc không làm đổi trạng thái book.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-1",
+                "quote": "Module `src/patchbook.js` exports exactly `createPatchBook(initial)` and `restorePatchBook(snapshot)`."
+              },
+              {
+                "requirementId": "R-2",
+                "quote": "A JSON document may be root null. Creation clones the initial JSON value at revision 0; `read()` returns exactly `{revision,document}` with a detached document."
+              }
+            ],
+            "explanation": "Các expected kiểm tra trực tiếp export, khởi tạo root null, hình dạng và revision của read, cùng tính detached được quy định."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Chưa tạo book; module chưa được import.",
+              "after": "Module đã import; danh sách named exports được quan sát.",
+              "requirementIds": [
+                "R-1"
+              ],
+              "action": "Import `src/patchbook.js` và liệt kê named exports.",
+              "expected": "Các named exports là đúng `createPatchBook` và `restorePatchBook`."
+            },
+            {
+              "id": "S-2",
+              "before": "Chưa có book; đồng hồ không thuộc hành vi API.",
+              "after": "Book được tạo từ null; read trả revision 0 và document null.",
+              "requirementIds": [
+                "R-2"
+              ],
+              "action": "Gọi `createPatchBook(null)`, sau đó gọi `read()`.",
+              "expected": "Kết quả có đúng `{revision,document}` với revision 0 và document null."
+            },
+            {
+              "id": "S-3",
+              "before": "Book ở revision 0, document null.",
+              "after": "Kết quả read đã bị sửa; trạng thái đọc lại vẫn revision 0, document null.",
+              "requirementIds": [
+                "R-2"
+              ],
+              "action": "Replace the document FIELD on the object returned by read() with a new JSON object, then call read() again; do not try to write a property on the null document itself.",
+              "expected": "Thay đổi trên kết quả trả về không ảnh hưởng document nội bộ."
+            }
+          ],
+          "invariants": [
+            "Việc sửa một giá trị trả về từ `read()` không thay đổi trạng thái nội bộ."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-1",
+            "R-2"
+          ]
+        },
+        {
+          "id": "C-2",
+          "group": "boundary",
+          "risk": "Bộ xác thực JSON có thể nhận dữ liệu ngoài JSON hoặc bỏ sót cấu trúc không hợp lệ.",
+          "priority": "high",
+          "preconditions": "Có thể gọi `createPatchBook` qua public API.",
+          "actions": "Thử lần lượt các giá trị JSON không hợp lệ: undefined, NaN, Infinity, mảng thưa, chu kỳ và đối tượng không plain.",
+          "expected": "Mỗi lần tạo thất bại bằng Error có code `INVALID`.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-3",
+                "quote": "Reject undefined, non-finite numbers, sparse arrays, cycles, and non-plain objects in JSON values with an Error whose code is `INVALID`."
+              }
+            ],
+            "explanation": "Mỗi giá trị thử là một loại được nêu rõ phải từ chối với code INVALID."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Chưa tạo book; chưa có dữ liệu đầu vào.",
+              "after": "Đã thử các giá trị đầu vào không hợp lệ; mỗi lần quan sát lỗi.",
+              "requirementIds": [
+                "R-3"
+              ],
+              "action": "Gọi `createPatchBook` riêng với undefined, NaN, Infinity, mảng có hole, object tự tham chiếu và đối tượng có prototype không phải Object.prototype hoặc null.",
+              "expected": "Mỗi giá trị bị từ chối bằng Error có code `INVALID`."
+            }
+          ],
+          "invariants": [
+            "Không có đầu vào không hợp lệ nào được chấp nhận như JSON document."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-3"
+          ]
+        },
+        {
+          "id": "C-3",
+          "group": "boundary",
+          "risk": "Shape validation có thể chấp nhận request hoặc operation sai cấu trúc, sai scalar, hoặc vượt giới hạn batch.",
+          "priority": "high",
+          "preconditions": "Có book hợp lệ để gọi `apply`; mỗi trường hợp được thử độc lập.",
+          "actions": "Gửi request null/không plain/thiếu hoặc thừa trường; ID rỗng, quá dài; revision sai; batch rỗng, quá dài, thưa; operation null, sai shape, sai op hoặc value không phải JSON.",
+          "expected": "Các đầu vào sai được nêu đều bị từ chối bằng Error có code `INVALID`.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-4",
+                "quote": "Apply requests have exactly `id`, `baseRevision`, and `ops`; IDs are strings of length 1–64, base revisions are nonnegative safe integers, and batches contain 1–32 dense operations of the exact documented shapes. Invalid outer requests, operations, fields, scalar values, or submitted JSON values fail with `INVALID`."
+              }
+            ],
+            "explanation": "Các đầu vào liệt kê bao phủ ranh giới và shape được điều khoản nêu; chỉ khẳng định code lỗi INVALID và không commit."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Book ở revision 0; chưa có request nào được áp dụng.",
+              "after": "Các request sai outer shape và scalar đã được thử; mỗi lần nhận INVALID.",
+              "requirementIds": [
+                "R-4"
+              ],
+              "action": "Thử request null, object không plain, thiếu/thừa khóa, ID độ dài 0 hoặc 65, baseRevision âm, không nguyên, không safe integer, hoặc ops không phải dense array 1–32 phần tử.",
+              "expected": "Mỗi request sai bị từ chối bằng Error có code `INVALID`."
+            },
+            {
+              "id": "S-2",
+              "before": "Book vẫn ở revision 0 vì các lần thử trước thất bại.",
+              "after": "Các operation sai đã được thử; trạng thái book không bị thay đổi do các request sai.",
+              "requirementIds": [
+                "R-4"
+              ],
+              "action": "Thử batch có operation null, shape thiếu/thừa trường, op không biết, path/from không phải string, hoặc value undefined.",
+              "expected": "Mỗi request sai bị từ chối bằng Error có code `INVALID`."
+            }
+          ],
+          "invariants": [
+            "Các request bị từ chối không tạo commit hoặc làm thay đổi document và revision."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-4"
+          ]
+        },
+        {
+          "id": "C-4",
+          "group": "boundary",
+          "risk": "Giải mã pointer nhiều lượt hoặc dùng truy cập thuộc tính kế thừa có thể dẫn đến sai path hay sửa prototype.",
+          "priority": "high",
+          "preconditions": "Tạo book từ object rỗng; gọi apply với baseRevision hiện tại.",
+          "actions": "Thử path syntax sai; sau đó ghi/đọc các key rỗng, key nguy hiểm và chuỗi cần giải mã một lượt.",
+          "expected": "Pointer sai cú pháp lỗi `PATH_SYNTAX`. Các key được hỗ trợ như key literal của object; không truy cập thuộc tính kế thừa hay làm đổi prototype.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-5",
+                "quote": "Paths follow the specified single-pass `~0`/`~1` decoding grammar. Invalid pointer syntax fails with `PATH_SYNTAX`; empty segments and literal keys `__proto__`, `constructor`, and `prototype` are supported without inherited-property access or prototype mutation."
+              }
+            ],
+            "explanation": "Các bước kiểm tra lỗi cú pháp và cách xử lý key literal theo grammar; invariant kiểm tra yêu cầu không dùng inherited property và không sửa prototype."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Book revision 0 với document `{}`.",
+              "after": "Request có path thiếu dấu `/` hoặc tilde sai bị từ chối; book vẫn revision 0.",
+              "requirementIds": [
+                "R-5"
+              ],
+              "action": "Gọi apply với các path như `abc`, `/x~`, `/x~2`.",
+              "expected": "Các path sai cú pháp thất bại với code `PATH_SYNTAX`."
+            },
+            {
+              "id": "S-2",
+              "before": "Book revision 0 với document `{}` sau các lần syntax error.",
+              "after": "Book revision 1 chứa các literal key đã put, gồm key rỗng, `__proto__`, `constructor`, `prototype` và key thể hiện giải mã một lượt.",
+              "requirementIds": [
+                "R-5"
+              ],
+              "action": "Put các giá trị tại path `/`, `/__proto__`, `/constructor`, `/prototype`, và path có segment cần giải mã `~0`/`~1`; sau đó đọc kết quả qua public API.",
+              "expected": "Các key được xử lý như own literal keys theo giải mã một lượt; không có truy cập kế thừa hoặc prototype mutation."
+            }
+          ],
+          "invariants": [
+            "Các thao tác path không làm thay đổi prototype của object hoặc truy cập inherited properties như own properties."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-5"
+          ]
+        },
+        {
+          "id": "C-5",
+          "group": "boundary",
+          "risk": "Lookup có thể nhầm missing, primitive traversal, index không canonical, hoặc dấu append trong ngữ cảnh không được phép.",
+          "priority": "high",
+          "preconditions": "Tạo book với document có object lồng nhau, null, primitive và array; thực hiện từng request riêng với revision phù hợp.",
+          "actions": "Thử missing own key, traversal qua null/primitive, index sai/out-of-range, và `-` ở vị trí không hợp lệ.",
+          "expected": "Lỗi tương ứng là `NOT_FOUND`, `TYPE`, hoặc `INDEX` theo loại lookup; object traversal chỉ dùng own property. Dấu `-` chỉ dùng ở destination cuối của put/move trên array.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-6",
+                "quote": "Path traversal uses own object properties. Missing object properties fail with `NOT_FOUND`, traversal through null or a primitive fails with `TYPE`, and array indices must be canonical safe decimal indices in range or fail with `INDEX`. `-` is accepted only as a final array destination for put or move."
+              },
+              {
+                "requirementId": "R-7",
+                "quote": "Put replaces the root, inserts or replaces an object’s final own key, and inserts into arrays at indices 0 through length or `-`. Remove replaces the root with null, deletes an existing object key, or removes an existing array element. Missing targets fail with the documented lookup errors."
+              }
+            ],
+            "explanation": "Các expected áp dụng trực tiếp loại lỗi lookup và ngoại lệ `-` được nêu. Append hợp lệ cũng xác nhận put destination được chấp nhận."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Book revision 0 với document gồm `{obj:{}, n:null, p:3, arr:['x']}`.",
+              "after": "Các lượt lookup sai đã cho code lỗi tương ứng; không có commit từ request lỗi.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Use check operations for /obj/missing, /n/x, /p/x, /arr/01, and /arr/1; use remove or move source for /arr/-. Each request uses otherwise valid shape and current baseRevision. Do not use put /arr/1 as an error: it is a valid insertion at the end.",
+              "expected": "Missing object property lỗi `NOT_FOUND`; đi xuyên null/primitive lỗi `TYPE`; spelling/index không hợp lệ hoặc ngoài range lỗi `INDEX`; `-` không được nhận làm source hay target remove."
+            },
+            {
+              "id": "S-2",
+              "before": "Book vẫn revision 0; document ban đầu còn nguyên.",
+              "after": "Put append tại destination array hợp lệ đã commit; array có thêm phần tử ở cuối.",
+              "requirementIds": [
+                "R-6",
+                "R-7"
+              ],
+              "action": "Put một JSON value tại `/arr/-`.",
+              "expected": "Dấu `-` được chấp nhận như append chỉ ở final array destination của put."
+            }
+          ],
+          "invariants": [
+            "Lookup lỗi không làm thay đổi document hoặc revision."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-6",
+            "R-7"
+          ]
+        },
+        {
+          "id": "C-6",
+          "group": "happy",
+          "risk": "Put/remove có thể thay thế thay vì chèn array, hoặc xử lý sai root và object key cuối.",
+          "priority": "high",
+          "preconditions": "Tạo book từ `{items:['a','b'], obj:{x:1}}`.",
+          "actions": "Put root, put key object, chèn vào array giữa, remove object key và array index, rồi remove root.",
+          "expected": "Root put thay toàn document; object put thêm/thay own key cuối; array put chèn và dịch phần tử; remove xóa đúng phần tử hoặc đưa root về null.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-7",
+                "quote": "Put replaces the root, inserts or replaces an object’s final own key, and inserts into arrays at indices 0 through length or `-`. Remove replaces the root with null, deletes an existing object key, or removes an existing array element. Missing targets fail with the documented lookup errors."
+              }
+            ],
+            "explanation": "Ba bước xác nhận put object/array, remove object/array và root replacement theo các quy tắc đã nêu."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Book revision 0 với `{items:['a','b'],obj:{x:1}}`.",
+              "after": "Book revision 1 có `{items:['a','z','b'],obj:{x:1,y:2}}`.",
+              "requirementIds": [
+                "R-7"
+              ],
+              "action": "Trong một batch, put `/obj/y` bằng 2 và put `/items/1` bằng `z`.",
+              "expected": "Object có own key mới; array chèn `z` ở index 1 và giữ thứ tự các phần tử cũ."
+            },
+            {
+              "id": "S-2",
+              "before": "Book revision 1 với `{items:['a','z','b'],obj:{x:1,y:2}}`.",
+              "after": "Book revision 2 có `{items:['a','b'],obj:{x:1}}`.",
+              "requirementIds": [
+                "R-7"
+              ],
+              "action": "Remove `/items/1` và `/obj/y` trong một batch.",
+              "expected": "Array element và own object key được xóa."
+            },
+            {
+              "id": "S-3",
+              "before": "Book revision 2 với document `{items:['a','b'],obj:{x:1}}`.",
+              "after": "Book revision 3 có document là `null`.",
+              "requirementIds": [
+                "R-7"
+              ],
+              "action": "Remove tại root path rỗng.",
+              "expected": "Root removal thay document bằng null."
+            }
+          ],
+          "invariants": [
+            "Mỗi commit phản ánh tuần tự các phép put/remove thành công trên document."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-7"
+          ]
+        },
+        {
+          "id": "C-7",
+          "group": "boundary",
+          "risk": "Equality có thể phụ thuộc thứ tự object key, bỏ qua thứ tự array, hoặc phân biệt -0 với 0.",
+          "priority": "high",
+          "preconditions": "Tạo book từ `{obj:{a:1,b:2},arr:[1,2],zero:0}`.",
+          "actions": "Commit one batch containing the equivalent object-key-order check and -0 check, then independently submit the two mismatch checks using the new revision.",
+          "expected": "Equivalent check-only batch succeeds at revision 1 with document unchanged; each mismatch independently throws TEST_FAILED and keeps revision 1, document and receipts unchanged.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-8",
+                "quote": "Check uses JSON deep equality, ignoring object key order, preserving array order, and treating -0 as 0. A mismatch fails with `TEST_FAILED`; lookup failures use normal path errors; a successful check does not alter the document."
+              },
+              {
+                "requirementId": "R-11",
+                "quote": "Operations execute sequentially against a private candidate. Any failure leaves document, revision, and receipt history unchanged, and a failed new ID can be reused. A successful batch increments revision once and returns a detached receipt exactly `{id,revision,document}`."
+              }
+            ],
+            "explanation": "Các check được chọn phân biệt ba quy tắc equality và xác nhận lỗi mismatch cùng tính không thay đổi của check."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Revision 0, document {obj:{a:1,b:2},arr:[1,2],zero:0}, no receipts.",
+              "after": "Revision 1, same document, one successful receipt.",
+              "requirementIds": [
+                "R-8",
+                "R-11"
+              ],
+              "action": "Apply one batch with check /obj = {b:2,a:1} and check /zero = -0, at baseRevision 0.",
+              "expected": "Both checks match; check-only batch commits exactly one revision and leaves document content unchanged."
+            },
+            {
+              "id": "S-2",
+              "before": "Revision 1 with original document and one receipt.",
+              "after": "Revision 1, same document and same receipt history.",
+              "requirementIds": [
+                "R-8",
+                "R-11"
+              ],
+              "action": "Using a new ID and baseRevision 1, apply check /arr = [2,1].",
+              "expected": "TEST_FAILED; document, revision and history unchanged."
+            },
+            {
+              "id": "S-3",
+              "before": "Revision 1 with original document and one receipt.",
+              "after": "Revision 1, same document and same receipt history.",
+              "requirementIds": [
+                "R-8",
+                "R-11"
+              ],
+              "action": "Using another new ID and baseRevision 1, apply check /obj = {a:9}.",
+              "expected": "TEST_FAILED; document, revision and history unchanged."
+            }
+          ],
+          "invariants": [
+            "Check thành công không làm thay đổi document."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-8",
+            "R-11"
+          ]
+        },
+        {
+          "id": "C-8",
+          "group": "boundary",
+          "risk": "Move có thể xử lý sai prefix theo segment, thứ tự resolve/remove, hoặc rollback khi destination lỗi.",
+          "priority": "high",
+          "preconditions": "Tạo book với `{a:{b:1},ab:2,items:['a','b','c','d']}`.",
+          "actions": "Thử move vào descendant, move từ `/a` sang `/ab`, move trong array, move source và destination giống nhau, move lồng lên root.",
+          "expected": "Descendant bị từ chối trước removal; `/ab` không bị coi là descendant của `/a`; array move dùng destination sau removal; same decoded path là no-op; move nested value lên root hợp lệ.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-9",
+                "quote": "Move resolves an existing source first; identical decoded paths are a successful no-op; moving into a proper decoded-segment descendant fails with `MOVE_INTO_SELF` before removal. Other moves remove the source, resolve the destination on the post-removal document, and apply put rules there."
+              },
+              {
+                "requirementId": "R-11",
+                "quote": "Operations execute sequentially against a private candidate. Any failure leaves document, revision, and receipt history unchanged, and a failed new ID can be reused. A successful batch increments revision once and returns a detached receipt exactly `{id,revision,document}`."
+              }
+            ],
+            "explanation": "Các bước kiểm tra prefix descendant, prefix không phải descendant, post-removal destination, no-op cùng path và move lên root; invariant rollback/commit dựa trên quy tắc transaction."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Book revision 0 với `{a:{b:1},ab:2,items:['a','b','c','d']}`.",
+              "after": "Move `/a` tới `/a/b/c` lỗi `MOVE_INTO_SELF`; document và revision vẫn như trước.",
+              "requirementIds": [
+                "R-9",
+                "R-11"
+              ],
+              "action": "Gọi apply với operation move từ `/a` tới `/a/b/c`.",
+              "expected": "Move vào proper decoded-segment descendant lỗi `MOVE_INTO_SELF` trước khi source bị gỡ."
+            },
+            {
+              "id": "S-2",
+              "before": "Book revision 0, document nguyên vẹn sau lỗi move.",
+              "after": "Book revision 1 có `ab` nhận giá trị object cũ của `a`; move source `/items/1` tới `/items/3` tạo `['a','c','d','b']`.",
+              "requirementIds": [
+                "R-9"
+              ],
+              "action": "Thực hiện hai move trong một batch: `/a` tới `/ab`, rồi `/items/1` tới `/items/3`.",
+              "expected": "Prefix được xét theo segment; destination array được resolve sau removal và cho kết quả đã nêu."
+            },
+            {
+              "id": "S-3",
+              "before": "Book revision 1; document chứa `ab` và array đã move.",
+              "after": "Move cùng decoded path thành công như no-op và move nested value lên root thành công; mỗi batch thành công tăng revision một lần.",
+              "requirementIds": [
+                "R-9",
+                "R-11"
+              ],
+              "action": "Thử move một source hiện hữu tới chính path đó, rồi trong batch kế tiếp move một nested value tới root.",
+              "expected": "Same path là no-op sau khi source được resolve; move nested value tới root được phép."
+            }
+          ],
+          "invariants": [
+            "Move lỗi không làm thay đổi document hoặc revision.",
+            "Mỗi batch thành công tạo đúng một commit."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-9",
+            "R-11"
+          ]
+        },
+        {
+          "id": "C-9",
+          "group": "consistency",
+          "risk": "Thứ tự validation, ID history, revision check và path resolution có thể sai; batch lỗi có thể ghi dở hoặc chiếm ID.",
+          "priority": "high",
+          "preconditions": "Book revision 0 với `{a:1}`; mỗi ca dùng ID riêng trừ lần retry ID được nêu.",
+          "actions": "Thử batch có thao tác đầu thành công rồi thao tác sau thất bại; tái sử dụng ID; so sánh lỗi khi revision lệch; kiểm tra path syntax trước ID replay.",
+          "expected": "Batch lỗi rollback toàn bộ; ID thất bại có thể dùng lại; revision mismatch xảy ra trước path resolution; request/path được validate trước ID history; commit thành công tăng revision đúng một lần và trả receipt detached.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-10",
+                "quote": "All request shapes, JSON values, and path syntaxes are validated before ID history, revision comparison, and path resolution. Exact successful ID replays return the saved historical receipt before revision/path checks; differing base revision or ops for a successful ID fail with `ID_CONFLICT`; otherwise revision mismatch fails with `REVISION_CONFLICT` before path resolution."
+              },
+              {
+                "requirementId": "R-11",
+                "quote": "Operations execute sequentially against a private candidate. Any failure leaves document, revision, and receipt history unchanged, and a failed new ID can be reused. A successful batch increments revision once and returns a detached receipt exactly `{id,revision,document}`."
+              }
+            ],
+            "explanation": "Chuỗi trạng thái cho thấy failed ID có thể retry, batch lỗi không ghi dở, revision mismatch đứng trước path resolution, và path syntax được kiểm tra trước ID history."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Book revision 0, document `{a:1}`, chưa có receipts.",
+              "after": "Batch gồm put `/b` rồi check sai `/a` thất bại; revision 0, document `{a:1}`, receipts không đổi.",
+              "requirementIds": [
+                "R-11"
+              ],
+              "action": "Apply batch ID `retry`, baseRevision 0, put `/b` = 2 rồi check `/a` = 9.",
+              "expected": "Lỗi `TEST_FAILED`; không có thay đổi document, revision hoặc receipt history."
+            },
+            {
+              "id": "S-2",
+              "before": "Book vẫn revision 0, document `{a:1}`, ID `retry` chưa thành công.",
+              "after": "ID `retry` commit thành công ở revision 1 với document `{a:1,b:2}`.",
+              "requirementIds": [
+                "R-11"
+              ],
+              "action": "Dùng lại ID `retry` với batch put `/b` = 2 và baseRevision 0.",
+              "expected": "Request được chấp nhận; receipt cho revision 1 và document đã commit."
+            },
+            {
+              "id": "S-3",
+              "before": "Book revision 1 với `{a:1,b:2}`.",
+              "after": "Request revision sai lỗi `REVISION_CONFLICT` trước khi path lookup; trạng thái vẫn revision 1.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Gửi request hợp lệ về shape nhưng baseRevision 0, path cú pháp hợp lệ nhưng không tồn tại.",
+              "expected": "Lỗi là `REVISION_CONFLICT`, không phải lỗi lookup path."
+            },
+            {
+              "id": "S-4",
+              "before": "Book revision 1; ID `retry` đã có successful history.",
+              "after": "Request dùng ID đã tồn tại với path syntax sai bị từ chối `PATH_SYNTAX` trước xử lý replay.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Gửi request dùng ID `retry`, baseRevision 0, với operation có path sai cú pháp.",
+              "expected": "Path syntax vẫn được validate trước ID history."
+            }
+          ],
+          "invariants": [
+            "Sau mỗi bước, revision và document chỉ phản ánh các batch đã commit thành công.",
+            "Batch thất bại không thêm receipt và không giữ lại hiệu ứng operation trước đó trong batch."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-10",
+            "R-11"
+          ]
+        },
+        {
+          "id": "C-10",
+          "group": "consistency",
+          "risk": "Replay có thể so sánh sai cấu trúc, trả document hiện tại thay vì lịch sử, hoặc cho phép reuse ID sau restore.",
+          "priority": "high",
+          "preconditions": "Book bắt đầu `{a:1}`; có thể JSON-clone snapshot bằng JSON serialization trong test.",
+          "actions": "Commit X rồi Y; replay X chính xác; thử ID conflict với baseRevision hoặc ops khác; snapshot, JSON-clone, restore rồi replay X.",
+          "expected": "Replay chính xác trả receipt lịch sử mà không đổi trạng thái hiện tại. ID conflict lỗi `ID_CONFLICT`. Restore giữ commit order, requests và historical receipts.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-10",
+                "quote": "All request shapes, JSON values, and path syntaxes are validated before ID history, revision comparison, and path resolution. Exact successful ID replays return the saved historical receipt before revision/path checks; differing base revision or ops for a successful ID fail with `ID_CONFLICT`; otherwise revision mismatch fails with `REVISION_CONFLICT` before path resolution."
+              },
+              {
+                "requirementId": "R-12",
+                "quote": "Successful IDs are permanent. Replay equality compares the initial base revision and ops structurally, ignoring object key order while preserving arrays and literal IDs. Historical receipts remain the original committed result after later commits and restore."
+              },
+              {
+                "requirementId": "R-13",
+                "quote": "`snapshot()` returns exactly `{schemaVersion:1,revision,document,receipts}` with receipts in commit order and each entry exactly `{id,baseRevision,ops,result}`; result has exactly `{id,revision,document}`. Snapshot, JSON-clone, and restore preserve document, revision, requests, and historical receipts; returned values and original/restored instances remain independent."
+              },
+              {
+                "requirementId": "R-11",
+                "quote": "Operations execute sequentially against a private candidate. Any failure leaves document, revision, and receipt history unchanged, and a failed new ID can be reused. A successful batch increments revision once and returns a detached receipt exactly `{id,revision,document}`."
+              }
+            ],
+            "explanation": "Chuỗi commit/replay/restore kiểm tra lịch sử qua các trạng thái, hình dạng và nội dung snapshot theo hợp đồng, ID permanence, equality và tính độc lập."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Book revision 0, document `{a:1}`, không có receipts.",
+              "after": "X commit revision 1 với `{a:1,b:2}`; Y commit revision 2 với `{b:2}`.",
+              "requirementIds": [
+                "R-11",
+                "R-12"
+              ],
+              "action": "Apply X (put `/b` = 2), sau đó Y (remove `/a`) với baseRevision tương ứng.",
+              "expected": "Revision hiện tại là 2, document `{b:2}`."
+            },
+            {
+              "id": "S-2",
+              "before": "Book revision 2 với `{b:2}`; X có receipt lịch sử revision 1.",
+              "after": "Replay X trả receipt revision 1 và `{a:1,b:2}`; read hiện tại vẫn revision 2 và `{b:2}`.",
+              "requirementIds": [
+                "R-10",
+                "R-12"
+              ],
+              "action": "Gửi lại chính xác request X với baseRevision và ops ban đầu.",
+              "expected": "Nhận cùng historical receipt của X; không tăng revision hoặc thay đổi document hiện tại."
+            },
+            {
+              "id": "S-3",
+              "before": "Book revision 2; ID X đã thành công.",
+              "after": "Các request dùng X nhưng đổi baseRevision hoặc ops lỗi `ID_CONFLICT`; trạng thái không đổi.",
+              "requirementIds": [
+                "R-10",
+                "R-12"
+              ],
+              "action": "Gửi lại ID X lần lượt với baseRevision khác và ops khác.",
+              "expected": "Mỗi request differing baseRevision hoặc ops bị từ chối bằng `ID_CONFLICT`."
+            },
+            {
+              "id": "S-4",
+              "before": "Book revision 2 với lịch sử X, Y.",
+              "after": "Book đã restore từ JSON-clone snapshot; read và snapshot phản ánh revision/document/receipt history tương đương.",
+              "requirementIds": [
+                "R-13"
+              ],
+              "action": "Lấy snapshot, JSON-clone, gọi `restorePatchBook`, rồi read và snapshot trên instance mới.",
+              "expected": "Document, revision, requests và historical receipts được bảo toàn."
+            },
+            {
+              "id": "S-5",
+              "before": "Book gốc và book restored đều có cùng dữ liệu revision 2 và lịch sử X, Y.",
+              "after": "Replay X trên restored book trả receipt lịch sử revision 1; commit mới ở một instance không làm đổi instance kia.",
+              "requirementIds": [
+                "R-12",
+                "R-13"
+              ],
+              "action": "Replay X trên restored book; sau đó commit một request chỉ trên book restored và đọc cả hai instance.",
+              "expected": "Replay trả kết quả lịch sử; original và restored instances evolve độc lập."
+            }
+          ],
+          "invariants": [
+            "Historical receipt của X luôn giữ revision 1 và document `{a:1,b:2}`.",
+            "Replay không đổi document hoặc revision hiện tại.",
+            "Hai instance sau restore không chia sẻ trạng thái có thể quan sát qua public API."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-10",
+            "R-12",
+            "R-13",
+            "R-11"
+          ]
+        },
+        {
+          "id": "C-11",
+          "group": "state",
+          "risk": "Aliasing qua input, receipt, snapshot hoặc instance restore có thể làm rò rỉ trạng thái nội bộ.",
+          "priority": "high",
+          "preconditions": "Book được tạo từ object JSON lồng nhau; thực hiện request put với object JSON lồng nhau.",
+          "actions": "Sửa input sau create/apply, sửa receipt và snapshot trả về, restore snapshot JSON-clone; tiếp tục đọc cả hai instance.",
+          "expected": "Các giá trị trả về và instance gốc/restored độc lập; sửa bản sao không làm đổi trạng thái nội bộ hoặc instance còn lại.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-2",
+                "quote": "Creation clones the initial JSON value at revision 0; `read()` returns exactly `{revision,document}` with a detached document."
+              },
+              {
+                "requirementId": "R-11",
+                "quote": "A successful batch increments revision once and returns a detached receipt exactly `{id,revision,document}`."
+              },
+              {
+                "requirementId": "R-13",
+                "quote": "Snapshot, JSON-clone, and restore preserve document, revision, requests, and historical receipts; returned values and original/restored instances remain independent."
+              }
+            ],
+            "explanation": "Các bước sửa input và giá trị trả về kiểm tra clone/detach ở create, apply, snapshot và restore; invariant yêu cầu chỉ các bản nội bộ giữ nguyên."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Có input `{nested:{v:1}}`; chưa tạo book.",
+              "after": "Book revision 0 giữ bản clone; input gốc được sửa thành `{nested:{v:9}}`.",
+              "requirementIds": [
+                "R-2",
+                "R-13"
+              ],
+              "action": "Tạo book từ input, sau đó sửa input gốc.",
+              "expected": "`read()` vẫn trả document `{nested:{v:1}}`."
+            },
+            {
+              "id": "S-2",
+              "before": "Book revision 0 với `{nested:{v:1}}`.",
+              "after": "Book revision 1 có `{nested:{v:2}}`; submitted value và receipt đã bị sửa ngoài book.",
+              "requirementIds": [
+                "R-2",
+                "R-11",
+                "R-13"
+              ],
+              "action": "Apply put `/nested` với object `{v:2}`; sửa object đã submit và document trong receipt trả về.",
+              "expected": "Read vẫn trả `{nested:{v:2}}`; mutation trên input/receipt không rò vào book."
+            },
+            {
+              "id": "S-3",
+              "before": "Book revision 1 với `{nested:{v:2}}`.",
+              "after": "Snapshot trả về đã bị sửa; snapshot mới vẫn biểu diễn trạng thái commit ban đầu.",
+              "requirementIds": [
+                "R-13"
+              ],
+              "action": "Gọi snapshot, sửa document và result trong snapshot trả về, rồi gọi snapshot lần nữa.",
+              "expected": "Snapshot trả về detached; sửa bản trước không làm thay đổi trạng thái hoặc snapshot sau."
+            },
+            {
+              "id": "S-4",
+              "before": "Book gốc revision 1; có snapshot hợp lệ.",
+              "after": "Book restored được tạo; sửa trạng thái qua commit trên restored không đổi book gốc.",
+              "requirementIds": [
+                "R-13"
+              ],
+              "action": "JSON-clone snapshot, restore; commit chỉ trên instance restored và đọc cả hai.",
+              "expected": "Original và restored instances remain independent."
+            }
+          ],
+          "invariants": [
+            "Mutating input hoặc bất kỳ read/receipt/snapshot trả về nào không làm thay đổi trạng thái nội bộ đã commit.",
+            "Thay đổi trên restored instance không làm đổi trạng thái quan sát được của original instance."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-2",
+            "R-11",
+            "R-13"
+          ]
+        },
+        {
+          "id": "C-12",
+          "group": "boundary",
+          "risk": "Restore có thể nhận outer argument không hợp lệ hoặc áp đặt validation ngoài hợp đồng.",
+          "priority": "high",
+          "preconditions": "Có thể gọi `restorePatchBook` qua public API.",
+          "actions": "Thử null và các primitive làm outer argument.",
+          "expected": "Null hoặc outer argument không phải object lỗi `INVALID`.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-14",
+                "quote": "A null or non-object outer restore argument fails with `INVALID`."
+              },
+              {
+                "requirementId": "R-15",
+                "quote": "Do not add behavior requirements for malformed or hand-authored snapshot internals beyond the specified outer restore argument check."
+              }
+            ],
+            "explanation": "Chỉ kiểm tra điều kiện outer argument được chỉ định; không suy diễn oracle cho nội dung snapshot tự tạo hoặc bị hỏng."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Chưa có instance được restore.",
+              "after": "Các lời gọi restore với null và primitive đã thất bại bằng INVALID.",
+              "requirementIds": [
+                "R-14"
+              ],
+              "action": "Gọi `restorePatchBook` riêng với null và các giá trị primitive.",
+              "expected": "Mỗi outer argument null hoặc non-object bị từ chối với Error có code `INVALID`."
+            }
+          ],
+          "invariants": [
+            "Không khẳng định hành vi với malformed hoặc hand-authored snapshot internals."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-14",
+            "R-15"
+          ]
+        }
+      ],
+      "notApplicable": [
+        {
+          "group": "authorization",
+          "reason": "Hợp đồng chỉ mô tả API in-memory không có người dùng, vai trò, quyền hoặc cơ chế authorization để kiểm thử."
+        },
+        {
+          "group": "concurrency",
+          "reason": "Hợp đồng cho phép lời gọi sync hoặc async và yêu cầu callers await mỗi lời gọi; không quy định xử lý lời gọi đồng thời, interleaving hay thứ tự cạnh tranh."
+        },
+        {
+          "group": "dependency",
+          "reason": "Không có dependency ngoài để kiểm thử qua public API; lệnh cấm dependency và các tài nguyên ngoài là tiêu chí kiểm tra thủ công R-16, không tạo thêm hành vi runtime."
+        }
+      ],
+      "questions": []
+    },
+    "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c",
+    "manifestProblems": [],
+    "capability": {
+      "adapter": "stryker-vitest",
+      "root": ".",
+      "candidates": [
+        "."
+      ],
+      "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+      "status": "available",
+      "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+      "toolVersion": "9.6.1",
+      "vitestVersion": "3.2.4",
+      "configFile": "vitest.config.js"
+    },
+    "mutation": {
+      "schemaVersion": 1,
+      "source": "stryker-vitest",
+      "status": "completed",
+      "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+      "slot": "A",
+      "contractVersion": 4,
+      "configHash": "291d95790ffac747cb283fede69bfeaed29bc2556a840ddb5037dd28d7a4a840",
+      "capability": {
+        "adapter": "stryker-vitest",
+        "root": ".",
+        "candidates": [
+          "."
+        ],
+        "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+        "status": "available",
+        "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+        "toolVersion": "9.6.1",
+        "vitestVersion": "3.2.4",
+        "configFile": "vitest.config.js"
+      },
+      "startedAt": "2026-10-25T15:10:29.103Z",
+      "durationMs": 63103,
+      "baseline": "passed",
+      "counts": {
+        "killed": 395,
+        "survived": 60,
+        "no_coverage": 8,
+        "timeout": 2,
+        "errors": 0,
+        "pending": 0
+      },
+      "mutants": [
+        {
+          "file": "src/patchbook.js",
+          "line": 82,
+          "status": "NoCoverage",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 83,
+          "status": "NoCoverage",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 83,
+          "status": "NoCoverage",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 86,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 88,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 115,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 125,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 127,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 7,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 1,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 8,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 10,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 13,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 15,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 15,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 15,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 15,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 15,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 15,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 16,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 16,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 16,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 16,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 16,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 16,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 16,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 21,
+          "status": "Survived",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 22,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 22,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 22,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 22,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 22,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 23,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 23,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 23,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 23,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 26,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 27,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 27,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 27,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 27,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 29,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 30,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 31,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 31,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 31,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 39,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 41,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 42,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 42,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 42,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 42,
+          "status": "Survived",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 43,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 44,
+          "status": "Survived",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 44,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 48,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 48,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 48,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 48,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 48,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 49,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 49,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 49,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 49,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 49,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 52,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 53,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 53,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 53,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 53,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 53,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 54,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 54,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 54,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 54,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 54,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 54,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 55,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 55,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 55,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 56,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 57,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 57,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 57,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 57,
+          "status": "Timeout",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 57,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 58,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 58,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 58,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 58,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 58,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 59,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 60,
+          "status": "Killed",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 61,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 61,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 61,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 61,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 61,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 62,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 62,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 62,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 62,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 62,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 63,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 64,
+          "status": "Timeout",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 71,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 72,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 72,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 72,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 72,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 72,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 72,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Survived",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Survived",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Killed",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Killed",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Survived",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 73,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 75,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 79,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 81,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 82,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 82,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 85,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 85,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 85,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 86,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 86,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 86,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 93,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 94,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 94,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 94,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 95,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 95,
+          "status": "Killed",
+          "mutator": "UnaryOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 96,
+          "status": "Killed",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 97,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 97,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 97,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 98,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 98,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 101,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 101,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 101,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 105,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 108,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 109,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 109,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 109,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 110,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 110,
+          "status": "Killed",
+          "mutator": "UnaryOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 111,
+          "status": "Killed",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 112,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 112,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 112,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 112,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 113,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 114,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 114,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 114,
+          "status": "Survived",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 114,
+          "status": "Survived",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 119,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 120,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 120,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 120,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 121,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 121,
+          "status": "Killed",
+          "mutator": "UnaryOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 122,
+          "status": "Killed",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 123,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 123,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 123,
+          "status": "Survived",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 123,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 124,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 124,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 124,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 125,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 125,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 125,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 131,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 132,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 132,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 132,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 132,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Survived",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Survived",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 134,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 137,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 137,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 137,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 137,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 138,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 138,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 138,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 138,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 138,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 138,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 138,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 138,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 140,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 141,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 142,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 142,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 142,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 142,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 145,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Survived",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 147,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 149,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 151,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 151,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 151,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 151,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 152,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 154,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 157,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 159,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 160,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 160,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 161,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 164,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 164,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 164,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 165,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 165,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 165,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 165,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 165,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 165,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 165,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 168,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 168,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 168,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 168,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 171,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 172,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 172,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 172,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 172,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 173,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 173,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 173,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 173,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 174,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 174,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 174,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 174,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 174,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 175,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 175,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 175,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 175,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 176,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Survived",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 178,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Survived",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 179,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 185,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 187,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 188,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 193,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 194,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 199,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 200,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 203,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/patchbook.js",
+          "line": 204,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        }
+      ],
+      "files": [
+        "src/patchbook.js"
+      ],
+      "message": "Đã kiểm tra các mutation trong phạm vi source đã chọn.",
+      "endedAt": "2026-10-25T15:11:32.206Z"
+    },
+    "testMs": 1121,
+    "cases": [
+      {
+        "caseId": "C-1",
+        "requirementIds": [
+          "R-1",
+          "R-2"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-1][R-2][C-1] exports and detached root null read\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-2",
+        "requirementIds": [
+          "R-3"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-3][C-2] rejects invalid JSON document values\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-3",
+        "requirementIds": [
+          "R-4"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-4][C-3] rejects invalid apply request and operation shapes\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-4",
+        "requirementIds": [
+          "R-5"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-5][C-4] validates pointer syntax and supports literal decoded keys\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-5",
+        "requirementIds": [
+          "R-6",
+          "R-7"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-6][R-7][C-5] path lookup errors and array append destination\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-6",
+        "requirementIds": [
+          "R-7"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-7][C-6] put and remove object, array, and root targets\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-7",
+        "requirementIds": [
+          "R-8",
+          "R-11"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-8][R-11][C-7] check equality and rollback on mismatches\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-8",
+        "requirementIds": [
+          "R-9",
+          "R-11"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-9][R-11][C-8] move descendant rejection, post-removal destinations, and no-op\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-9",
+        "requirementIds": [
+          "R-10",
+          "R-11"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-10][R-11][C-9] validation order, rollback, retry, and revision conflict\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-10",
+        "requirementIds": [
+          "R-10",
+          "R-12",
+          "R-13",
+          "R-11"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-10][R-12][R-13][R-11][C-10] historical replay and snapshot restore\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-11",
+        "requirementIds": [
+          "R-2",
+          "R-11",
+          "R-13"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-2][R-11][R-13][C-11] input, receipt, snapshot, and restored state are detached\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      },
+      {
+        "caseId": "C-12",
+        "requirementIds": [
+          "R-14",
+          "R-15"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-14][R-15][C-12] rejects invalid restore outer arguments\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "e0fabecf69d62213868053a3c2cd42486ac8b8813f2319bc428ba3de866fae2c"
+      }
+    ]
+  },
+  "qualityPolicyVersion": 3,
+  "generatedAt": "2026-10-25T15:11:53.712Z",
+  "runId": "run_627ff9de",
+  "title": "PatchBook / department / GPT-6 Luna medium",
+  "requirement": "# PatchBook — atomic JSON edits with historical replay\n\nImplement a small in-memory JavaScript ES module `src/patchbook.js`. Export exactly `createPatchBook(initial)` and `restorePatchBook(snapshot)`. A book has `read()`, `apply({id,baseRevision,ops})`, `snapshot()`. Calls may be sync or async; callers await each. Add a short README example. No dependency, filesystem, network, wall clock, background task, eval or dynamic code execution. Only documented behavior is required; do not invent behavior for unspecified inputs.\n\n1. A JSON value is null, boolean, string, finite number, dense array of JSON values, or plain object (Object.prototype or null prototype) with JSON values in its own enumerable string properties. Reject undefined, NaN/Infinity, holes and cycles with Error code `INVALID`. Root null is valid. `createPatchBook(initial)` clones the initial value and starts revision 0. `read()` returns exactly `{revision,document}`, detached. All submitted values, returned reads/receipts/snapshots and restored instances must remain independent of internal state.\n2. `apply` requires a non-null plain object with exactly id, baseRevision, ops. ID is a literal string length 1–64, without trimming. baseRevision is a nonnegative safe integer. ops is a dense array of 1–32 operation objects. Operation shapes are exact: `{op:'put',path,value}`, `{op:'remove',path}`, `{op:'check',path,value}`, `{op:'move',from,path}`. path/from must be strings; value must be JSON. Reject malformed outer request, null request/operation, missing/extra field, unknown op or invalid scalar/value with `INVALID`. No precedence is required between unrelated malformed fields.\n3. Paths use THIS grammar (not an external standard): empty string is root; every other path begins `/`, then segments separated by `/`. In each segment `~0` decodes to `~` and `~1` to `/` in a single pass; any other/lone tilde and any nonempty path without leading `/` throws `PATH_SYNTAX`. Empty segments and keys `__proto__`, `constructor`, `prototype` are valid literal object keys and must never access inherited properties or change prototypes. On objects, all intermediate keys must exist as OWN properties or throw `NOT_FOUND`. Traversing a primitive/null throws `TYPE`. On arrays, an index must be canonical decimal `0` or a nonzero digit followed by digits, and be a safe integer: invalid spelling or out-of-range throws `INDEX`. Intermediate indices must exist; `-` is allowed ONLY as the final array destination of put/move, meaning append. Object segments such as `01` or `-` are ordinary keys.\n4. `put` at root replaces the document. In an object, put inserts/replaces the final own key (without creating missing ancestors). In an array, put INSERTS at indices 0..length (or appends for `-`), shifting later items; it does not overwrite an item. `remove` requires an existing own key or array index 0..length-1; root removal replaces the document with null. `check` compares the value at its path with the submitted value: JSON deep equality ignores object key order, preserves array order, and treats -0 as 0. Unequal values throw `TEST_FAILED`; missing paths use the normal lookup errors. Check does not alter document content.\n5. `move` first resolves an existing source value. Same decoded source and destination is a successful no-op (source must still exist). A proper decoded-segment prefix from source to destination throws `MOVE_INTO_SELF` BEFORE removing anything; `/a` is not an ancestor of `/ab`, while root is an ancestor of every non-root path. Otherwise remove source, then resolve destination on the POST-REMOVAL document and insert/replace using put rules. Thus moving `/items/1` to `/items/3` in a four-item array is valid and yields the old second item at the end; an index valid before removal can be invalid afterwards. A failed destination rolls back both the removal and any earlier operation in the batch. Moving a nested value to root is allowed.\n6. Precedence and transaction rules: first validate ALL request/operation shapes, JSON values and path syntaxes, without resolving paths. Next handle successful ID history (rule 7), then compare baseRevision to current revision; mismatch throws `REVISION_CONFLICT` before path resolution. Then execute operations sequentially on a private candidate. First operation failure aborts everything: document, revision and receipt history stay unchanged; a failed new ID is reusable. A successful batch increments revision exactly once, including check-only or same-path-move batches, and returns a detached receipt exactly `{id,revision,document}` showing its committed document. No intermediate state becomes visible.\n7. Successful IDs are permanent. Replay matches the INITIAL `{baseRevision,ops}` structurally, ignoring object key order but preserving arrays and literal IDs. An exact repeat returns the SAME HISTORICAL receipt saved for that ID, even after later commits or restore, without checking current revision, resolving old paths, incrementing revision or changing history. Any different baseRevision/ops using that ID throws `ID_CONFLICT`, ahead of revision/path-resolution errors. Invalid shapes and pointer syntax are still rejected before ID history. Do not return the current document as an old receipt or mutate stored requests while executing their values.\n8. `snapshot()` returns exactly `{schemaVersion:1,revision,document,receipts}`. receipts is an array in commit order, each entry exactly `{id,baseRevision,ops,result}` where result has exactly the three receipt fields `{id,revision,document}`. Store initial request ops and historical committed result, not the latest document for every entry. Snapshot/JSON-clone/restore preserves all content, revision and replay receipts. Only this implementation's produced snapshots are required restore inputs; nevertheless a null/non-object outer restore argument must throw `INVALID`. Do not infer validation rules for hand-authored/corrupted snapshot internals. Returned snapshots and both original/restored instances evolve independently.\n\nExamples: starting `{items:['a','b','c','d']}`, one batch `move /items/1 -> /items/3` commits `{items:['a','c','d','b']}`. Starting `{a:1}`, a batch `put /b = 2`, `check /a = 9` fails `TEST_FAILED` and leaves revision 0/document `{a:1}` with no receipt. Commit request X adding b, then request Y removing a: replay X returns its earlier `{a:1,b:2}` document and earlier revision, while `read()` stays at Y. A null apply request is invalid; a null initial document is valid.\n",
+  "mode": "verify",
+  "provider": "codex",
+  "readiness": "ready_with_warnings",
+  "notReadyReasons": [],
+  "checkpoint": "9c9f1a09b0b505b00038c94a4dfe797a70f62528",
+  "baseSha": "a3b6308a3e65ad27af5fff9ea1ba3d2a4c07085b",
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "Module `src/patchbook.js` exports exactly `createPatchBook(initial)` and `restorePatchBook(snapshot)`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-1][R-2][C-1] exports and detached root null read\"]]"
+      ]
+    },
+    {
+      "id": "R-2",
+      "text": "A JSON document may be root null. Creation clones the initial JSON value at revision 0; `read()` returns exactly `{revision,document}` with a detached document.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-1][R-2][C-1] exports and detached root null read\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-2][R-11][R-13][C-11] input, receipt, snapshot, and restored state are detached\"]]"
+      ]
+    },
+    {
+      "id": "R-3",
+      "text": "Reject undefined, non-finite numbers, sparse arrays, cycles, and non-plain objects in JSON values with an Error whose code is `INVALID`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-3][C-2] rejects invalid JSON document values\"]]"
+      ]
+    },
+    {
+      "id": "R-4",
+      "text": "Apply requests have exactly `id`, `baseRevision`, and `ops`; IDs are strings of length 1–64, base revisions are nonnegative safe integers, and batches contain 1–32 dense operations of the exact documented shapes. Invalid outer requests, operations, fields, scalar values, or submitted JSON values fail with `INVALID`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-4][C-3] rejects invalid apply request and operation shapes\"]]"
+      ]
+    },
+    {
+      "id": "R-5",
+      "text": "Paths follow the specified single-pass `~0`/`~1` decoding grammar. Invalid pointer syntax fails with `PATH_SYNTAX`; empty segments and literal keys `__proto__`, `constructor`, and `prototype` are supported without inherited-property access or prototype mutation.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][C-4] validates pointer syntax and supports literal decoded keys\"]]"
+      ]
+    },
+    {
+      "id": "R-6",
+      "text": "Path traversal uses own object properties. Missing object properties fail with `NOT_FOUND`, traversal through null or a primitive fails with `TYPE`, and array indices must be canonical safe decimal indices in range or fail with `INDEX`. `-` is accepted only as a final array destination for put or move.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-6][R-7][C-5] path lookup errors and array append destination\"]]"
+      ]
+    },
+    {
+      "id": "R-7",
+      "text": "Put replaces the root, inserts or replaces an object’s final own key, and inserts into arrays at indices 0 through length or `-`. Remove replaces the root with null, deletes an existing object key, or removes an existing array element. Missing targets fail with the documented lookup errors.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-6][R-7][C-5] path lookup errors and array append destination\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][C-6] put and remove object, array, and root targets\"]]"
+      ]
+    },
+    {
+      "id": "R-8",
+      "text": "Check uses JSON deep equality, ignoring object key order, preserving array order, and treating -0 as 0. A mismatch fails with `TEST_FAILED`; lookup failures use normal path errors; a successful check does not alter the document.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-8][R-11][C-7] check equality and rollback on mismatches\"]]"
+      ]
+    },
+    {
+      "id": "R-9",
+      "text": "Move resolves an existing source first; identical decoded paths are a successful no-op; moving into a proper decoded-segment descendant fails with `MOVE_INTO_SELF` before removal. Other moves remove the source, resolve the destination on the post-removal document, and apply put rules there.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-9][R-11][C-8] move descendant rejection, post-removal destinations, and no-op\"]]"
+      ]
+    },
+    {
+      "id": "R-10",
+      "text": "All request shapes, JSON values, and path syntaxes are validated before ID history, revision comparison, and path resolution. Exact successful ID replays return the saved historical receipt before revision/path checks; differing base revision or ops for a successful ID fail with `ID_CONFLICT`; otherwise revision mismatch fails with `REVISION_CONFLICT` before path resolution.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-11][C-9] validation order, rollback, retry, and revision conflict\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-12][R-13][R-11][C-10] historical replay and snapshot restore\"]]"
+      ]
+    },
+    {
+      "id": "R-11",
+      "text": "Operations execute sequentially against a private candidate. Any failure leaves document, revision, and receipt history unchanged, and a failed new ID can be reused. A successful batch increments revision once and returns a detached receipt exactly `{id,revision,document}`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-8][R-11][C-7] check equality and rollback on mismatches\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-9][R-11][C-8] move descendant rejection, post-removal destinations, and no-op\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-11][C-9] validation order, rollback, retry, and revision conflict\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-12][R-13][R-11][C-10] historical replay and snapshot restore\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-2][R-11][R-13][C-11] input, receipt, snapshot, and restored state are detached\"]]"
+      ]
+    },
+    {
+      "id": "R-12",
+      "text": "Successful IDs are permanent. Replay equality compares the initial base revision and ops structurally, ignoring object key order while preserving arrays and literal IDs. Historical receipts remain the original committed result after later commits and restore.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-12][R-13][R-11][C-10] historical replay and snapshot restore\"]]"
+      ]
+    },
+    {
+      "id": "R-13",
+      "text": "`snapshot()` returns exactly `{schemaVersion:1,revision,document,receipts}` with receipts in commit order and each entry exactly `{id,baseRevision,ops,result}`; result has exactly `{id,revision,document}`. Snapshot, JSON-clone, and restore preserve document, revision, requests, and historical receipts; returned values and original/restored instances remain independent.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-12][R-13][R-11][C-10] historical replay and snapshot restore\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-2][R-11][R-13][C-11] input, receipt, snapshot, and restored state are detached\"]]"
+      ]
+    },
+    {
+      "id": "R-14",
+      "text": "A null or non-object outer restore argument fails with `INVALID`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-14][R-15][C-12] rejects invalid restore outer arguments\"]]"
+      ]
+    },
+    {
+      "id": "R-15",
+      "text": "Do not add behavior requirements for malformed or hand-authored snapshot internals beyond the specified outer restore argument check.",
+      "required": true,
+      "manual": false,
+      "kind": "forbidden",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-14][R-15][C-12] rejects invalid restore outer arguments\"]]"
+      ]
+    },
+    {
+      "id": "R-16",
+      "text": "Do not use dependencies, filesystem, network, wall clock, background tasks, eval, or dynamic code execution.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden",
+      "status": "manual_pending",
+      "tests": []
+    }
+  ],
+  "assumptions": [],
+  "changes": {
+    "available": true,
+    "files": [
+      {
+        "path": "README.md",
+        "status": "modified",
+        "added": 15,
+        "removed": 1
+      },
+      {
+        "path": "src/patchbook.js",
+        "status": "modified",
+        "added": 206,
+        "removed": 2
+      },
+      {
+        "path": "tests/acceptance.test.js",
+        "status": "added",
+        "added": 249,
+        "removed": 0
+      }
+    ],
+    "added": 470,
+    "removed": 3,
+    "testFiles": [
+      "tests/acceptance.test.js"
+    ],
+    "patch": "diff --git a/README.md b/README.md\nindex 149e8a5..98935cb 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,16 @@\n # PatchBook\n-Implement SPEC.md and add a short usage example.\n+\n+PatchBook applies JSON edits atomically and keeps successful request IDs replayable.\n+\n+```js\n+import { createPatchBook } from './src/patchbook.js';\n+\n+const book = createPatchBook({ items: ['a', 'b', 'c', 'd'] });\n+const receipt = book.apply({\n+  id: 'move-second-to-end',\n+  baseRevision: 0,\n+  ops: [{ op: 'move', from: '/items/1', path: '/items/3' }],\n+});\n+\n+console.log(receipt.document); // { items: ['a', 'c', 'd', 'b'] }\n+```\ndiff --git a/src/patchbook.js b/src/patchbook.js\nindex 3066584..0750354 100644\n--- a/src/patchbook.js\n+++ b/src/patchbook.js\n@@ -1,2 +1,206 @@\n-export function createPatchBook(){throw new Error('Not implemented');}\n-export function restorePatchBook(){throw new Error('Not implemented');}\n+const fail = (code) => {\n+  const error = new Error(code);\n+  error.code = code;\n+  throw error;\n+};\n+\n+const isPlainObject = (value) => {\n+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;\n+  const prototype = Object.getPrototypeOf(value);\n+  return prototype === Object.prototype || prototype === null;\n+};\n+\n+function cloneJson(value, ancestors = new Set()) {\n+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;\n+  if (typeof value === 'number' && Number.isFinite(value)) return value;\n+  if (typeof value !== 'object' || ancestors.has(value)) fail('INVALID');\n+\n+  ancestors.add(value);\n+  let copy;\n+  if (Array.isArray(value)) {\n+    copy = new Array(value.length);\n+    for (let index = 0; index < value.length; index += 1) {\n+      if (!Object.prototype.hasOwnProperty.call(value, index)) fail('INVALID');\n+      copy[index] = cloneJson(value[index], ancestors);\n+    }\n+  } else {\n+    if (!isPlainObject(value)) fail('INVALID');\n+    copy = Object.create(Object.getPrototypeOf(value));\n+    for (const key of Object.keys(value)) {\n+      Object.defineProperty(copy, key, {\n+        value: cloneJson(value[key], ancestors), enumerable: true, writable: true, configurable: true,\n+      });\n+    }\n+  }\n+  ancestors.delete(value);\n+  return copy;\n+}\n+\n+function equalJson(left, right) {\n+  if (left === right) return true; // Includes the required -0/0 equivalence.\n+  if (left === null || right === null || typeof left !== 'object' || typeof right !== 'object') return false;\n+  if (Array.isArray(left) || Array.isArray(right)) {\n+    return Array.isArray(left) && Array.isArray(right) && left.length === right.length\n+      && left.every((item, index) => equalJson(item, right[index]));\n+  }\n+  const leftKeys = Object.keys(left);\n+  const rightKeys = Object.keys(right);\n+  return leftKeys.length === rightKeys.length\n+    && leftKeys.every((key) => Object.prototype.hasOwnProperty.call(right, key) && equalJson(left[key], right[key]));\n+}\n+\n+function decodePath(path) {\n+  if (path === '') return [];\n+  if (!path.startsWith('/')) fail('PATH_SYNTAX');\n+  return path.slice(1).split('/').map((segment) => {\n+    let decoded = '';\n+    for (let index = 0; index < segment.length; index += 1) {\n+      if (segment[index] !== '~') decoded += segment[index];\n+      else {\n+        const escaped = segment[index + 1];\n+        if (escaped === '0') decoded += '~';\n+        else if (escaped === '1') decoded += '/';\n+        else fail('PATH_SYNTAX');\n+        index += 1;\n+      }\n+    }\n+    return decoded;\n+  });\n+}\n+\n+function arrayIndex(segment, length, allowEnd, allowAppend) {\n+  if (segment === '-' && allowAppend) return length;\n+  if (!/^(0|[1-9][0-9]*)$/.test(segment)) fail('INDEX');\n+  const index = Number(segment);\n+  if (!Number.isSafeInteger(index) || index >= length + (allowEnd ? 1 : 0)) fail('INDEX');\n+  return index;\n+}\n+\n+function resolveParent(document, segments) {\n+  let node = document;\n+  for (const segment of segments) {\n+    if (Array.isArray(node)) {\n+      const index = arrayIndex(segment, node.length, false, false);\n+      node = node[index];\n+    } else if (isPlainObject(node)) {\n+      if (!Object.prototype.hasOwnProperty.call(node, segment)) fail('NOT_FOUND');\n+      node = node[segment];\n+    } else fail('TYPE');\n+  }\n+  return node;\n+}\n+\n+function getAt(document, segments) {\n+  if (segments.length === 0) return document;\n+  const parent = resolveParent(document, segments.slice(0, -1));\n+  const key = segments[segments.length - 1];\n+  if (Array.isArray(parent)) {\n+    const index = arrayIndex(key, parent.length, false, false);\n+    return parent[index];\n+  }\n+  if (isPlainObject(parent)) {\n+    if (!Object.prototype.hasOwnProperty.call(parent, key)) fail('NOT_FOUND');\n+    return parent[key];\n+  }\n+  fail('TYPE');\n+}\n+\n+function putAt(document, segments, value) {\n+  if (segments.length === 0) return value;\n+  const parent = resolveParent(document, segments.slice(0, -1));\n+  const key = segments[segments.length - 1];\n+  if (Array.isArray(parent)) parent.splice(arrayIndex(key, parent.length, true, true), 0, value);\n+  else if (isPlainObject(parent)) {\n+    Object.defineProperty(parent, key, { value, enumerable: true, writable: true, configurable: true });\n+  } else fail('TYPE');\n+  return document;\n+}\n+\n+function removeAt(document, segments) {\n+  if (segments.length === 0) return null;\n+  const parent = resolveParent(document, segments.slice(0, -1));\n+  const key = segments[segments.length - 1];\n+  if (Array.isArray(parent)) parent.splice(arrayIndex(key, parent.length, false, false), 1);\n+  else if (isPlainObject(parent)) {\n+    if (!Object.prototype.hasOwnProperty.call(parent, key)) fail('NOT_FOUND');\n+    delete parent[key];\n+  } else fail('TYPE');\n+  return document;\n+}\n+\n+function validateRequest(request) {\n+  if (!isPlainObject(request)) fail('INVALID');\n+  const keys = Object.keys(request);\n+  if (keys.length !== 3 || !['id', 'baseRevision', 'ops'].every((key) => Object.prototype.hasOwnProperty.call(request, key))) fail('INVALID');\n+  const { id, baseRevision, ops } = request;\n+  if (typeof id !== 'string' || id.length < 1 || id.length > 64\n+      || !Number.isSafeInteger(baseRevision) || baseRevision < 0\n+      || !Array.isArray(ops) || ops.length < 1 || ops.length > 32) fail('INVALID');\n+  const clonedOps = cloneJson(ops);\n+  const decodedOps = [];\n+  for (const operation of clonedOps) {\n+    if (!isPlainObject(operation)) fail('INVALID');\n+    const fields = Object.keys(operation);\n+    const { op } = operation;\n+    const expected = op === 'put' || op === 'check' ? ['op', 'path', 'value']\n+      : op === 'remove' ? ['op', 'path'] : op === 'move' ? ['op', 'from', 'path'] : null;\n+    if (!expected || fields.length !== expected.length || !expected.every((field) => Object.prototype.hasOwnProperty.call(operation, field))) fail('INVALID');\n+    if (typeof operation.path !== 'string' || (op === 'move' && typeof operation.from !== 'string')) fail('INVALID');\n+    if (op === 'put' || op === 'check') operation.value = cloneJson(operation.value);\n+    const path = decodePath(operation.path);\n+    const from = op === 'move' ? decodePath(operation.from) : null;\n+    decodedOps.push({ operation, path, from });\n+  }\n+  return { id, baseRevision, ops: clonedOps, decodedOps };\n+}\n+\n+function createBook(document, revision, receipts) {\n+  const byId = new Map(receipts.map((entry) => [entry.id, entry]));\n+  return {\n+    read() { return { revision, document: cloneJson(document) }; },\n+    apply(request) {\n+      const validated = validateRequest(request);\n+      const previous = byId.get(validated.id);\n+      if (previous) {\n+        if (previous.baseRevision !== validated.baseRevision || !equalJson(previous.ops, validated.ops)) fail('ID_CONFLICT');\n+        return cloneJson(previous.result);\n+      }\n+      if (validated.baseRevision !== revision) fail('REVISION_CONFLICT');\n+\n+      let candidate = cloneJson(document);\n+      for (const { operation, path, from } of validated.decodedOps) {\n+        if (operation.op === 'put') candidate = putAt(candidate, path, cloneJson(operation.value));\n+        else if (operation.op === 'remove') candidate = removeAt(candidate, path);\n+        else if (operation.op === 'check') {\n+          if (!equalJson(getAt(candidate, path), operation.value)) fail('TEST_FAILED');\n+        } else {\n+          const source = cloneJson(getAt(candidate, from));\n+          if (from.length === path.length && from.every((segment, index) => segment === path[index])) continue;\n+          if (from.length < path.length && from.every((segment, index) => segment === path[index])) fail('MOVE_INTO_SELF');\n+          candidate = removeAt(candidate, from);\n+          candidate = putAt(candidate, path, source);\n+        }\n+      }\n+\n+      revision += 1;\n+      document = candidate;\n+      const result = { id: validated.id, revision, document: cloneJson(document) };\n+      const entry = { id: validated.id, baseRevision: validated.baseRevision, ops: cloneJson(validated.ops), result: cloneJson(result) };\n+      receipts.push(entry);\n+      byId.set(entry.id, entry);\n+      return cloneJson(result);\n+    },\n+    snapshot() {\n+      return { schemaVersion: 1, revision, document: cloneJson(document), receipts: cloneJson(receipts) };\n+    },\n+  };\n+}\n+\n+export function createPatchBook(initial) {\n+  return createBook(cloneJson(initial), 0, []);\n+}\n+\n+export function restorePatchBook(snapshot) {\n+  if (snapshot === null || typeof snapshot !== 'object') fail('INVALID');\n+  return createBook(cloneJson(snapshot.document), snapshot.revision, cloneJson(snapshot.receipts));\n+}\ndiff --git a/tests/acceptance.test.js b/tests/acceptance.test.js\nnew file mode 100644\nindex 0000000..36901bf\n--- /dev/null\n+++ b/tests/acceptance.test.js\n@@ -0,0 +1,249 @@\n+import { test, expect } from 'vitest';\n+import * as api from '../src/patchbook.js';\n+\n+const codeOf = async (call) => {\n+  try { await call(); } catch (error) { return error?.code; }\n+  return 'NO_ERROR';\n+};\n+const keys = (value) => Object.keys(value).sort();\n+\n+// @aidept-case C-1\n+test('[R-1][R-2][C-1] exports and detached root null read', async () => {\n+  // @aidept-step S-1\n+  expect(Object.keys(api).sort()).toEqual(['createPatchBook', 'restorePatchBook']);\n+  const book = await api.createPatchBook(null);\n+  const first = await book.read();\n+  // @aidept-step S-2\n+  expect(first).toEqual({ revision: 0, document: null });\n+  // @aidept-step S-2\n+  expect(keys(first)).toEqual(['document', 'revision']);\n+  first.document = { changed: true };\n+  const second = await book.read();\n+  // @aidept-step S-3\n+  expect(second).toEqual({ revision: 0, document: null });\n+});\n+\n+// @aidept-case C-2\n+test('[R-3][C-2] rejects invalid JSON document values', async () => {\n+  const sparse = []; sparse.length = 1;\n+  const cyclic = {}; cyclic.self = cyclic;\n+  const values = [undefined, NaN, Infinity, sparse, cyclic, new Date()];\n+  for (const value of values) {\n+    // @aidept-step S-1\n+    expect(await codeOf(() => api.createPatchBook(value))).toBe('INVALID');\n+  }\n+});\n+\n+// @aidept-case C-3\n+test('[R-4][C-3] rejects invalid apply request and operation shapes', async () => {\n+  const book = await api.createPatchBook({});\n+  const valid = { id: 'i', baseRevision: 0, ops: [{ op: 'put', path: '/x', value: 1 }] };\n+  const badRequests = [null, Object.assign(Object.create({ inherited: true }), valid), { id: 'i', baseRevision: 0 }, { ...valid, extra: 1 }, { ...valid, id: '' }, { ...valid, id: 'x'.repeat(65) }, { ...valid, baseRevision: -1 }, { ...valid, baseRevision: 1.5 }, { ...valid, baseRevision: Number.MAX_SAFE_INTEGER + 1 }, { ...valid, ops: [] }, { ...valid, ops: Array.from({ length: 33 }, () => ({ op: 'remove', path: '' })) }, { ...valid, ops: new Array(1) }];\n+  for (const request of badRequests) {\n+    // @aidept-step S-1\n+    expect(await codeOf(() => book.apply(request))).toBe('INVALID');\n+  }\n+  const badOps = [null, { op: 'remove' }, { op: 'remove', path: '', extra: 1 }, { op: 'wat', path: '' }, { op: 'put', path: 2, value: 1 }, { op: 'put', path: '', value: undefined }, { op: 'move', from: 1, path: '' }];\n+  for (const op of badOps) {\n+    // @aidept-step S-2\n+    expect(await codeOf(() => book.apply({ id: 'bad', baseRevision: 0, ops: [op] }))).toBe('INVALID');\n+  }\n+  // @aidept-step S-2\n+  expect(await book.read()).toEqual({ revision: 0, document: {} });\n+});\n+\n+// @aidept-case C-4\n+test('[R-5][C-4] validates pointer syntax and supports literal decoded keys', async () => {\n+  const book = await api.createPatchBook({});\n+  for (const path of ['abc', '/x~', '/x~2']) {\n+    // @aidept-step S-1\n+    expect(await codeOf(() => book.apply({ id: `bad-${path}`, baseRevision: 0, ops: [{ op: 'put', path, value: 1 }] }))).toBe('PATH_SYNTAX');\n+  }\n+  // @aidept-step S-1\n+  expect(await book.read()).toEqual({ revision: 0, document: {} });\n+  const ops = [\n+    { op: 'put', path: '/', value: 'empty' }, { op: 'put', path: '/__proto__', value: { safe: true } },\n+    { op: 'put', path: '/constructor', value: 3 }, { op: 'put', path: '/prototype', value: 4 },\n+    { op: 'put', path: '/a~0b', value: 5 }, { op: 'put', path: '/a~1b', value: 6 },\n+  ];\n+  await book.apply({ id: 'keys', baseRevision: 0, ops });\n+  const result = await book.read();\n+  const expected = Object.fromEntries([['', 'empty'], ['__proto__', { safe: true }], ['constructor', 3], ['prototype', 4], ['a~b', 5], ['a/b', 6]]);\n+  // @aidept-step S-2\n+  expect(result.document).toEqual(expected);\n+  // @aidept-step S-2\n+  expect(Object.getPrototypeOf(result.document)).toBe(Object.prototype);\n+  // @aidept-step S-2\n+  expect(Object.prototype.safe).toBeUndefined();\n+});\n+\n+// @aidept-case C-5\n+test('[R-6][R-7][C-5] path lookup errors and array append destination', async () => {\n+  const book = await api.createPatchBook({ obj: {}, n: null, p: 3, arr: ['x'] });\n+  const requests = [\n+    [{ op: 'check', path: '/obj/missing', value: 1 }, 'NOT_FOUND'],\n+    [{ op: 'check', path: '/n/x', value: 1 }, 'TYPE'],\n+    [{ op: 'check', path: '/p/x', value: 1 }, 'TYPE'],\n+    [{ op: 'check', path: '/arr/01', value: 1 }, 'INDEX'],\n+    [{ op: 'check', path: '/arr/1', value: 1 }, 'INDEX'],\n+    [{ op: 'remove', path: '/arr/-' }, 'INDEX'],\n+    [{ op: 'move', from: '/arr/-', path: '/obj/x' }, 'INDEX'],\n+  ];\n+  for (const [op, code] of requests) {\n+    // @aidept-step S-1\n+    expect(await codeOf(() => book.apply({ id: `err-${code}-${op.path ?? op.from}`, baseRevision: 0, ops: [op] }))).toBe(code);\n+  }\n+  // @aidept-step S-1\n+  expect(await book.read()).toEqual({ revision: 0, document: { obj: {}, n: null, p: 3, arr: ['x'] } });\n+  await book.apply({ id: 'append', baseRevision: 0, ops: [{ op: 'put', path: '/arr/-', value: 'y' }] });\n+  // @aidept-step S-2\n+  expect(await book.read()).toEqual({ revision: 1, document: { obj: {}, n: null, p: 3, arr: ['x', 'y'] } });\n+});\n+\n+// @aidept-case C-6\n+test('[R-7][C-6] put and remove object, array, and root targets', async () => {\n+  const book = await api.createPatchBook({ items: ['a', 'b'], obj: { x: 1 } });\n+  await book.apply({ id: 'puts', baseRevision: 0, ops: [{ op: 'put', path: '/obj/y', value: 2 }, { op: 'put', path: '/items/1', value: 'z' }] });\n+  // @aidept-step S-1\n+  expect(await book.read()).toEqual({ revision: 1, document: { items: ['a', 'z', 'b'], obj: { x: 1, y: 2 } } });\n+  await book.apply({ id: 'removes', baseRevision: 1, ops: [{ op: 'remove', path: '/items/1' }, { op: 'remove', path: '/obj/y' }] });\n+  // @aidept-step S-2\n+  expect(await book.read()).toEqual({ revision: 2, document: { items: ['a', 'b'], obj: { x: 1 } } });\n+  await book.apply({ id: 'root', baseRevision: 2, ops: [{ op: 'remove', path: '' }] });\n+  // @aidept-step S-3\n+  expect(await book.read()).toEqual({ revision: 3, document: null });\n+});\n+\n+// @aidept-case C-7\n+test('[R-8][R-11][C-7] check equality and rollback on mismatches', async () => {\n+  const book = await api.createPatchBook({ obj: { a: 1, b: 2 }, arr: [1, 2], zero: 0 });\n+  const receipt = await book.apply({ id: 'checks', baseRevision: 0, ops: [{ op: 'check', path: '/obj', value: { b: 2, a: 1 } }, { op: 'check', path: '/zero', value: -0 }] });\n+  // @aidept-step S-1\n+  expect(receipt).toEqual({ id: 'checks', revision: 1, document: { obj: { a: 1, b: 2 }, arr: [1, 2], zero: 0 } });\n+  // @aidept-step S-1\n+  expect((await book.snapshot()).receipts).toHaveLength(1);\n+  const arrayError = await codeOf(() => book.apply({ id: 'array-order', baseRevision: 1, ops: [{ op: 'check', path: '/arr', value: [2, 1] }] }));\n+  // @aidept-step S-2\n+  expect(arrayError).toBe('TEST_FAILED');\n+  // @aidept-step S-2\n+  expect(await book.read()).toEqual({ revision: 1, document: { obj: { a: 1, b: 2 }, arr: [1, 2], zero: 0 } });\n+  // @aidept-step S-2\n+  expect((await book.snapshot()).receipts).toHaveLength(1);\n+  const objectError = await codeOf(() => book.apply({ id: 'object-value', baseRevision: 1, ops: [{ op: 'check', path: '/obj', value: { a: 9 } }] }));\n+  // @aidept-step S-3\n+  expect(objectError).toBe('TEST_FAILED');\n+  // @aidept-step S-3\n+  expect(await book.read()).toEqual({ revision: 1, document: { obj: { a: 1, b: 2 }, arr: [1, 2], zero: 0 } });\n+  // @aidept-step S-3\n+  expect((await book.snapshot()).receipts).toHaveLength(1);\n+});\n+\n+// @aidept-case C-8\n+test('[R-9][R-11][C-8] move descendant rejection, post-removal destinations, and no-op', async () => {\n+  const book = await api.createPatchBook({ a: { b: 1 }, ab: 2, items: ['a', 'b', 'c', 'd'] });\n+  const err = await codeOf(() => book.apply({ id: 'descendant', baseRevision: 0, ops: [{ op: 'move', from: '/a', path: '/a/b/c' }] }));\n+  // @aidept-step S-1\n+  expect(err).toBe('MOVE_INTO_SELF');\n+  // @aidept-step S-1\n+  expect(await book.read()).toEqual({ revision: 0, document: { a: { b: 1 }, ab: 2, items: ['a', 'b', 'c', 'd'] } });\n+  await book.apply({ id: 'moves', baseRevision: 0, ops: [{ op: 'move', from: '/a', path: '/ab' }, { op: 'move', from: '/items/1', path: '/items/3' }] });\n+  // @aidept-step S-2\n+  expect(await book.read()).toEqual({ revision: 1, document: { ab: { b: 1 }, items: ['a', 'c', 'd', 'b'] } });\n+  const noop = await book.apply({ id: 'noop', baseRevision: 1, ops: [{ op: 'move', from: '/items/1', path: '/items/1' }] });\n+  // @aidept-step S-3\n+  expect(noop).toEqual({ id: 'noop', revision: 2, document: { ab: { b: 1 }, items: ['a', 'c', 'd', 'b'] } });\n+  const lifted = await book.apply({ id: 'lift', baseRevision: 2, ops: [{ op: 'move', from: '/ab/b', path: '' }] });\n+  // @aidept-step S-3\n+  expect(lifted).toEqual({ id: 'lift', revision: 3, document: 1 });\n+});\n+\n+// @aidept-case C-9\n+test('[R-10][R-11][C-9] validation order, rollback, retry, and revision conflict', async () => {\n+  const book = await api.createPatchBook({ a: 1 });\n+  const failed = await codeOf(() => book.apply({ id: 'retry', baseRevision: 0, ops: [{ op: 'put', path: '/b', value: 2 }, { op: 'check', path: '/a', value: 9 }] }));\n+  // @aidept-step S-1\n+  expect(failed).toBe('TEST_FAILED');\n+  // @aidept-step S-1\n+  expect(await book.read()).toEqual({ revision: 0, document: { a: 1 } });\n+  // @aidept-step S-1\n+  expect((await book.snapshot()).receipts).toEqual([]);\n+  const receipt = await book.apply({ id: 'retry', baseRevision: 0, ops: [{ op: 'put', path: '/b', value: 2 }] });\n+  // @aidept-step S-2\n+  expect(receipt).toEqual({ id: 'retry', revision: 1, document: { a: 1, b: 2 } });\n+  const conflict = await codeOf(() => book.apply({ id: 'stale', baseRevision: 0, ops: [{ op: 'check', path: '/missing', value: 1 }] }));\n+  // @aidept-step S-3\n+  expect(conflict).toBe('REVISION_CONFLICT');\n+  const syntax = await codeOf(() => book.apply({ id: 'retry', baseRevision: 0, ops: [{ op: 'check', path: '/bad~', value: 1 }] }));\n+  // @aidept-step S-4\n+  expect(syntax).toBe('PATH_SYNTAX');\n+});\n+\n+// @aidept-case C-10\n+test('[R-10][R-12][R-13][R-11][C-10] historical replay and snapshot restore', async () => {\n+  const book = await api.createPatchBook({ a: 1 });\n+  const x = { id: 'X', baseRevision: 0, ops: [{ op: 'put', path: '/b', value: 2 }] };\n+  await book.apply(x);\n+  await book.apply({ id: 'Y', baseRevision: 1, ops: [{ op: 'remove', path: '/a' }] });\n+  // @aidept-step S-1\n+  expect(await book.read()).toEqual({ revision: 2, document: { b: 2 } });\n+  const old = await book.apply(x);\n+  // @aidept-step S-2\n+  expect(old).toEqual({ id: 'X', revision: 1, document: { a: 1, b: 2 } });\n+  // @aidept-step S-2\n+  expect(await book.read()).toEqual({ revision: 2, document: { b: 2 } });\n+  const diffBase = await codeOf(() => book.apply({ ...x, baseRevision: 2 }));\n+  const diffOps = await codeOf(() => book.apply({ ...x, ops: [{ op: 'put', path: '/b', value: 3 }] }));\n+  // @aidept-step S-3\n+  expect([diffBase, diffOps]).toEqual(['ID_CONFLICT', 'ID_CONFLICT']);\n+  const snapshot = await book.snapshot();\n+  // @aidept-step S-4\n+  expect(keys(snapshot)).toEqual(['document', 'receipts', 'revision', 'schemaVersion']);\n+  // @aidept-step S-4\n+  expect(snapshot.receipts).toEqual([\n+    { id: 'X', baseRevision: 0, ops: x.ops, result: { id: 'X', revision: 1, document: { a: 1, b: 2 } } },\n+    { id: 'Y', baseRevision: 1, ops: [{ op: 'remove', path: '/a' }], result: { id: 'Y', revision: 2, document: { b: 2 } } },\n+  ]);\n+  const restored = await api.restorePatchBook(JSON.parse(JSON.stringify(snapshot)));\n+  // @aidept-step S-4\n+  expect(await restored.snapshot()).toEqual(snapshot);\n+  const replay = await restored.apply(x);\n+  // @aidept-step S-5\n+  expect(replay).toEqual({ id: 'X', revision: 1, document: { a: 1, b: 2 } });\n+  await restored.apply({ id: 'Z', baseRevision: 2, ops: [{ op: 'put', path: '/c', value: 3 }] });\n+  // @aidept-step S-5\n+  expect(await book.read()).toEqual({ revision: 2, document: { b: 2 } });\n+  // @aidept-step S-5\n+  expect(await restored.read()).toEqual({ revision: 3, document: { b: 2, c: 3 } });\n+});\n+\n+// @aidept-case C-11\n+test('[R-2][R-11][R-13][C-11] input, receipt, snapshot, and restored state are detached', async () => {\n+  const input = { nested: { v: 1 } };\n+  const book = await api.createPatchBook(input);\n+  input.nested.v = 9;\n+  // @aidept-step S-1\n+  expect(await book.read()).toEqual({ revision: 0, document: { nested: { v: 1 } } });\n+  const value = { v: 2 };\n+  const receipt = await book.apply({ id: 'put', baseRevision: 0, ops: [{ op: 'put', path: '/nested', value }] });\n+  value.v = 8; receipt.document.nested.v = 7;\n+  // @aidept-step S-2\n+  expect(await book.read()).toEqual({ revision: 1, document: { nested: { v: 2 } } });\n+  const snapshot = await book.snapshot();\n+  snapshot.document.nested.v = 6; snapshot.receipts[0].result.document.nested.v = 5;\n+  // @aidept-step S-3\n+  expect(await book.snapshot()).toEqual({ schemaVersion: 1, revision: 1, document: { nested: { v: 2 } }, receipts: [{ id: 'put', baseRevision: 0, ops: [{ op: 'put', path: '/nested', value: { v: 2 } }], result: { id: 'put', revision: 1, document: { nested: { v: 2 } } } }] });\n+  const restored = await api.restorePatchBook(JSON.parse(JSON.stringify(await book.snapshot())));\n+  await restored.apply({ id: 'restored-only', baseRevision: 1, ops: [{ op: 'put', path: '/nested/v', value: 3 }] });\n+  // @aidept-step S-4\n+  expect(await book.read()).toEqual({ revision: 1, document: { nested: { v: 2 } } });\n+  // @aidept-step S-4\n+  expect(await restored.read()).toEqual({ revision: 2, document: { nested: { v: 3 } } });\n+});\n+\n+// @aidept-case C-12\n+test('[R-14][R-15][C-12] rejects invalid restore outer arguments', async () => {\n+  for (const value of [null, undefined, 1, 'snapshot', true]) {\n+    // @aidept-step S-1\n+    expect(await codeOf(() => api.restorePatchBook(value))).toBe('INVALID');\n+  }\n+});\n"
+  },
+  "checks": [
+    {
+      "id": "test",
+      "command": "node node_modules/vitest/vitest.mjs run --configLoader runner --reporter=json --outputFile=.aidept-report.json",
+      "status": "passed",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "skippedNames": [],
+      "durationMs": 1121,
+      "runs": 1,
+      "quarantined": false,
+      "issues": []
+    }
+  ],
+  "verifier": {
+    "expected": true,
+    "ran": true,
+    "verdict": {
+      "decision": "pass",
+      "summary": "Tôi sẽ đối chiếu đúng hợp đồng trước, rồi xem trạng thái/diff hiện có và tìm phản ví dụ qua public API. Chỉ báo finding có thể chỉ ra bằng dòng code hoặc ca tái hiện cụ thể.",
+      "findingCount": 0,
+      "scope": {
+        "reviewed": [
+          "SPEC.md and contract requirements R-1–R-16",
+          "src/patchbook.js",
+          "README.md",
+          "tests/acceptance.test.js"
+        ],
+        "checkIds": [
+          "chk_4cd1d57b"
+        ],
+        "limitations": [
+          "Did not run tests; the supplied runner result reports 13 passed, 0 failed, and 0 skipped."
+        ],
+        "additionalChecks": [
+          {
+            "command": "\"C:\\\\Users\\\\ADMIN\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\native\\\\powershell\\\\pwsh.exe\" -Command 'Get-Content SPEC.md; git status --short; git diff -- src/patchbook.js README.md tests/acceptance.test.js'",
+            "status": "passed",
+            "detail": "ny different baseRevision/ops using that ID throws `ID_CONFLICT`, ahead of revision/path-resolution errors. Invalid shapes and pointer syntax are still rejected before ID history. Do not return the current document as an old receipt or mutate stored requests while executing their values.\r\n8. `snapshot()` returns exactly `{schemaVersion:1,revision,document,receipts}`. receipts is an array in commit order, each entry exactly `{id,baseRevision,ops,result}` where result has exactly the three receipt fields `{id,revision,document}`. Store initial request ops and historical committed result, not the latest document for every entry. Snapshot/JSON-clone/restore preserves all content, revision and replay receipts. Only this implementation's produced snapshots are required restore inputs; nevertheless a null/non-object outer restore argument must throw `INVALID`. Do not infer validation rules for hand-authored/corrupted snapshot internals. Returned snapshots and both original/restored instances evolve independently.\r\n\r\nExamples: starting `{items:['a','b','c','d']}`, one batch `move /items/1 -> /items/3` commits `{items:['a','c','d','b']}`. Starting `{a:1}`, a batch `put /b = 2`, `check /a = 9` fails `TEST_FAILED` and leaves revision 0/document `{a:1}` with no receipt. Commit request X adding b, then request Y removing a: replay X returns its earlier `{a:1,b:2}` document and earlier revision, while `read()` stays at Y. A null apply request is invalid; a null initial document is valid.\r\n"
+          }
+        ]
+      }
+    },
+    "findings": []
+  },
+  "effort": {
+    "costUsd": 1.2091326,
+    "estimated": true,
+    "tokens": 1042493,
+    "aiMs": 383280,
+    "humanMs": 0,
+    "attempts": 6,
+    "repairs": 0
+  },
+  "scopeApprovals": [],
+  "skills": [],
+  "warnings": [
+    {
+      "level": "warn",
+      "text": "Mutation còn 60 sống sót và 8 không được test phủ; cần xem chất lượng assertion."
+    },
+    {
+      "level": "warn",
+      "text": "Mutation: 2 timeout, 0 lỗi công cụ/biên dịch, 0 chưa chạy; không tính là test bắt lỗi."
+    },
+    {
+      "level": "warn",
+      "text": "Giới hạn Verifier: Did not run tests; the supplied runner result reports 13 passed, 0 failed, and 0 skipped."
+    },
+    {
+      "level": "warn",
+      "text": "Cần bạn tự kiểm tra: R-16 (tiêu chí thủ công, hệ thống không kiểm được)."
+    },
+    {
+      "level": "info",
+      "text": "Công cụ phân tích mã (knip, jscpd, dependency-cruiser) chưa chạy: chưa có đánh giá về mã chết, trùng lặp hay vi phạm ranh giới module."
+    }
+  ],
+  "delivery": {
+    "kind": "branch",
+    "target": "aidept/run_627ff9de-A",
+    "branch": "aidept/run_627ff9de-A",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\department",
+    "delivered": false,
+    "status": "unconfirmed",
+    "commands": [
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\department\" log --oneline HEAD..aidept/run_627ff9de-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\department\" diff HEAD..aidept/run_627ff9de-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\patchbook-20261025\\department\" merge aidept/run_627ff9de-A"
+    ]
+  }
+}

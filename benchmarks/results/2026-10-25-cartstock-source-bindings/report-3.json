@@ -1,0 +1,4430 @@
+{
+  "findingReplays": [],
+  "execution": {
+    "available": true,
+    "automaticMs": 361825,
+    "waitingMs": 82953,
+    "agentQueueMs": 11,
+    "spans": [
+      {
+        "id": "0a098389-a2cc-436e-8c21-44c10249e8b6",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T11:20:24.532Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:24.542Z"
+      },
+      {
+        "id": "d5ee18d1-2df0-40bd-8636-6cbbe3236cba",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T11:20:24.534Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:22:54.260Z"
+      },
+      {
+        "id": "27db07c0-cfb3-44ec-9f7b-9a1424c590d2",
+        "kind": "setup",
+        "label": "Chuẩn bị bản sao/cài dependency",
+        "startedAt": "2026-10-25T11:20:24.550Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:25.002Z"
+      },
+      {
+        "id": "d2f29f64-8dfc-4d26-b955-36d2a9063aee",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T11:20:25.016Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:26.787Z"
+      },
+      {
+        "attemptId": "att_93fd0e7d",
+        "role": "planner",
+        "id": "d440bf74-c135-4e66-b2e2-969af6f6db9a",
+        "kind": "agent_queue",
+        "label": "planner chờ slot",
+        "startedAt": "2026-10-25T11:20:26.806Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:26.808Z"
+      },
+      {
+        "attemptId": "att_93fd0e7d",
+        "role": "planner",
+        "id": "eea165e2-2b03-482f-9cb6-9a477e0f6d52",
+        "kind": "agent",
+        "label": "planner (A)",
+        "startedAt": "2026-10-25T11:20:26.810Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:47.829Z"
+      },
+      {
+        "attemptId": "att_163b68b4",
+        "role": "author",
+        "id": "f3b8bf98-bb80-44c6-b537-dd5288ce9e72",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T11:20:47.997Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:20:47.999Z"
+      },
+      {
+        "attemptId": "att_163b68b4",
+        "role": "author",
+        "id": "24567101-9557-4ac8-8d78-48ee99f7eb7f",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T11:20:48.001Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:21:56.993Z"
+      },
+      {
+        "retryReason": "invalid_output",
+        "id": "615493cd-1bcc-4b7f-9cc7-55ca553f67eb",
+        "kind": "tool",
+        "label": "Author sửa kế hoạch ca một lần theo 9 lỗi kiểm tra; chưa duyệt hợp đồng.",
+        "startedAt": "2026-10-25T11:21:57.135Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:21:57.137Z"
+      },
+      {
+        "attemptId": "att_95ad5fc4",
+        "role": "author",
+        "id": "22cc6ea5-9ed7-48c4-b280-a68c6568a582",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T11:21:57.151Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:21:57.153Z"
+      },
+      {
+        "attemptId": "att_95ad5fc4",
+        "role": "author",
+        "id": "5d24cd04-3da5-4711-af43-6c55040c62a8",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T11:21:57.155Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:22:54.095Z"
+      },
+      {
+        "id": "6fde21e7-63eb-46cd-a5db-7dbcc209a8a9",
+        "kind": "approval",
+        "label": "awaiting_approval",
+        "startedAt": "2026-10-25T11:22:54.255Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:24:16.304Z"
+      },
+      {
+        "id": "833d93e0-bb9b-44dc-8f5b-47546dc00bee",
+        "kind": "queue",
+        "label": "queued",
+        "startedAt": "2026-10-25T11:24:16.304Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:24:16.308Z"
+      },
+      {
+        "id": "ff6770b0-196f-4e45-b6ae-33a689e7749a",
+        "kind": "run",
+        "label": "Điều phối run",
+        "startedAt": "2026-10-25T11:24:16.306Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:27:48.405Z"
+      },
+      {
+        "id": "7cade0b0-e311-4a26-9003-02435a45ef34",
+        "kind": "preflight",
+        "label": "Kiểm tra môi trường (tối đa 60 giây)",
+        "startedAt": "2026-10-25T11:24:16.313Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:24:17.433Z"
+      },
+      {
+        "attemptId": "att_9df170cb",
+        "role": "author",
+        "id": "cfc38b8c-e868-4dfb-9e4b-d2c32c34529e",
+        "kind": "agent_queue",
+        "label": "author chờ slot",
+        "startedAt": "2026-10-25T11:24:17.454Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:24:17.456Z"
+      },
+      {
+        "attemptId": "att_9df170cb",
+        "role": "author",
+        "id": "7dda1d08-7215-4297-a68a-57bd8e11bd40",
+        "kind": "agent",
+        "label": "author (A)",
+        "startedAt": "2026-10-25T11:24:17.458Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:25:30.007Z"
+      },
+      {
+        "attemptId": "att_bbf3ca44",
+        "role": "developer",
+        "id": "9e0cf5fb-8fd7-48e9-99c9-b495f7f0d400",
+        "kind": "agent_queue",
+        "label": "developer chờ slot",
+        "startedAt": "2026-10-25T11:25:30.409Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:25:30.411Z"
+      },
+      {
+        "attemptId": "att_bbf3ca44",
+        "role": "developer",
+        "id": "86e35391-1b36-4b76-bf76-9c5dbf1999c9",
+        "kind": "agent",
+        "label": "developer (A)",
+        "startedAt": "2026-10-25T11:25:30.413Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:26:33.932Z"
+      },
+      {
+        "id": "5cd4521c-9bfd-4d66-80d8-32ca562c85ee",
+        "kind": "check",
+        "label": "Check \"test\" (candidate)",
+        "startedAt": "2026-10-25T11:26:34.269Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:26:35.439Z"
+      },
+      {
+        "id": "71ae1bc0-0d94-43c3-9631-5c2df7134ab7",
+        "kind": "mutation",
+        "label": "Kiểm tra khả năng bắt lỗi của test (tối đa 5 phút)",
+        "startedAt": "2026-10-25T11:26:35.473Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:27:33.746Z"
+      },
+      {
+        "attemptId": "att_522bfdf7",
+        "role": "verifier",
+        "id": "d82b9c76-e3b3-4286-b97d-2c46cfd5ed3e",
+        "kind": "agent_queue",
+        "label": "verifier chờ slot",
+        "startedAt": "2026-10-25T11:27:33.898Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:27:33.899Z"
+      },
+      {
+        "attemptId": "att_522bfdf7",
+        "role": "verifier",
+        "id": "7c948173-3f5b-4b97-8c5e-30031b080976",
+        "kind": "agent",
+        "label": "verifier (A)",
+        "startedAt": "2026-10-25T11:27:33.901Z",
+        "status": "completed",
+        "endedAt": "2026-10-25T11:27:48.241Z"
+      },
+      {
+        "id": "0ebb275b-a5ce-4774-b146-6c683ad133a4",
+        "kind": "approval",
+        "label": "awaiting_acceptance",
+        "startedAt": "2026-10-25T11:27:48.400Z",
+        "status": "running"
+      }
+    ],
+    "attemptsByRole": {
+      "planner": 1,
+      "author": 3,
+      "developer": 1,
+      "verifier": 1
+    },
+    "retries": [
+      {
+        "reason": "invalid_output",
+        "count": 1
+      }
+    ]
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "status": "passed",
+    "runtime": "local",
+    "workspace": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\workspaces\\run_3973832e-A",
+    "configHash": "57f7b32f6025aaeef8d63a1d88e8eed8b1eee50d060be397fddfe5049e004a40",
+    "checkpoint": null,
+    "startedAt": "2026-10-25T11:24:16.316Z",
+    "endedAt": "2026-10-25T11:24:17.433Z",
+    "checks": [
+      {
+        "recipeId": "test",
+        "runner": "vitest",
+        "version": "vitest/3.2.4 win32-x64 node-v24.12.0",
+        "status": "passed",
+        "message": "Runner tải cấu hình và discovery thành công; chưa chứng minh test nghiệp vụ đạt."
+      }
+    ],
+    "limitation": "Kiểm tra trên runtime chạy checks; không xác nhận quyền thực thi trong sandbox riêng của agent. Không phải bằng chứng nghiệm thu."
+  },
+  "quality": {
+    "enabled": true,
+    "plan": {
+      "schemaVersion": 2,
+      "statefulModelVersion": 1,
+      "reasoningVersion": 1,
+      "cases": [
+        {
+          "id": "C-1",
+          "group": "happy",
+          "risk": "Exports and documented API are unavailable or expose the wrong view shape.",
+          "priority": "high",
+          "preconditions": "Load the ES module at src/stockroom.js.",
+          "actions": "Create a stockroom and call reserve and get.",
+          "expected": "Both documented exports are available; the reservation view has exactly the six documented fields.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-1",
+                "quote": "Export `createStockroom({stock, now=0})` and `restoreStockroom(snapshot)` from `src/stockroom.js` as a JavaScript ES module."
+              },
+              {
+                "requirementId": "R-3",
+                "quote": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state."
+              },
+              {
+                "requirementId": "R-4",
+                "quote": "Reservation views contain exactly `{id,owner,items,expiresAt,state,version}`. Successful reservation-changing methods and `get` return detached views; missing IDs throw `UNKNOWN_RESERVATION`."
+              }
+            ],
+            "explanation": "The documented exports, initial reservation values, and exact view shape are directly specified. The reserve and get calls exercise only the public API."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "No stockroom exists; logical time is not initialized.",
+              "after": "Stockroom has on-hand {A:1}, now 0, and no reservations.",
+              "requirementIds": [
+                "R-1"
+              ],
+              "action": "Call createStockroom({stock:{A:1}}).",
+              "expected": "Creation succeeds; the module also exports restoreStockroom."
+            },
+            {
+              "id": "S-2",
+              "before": "Stockroom has on-hand {A:1}, now 0, and no reservations.",
+              "after": "Stockroom has one held reservation r owned by o, items {A:1}, expiresAt 1, version 1; now remains 0.",
+              "requirementIds": [
+                "R-1",
+                "R-3",
+                "R-4"
+              ],
+              "action": "Call reserve({id:'r',owner:'o',items:{A:1},ttl:1}), then get('r').",
+              "expected": "Both calls return views with exactly {id,owner,items,expiresAt,state,version}; values are r, o, {A:1}, 1, held, 1."
+            }
+          ],
+          "invariants": [
+            "Only documented exports and API methods are used.",
+            "A reservation view has exactly the six documented fields."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-1",
+            "R-3",
+            "R-4"
+          ]
+        },
+        {
+          "id": "C-2",
+          "group": "boundary",
+          "risk": "Invalid scalar and shape inputs are accepted, or unknown SKUs are misclassified.",
+          "priority": "high",
+          "preconditions": "Use a fresh stockroom with stock {A:2}. Each invalid input is tested independently.",
+          "actions": "Try representative invalid stock, item, identifier, owner, time, TTL, and version values, plus an unknown item SKU.",
+          "expected": "Invalid shapes or scalars throw an Error with code INVALID; unknown item SKU throws UNKNOWN_SKU.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-2",
+                "quote": "Validate stock, item maps, IDs, owners, logical time, TTLs, and command versions as specified. Invalid shapes or scalars throw an Error with `code='INVALID'`; unknown item SKUs throw `UNKNOWN_SKU`."
+              }
+            ],
+            "explanation": "The probes isolate one invalid condition at a time and check only the specified error code."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Each invalid factory input is isolated. For reserve validation use a fresh valid stockroom with stock {A:2}, now 0, no reservations, and otherwise valid request fields.",
+              "after": "Invalid factory input creates no instance; each invalid reserve leaves its valid isolated stockroom unchanged.",
+              "requirementIds": [
+                "R-2"
+              ],
+              "action": "Independently try createStockroom with empty stock, negative or unsafe stock quantity, and invalid now; also try reserve with empty items, nonpositive or unsafe quantity, malformed ID/owner, and nonpositive or unsafe TTL.",
+              "expected": "Each invalid shape or scalar throws an Error whose code is INVALID."
+            },
+            {
+              "id": "S-2",
+              "before": "A fresh valid stockroom has stock {A:2}, now 0 and held reservation r owned by o, items {A:1}, ttl 5, version 1. Unknown-SKU reserve uses a new ID and otherwise valid fields; command-version checks use existing r and its correct owner.",
+              "after": "Stockroom remains unchanged.",
+              "requirementIds": [
+                "R-2"
+              ],
+              "action": "Independently try reserve with an otherwise valid item map containing unknown SKU Z, and amend, confirm, and cancel with invalid command versions.",
+              "expected": "Unknown SKU throws UNKNOWN_SKU; invalid command versions throw an Error with code INVALID."
+            }
+          ],
+          "invariants": [
+            "Each probe starts from the stated stockroom state; no assertion depends on precedence between unrelated invalid fields."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-2"
+          ]
+        },
+        {
+          "id": "C-3",
+          "group": "happy",
+          "risk": "A multi-item reservation partially changes state when stock is insufficient.",
+          "priority": "high",
+          "preconditions": "Fresh stockroom with stock {A:2,B:1}, now 0.",
+          "actions": "Reserve quantities that exceed available B, then reserve a fitting request.",
+          "expected": "The insufficient command leaves state unchanged; a fitting request is held atomically.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-3",
+                "quote": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state."
+              },
+              {
+                "requirementId": "R-13",
+                "quote": "A failed command leaves all relevant reservation, stock, expiry, version, and logical-time state unchanged."
+              }
+            ],
+            "explanation": "The failed multi-SKU reserve is followed by a successful reserve against the same state, exposing partial writes or ID consumption."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "On-hand {A:2,B:1}, now 0, no reservations.",
+              "after": "On-hand {A:2,B:1}, now 0, no reservations.",
+              "requirementIds": [
+                "R-3",
+                "R-13"
+              ],
+              "action": "Call reserve({id:'bad',owner:'o',items:{A:1,B:2},ttl:3}).",
+              "expected": "Throws INSUFFICIENT; snapshot and availability equal their before values."
+            },
+            {
+              "id": "S-2",
+              "before": "On-hand {A:2,B:1}, now 0, no reservations.",
+              "after": "On-hand {A:2,B:1}, now 0; r is held at version 1 until time 3.",
+              "requirementIds": [
+                "R-3"
+              ],
+              "action": "Call reserve({id:'r',owner:'o',items:{A:2,B:1},ttl:3}).",
+              "expected": "Returns the held version-1 view with expiresAt 3; availability is {A:0,B:0}."
+            }
+          ],
+          "invariants": [
+            "Failed reserve does not create a reservation or alter stock, expiry, version, or logical time.",
+            "Availability equals on-hand stock minus quantities held by held reservations."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-3",
+            "R-13"
+          ]
+        },
+        {
+          "id": "C-4",
+          "group": "consistency",
+          "risk": "Amendment fails to credit the reservation's old hold or partially replaces its items.",
+          "priority": "high",
+          "preconditions": "Fresh stockroom with stock {A:2,B:1}, now 0.",
+          "actions": "Hold {A:1,B:1}, attempt an over-capacity amendment, then amend to a fitting replacement.",
+          "expected": "The failed edit preserves the old reservation and availability; the successful edit replaces the full item map.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-7",
+                "quote": "`amend` replaces the full item map atomically, credits the old hold when checking capacity, and increments version exactly once on success. Omitted TTL preserves expiry; supplied TTL sets expiry to `now+ttl`. Even an identical successful amendment increments version."
+              },
+              {
+                "requirementId": "R-9",
+                "quote": "`availability()` reports on-hand quantity less quantities held by held reservations. Availability immediately before and after a successful confirm is equal."
+              },
+              {
+                "requirementId": "R-13",
+                "quote": "A failed command leaves all relevant reservation, stock, expiry, version, and logical-time state unchanged."
+              },
+              {
+                "requirementId": "R-3",
+                "quote": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state."
+              }
+            ],
+            "explanation": "The over-capacity replacement checks all-or-nothing behavior. The subsequent fitting replacement tests old-hold credit, full-map replacement, one version increment, and omitted-TTL preservation."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "On-hand {A:2,B:1}, now 0, no reservations.",
+              "after": "r held at version 1 with items {A:1,B:1}, expiresAt 5; availability {A:1,B:0}.",
+              "requirementIds": [
+                "R-3",
+                "R-9"
+              ],
+              "action": "Reserve r for {A:1,B:1} with ttl 5.",
+              "expected": "Reserve succeeds and availability is {A:1,B:0}."
+            },
+            {
+              "id": "S-2",
+              "before": "r held at version 1 with {A:1,B:1}, expiresAt 5; now 0.",
+              "after": "r and availability are unchanged; now remains 0.",
+              "requirementIds": [
+                "R-7",
+                "R-13"
+              ],
+              "action": "Amend r at version 1 to {A:2,B:2}.",
+              "expected": "Throws INSUFFICIENT; get and availability match their before values."
+            },
+            {
+              "id": "S-3",
+              "before": "r held at version 1 with {A:1,B:1}, expiresAt 5; now 0.",
+              "after": "r held at version 2 with items {A:2}, expiresAt 5; availability {A:0,B:1}.",
+              "requirementIds": [
+                "R-7",
+                "R-9"
+              ],
+              "action": "Amend r at version 1 to the full map {A:2}, omitting ttl.",
+              "expected": "Returns version 2, replaces rather than merges items, preserves expiry 5, and reports availability {A:0,B:1}."
+            }
+          ],
+          "invariants": [
+            "After every step, availability is on-hand stock less held quantities.",
+            "A failed amendment leaves reservation items, expiry, version, stock, and logical time unchanged."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-7",
+            "R-9",
+            "R-13",
+            "R-3"
+          ]
+        },
+        {
+          "id": "C-5",
+          "group": "authorization",
+          "risk": "Command checks use the wrong owner/state/version precedence.",
+          "priority": "high",
+          "preconditions": "Create held reservation r at version 1, then separately create and cancel reservation c.",
+          "actions": "Submit wrong-owner stale-version commands against held r and correct-owner stale-version commands against terminal c.",
+          "expected": "Wrong owner yields FORBIDDEN before version; correct owner on terminal state yields STATE before version.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-6",
+                "quote": "For valid `amend`, `confirm`, and `cancel` requests, check owner before reservation state and version: wrong owner throws `FORBIDDEN`, correct owner on a terminal reservation throws `STATE`, and a stale version on a held reservation throws `VERSION_CONFLICT`."
+              },
+              {
+                "requirementId": "R-13",
+                "quote": "A failed command leaves all relevant reservation, stock, expiry, version, and logical-time state unchanged."
+              }
+            ],
+            "explanation": "Inputs are otherwise valid, isolating the precedence explicitly specified for held and terminal reservations."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "r is held by owner o at version 1; now 0.",
+              "after": "r remains held by o at version 1; now 0.",
+              "requirementIds": [
+                "R-6",
+                "R-13"
+              ],
+              "action": "Call amend, confirm, and cancel for r with owner 'other' and stale version 99, using otherwise valid fields.",
+              "expected": "Each throws FORBIDDEN and leaves state unchanged."
+            },
+            {
+              "id": "S-2",
+              "before": "c is cancelled at version 2; now 0.",
+              "after": "c remains cancelled at version 2; now 0.",
+              "requirementIds": [
+                "R-6",
+                "R-13"
+              ],
+              "action": "Call amend, confirm, and cancel for c with its correct owner and stale version 1, using otherwise valid fields.",
+              "expected": "Each throws STATE and leaves state unchanged."
+            }
+          ],
+          "invariants": [
+            "Authorization and state errors do not mutate reservation, stock, expiry, version, or logical time."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-6",
+            "R-13"
+          ]
+        },
+        {
+          "id": "C-6",
+          "group": "state",
+          "risk": "Amend, confirm, or cancel increments incorrectly, loses terminal history, or misaccounts inventory.",
+          "priority": "high",
+          "preconditions": "Fresh stockroom with stock {A:3}, now 0.",
+          "actions": "Reserve, make an identical amendment, measure availability around confirm, then test terminal behavior on another reservation cancelled while held.",
+          "expected": "Successful changes increment once; confirm preserves availability while deducting on-hand stock; cancel releases the hold without deduction.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-7",
+                "quote": "`amend` replaces the full item map atomically, credits the old hold when checking capacity, and increments version exactly once on success. Omitted TTL preserves expiry; supplied TTL sets expiry to `now+ttl`. Even an identical successful amendment increments version."
+              },
+              {
+                "requirementId": "R-8",
+                "quote": "`confirm` deducts held quantities from on-hand stock and changes state to confirmed; `cancel` changes state to cancelled and releases the hold without deducting on-hand stock. Both increment version once, and terminal views retain items and expiry."
+              },
+              {
+                "requirementId": "R-9",
+                "quote": "`availability()` reports on-hand quantity less quantities held by held reservations. Availability immediately before and after a successful confirm is equal."
+              },
+              {
+                "requirementId": "R-3",
+                "quote": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state."
+              }
+            ],
+            "explanation": "The ordered operations expose version changes, unchanged expiry for omitted TTL, confirm conservation of availability, and cancel release without stock deduction."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "On-hand {A:3}, now 0, no reservations.",
+              "after": "r held with {A:2}, expiresAt 5, version 1; availability {A:1}.",
+              "requirementIds": [
+                "R-3",
+                "R-9"
+              ],
+              "action": "Reserve r for {A:2}, ttl 5.",
+              "expected": "Returns version 1 held view; availability is {A:1}."
+            },
+            {
+              "id": "S-2",
+              "before": "r held at version 1, expiresAt 5; availability {A:1}.",
+              "after": "r held at version 2, expiresAt 5; availability {A:1}.",
+              "requirementIds": [
+                "R-7",
+                "R-9"
+              ],
+              "action": "Amend r at version 1 to the identical items {A:2}, omitting ttl.",
+              "expected": "Returns version 2 and preserves expiry and availability."
+            },
+            {
+              "id": "S-3",
+              "before": "r held at version 2; on-hand {A:3}; availability {A:1}.",
+              "after": "r confirmed at version 3, retaining items {A:2} and expiresAt 5; on-hand {A:1}; availability {A:1}.",
+              "requirementIds": [
+                "R-8",
+                "R-9"
+              ],
+              "action": "Record availability, then confirm r with owner o and version 2.",
+              "expected": "Confirm succeeds, increments once, retains terminal view data, deducts held stock, and leaves availability equal to the recorded value."
+            },
+            {
+              "id": "S-4",
+              "before": "On-hand {A:1}; r is confirmed; c does not exist yet; now remains 0.",
+              "after": "c cancelled at version 2 with items {A:1} and expiresAt 5; on-hand remains {A:1}; availability {A:1}.",
+              "requirementIds": [
+                "R-3",
+                "R-8",
+                "R-9"
+              ],
+              "action": "Reserve c for {A:1}, then cancel c at version 1.",
+              "expected": "Cancel increments once, retains items and expiry, releases the hold, and does not deduct on-hand stock."
+            }
+          ],
+          "invariants": [
+            "Availability is on-hand stock less quantities in held reservations after every step.",
+            "Terminal views retain their items and expiry.",
+            "Each successful reservation-changing command increments its version exactly once."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-7",
+            "R-8",
+            "R-9",
+            "R-3"
+          ]
+        },
+        {
+          "id": "C-7",
+          "group": "concurrency",
+          "risk": "Reserve retries compare the amended current state instead of the original request, or create duplicate holds.",
+          "priority": "high",
+          "preconditions": "Fresh stockroom with stock {A:3,B:2}, now 0.",
+          "actions": "Reserve, amend, replay the original request with reordered item keys, then conflict on a changed initial request.",
+          "expected": "Matching replay returns current amended view without mutation; differing initial request yields ID_CONFLICT.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-5",
+                "quote": "`reserve` replays by ID and initial `{owner,items,ttl}`, treating item key order as irrelevant. A matching replay returns the current view without changing state, including after amendments or terminal transitions; a differing initial request throws `ID_CONFLICT`."
+              },
+              {
+                "requirementId": "R-7",
+                "quote": "`amend` replaces the full item map atomically, credits the old hold when checking capacity, and increments version exactly once on success. Omitted TTL preserves expiry; supplied TTL sets expiry to `now+ttl`. Even an identical successful amendment increments version."
+              }
+            ],
+            "explanation": "The sequence models a retry after an edit: item-key ordering is ignored, the returned view is current, and the original request remains the idempotency key."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "On-hand {A:3,B:2}, now 0, no reservations.",
+              "after": "r held at version 1 with items {A:1,B:1}, expiresAt 5; now 0.",
+              "requirementIds": [
+                "R-5"
+              ],
+              "action": "Use stock {A:3,B:2}; reserve r with items {A:1,B:1}, ttl 5.",
+              "expected": "Reservation is created and its initial request is recorded."
+            },
+            {
+              "id": "S-2",
+              "before": "r held at version 1 with initial request owner o, items {A:1,B:1}, ttl 5; now 0.",
+              "after": "r held at version 2 with items {A:2}, expiresAt 5; now 0.",
+              "requirementIds": [
+                "R-7"
+              ],
+              "action": "Amend r at version 1 to {A:2}, omitting ttl.",
+              "expected": "Amend succeeds and returns version 2."
+            },
+            {
+              "id": "S-3",
+              "before": "r held at version 2 with items {A:2}, expiresAt 5; now 0.",
+              "after": "State is unchanged.",
+              "requirementIds": [
+                "R-5"
+              ],
+              "action": "Replay reserve for r with owner o, items {B:1,A:1}, ttl 5.",
+              "expected": "Returns the current version-2 amended view; no state, version, inventory, or expiry changes."
+            },
+            {
+              "id": "S-4",
+              "before": "r remains held at version 2, items {A:2}, expiresAt 5; now 0.",
+              "after": "State is unchanged.",
+              "requirementIds": [
+                "R-5"
+              ],
+              "action": "Call reserve for r with owner o, items {A:1}, ttl 5.",
+              "expected": "Throws ID_CONFLICT and changes nothing."
+            }
+          ],
+          "invariants": [
+            "At most one reservation exists for ID r.",
+            "A matching replay does not change state, including version, inventory, or expiry.",
+            "The original request remains the replay comparison basis after amendment."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-5",
+            "R-7"
+          ]
+        },
+        {
+          "id": "C-8",
+          "group": "state",
+          "risk": "Expiry boundary, ordering, repeated advance, or invalid-time handling is incorrect.",
+          "priority": "high",
+          "preconditions": "Create reservations with distinct expiries and tied expiries using valid positive TTLs.",
+          "actions": "Advance to just before and exactly at deadlines, repeat the same advance, then submit invalid times.",
+          "expected": "Only held reservations at or before time expire; result is ordered by expiry then JavaScript string ID; invalid times do not mutate state.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-10",
+                "quote": "`advance(time)` accepts only a nonnegative safe integer not less than current logical time; invalid input throws `INVALID_TIME` without changing state. It expires held reservations whose expiry is at or before `time`, increments each version once, and returns exactly `{now:time,expired:[ids]}` sorted by expiry then JavaScript string comparison of ID."
+              },
+              {
+                "requirementId": "R-13",
+                "quote": "A failed command leaves all relevant reservation, stock, expiry, version, and logical-time state unchanged."
+              },
+              {
+                "requirementId": "R-3",
+                "quote": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state."
+              }
+            ],
+            "explanation": "Advancing to 2 checks the pre-boundary; advancing to 5 checks inclusive expiry, tied-deadline ID ordering, and one-time transition. Invalid times are isolated probes."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "now 0, no reservations.",
+              "after": "a and b held until 5; c held until 3; now 0.",
+              "requirementIds": [
+                "R-3",
+                "R-10"
+              ],
+              "action": "Reserve IDs a,b with ttl 5 and c with ttl 3.",
+              "expected": "All are held at version 1 with the stated expiries."
+            },
+            {
+              "id": "S-2",
+              "before": "now 0; a,b expire at 5 and c at 3, all held.",
+              "after": "now 2; all remain held at version 1.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Call advance(2).",
+              "expected": "Returns exactly {now:2,expired:[]}."
+            },
+            {
+              "id": "S-3",
+              "before": "now 2; a,b held until 5, c held until 3.",
+              "after": "now 5; c,a,b are expired at version 2; terminal expiry values are retained.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Call advance(5).",
+              "expected": "Returns exactly {now:5,expired:['c','a','b']}."
+            },
+            {
+              "id": "S-4",
+              "before": "now 5; c,a,b are expired at version 2.",
+              "after": "now 5; reservations remain expired at version 2.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Call advance(5) again.",
+              "expected": "Returns exactly {now:5,expired:[]}."
+            },
+            {
+              "id": "S-5",
+              "before": "now 5; reservations are terminal at version 2.",
+              "after": "now 5; all reservation and stock state is unchanged.",
+              "requirementIds": [
+                "R-10",
+                "R-13"
+              ],
+              "action": "Independently call advance(4), advance(-1), and advance(Number.MAX_SAFE_INTEGER+1).",
+              "expected": "Each throws INVALID_TIME and changes no state."
+            }
+          ],
+          "invariants": [
+            "Logical time never decreases.",
+            "A held reservation expires only when its expiry is at or before the accepted advance time.",
+            "Each reservation expires at most once and increments version once on expiry."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-10",
+            "R-13",
+            "R-3"
+          ]
+        },
+        {
+          "id": "C-9",
+          "group": "consistency",
+          "risk": "Returned objects alias internal data, or snapshot restore loses replay history or independence.",
+          "priority": "high",
+          "preconditions": "Create stockroom with stock {A:3,B:1}, now 0, and a held reservation.",
+          "actions": "Mutate input and returned objects, snapshot and JSON-clone, restore, then evolve each instance independently.",
+          "expected": "Mutations do not affect internal state; snapshot shape/order and restored history/replay are preserved; instances evolve independently.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-5",
+                "quote": "`reserve` replays by ID and initial `{owner,items,ttl}`, treating item key order as irrelevant. A matching replay returns the current view without changing state, including after amendments or terminal transitions; a differing initial request throws `ID_CONFLICT`."
+              },
+              {
+                "requirementId": "R-11",
+                "quote": "`snapshot()` returns exactly `{schemaVersion:1,now,onHand,reservations}` with reservations sorted by JavaScript string comparison of ID and each entry containing the six view fields plus its initial replay request. Restore preserves stock, logical time, reservation history, versions, expiries, and replay requests; restored and original instances evolve independently."
+              },
+              {
+                "requirementId": "R-12",
+                "quote": "Mutating submitted stock/items or returned views, availability maps, or snapshots does not mutate internal state."
+              },
+              {
+                "requirementId": "R-3",
+                "quote": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state."
+              }
+            ],
+            "explanation": "The sequence checks defensive copies at each public boundary, JSON-clone restore fidelity for replay, and independent evolution after restore."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "No stockroom exists.",
+              "after": "Original has on-hand {A:3,B:1}, now 0, and no reservations.",
+              "requirementIds": [
+                "R-12"
+              ],
+              "action": "Create from stock object {A:3,B:1}, then mutate the submitted object.",
+              "expected": "Mutating submitted stock does not change original stockroom state."
+            },
+            {
+              "id": "S-2",
+              "before": "Original has on-hand {A:3,B:1}, now 0, no reservations.",
+              "after": "r held at version 1 with items {A:1}, expiresAt 5; availability {A:2,B:1}.",
+              "requirementIds": [
+                "R-3",
+                "R-12"
+              ],
+              "action": "Reserve using an items object {A:1}; mutate that input, the returned view and its items, and the returned availability map.",
+              "expected": "Subsequent get and availability still show the original internal reservation and quantities."
+            },
+            {
+              "id": "S-3",
+              "before": "Original has r held at version 1, now 0, on-hand {A:3,B:1}.",
+              "after": "Original is unchanged; the returned snapshot has exact top-level fields and reservations sorted by JavaScript string ID order.",
+              "requirementIds": [
+                "R-11",
+                "R-12"
+              ],
+              "action": "Call snapshot(); save an independent pristine JSON clone BEFORE mutating returned snapshot onHand and reservation entries. Mutate only the returned snapshot, then read original state again.",
+              "expected": "Snapshot has exactly {schemaVersion,now,onHand,reservations}; mutating it does not change original state."
+            },
+            {
+              "id": "S-4",
+              "before": "Original has r held at version 1, now 0, with initial request owner o, items {A:1}, ttl 5.",
+              "after": "Restored copy matches saved state and replay metadata; original remains unchanged.",
+              "requirementIds": [
+                "R-5",
+                "R-11"
+              ],
+              "action": "Restore from the pristine saved snapshot clone retained before the mutation in S-3; replay r original reserve request. Do not restore the intentionally mutated snapshot.",
+              "expected": "Restored view and replay behavior match saved state; replay returns current view without mutation."
+            },
+            {
+              "id": "S-5",
+              "before": "Original and restored instances both have r held at version 1, now 0.",
+              "after": "After confirming r only in restored, restored has r confirmed and on-hand {A:2,B:1}; original remains held with on-hand {A:3,B:1}.",
+              "requirementIds": [
+                "R-11"
+              ],
+              "action": "Confirm r in restored at version 1; then inspect both instances.",
+              "expected": "The two instances evolve independently; original remains unchanged."
+            }
+          ],
+          "invariants": [
+            "Mutating any submitted input or returned view, availability map, or snapshot never changes internal state.",
+            "Snapshot reservation entries are sorted by JavaScript string comparison of ID.",
+            "Original and restored copies do not share evolving state."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-5",
+            "R-11",
+            "R-12",
+            "R-3"
+          ]
+        },
+        {
+          "id": "C-10",
+          "group": "state",
+          "risk": "A failed stale command partially changes reservation, stock, expiry, version, or logical time.",
+          "priority": "high",
+          "preconditions": "Fresh stockroom with stock {A:2}, now 0; reserve and successfully amend a held reservation.",
+          "actions": "Capture state, issue stale-version commands, and compare state after each failure.",
+          "expected": "Stale held-reservation commands throw VERSION_CONFLICT and leave all relevant state unchanged.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-6",
+                "quote": "For valid `amend`, `confirm`, and `cancel` requests, check owner before reservation state and version: wrong owner throws `FORBIDDEN`, correct owner on a terminal reservation throws `STATE`, and a stale version on a held reservation throws `VERSION_CONFLICT`."
+              },
+              {
+                "requirementId": "R-13",
+                "quote": "A failed command leaves all relevant reservation, stock, expiry, version, and logical-time state unchanged."
+              },
+              {
+                "requirementId": "R-3",
+                "quote": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state."
+              },
+              {
+                "requirementId": "R-7",
+                "quote": "`amend` replaces the full item map atomically, credits the old hold when checking capacity, and increments version exactly once on success. Omitted TTL preserves expiry; supplied TTL sets expiry to `now+ttl`. Even an identical successful amendment increments version."
+              }
+            ],
+            "explanation": "Each command is otherwise valid and uses the correct owner on a held reservation, so the stale version is the isolated failure condition."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "On-hand {A:2}, now 0, no reservations.",
+              "after": "r held at version 2 with items {A:1}, expiresAt 5; availability {A:1}.",
+              "requirementIds": [
+                "R-3",
+                "R-7"
+              ],
+              "action": "Reserve r at version 1, then amend at version 1 to {A:1}.",
+              "expected": "Amend succeeds and increments version to 2."
+            },
+            {
+              "id": "S-2",
+              "before": "r held at version 2, expiresAt 5; on-hand {A:2}; now 0.",
+              "after": "All state remains as before.",
+              "requirementIds": [
+                "R-6",
+                "R-13"
+              ],
+              "action": "Independently call amend, confirm, and cancel for r with correct owner and stale version 1.",
+              "expected": "Each throws VERSION_CONFLICT; snapshot and availability remain unchanged after each call."
+            }
+          ],
+          "invariants": [
+            "A failed command does not alter reservation, stock, expiry, version, or logical time.",
+            "The current held reservation version remains 2."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-6",
+            "R-13",
+            "R-3",
+            "R-7"
+          ]
+        },
+        {
+          "id": "C-11",
+          "group": "state",
+          "risk": "Invalid or implicit time handling changes logical time, expires reservations early, or makes terminal commands idempotent.",
+          "priority": "high",
+          "preconditions": "Create a held reservation expiring at 5 and a separate reservation that is cancelled before expiry.",
+          "actions": "Call methods without advancing time, try terminal commands again, then advance to the deadline.",
+          "expected": "Only advance changes time; no implicit expiry occurs; terminal confirm/cancel follows STATE; expiry happens only at the accepted deadline.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-8",
+                "quote": "`confirm` deducts held quantities from on-hand stock and changes state to confirmed; `cancel` changes state to cancelled and releases the hold without deducting on-hand stock. Both increment version once, and terminal views retain items and expiry."
+              },
+              {
+                "requirementId": "R-10",
+                "quote": "`advance(time)` accepts only a nonnegative safe integer not less than current logical time; invalid input throws `INVALID_TIME` without changing state. It expires held reservations whose expiry is at or before `time`, increments each version once, and returns exactly `{now:time,expired:[ids]}` sorted by expiry then JavaScript string comparison of ID."
+              },
+              {
+                "requirementId": "R-14",
+                "quote": "Do not introduce behavior beyond the specified API contract, such as implicit time advancement, ID reuse, or idempotent terminal confirm/cancel."
+              }
+            ],
+            "explanation": "The public reads and replay are made before advancing; the exact boundary and terminal command outcomes follow the explicit time and state rules."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "now 0; r held until 5; c has just been cancelled at version 2 with expiry 5.",
+              "after": "now 0; r still held; c remains cancelled.",
+              "requirementIds": [
+                "R-8",
+                "R-14"
+              ],
+              "action": "Call get, availability, snapshot, replay r, then confirm and cancel c again with correct owner and current version.",
+              "expected": "Read/replay calls do not advance time or expire r; terminal commands throw STATE rather than succeeding idempotently."
+            },
+            {
+              "id": "S-2",
+              "before": "now 0; r held until 5; c cancelled.",
+              "after": "now 4; r still held at version 1; c remains cancelled.",
+              "requirementIds": [
+                "R-10",
+                "R-14"
+              ],
+              "action": "Call advance(4).",
+              "expected": "Returns {now:4,expired:[]} and does not expire r early."
+            },
+            {
+              "id": "S-3",
+              "before": "now 4; r held until 5; c cancelled.",
+              "after": "now 5; r expired at version 2; c remains cancelled.",
+              "requirementIds": [
+                "R-10",
+                "R-14"
+              ],
+              "action": "Call advance(5).",
+              "expected": "Returns {now:5,expired:['r']}; terminal c does not expire."
+            }
+          ],
+          "invariants": [
+            "Only advance changes logical time.",
+            "Terminal reservations do not transition again.",
+            "No held reservation expires before its expiry."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-8",
+            "R-10",
+            "R-14"
+          ]
+        },
+        {
+          "id": "C-12",
+          "group": "boundary",
+          "risk": "ID reuse or replay after a terminal transition loses reservation history.",
+          "priority": "high",
+          "preconditions": "Fresh stockroom with stock {A:2}, now 0.",
+          "actions": "Create and cancel an ID, replay its initial request, then retry the ID with a different request.",
+          "expected": "Matching replay returns the current terminal view; ID remains occupied and differing request conflicts.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-5",
+                "quote": "`reserve` replays by ID and initial `{owner,items,ttl}`, treating item key order as irrelevant. A matching replay returns the current view without changing state, including after amendments or terminal transitions; a differing initial request throws `ID_CONFLICT`."
+              },
+              {
+                "requirementId": "R-14",
+                "quote": "Do not introduce behavior beyond the specified API contract, such as implicit time advancement, ID reuse, or idempotent terminal confirm/cancel."
+              },
+              {
+                "requirementId": "R-3",
+                "quote": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state."
+              },
+              {
+                "requirementId": "R-8",
+                "quote": "`confirm` deducts held quantities from on-hand stock and changes state to confirmed; `cancel` changes state to cancelled and releases the hold without deducting on-hand stock. Both increment version once, and terminal views retain items and expiry."
+              }
+            ],
+            "explanation": "The cancelled reservation remains part of history; the exact replay and changed-request outcomes are specified."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "On-hand {A:2}, now 0, no reservations.",
+              "after": "r cancelled at version 2, retaining items {A:1} and expiry 5.",
+              "requirementIds": [
+                "R-3",
+                "R-8"
+              ],
+              "action": "Reserve r for {A:1}, ttl 5, then cancel at version 1.",
+              "expected": "Cancel succeeds and reservation history remains."
+            },
+            {
+              "id": "S-2",
+              "before": "r cancelled at version 2; initial request is owner o, items {A:1}, ttl 5.",
+              "after": "State remains unchanged.",
+              "requirementIds": [
+                "R-5",
+                "R-14"
+              ],
+              "action": "Replay the identical reserve request.",
+              "expected": "Returns current cancelled version-2 view without mutation."
+            },
+            {
+              "id": "S-3",
+              "before": "r remains cancelled at version 2.",
+              "after": "State remains unchanged.",
+              "requirementIds": [
+                "R-5",
+                "R-14"
+              ],
+              "action": "Attempt reserve with ID r and otherwise valid different initial items {A:2}.",
+              "expected": "Throws ID_CONFLICT; ID is not reused."
+            }
+          ],
+          "invariants": [
+            "Reservation IDs are not removed or reused.",
+            "Replay does not change terminal state, version, stock, or expiry."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-5",
+            "R-14",
+            "R-3",
+            "R-8"
+          ]
+        }
+      ],
+      "notApplicable": [
+        {
+          "group": "dependency",
+          "reason": "Pure in-memory API has no external dependencies, network or persistence per original SPEC; capacity/rollback is covered as consistency in C-4."
+        }
+      ],
+      "questions": []
+    },
+    "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a",
+    "manifestProblems": [],
+    "capability": {
+      "adapter": "stryker-vitest",
+      "root": ".",
+      "candidates": [
+        "."
+      ],
+      "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+      "status": "available",
+      "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+      "toolVersion": "9.6.1",
+      "vitestVersion": "3.2.4",
+      "configFile": "vitest.config.js"
+    },
+    "mutation": {
+      "schemaVersion": 1,
+      "source": "stryker-vitest",
+      "status": "completed",
+      "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+      "slot": "A",
+      "contractVersion": 4,
+      "configHash": "da2041f6292315e8c4ad028717882499b7c7731ff038946c97b4d6591e8f3497",
+      "capability": {
+        "adapter": "stryker-vitest",
+        "root": ".",
+        "candidates": [
+          "."
+        ],
+        "install": "Cài trong project: npm install --save-dev --save-exact @stryker-mutator/core@9.6.1 @stryker-mutator/vitest-runner@9.6.1 (Vitest >=2, Node >=20). Sau đó commit manifest và lockfile rồi tạo run mới.",
+        "status": "available",
+        "reason": "Đã nhận diện JS/TS + Vitest và bộ Stryker tương thích.",
+        "toolVersion": "9.6.1",
+        "vitestVersion": "3.2.4",
+        "configFile": "vitest.config.js"
+      },
+      "startedAt": "2026-10-25T11:26:35.477Z",
+      "durationMs": 58261,
+      "baseline": "passed",
+      "counts": {
+        "killed": 277,
+        "survived": 126,
+        "no_coverage": 47,
+        "timeout": 0,
+        "errors": 0,
+        "pending": 0
+      },
+      "mutants": [
+        {
+          "file": "src/stockroom.js",
+          "line": 18,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 18,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 23,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 23,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 80,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 80,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 85,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 85,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 98,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 98,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 111,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 111,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 122,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 122,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "NoCoverage",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "NoCoverage",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "NoCoverage",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "NoCoverage",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "NoCoverage",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "NoCoverage",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 127,
+          "status": "NoCoverage",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 128,
+          "status": "NoCoverage",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 129,
+          "status": "NoCoverage",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 129,
+          "status": "NoCoverage",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 129,
+          "status": "NoCoverage",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 129,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 129,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "NoCoverage",
+          "mutator": "UnaryOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 187,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 187,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "NoCoverage",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 196,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 196,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 199,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 199,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 202,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 202,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "NoCoverage",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 206,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 206,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "NoCoverage",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 210,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 210,
+          "status": "NoCoverage",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 9,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 3,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 10,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 13,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 14,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 17,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 18,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 18,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 18,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 20,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 20,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 22,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 23,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 23,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 23,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 25,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 26,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 26,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 28,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 28,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 28,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 28,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 28,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 28,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 34,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 35,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 36,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 39,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 40,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 43,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Survived",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 45,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 48,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 49,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 59,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 59,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 64,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 66,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 67,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 67,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 67,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 67,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 68,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 73,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 74,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 74,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 74,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 77,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 78,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 80,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 80,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 80,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 84,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 85,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 85,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 85,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 90,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 90,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 90,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 90,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 90,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 91,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 91,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 91,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 91,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 91,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 91,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 92,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 92,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 92,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 92,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 92,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 96,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 97,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 98,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 98,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 98,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 102,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 104,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 104,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 104,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 105,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 106,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 106,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 111,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 110,
+          "status": "Killed",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 111,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 111,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 113,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 114,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 115,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 116,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 121,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 122,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 122,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 122,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 124,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 127,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 127,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 127,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 132,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 133,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 136,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 139,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 141,
+          "status": "Killed",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 142,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 143,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 146,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 148,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 149,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 152,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 154,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 155,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 157,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 157,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 157,
+          "status": "Killed",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 158,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Killed",
+          "mutator": "ArithmeticOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 159,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 160,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 161,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 162,
+          "status": "Killed",
+          "mutator": "AssignmentOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 164,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 164,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 166,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "MethodExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "UnaryOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 167,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 168,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 172,
+          "status": "Killed",
+          "mutator": "ArrowFunction"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 172,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 174,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 186,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 187,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 187,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 187,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Killed",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 189,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 190,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 190,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 194,
+          "status": "Killed",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 198,
+          "status": "Survived",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 195,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 198,
+          "status": "Survived",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 199,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 199,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 199,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 200,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 201,
+          "status": "Survived",
+          "mutator": "BlockStatement"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 202,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 202,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 202,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Killed",
+          "mutator": "ArrayDeclaration"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 205,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 208,
+          "status": "Survived",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 208,
+          "status": "Survived",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 208,
+          "status": "Survived",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "LogicalOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "StringLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "ConditionalExpression"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Survived",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 209,
+          "status": "Killed",
+          "mutator": "EqualityOperator"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 212,
+          "status": "Survived",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 212,
+          "status": "Survived",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 212,
+          "status": "Survived",
+          "mutator": "BooleanLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 213,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 214,
+          "status": "Killed",
+          "mutator": "ObjectLiteral"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 1,
+          "status": "Survived",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 1,
+          "status": "Survived",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 1,
+          "status": "Killed",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 1,
+          "status": "Killed",
+          "mutator": "Regex"
+        },
+        {
+          "file": "src/stockroom.js",
+          "line": 1,
+          "status": "Survived",
+          "mutator": "Regex"
+        }
+      ],
+      "files": [
+        "src/stockroom.js"
+      ],
+      "message": "Đã kiểm tra các mutation trong phạm vi source đã chọn.",
+      "endedAt": "2026-10-25T11:27:33.738Z"
+    },
+    "testMs": 1086,
+    "cases": [
+      {
+        "caseId": "C-1",
+        "requirementIds": [
+          "R-1",
+          "R-3",
+          "R-4"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-1][R-3][R-4][C-1] exports and reservation view\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-2",
+        "requirementIds": [
+          "R-2"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-2][C-2] validates inputs and distinguishes unknown SKU\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-3",
+        "requirementIds": [
+          "R-3",
+          "R-13"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-3][R-13][C-3] reserve is atomic on insufficient multi-SKU stock\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-4",
+        "requirementIds": [
+          "R-7",
+          "R-9",
+          "R-13",
+          "R-3"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-7][R-9][R-13][R-3][C-4] amend is atomic, credits prior hold, and replaces items\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-5",
+        "requirementIds": [
+          "R-6",
+          "R-13"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-6][R-13][C-5] owner and state errors precede version checks\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-6",
+        "requirementIds": [
+          "R-7",
+          "R-8",
+          "R-9",
+          "R-3"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-7][R-8][R-9][R-3][C-6] amend confirm and cancel account for inventory\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-7",
+        "requirementIds": [
+          "R-5",
+          "R-7"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-5][R-7][C-7] reserve replay uses initial request after amendment\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-8",
+        "requirementIds": [
+          "R-10",
+          "R-13",
+          "R-3"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-10][R-13][R-3][C-8] advance expires at boundaries and orders results\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-9",
+        "requirementIds": [
+          "R-5",
+          "R-11",
+          "R-12",
+          "R-3"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-5][R-11][R-12][R-3][C-9] snapshots and all public values are detached\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-10",
+        "requirementIds": [
+          "R-6",
+          "R-13",
+          "R-3",
+          "R-7"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-6][R-13][R-3][R-7][C-10] stale held commands do not mutate state\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-11",
+        "requirementIds": [
+          "R-8",
+          "R-10",
+          "R-14"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-8][R-10][R-14][C-11] reads do not advance time and terminal actions fail\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      },
+      {
+        "caseId": "C-12",
+        "requirementIds": [
+          "R-5",
+          "R-14",
+          "R-3",
+          "R-8"
+        ],
+        "required": true,
+        "method": "automated",
+        "status": "passed",
+        "tests": [
+          "test: @json:[\"tests/acceptance.test.js\",[\"[R-5][R-14][R-3][R-8][C-12] cancelled ID remains replayable but cannot be reused\"]]"
+        ],
+        "reasons": [],
+        "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+        "slot": "A",
+        "contractVersion": 4,
+        "manifestHash": "c7a209234f4052dcb351753ff04427a72b42ce67cca98feffaa8f09741bb643a"
+      }
+    ]
+  },
+  "qualityPolicyVersion": 3,
+  "generatedAt": "2026-10-25T11:27:49.290Z",
+  "runId": "run_3973832e",
+  "title": "CartStock / source bindings / GPT-6 Luna medium",
+  "requirement": "# CartStock — inventory holds with atomic cart edits\n\nBuild a compact in-memory JavaScript ES module in `src/stockroom.js`. Export `createStockroom({stock, now=0})` and `restoreStockroom(snapshot)`. All methods may be synchronous or asynchronous; callers may await every call. Inputs and results are JSON values. Use no wall clock, persistence, network, external dependency, or background timer. Add a short README usage example.\n\nAPI: `reserve({id,owner,items,ttl})`, `amend({id,owner,version,items,ttl?})`, `confirm({id,owner,version})`, `cancel({id,owner,version})`, `get(id)`, `availability()`, `advance(time)`, `snapshot()`.\n\n1. `stock` is a nonempty object mapping SKU to nonnegative safe integer on-hand quantity. SKU matches `/^[A-Za-z][A-Za-z0-9_-]{0,31}$/`; `constructor` is a valid SKU. `items` is a nonempty SKU-to-positive-safe-integer object containing only known SKUs. IDs and owners are strings of length 1–64, used literally without trimming. Logical `now` is a nonnegative safe integer. `ttl` is a positive safe integer and `now+ttl` must be safe whenever a new deadline is computed. Versions supplied to commands are positive safe integers. Invalid shapes/scalars throw Error with `code='INVALID'`; an unknown SKU throws `UNKNOWN_SKU`. No need to define precedence for several unrelated invalid fields.\n2. `reserve` atomically creates a `held` reservation at version 1 and `expiresAt=now+ttl`, provided every item fits current availability. Insufficient quantity throws `INSUFFICIENT` with no state change. A view has exactly `{id,owner,items,expiresAt,state,version}`. Every successful reservation-changing method returns its new detached view. `get(id)` returns that same detached view; missing ID throws `UNKNOWN_RESERVATION`. IDs are never removed or reused.\n3. Reserve is idempotent by ID and its **initial** request `{owner,items,ttl}`. The order of keys in `items` is irrelevant. Repeating the same initial request returns the **current** reservation view without changing version, inventory or expiry—even after an amend, confirm, cancel, expiry, or restore. Any different initial-request value using that ID throws `ID_CONFLICT`. A replay at a later logical time does not extend the original expiry. Replay validates the literal fields but does not recompute a deadline or recheck capacity.\n4. `amend`, `confirm` and `cancel` require the existing owner and `held` state, then an exact version. For otherwise valid inputs, check owner **before state and version**: wrong owner throws `FORBIDDEN`; correct owner on a terminal state throws `STATE`; held with stale version throws `VERSION_CONFLICT`. Successful commands increment version by exactly 1. Failed commands change nothing. `amend` replaces the entire item map and credits its old hold before checking capacity. It is all-or-nothing across every SKU, version and expiry. If ttl is omitted, keep the old expiry; if supplied, replace expiry with `now+ttl`. An identical successful amend still increments version.\n5. `availability()` returns every SKU's on-hand quantity minus quantities in **held** reservations. `confirm` reduces on-hand quantities by the held items and changes state to `confirmed`, so availability immediately before/after confirm is equal. `cancel` changes state to `cancelled`, releasing the hold without changing on-hand stock. Terminal reservations retain their items and expiresAt in their views; confirm/cancel on a terminal reservation is not an idempotent command and follows STATE above.\n6. Only `advance(time)` changes logical time. It requires a nonnegative safe integer >= current time; otherwise throw `INVALID_TIME` without state changes. Before returning it expires all held reservations with `expiresAt <= time`, changing state to `expired` and incrementing each version once. Return exactly `{now:time,expired:[ids]}`, ordered by expiry then ID using JavaScript string comparison. Repeating advance at the same time does not expire them again. Terminal reservations never expire. No other method implicitly advances or expires anything.\n7. `snapshot()` returns exactly `{schemaVersion:1,now,onHand,reservations}`. `onHand` is current stock after confirmed purchases. Reservations are sorted by ID using JavaScript string comparison; each entry contains its six view fields plus `initialRequest:{owner,items,ttl}` for reserve replay. Snapshot/JSON-clone/restore preserves every reservation, version, terminal history, expiry, stock and initial replay request. Original and restored copies evolve independently. Only this implementation's produced snapshots are required restore inputs.\n8. Mutating submitted stock/items, returned views, availability maps or snapshots must never mutate internal state. Do not add behaviors not specified here. Tests should exercise public API sequences, especially failed multi-SKU edits, repeated requests after amendments, owner/version precedence, exact expiry boundaries, confirm/release accounting and restore. Undefined behavior is not a reason to invent an acceptance assertion.\n",
+  "mode": "verify",
+  "provider": "codex",
+  "readiness": "ready_with_warnings",
+  "notReadyReasons": [],
+  "checkpoint": "eacf41d2914b409fd76652087d02ff1967734e72",
+  "baseSha": "deed43127fd6d0dc806bbe5a0852ecb540ae2553",
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "Export `createStockroom({stock, now=0})` and `restoreStockroom(snapshot)` from `src/stockroom.js` as a JavaScript ES module.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-1][R-3][R-4][C-1] exports and reservation view\"]]"
+      ]
+    },
+    {
+      "id": "R-2",
+      "text": "Validate stock, item maps, IDs, owners, logical time, TTLs, and command versions as specified. Invalid shapes or scalars throw an Error with `code='INVALID'`; unknown item SKUs throw `UNKNOWN_SKU`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-2][C-2] validates inputs and distinguishes unknown SKU\"]]"
+      ]
+    },
+    {
+      "id": "R-3",
+      "text": "`reserve` atomically creates a held reservation at version 1 with expiry `now+ttl` when all requested quantities are available. Insufficient stock throws `INSUFFICIENT` without changing state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-1][R-3][R-4][C-1] exports and reservation view\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-3][R-13][C-3] reserve is atomic on insufficient multi-SKU stock\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][R-9][R-13][R-3][C-4] amend is atomic, credits prior hold, and replaces items\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][R-8][R-9][R-3][C-6] amend confirm and cancel account for inventory\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-13][R-3][C-8] advance expires at boundaries and orders results\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-11][R-12][R-3][C-9] snapshots and all public values are detached\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-6][R-13][R-3][R-7][C-10] stale held commands do not mutate state\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-14][R-3][R-8][C-12] cancelled ID remains replayable but cannot be reused\"]]"
+      ]
+    },
+    {
+      "id": "R-4",
+      "text": "Reservation views contain exactly `{id,owner,items,expiresAt,state,version}`. Successful reservation-changing methods and `get` return detached views; missing IDs throw `UNKNOWN_RESERVATION`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-1][R-3][R-4][C-1] exports and reservation view\"]]"
+      ]
+    },
+    {
+      "id": "R-5",
+      "text": "`reserve` replays by ID and initial `{owner,items,ttl}`, treating item key order as irrelevant. A matching replay returns the current view without changing state, including after amendments or terminal transitions; a differing initial request throws `ID_CONFLICT`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-7][C-7] reserve replay uses initial request after amendment\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-11][R-12][R-3][C-9] snapshots and all public values are detached\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-14][R-3][R-8][C-12] cancelled ID remains replayable but cannot be reused\"]]"
+      ]
+    },
+    {
+      "id": "R-6",
+      "text": "For valid `amend`, `confirm`, and `cancel` requests, check owner before reservation state and version: wrong owner throws `FORBIDDEN`, correct owner on a terminal reservation throws `STATE`, and a stale version on a held reservation throws `VERSION_CONFLICT`.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-6][R-13][C-5] owner and state errors precede version checks\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-6][R-13][R-3][R-7][C-10] stale held commands do not mutate state\"]]"
+      ]
+    },
+    {
+      "id": "R-7",
+      "text": "`amend` replaces the full item map atomically, credits the old hold when checking capacity, and increments version exactly once on success. Omitted TTL preserves expiry; supplied TTL sets expiry to `now+ttl`. Even an identical successful amendment increments version.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][R-9][R-13][R-3][C-4] amend is atomic, credits prior hold, and replaces items\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][R-8][R-9][R-3][C-6] amend confirm and cancel account for inventory\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-7][C-7] reserve replay uses initial request after amendment\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-6][R-13][R-3][R-7][C-10] stale held commands do not mutate state\"]]"
+      ]
+    },
+    {
+      "id": "R-8",
+      "text": "`confirm` deducts held quantities from on-hand stock and changes state to confirmed; `cancel` changes state to cancelled and releases the hold without deducting on-hand stock. Both increment version once, and terminal views retain items and expiry.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][R-8][R-9][R-3][C-6] amend confirm and cancel account for inventory\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-8][R-10][R-14][C-11] reads do not advance time and terminal actions fail\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-14][R-3][R-8][C-12] cancelled ID remains replayable but cannot be reused\"]]"
+      ]
+    },
+    {
+      "id": "R-9",
+      "text": "`availability()` reports on-hand quantity less quantities held by held reservations. Availability immediately before and after a successful confirm is equal.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][R-9][R-13][R-3][C-4] amend is atomic, credits prior hold, and replaces items\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][R-8][R-9][R-3][C-6] amend confirm and cancel account for inventory\"]]"
+      ]
+    },
+    {
+      "id": "R-10",
+      "text": "`advance(time)` accepts only a nonnegative safe integer not less than current logical time; invalid input throws `INVALID_TIME` without changing state. It expires held reservations whose expiry is at or before `time`, increments each version once, and returns exactly `{now:time,expired:[ids]}` sorted by expiry then JavaScript string comparison of ID.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-13][R-3][C-8] advance expires at boundaries and orders results\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-8][R-10][R-14][C-11] reads do not advance time and terminal actions fail\"]]"
+      ]
+    },
+    {
+      "id": "R-11",
+      "text": "`snapshot()` returns exactly `{schemaVersion:1,now,onHand,reservations}` with reservations sorted by JavaScript string comparison of ID and each entry containing the six view fields plus its initial replay request. Restore preserves stock, logical time, reservation history, versions, expiries, and replay requests; restored and original instances evolve independently.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-11][R-12][R-3][C-9] snapshots and all public values are detached\"]]"
+      ]
+    },
+    {
+      "id": "R-12",
+      "text": "Mutating submitted stock/items or returned views, availability maps, or snapshots does not mutate internal state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-11][R-12][R-3][C-9] snapshots and all public values are detached\"]]"
+      ]
+    },
+    {
+      "id": "R-13",
+      "text": "A failed command leaves all relevant reservation, stock, expiry, version, and logical-time state unchanged.",
+      "required": true,
+      "manual": false,
+      "kind": "expected",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-3][R-13][C-3] reserve is atomic on insufficient multi-SKU stock\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-7][R-9][R-13][R-3][C-4] amend is atomic, credits prior hold, and replaces items\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-6][R-13][C-5] owner and state errors precede version checks\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-10][R-13][R-3][C-8] advance expires at boundaries and orders results\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-6][R-13][R-3][R-7][C-10] stale held commands do not mutate state\"]]"
+      ]
+    },
+    {
+      "id": "R-14",
+      "text": "Do not introduce behavior beyond the specified API contract, such as implicit time advancement, ID reuse, or idempotent terminal confirm/cancel.",
+      "required": true,
+      "manual": false,
+      "kind": "forbidden",
+      "status": "verified",
+      "tests": [
+        "@json:[\"tests/acceptance.test.js\",[\"[R-8][R-10][R-14][C-11] reads do not advance time and terminal actions fail\"]]",
+        "@json:[\"tests/acceptance.test.js\",[\"[R-5][R-14][R-3][R-8][C-12] cancelled ID remains replayable but cannot be reused\"]]"
+      ]
+    }
+  ],
+  "assumptions": [
+    "Restore inputs are limited to snapshots produced by this implementation, as stated in the requirement.",
+    "The requirement does not define precedence among multiple unrelated invalid fields; acceptance checks one relevant failure condition at a time.",
+    "The requirement permits methods to be synchronous or asynchronous, so callers may await every method and tests should accept either."
+  ],
+  "changes": {
+    "available": true,
+    "files": [
+      {
+        "path": "README.md",
+        "status": "modified",
+        "added": 12,
+        "removed": 1
+      },
+      {
+        "path": "src/stockroom.js",
+        "status": "modified",
+        "added": 217,
+        "removed": 2
+      },
+      {
+        "path": "tests/acceptance.test.js",
+        "status": "added",
+        "added": 371,
+        "removed": 0
+      }
+    ],
+    "added": 600,
+    "removed": 3,
+    "testFiles": [
+      "tests/acceptance.test.js"
+    ],
+    "patch": "diff --git a/README.md b/README.md\nindex 1ea4bfd..1ca7c65 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,13 @@\n # CartStock\n-Implement the public API specified in SPEC.md.\n+\n+```js\n+import { createStockroom } from './src/stockroom.js';\n+\n+const stockroom = createStockroom({ stock: { mug: 4, plate: 2 } });\n+const hold = stockroom.reserve({ id: 'cart-17', owner: 'customer-8', items: { mug: 2 }, ttl: 300 });\n+console.log(hold, stockroom.availability());\n+\n+// Confirm using the version returned by reserve; advance logical time explicitly.\n+stockroom.confirm({ id: hold.id, owner: hold.owner, version: hold.version });\n+stockroom.advance(300);\n+```\ndiff --git a/src/stockroom.js b/src/stockroom.js\nindex b0bb026..c60ce07 100644\n--- a/src/stockroom.js\n+++ b/src/stockroom.js\n@@ -1,2 +1,217 @@\n-export function createStockroom() { throw new Error('Not implemented'); }\n-export function restoreStockroom() { throw new Error('Not implemented'); }\n+const SKU_PATTERN = /^[A-Za-z][A-Za-z0-9_-]{0,31}$/;\n+\n+function fail(code, message) {\n+  const error = new Error(message);\n+  error.code = code;\n+  throw error;\n+}\n+\n+function isRecord(value) {\n+  return value !== null && typeof value === 'object' && !Array.isArray(value);\n+}\n+\n+function copyMap(value) {\n+  return Object.fromEntries(Object.keys(value).map((key) => [key, value[key]]));\n+}\n+\n+function validateMap(value, { nonempty, positive, known } = {}) {\n+  if (!isRecord(value)) fail('INVALID', 'Expected an object map');\n+  const keys = Object.keys(value);\n+  if (nonempty && keys.length === 0) fail('INVALID', 'Expected a nonempty object map');\n+  const result = {};\n+  for (const sku of keys) {\n+    if (!SKU_PATTERN.test(sku)) fail('INVALID', 'Invalid SKU');\n+    const quantity = value[sku];\n+    if (!Number.isSafeInteger(quantity) || (positive ? quantity <= 0 : quantity < 0)) {\n+      fail('INVALID', 'Invalid quantity');\n+    }\n+    if (known && !known.has(sku)) fail('UNKNOWN_SKU', 'Unknown SKU');\n+    result[sku] = quantity;\n+  }\n+  return result;\n+}\n+\n+function validateIdentity(id, owner) {\n+  if (typeof id !== 'string' || id.length < 1 || id.length > 64) fail('INVALID', 'Invalid reservation ID');\n+  if (typeof owner !== 'string' || owner.length < 1 || owner.length > 64) fail('INVALID', 'Invalid owner');\n+}\n+\n+function validateVersion(version) {\n+  if (!Number.isSafeInteger(version) || version <= 0) fail('INVALID', 'Invalid version');\n+}\n+\n+function sameItems(a, b) {\n+  const keys = Object.keys(a);\n+  return keys.length === Object.keys(b).length && keys.every((key) => Object.hasOwn(b, key) && a[key] === b[key]);\n+}\n+\n+function view(reservation) {\n+  return {\n+    id: reservation.id,\n+    owner: reservation.owner,\n+    items: copyMap(reservation.items),\n+    expiresAt: reservation.expiresAt,\n+    state: reservation.state,\n+    version: reservation.version,\n+  };\n+}\n+\n+function buildStockroom(onHandInput, now, restoredReservations = []) {\n+  const onHand = new Map(Object.entries(onHandInput));\n+  const reservations = new Map();\n+  for (const reservation of restoredReservations) reservations.set(reservation.id, reservation);\n+\n+  function availability() {\n+    const result = Object.fromEntries(onHand);\n+    for (const reservation of reservations.values()) {\n+      if (reservation.state !== 'held') continue;\n+      for (const [sku, quantity] of Object.entries(reservation.items)) result[sku] -= quantity;\n+    }\n+    return result;\n+  }\n+\n+  function validateItems(items) {\n+    return validateMap(items, { nonempty: true, positive: true, known: new Set(onHand.keys()) });\n+  }\n+\n+  function find(id) {\n+    if (typeof id !== 'string' || id.length < 1 || id.length > 64) fail('INVALID', 'Invalid reservation ID');\n+    const reservation = reservations.get(id);\n+    if (!reservation) fail('UNKNOWN_RESERVATION', 'Unknown reservation');\n+    return reservation;\n+  }\n+\n+  function checkCommand(input) {\n+    if (!isRecord(input)) fail('INVALID', 'Expected command object');\n+    const { id, owner, version } = input;\n+    validateIdentity(id, owner);\n+    validateVersion(version);\n+    const reservation = find(id);\n+    if (reservation.owner !== owner) fail('FORBIDDEN', 'Owner does not match');\n+    if (reservation.state !== 'held') fail('STATE', 'Reservation is not held');\n+    if (reservation.version !== version) fail('VERSION_CONFLICT', 'Reservation version does not match');\n+    return reservation;\n+  }\n+\n+  const api = {\n+    reserve(input) {\n+      if (!isRecord(input)) fail('INVALID', 'Expected reservation object');\n+      const { id, owner, ttl } = input;\n+      validateIdentity(id, owner);\n+      const items = validateItems(input.items);\n+      if (!Number.isSafeInteger(ttl) || ttl <= 0) fail('INVALID', 'Invalid TTL');\n+      const previous = reservations.get(id);\n+      if (previous) {\n+        if (previous.initialRequest.owner !== owner || previous.initialRequest.ttl !== ttl || !sameItems(previous.initialRequest.items, items)) {\n+          fail('ID_CONFLICT', 'Reservation ID has a different initial request');\n+        }\n+        return view(previous);\n+      }\n+      const expiresAt = now + ttl;\n+      if (!Number.isSafeInteger(expiresAt)) fail('INVALID', 'Deadline is not a safe integer');\n+      const available = availability();\n+      if (Object.entries(items).some(([sku, quantity]) => quantity > available[sku])) fail('INSUFFICIENT', 'Insufficient stock');\n+      const reservation = {\n+        id, owner, items, expiresAt, state: 'held', version: 1,\n+        initialRequest: { owner, items: copyMap(items), ttl },\n+      };\n+      reservations.set(id, reservation);\n+      return view(reservation);\n+    },\n+    amend(input) {\n+      if (!isRecord(input)) fail('INVALID', 'Expected command object');\n+      const nextItems = validateItems(input.items);\n+      if (Object.hasOwn(input, 'ttl') && (!Number.isSafeInteger(input.ttl) || input.ttl <= 0)) fail('INVALID', 'Invalid TTL');\n+      const reservation = checkCommand(input);\n+      let nextExpiry = reservation.expiresAt;\n+      if (Object.hasOwn(input, 'ttl')) {\n+        nextExpiry = now + input.ttl;\n+        if (!Number.isSafeInteger(nextExpiry)) fail('INVALID', 'Deadline is not a safe integer');\n+      }\n+      const available = availability();\n+      for (const [sku, quantity] of Object.entries(reservation.items)) available[sku] += quantity;\n+      if (Object.entries(nextItems).some(([sku, quantity]) => quantity > available[sku])) fail('INSUFFICIENT', 'Insufficient stock');\n+      reservation.items = nextItems;\n+      reservation.expiresAt = nextExpiry;\n+      reservation.version += 1;\n+      return view(reservation);\n+    },\n+    confirm(input) {\n+      const reservation = checkCommand(input);\n+      for (const [sku, quantity] of Object.entries(reservation.items)) onHand.set(sku, onHand.get(sku) - quantity);\n+      reservation.state = 'confirmed';\n+      reservation.version += 1;\n+      return view(reservation);\n+    },\n+    cancel(input) {\n+      const reservation = checkCommand(input);\n+      reservation.state = 'cancelled';\n+      reservation.version += 1;\n+      return view(reservation);\n+    },\n+    get(id) { return view(find(id)); },\n+    availability,\n+    advance(time) {\n+      if (!Number.isSafeInteger(time) || time < 0 || time < now) fail('INVALID_TIME', 'Invalid logical time');\n+      now = time;\n+      const expiredReservations = [...reservations.values()]\n+        .filter((reservation) => reservation.state === 'held' && reservation.expiresAt <= time)\n+        .sort((a, b) => a.expiresAt - b.expiresAt || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));\n+      for (const reservation of expiredReservations) {\n+        reservation.state = 'expired';\n+        reservation.version += 1;\n+      }\n+      return { now, expired: expiredReservations.map(({ id }) => id) };\n+    },\n+    snapshot() {\n+      const entries = [...reservations.values()].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);\n+      return {\n+        schemaVersion: 1,\n+        now,\n+        onHand: Object.fromEntries(onHand),\n+        reservations: entries.map((reservation) => ({\n+          ...view(reservation),\n+          initialRequest: {\n+            owner: reservation.initialRequest.owner,\n+            items: copyMap(reservation.initialRequest.items),\n+            ttl: reservation.initialRequest.ttl,\n+          },\n+        })),\n+      };\n+    },\n+  };\n+  return api;\n+}\n+\n+export function createStockroom(input = {}) {\n+  if (!isRecord(input)) fail('INVALID', 'Expected stockroom options');\n+  const { stock, now = 0 } = input;\n+  if (!Number.isSafeInteger(now) || now < 0) fail('INVALID', 'Invalid logical time');\n+  const validatedStock = validateMap(stock, { nonempty: true });\n+  return buildStockroom(validatedStock, now);\n+}\n+\n+export function restoreStockroom(snapshot) {\n+  if (!isRecord(snapshot) || snapshot.schemaVersion !== 1 || !Number.isSafeInteger(snapshot.now) || snapshot.now < 0) {\n+    fail('INVALID', 'Invalid snapshot');\n+  }\n+  const onHand = validateMap(snapshot.onHand, { nonempty: true });\n+  if (!Array.isArray(snapshot.reservations)) fail('INVALID', 'Invalid reservations');\n+  const restoredReservations = [];\n+  for (const entry of snapshot.reservations) {\n+    if (!isRecord(entry)) fail('INVALID', 'Invalid reservation entry');\n+    const { id, owner, items, expiresAt, state, version, initialRequest } = entry;\n+    validateIdentity(id, owner);\n+    if (!Number.isSafeInteger(expiresAt) || expiresAt < 0 || !['held', 'confirmed', 'cancelled', 'expired'].includes(state) || !Number.isSafeInteger(version) || version <= 0) {\n+      fail('INVALID', 'Invalid reservation state');\n+    }\n+    const currentItems = validateMap(items, { nonempty: true, positive: true, known: new Set(Object.keys(onHand)) });\n+    if (!isRecord(initialRequest) || typeof initialRequest.owner !== 'string' || initialRequest.owner.length < 1 || initialRequest.owner.length > 64 || !Number.isSafeInteger(initialRequest.ttl) || initialRequest.ttl <= 0) {\n+      fail('INVALID', 'Invalid initial request');\n+    }\n+    const initialItems = validateMap(initialRequest.items, { nonempty: true, positive: true, known: new Set(Object.keys(onHand)) });\n+    restoredReservations.push({ id, owner, items: currentItems, expiresAt, state, version,\n+      initialRequest: { owner: initialRequest.owner, items: initialItems, ttl: initialRequest.ttl } });\n+  }\n+  return buildStockroom(onHand, snapshot.now, restoredReservations);\n+}\ndiff --git a/tests/acceptance.test.js b/tests/acceptance.test.js\nnew file mode 100644\nindex 0000000..15efedc\n--- /dev/null\n+++ b/tests/acceptance.test.js\n@@ -0,0 +1,371 @@\n+import { expect, test } from 'vitest';\n+import { createStockroom, restoreStockroom } from '../src/stockroom.js';\n+\n+async function captureError(call) {\n+  try {\n+    await call();\n+  } catch (error) {\n+    return error;\n+  }\n+  return undefined;\n+}\n+\n+// @aidept-case C-1\n+test('[R-1][R-3][R-4][C-1] exports and reservation view', async () => {\n+  // @aidept-step S-1\n+  expect(typeof createStockroom).toBe('function');\n+  // @aidept-step S-1\n+  expect(typeof restoreStockroom).toBe('function');\n+  const room = await createStockroom({ stock: { A: 1 } });\n+  // @aidept-step S-1\n+  expect(await room.availability()).toEqual({ A: 1 });\n+  const made = await room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 1 });\n+  const fetched = await room.get('r');\n+  // @aidept-step S-2\n+  expect(made).toEqual({ id: 'r', owner: 'o', items: { A: 1 }, expiresAt: 1, state: 'held', version: 1 });\n+  // @aidept-step S-2\n+  expect(Object.keys(made).sort()).toEqual(['expiresAt', 'id', 'items', 'owner', 'state', 'version']);\n+  // @aidept-step S-2\n+  expect(fetched).toEqual(made);\n+});\n+\n+// @aidept-case C-2\n+test('[R-2][C-2] validates inputs and distinguishes unknown SKU', async () => {\n+  const invalidFactories = [\n+    () => createStockroom({ stock: {} }),\n+    () => createStockroom({ stock: { A: -1 } }),\n+    () => createStockroom({ stock: { A: Number.MAX_SAFE_INTEGER + 1 } }),\n+    () => createStockroom({ stock: { A: 1 }, now: -1 }),\n+  ];\n+  for (const factory of invalidFactories) {\n+    const error = await captureError(factory);\n+    // @aidept-step S-1\n+    expect(error?.code).toBe('INVALID');\n+  }\n+  const room = await createStockroom({ stock: { A: 2 } });\n+  const invalidReserves = [\n+    () => room.reserve({ id: 'x', owner: 'o', items: {}, ttl: 1 }),\n+    () => room.reserve({ id: 'x', owner: 'o', items: { A: 0 }, ttl: 1 }),\n+    () => room.reserve({ id: '', owner: 'o', items: { A: 1 }, ttl: 1 }),\n+    () => room.reserve({ id: 'x', owner: '', items: { A: 1 }, ttl: 1 }),\n+    () => room.reserve({ id: 'x', owner: 'o', items: { A: 1 }, ttl: 0 }),\n+    () => room.reserve({ id: 'x', owner: 'o', items: { A: 1 }, ttl: Number.MAX_SAFE_INTEGER + 1 }),\n+  ];\n+  for (const call of invalidReserves) {\n+    const error = await captureError(call);\n+    // @aidept-step S-1\n+    expect(error?.code).toBe('INVALID');\n+  }\n+  const unknown = await captureError(() => room.reserve({ id: 'u', owner: 'o', items: { Z: 1 }, ttl: 1 }));\n+  // @aidept-step S-2\n+  expect(unknown?.code).toBe('UNKNOWN_SKU');\n+  await room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  for (const command of [\n+    () => room.amend({ id: 'r', owner: 'o', version: 0, items: { A: 1 } }),\n+    () => room.confirm({ id: 'r', owner: 'o', version: 0 }),\n+    () => room.cancel({ id: 'r', owner: 'o', version: 0 }),\n+  ]) {\n+    const error = await captureError(command);\n+    // @aidept-step S-2\n+    expect(error?.code).toBe('INVALID');\n+  }\n+  // @aidept-step S-2\n+  expect(await room.get('r')).toMatchObject({ state: 'held', version: 1 });\n+});\n+\n+// @aidept-case C-3\n+test('[R-3][R-13][C-3] reserve is atomic on insufficient multi-SKU stock', async () => {\n+  const room = await createStockroom({ stock: { A: 2, B: 1 } });\n+  const beforeSnapshot = await room.snapshot();\n+  const beforeAvailability = await room.availability();\n+  const error = await captureError(() => room.reserve({ id: 'bad', owner: 'o', items: { A: 1, B: 2 }, ttl: 3 }));\n+  // @aidept-step S-1\n+  expect(error?.code).toBe('INSUFFICIENT');\n+  // @aidept-step S-1\n+  expect(await room.snapshot()).toEqual(beforeSnapshot);\n+  // @aidept-step S-1\n+  expect(await room.availability()).toEqual(beforeAvailability);\n+  const made = await room.reserve({ id: 'r', owner: 'o', items: { A: 2, B: 1 }, ttl: 3 });\n+  // @aidept-step S-2\n+  expect(made).toEqual({ id: 'r', owner: 'o', items: { A: 2, B: 1 }, expiresAt: 3, state: 'held', version: 1 });\n+  // @aidept-step S-2\n+  expect(await room.availability()).toEqual({ A: 0, B: 0 });\n+});\n+\n+// @aidept-case C-4\n+test('[R-7][R-9][R-13][R-3][C-4] amend is atomic, credits prior hold, and replaces items', async () => {\n+  const room = await createStockroom({ stock: { A: 2, B: 1 } });\n+  const initial = await room.reserve({ id: 'r', owner: 'o', items: { A: 1, B: 1 }, ttl: 5 });\n+  // @aidept-step S-1\n+  expect(initial).toMatchObject({ state: 'held', version: 1, expiresAt: 5 });\n+  // @aidept-step S-1\n+  expect(await room.availability()).toEqual({ A: 1, B: 0 });\n+  const before = await room.snapshot();\n+  const error = await captureError(() => room.amend({ id: 'r', owner: 'o', version: 1, items: { A: 2, B: 2 } }));\n+  // @aidept-step S-2\n+  expect(error?.code).toBe('INSUFFICIENT');\n+  // @aidept-step S-2\n+  expect(await room.get('r')).toEqual(initial);\n+  // @aidept-step S-2\n+  expect(await room.availability()).toEqual({ A: 1, B: 0 });\n+  // @aidept-step S-2\n+  expect(await room.snapshot()).toEqual(before);\n+  const amended = await room.amend({ id: 'r', owner: 'o', version: 1, items: { A: 2 } });\n+  // @aidept-step S-3\n+  expect(amended).toEqual({ id: 'r', owner: 'o', items: { A: 2 }, expiresAt: 5, state: 'held', version: 2 });\n+  // @aidept-step S-3\n+  expect(await room.availability()).toEqual({ A: 0, B: 1 });\n+});\n+\n+// @aidept-case C-5\n+test('[R-6][R-13][C-5] owner and state errors precede version checks', async () => {\n+  const room = await createStockroom({ stock: { A: 3 } });\n+  await room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  await room.reserve({ id: 'c', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  await room.cancel({ id: 'c', owner: 'o', version: 1 });\n+  const before = await room.snapshot();\n+  for (const call of [\n+    () => room.amend({ id: 'r', owner: 'other', version: 99, items: { A: 1 } }),\n+    () => room.confirm({ id: 'r', owner: 'other', version: 99 }),\n+    () => room.cancel({ id: 'r', owner: 'other', version: 99 }),\n+  ]) {\n+    const error = await captureError(call);\n+    // @aidept-step S-1\n+    expect(error?.code).toBe('FORBIDDEN');\n+    // @aidept-step S-1\n+    expect(await room.snapshot()).toEqual(before);\n+  }\n+  for (const call of [\n+    () => room.amend({ id: 'c', owner: 'o', version: 1, items: { A: 1 } }),\n+    () => room.confirm({ id: 'c', owner: 'o', version: 1 }),\n+    () => room.cancel({ id: 'c', owner: 'o', version: 1 }),\n+  ]) {\n+    const error = await captureError(call);\n+    // @aidept-step S-2\n+    expect(error?.code).toBe('STATE');\n+    // @aidept-step S-2\n+    expect(await room.snapshot()).toEqual(before);\n+  }\n+});\n+\n+// @aidept-case C-6\n+test('[R-7][R-8][R-9][R-3][C-6] amend confirm and cancel account for inventory', async () => {\n+  const room = await createStockroom({ stock: { A: 3 } });\n+  const made = await room.reserve({ id: 'r', owner: 'o', items: { A: 2 }, ttl: 5 });\n+  // @aidept-step S-1\n+  expect(made).toMatchObject({ state: 'held', version: 1, expiresAt: 5 });\n+  // @aidept-step S-1\n+  expect(await room.availability()).toEqual({ A: 1 });\n+  const amended = await room.amend({ id: 'r', owner: 'o', version: 1, items: { A: 2 } });\n+  // @aidept-step S-2\n+  expect(amended).toMatchObject({ state: 'held', version: 2, expiresAt: 5 });\n+  // @aidept-step S-2\n+  expect(await room.availability()).toEqual({ A: 1 });\n+  const beforeConfirm = await room.availability();\n+  const confirmed = await room.confirm({ id: 'r', owner: 'o', version: 2 });\n+  // @aidept-step S-3\n+  expect(confirmed).toEqual({ id: 'r', owner: 'o', items: { A: 2 }, expiresAt: 5, state: 'confirmed', version: 3 });\n+  // @aidept-step S-3\n+  expect(await room.availability()).toEqual(beforeConfirm);\n+  // @aidept-step S-3\n+  expect((await room.snapshot()).onHand).toEqual({ A: 1 });\n+  const cancelled = await room.reserve({ id: 'c', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  // @aidept-step S-4\n+  expect(cancelled).toMatchObject({ id: 'c', state: 'held', version: 1, expiresAt: 5 });\n+  const cancelledView = await room.cancel({ id: 'c', owner: 'o', version: 1 });\n+  // @aidept-step S-4\n+  expect(cancelledView).toEqual({ id: 'c', owner: 'o', items: { A: 1 }, expiresAt: 5, state: 'cancelled', version: 2 });\n+  // @aidept-step S-4\n+  expect((await room.snapshot()).onHand).toEqual({ A: 1 });\n+  // @aidept-step S-4\n+  expect(await room.availability()).toEqual({ A: 1 });\n+});\n+\n+// @aidept-case C-7\n+test('[R-5][R-7][C-7] reserve replay uses initial request after amendment', async () => {\n+  const room = await createStockroom({ stock: { A: 3, B: 2 } });\n+  const made = await room.reserve({ id: 'r', owner: 'o', items: { A: 1, B: 1 }, ttl: 5 });\n+  // @aidept-step S-1\n+  expect(made).toMatchObject({ id: 'r', state: 'held', version: 1, expiresAt: 5 });\n+  const amended = await room.amend({ id: 'r', owner: 'o', version: 1, items: { A: 2 } });\n+  // @aidept-step S-2\n+  expect(amended).toEqual({ id: 'r', owner: 'o', items: { A: 2 }, expiresAt: 5, state: 'held', version: 2 });\n+  const before = await room.snapshot();\n+  const replay = await room.reserve({ id: 'r', owner: 'o', items: { B: 1, A: 1 }, ttl: 5 });\n+  // @aidept-step S-3\n+  expect(replay).toEqual(amended);\n+  // @aidept-step S-3\n+  expect(await room.snapshot()).toEqual(before);\n+  const error = await captureError(() => room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 }));\n+  // @aidept-step S-4\n+  expect(error?.code).toBe('ID_CONFLICT');\n+  // @aidept-step S-4\n+  expect(await room.snapshot()).toEqual(before);\n+});\n+\n+// @aidept-case C-8\n+test('[R-10][R-13][R-3][C-8] advance expires at boundaries and orders results', async () => {\n+  const room = await createStockroom({ stock: { A: 3 } });\n+  const a = await room.reserve({ id: 'a', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  const b = await room.reserve({ id: 'b', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  const c = await room.reserve({ id: 'c', owner: 'o', items: { A: 1 }, ttl: 3 });\n+  // @aidept-step S-1\n+  expect([a.expiresAt, b.expiresAt, c.expiresAt]).toEqual([5, 5, 3]);\n+  // @aidept-step S-1\n+  expect([a.version, b.version, c.version]).toEqual([1, 1, 1]);\n+  const early = await room.advance(2);\n+  // @aidept-step S-2\n+  expect(early).toEqual({ now: 2, expired: [] });\n+  // @aidept-step S-2\n+  expect(await room.get('c')).toMatchObject({ state: 'held', version: 1 });\n+  const boundary = await room.advance(5);\n+  // @aidept-step S-3\n+  expect(boundary).toEqual({ now: 5, expired: ['c', 'a', 'b'] });\n+  // @aidept-step S-3\n+  expect(await room.get('a')).toMatchObject({ state: 'expired', version: 2, expiresAt: 5 });\n+  // @aidept-step S-3\n+  expect(await room.get('c')).toMatchObject({ state: 'expired', version: 2, expiresAt: 3 });\n+  const repeated = await room.advance(5);\n+  // @aidept-step S-4\n+  expect(repeated).toEqual({ now: 5, expired: [] });\n+  const before = await room.snapshot();\n+  for (const time of [4, -1, Number.MAX_SAFE_INTEGER + 1]) {\n+    const error = await captureError(() => room.advance(time));\n+    // @aidept-step S-5\n+    expect(error?.code).toBe('INVALID_TIME');\n+    // @aidept-step S-5\n+    expect(await room.snapshot()).toEqual(before);\n+  }\n+});\n+\n+// @aidept-case C-9\n+test('[R-5][R-11][R-12][R-3][C-9] snapshots and all public values are detached', async () => {\n+  const stock = { A: 3, B: 1 };\n+  const room = await createStockroom({ stock });\n+  stock.A = 0;\n+  // @aidept-step S-1\n+  expect(await room.availability()).toEqual({ A: 3, B: 1 });\n+  const items = { A: 1 };\n+  const made = await room.reserve({ id: 'r', owner: 'o', items, ttl: 5 });\n+  items.A = 3;\n+  made.items.A = 2;\n+  made.owner = 'changed';\n+  const availability = await room.availability();\n+  availability.A = 99;\n+  // @aidept-step S-2\n+  expect(await room.get('r')).toEqual({ id: 'r', owner: 'o', items: { A: 1 }, expiresAt: 5, state: 'held', version: 1 });\n+  // @aidept-step S-2\n+  expect(await room.availability()).toEqual({ A: 2, B: 1 });\n+  const snapshot = await room.snapshot();\n+  const saved = JSON.parse(JSON.stringify(snapshot));\n+  snapshot.onHand.A = 0;\n+  snapshot.reservations[0].items.A = 77;\n+  snapshot.reservations[0].initialRequest.items.A = 77;\n+  // @aidept-step S-3\n+  expect(Object.keys(saved).sort()).toEqual(['now', 'onHand', 'reservations', 'schemaVersion']);\n+  // @aidept-step S-3\n+  expect(saved.reservations.map((entry) => entry.id)).toEqual(['r']);\n+  // @aidept-step S-3\n+  expect(await room.get('r')).toEqual({ id: 'r', owner: 'o', items: { A: 1 }, expiresAt: 5, state: 'held', version: 1 });\n+  // @aidept-step S-3\n+  expect(await room.availability()).toEqual({ A: 2, B: 1 });\n+  const restored = await restoreStockroom(saved);\n+  const replay = await restored.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  // @aidept-step S-4\n+  expect(replay).toEqual({ id: 'r', owner: 'o', items: { A: 1 }, expiresAt: 5, state: 'held', version: 1 });\n+  // @aidept-step S-4\n+  expect(await restored.snapshot()).toEqual(saved);\n+  await restored.confirm({ id: 'r', owner: 'o', version: 1 });\n+  // @aidept-step S-5\n+  expect(await restored.get('r')).toMatchObject({ state: 'confirmed', version: 2 });\n+  // @aidept-step S-5\n+  expect(await restored.snapshot()).toMatchObject({ onHand: { A: 2, B: 1 } });\n+  // @aidept-step S-5\n+  expect(await room.get('r')).toMatchObject({ state: 'held', version: 1 });\n+  // @aidept-step S-5\n+  expect(await room.snapshot()).toMatchObject({ onHand: { A: 3, B: 1 } });\n+});\n+\n+// @aidept-case C-10\n+test('[R-6][R-13][R-3][R-7][C-10] stale held commands do not mutate state', async () => {\n+  const room = await createStockroom({ stock: { A: 2 } });\n+  await room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  const amended = await room.amend({ id: 'r', owner: 'o', version: 1, items: { A: 1 } });\n+  // @aidept-step S-1\n+  expect(amended).toMatchObject({ state: 'held', version: 2, expiresAt: 5 });\n+  const before = await room.snapshot();\n+  for (const call of [\n+    () => room.amend({ id: 'r', owner: 'o', version: 1, items: { A: 1 } }),\n+    () => room.confirm({ id: 'r', owner: 'o', version: 1 }),\n+    () => room.cancel({ id: 'r', owner: 'o', version: 1 }),\n+  ]) {\n+    const error = await captureError(call);\n+    // @aidept-step S-2\n+    expect(error?.code).toBe('VERSION_CONFLICT');\n+    // @aidept-step S-2\n+    expect(await room.snapshot()).toEqual(before);\n+    // @aidept-step S-2\n+    expect(await room.availability()).toEqual({ A: 1 });\n+  }\n+});\n+\n+// @aidept-case C-11\n+test('[R-8][R-10][R-14][C-11] reads do not advance time and terminal actions fail', async () => {\n+  const room = await createStockroom({ stock: { A: 2 } });\n+  const held = await room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  await room.reserve({ id: 'c', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  const cancelled = await room.cancel({ id: 'c', owner: 'o', version: 1 });\n+  // @aidept-step S-1\n+  expect(cancelled).toMatchObject({ state: 'cancelled', version: 2, expiresAt: 5 });\n+  // @aidept-step S-1\n+  expect(await room.get('r')).toEqual(held);\n+  // @aidept-step S-1\n+  expect((await room.snapshot()).now).toBe(0);\n+  const replay = await room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  // @aidept-step S-1\n+  expect(replay).toEqual(held);\n+  for (const call of [\n+    () => room.confirm({ id: 'c', owner: 'o', version: 2 }),\n+    () => room.cancel({ id: 'c', owner: 'o', version: 2 }),\n+  ]) {\n+    const error = await captureError(call);\n+    // @aidept-step S-1\n+    expect(error?.code).toBe('STATE');\n+  }\n+  const atFour = await room.advance(4);\n+  // @aidept-step S-2\n+  expect(atFour).toEqual({ now: 4, expired: [] });\n+  // @aidept-step S-2\n+  expect(await room.get('r')).toMatchObject({ state: 'held', version: 1 });\n+  const atFive = await room.advance(5);\n+  // @aidept-step S-3\n+  expect(atFive).toEqual({ now: 5, expired: ['r'] });\n+  // @aidept-step S-3\n+  expect(await room.get('r')).toMatchObject({ state: 'expired', version: 2 });\n+  // @aidept-step S-3\n+  expect(await room.get('c')).toMatchObject({ state: 'cancelled', version: 2 });\n+});\n+\n+// @aidept-case C-12\n+test('[R-5][R-14][R-3][R-8][C-12] cancelled ID remains replayable but cannot be reused', async () => {\n+  const room = await createStockroom({ stock: { A: 2 } });\n+  const made = await room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  // @aidept-step S-1\n+  expect(made).toMatchObject({ state: 'held', version: 1, expiresAt: 5 });\n+  const cancelled = await room.cancel({ id: 'r', owner: 'o', version: 1 });\n+  // @aidept-step S-1\n+  expect(cancelled).toEqual({ id: 'r', owner: 'o', items: { A: 1 }, expiresAt: 5, state: 'cancelled', version: 2 });\n+  const before = await room.snapshot();\n+  const replay = await room.reserve({ id: 'r', owner: 'o', items: { A: 1 }, ttl: 5 });\n+  // @aidept-step S-2\n+  expect(replay).toEqual(cancelled);\n+  // @aidept-step S-2\n+  expect(await room.snapshot()).toEqual(before);\n+  const error = await captureError(() => room.reserve({ id: 'r', owner: 'o', items: { A: 2 }, ttl: 5 }));\n+  // @aidept-step S-3\n+  expect(error?.code).toBe('ID_CONFLICT');\n+  // @aidept-step S-3\n+  expect(await room.get('r')).toEqual(cancelled);\n+  // @aidept-step S-3\n+  expect(await room.snapshot()).toEqual(before);\n+});\n"
+  },
+  "checks": [
+    {
+      "id": "test",
+      "command": "node node_modules/vitest/vitest.mjs run --reporter=json --outputFile=.aidept-report.json",
+      "status": "passed",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "skippedNames": [],
+      "durationMs": 1086,
+      "runs": 1,
+      "quarantined": false,
+      "issues": []
+    }
+  ],
+  "verifier": {
+    "expected": true,
+    "ran": true,
+    "verdict": {
+      "decision": "pass",
+      "summary": "Tôi sẽ lập checklist từ hợp đồng trước, sau đó đối chiếu diff và chỉ nêu lỗi có đường dẫn cụ thể hoặc có thể tái hiện qua API công khai. Ngữ cảnh runner đã báo pass; tôi sẽ không coi đó là kiểm chứng độc lập hay chạy thêm test.\nChecklist từ SPEC: (1) exports/API và validation/error codes; (2) reserve nguyên tử, view tách rời, replay theo request ban đầu; (3) amend/confirm/cancel đúng precedence, version và hạch toán; (4) advance chỉ đổi giờ và expire đúng ranh giới/thứ tự; (5) snapshot/restore giữ lịch sử và độc lập; (6) không alias dữ liệu đầu vào/đầu ra, không thêm hành vi ngoài hợp đồng. Đang đối chiếu các mục này với phần triển khai trong diff.",
+      "findingCount": 0,
+      "scope": {
+        "reviewed": [
+          "SPEC.md",
+          "src/stockroom.js",
+          "README.md",
+          "diff phần tests/acceptance.test.js"
+        ],
+        "checkIds": [
+          "chk_8c8291ce"
+        ],
+        "limitations": [
+          "Chưa tự chạy test; runner hiện hành báo 13 passed, 0 failed, 0 skipped."
+        ],
+        "additionalChecks": []
+      }
+    },
+    "findings": []
+  },
+  "effort": {
+    "costUsd": 1.0269270000000001,
+    "estimated": true,
+    "tokens": 682153,
+    "aiMs": 297493,
+    "humanMs": 0,
+    "attempts": 6,
+    "repairs": 0
+  },
+  "scopeApprovals": [],
+  "skills": [],
+  "warnings": [
+    {
+      "level": "warn",
+      "text": "Mutation còn 126 sống sót và 47 không được test phủ; cần xem chất lượng assertion."
+    },
+    {
+      "level": "warn",
+      "text": "Giới hạn Verifier: Chưa tự chạy test; runner hiện hành báo 13 passed, 0 failed, 0 skipped."
+    },
+    {
+      "level": "info",
+      "text": "Công cụ phân tích mã (knip, jscpd, dependency-cruiser) chưa chạy: chưa có đánh giá về mã chết, trùng lặp hay vi phạm ranh giới module."
+    }
+  ],
+  "delivery": {
+    "kind": "branch",
+    "target": "aidept/run_3973832e-A",
+    "branch": "aidept/run_3973832e-A",
+    "repository": "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\project",
+    "delivered": false,
+    "status": "unconfirmed",
+    "commands": [
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\project\" log --oneline HEAD..aidept/run_3973832e-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\project\" diff HEAD..aidept/run_3973832e-A",
+      "git -C \"C:\\Users\\ADMIN\\OneDrive\\Desktop\\ai-department\\.data\\cartstock-v3-20261025\\project\" merge aidept/run_3973832e-A"
+    ]
+  }
+}
