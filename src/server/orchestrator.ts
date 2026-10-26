@@ -419,12 +419,7 @@ export class Orchestrator {
       else if (this.s.run(runId).pendingAction === 'repair') await this.verification.repairPhase(runId, controller.signal);
       else if (!isApproved(this.s.run(runId).contract)) await this.planning.planPhase(runId, controller.signal);
       else await this.buildPhase(runId, controller.signal);
-      // A test correction approved by the system (see TestRecovery.autoApprove) is applied right away instead of waiting for a person.
-      const after = this.s.run(runId);
-      if (after.testRepairApproval?.auto && !after.testRepairApproval.appliedCheckpoint && ['blocked', 'failed'].includes(after.status)) {
-        this.s.mutate(runId, (r) => { r.status = 'running'; r.blocker = null; });
-        await this.applyTestRepair(runId, controller.signal);
-      }
+      await this.autoRecover(runId, controller.signal);
     } catch (error) {
       this.recordStop(runId, error, controller.signal);
     } finally {
@@ -435,6 +430,32 @@ export class Orchestrator {
       // interrupted request is still there to be carried out when the run is resumed.
       if (run?.pendingAction) this.s.mutate(runId, (r) => { delete r.pendingAction; });
       if (run && run.status === 'running') this.s.mutate(runId, (r) => { r.status = 'paused'; r.blocker = 'Giai đoạn kết thúc mà không có trạng thái rõ ràng.'; });
+    }
+  }
+
+  /**
+   * A test correction approved by the system (see TestRecovery.autoApprove) is applied right away instead of waiting for a
+   * person; and when the corrected tests still fail, the normal repair loop goes on (twice at most per contract version)
+   * instead of the run ending on the first red check.
+   */
+  private async autoRecover(runId: string, signal: AbortSignal): Promise<void> {
+    for (let step = 0; step < 6; step++) {
+      const run = this.s.run(runId);
+      const stopped = ['blocked', 'failed'].includes(run.status);
+      if (stopped && run.testRepairApproval?.auto && !run.testRepairApproval.appliedCheckpoint) {
+        this.s.mutate(runId, (r) => { r.status = 'running'; r.blocker = null; });
+        await this.applyTestRepair(runId, signal);
+        continue;
+      }
+      const artifacts = this.store.artifacts.list(runId).filter((a) => a.valid && a.contractVersion === run.contract.version);
+      const corrected = artifacts.some((a) => a.title === 'Test repair receipt');
+      const continued = artifacts.filter((a) => a.title === 'Auto continue after test repair').length;
+      if (run.status !== 'failed' || !corrected || continued >= 2) return;
+      this.s.artifact(runId, { kind: 'report', title: 'Auto continue after test repair', content: '{}', checkpoint: run.checkpoint });
+      this.authorizeDeveloperRetry(runId, 'Bản sửa test đã áp dụng nhưng check vẫn fail: tiếp tục vòng sửa thông thường.');
+      this.scope.discardFailedCandidates(runId);
+      this.s.mutate(runId, (r) => { r.status = 'running'; r.blocker = null; });
+      await this.buildPhase(runId, signal);
     }
   }
 

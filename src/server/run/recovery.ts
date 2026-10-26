@@ -2,7 +2,10 @@ import { DiagnosisSchema as Diagnosis, diagnosisProblems, diagnosisOutputGuide, 
 import type { Diagnosis as DiagnosisValue } from '../../core/diagnosis.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
 import { auditManifestAssertions, assertionTokens } from '../../core/authoring.js';
-import { validateManifest } from '../../core/testplan.js';
+import { validateManifest, manifestFindings, normalizeTestId } from '../../core/testplan.js';
+import { deriveTitleManifest } from '../../core/sourcebindings.js';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import { parseOutput } from '../../core/outputs.js';
 import { contractText, originalRequirementBlock } from '../../core/prompts.js';
 import { deepQuality, latestChecks, readManifest } from '../../core/qualityevidence.js';
@@ -174,7 +177,7 @@ ${extra}` });
     if (changes.files.length !== p.paths.length || changes.files.some(f => !p.paths.includes(f))) {
       await runtime.revert(run, p.slot); throw new Blocked('Diff áp dụng không khớp file test đã duyệt.');
     }
-    const entries=structuredClone(manifest.manifest.entries);
+    let entries=structuredClone(manifest.manifest.entries);
     if(run.qualityPolicyVersion===3){
       for(const e of entries)for(const binding of e.assertions??[]){
         delete binding.line;
@@ -183,15 +186,28 @@ ${extra}` });
       }
     }
     const allPaths = [...new Set(entries.map(e => e.path))];
-    const audit=await auditManifestAssertions(run.contract,entries,runtime.workspacePath?.(run,p.slot),allPaths);
+    let audit=await auditManifestAssertions(run.contract,entries,runtime.workspacePath?.(run,p.slot),allPaths);
     const evidenceProblems=[...validateManifest(run.contract,entries,run.configSnapshot.checks,allPaths),...audit.problems];
-    if(evidenceProblems.length){await runtime.revert(run,p.slot);throw new Blocked(`Bản sửa không giữ liên kết assertion/kế hoạch: ${evidenceProblems.join(' ')}`);}
+    let advisories:string[]=[];
+    if(evidenceProblems.length){
+      // The correction changed text the assertion bindings pointed at. Tests are still identified by title, so bind by title and
+      // say in the report that assertions are no longer tied to steps; stop only if even the titles no longer cover the plan.
+      const workspace=runtime.workspacePath?.(run,p.slot),derived:typeof entries=[];
+      if(workspace)for(const file of allPaths){
+        const recipeId=manifest.manifest.entries.find(e=>e.path===file)?.recipeId;
+        if(recipeId)for(const e of deriveTitleManifest(run.contract,file,recipeId,await readFile(path.join(workspace,file),'utf8')))derived.push({...e,path:e.path.replace(/\\/g,'/'),testId:normalizeTestId(e.testId)});
+      }
+      const found=manifestFindings(run.contract,derived,run.configSnapshot.checks,allPaths,{derived:true});
+      if(!workspace||found.blocking.length){await runtime.revert(run,p.slot);throw new Blocked(`Bản sửa không giữ liên kết assertion/kế hoạch: ${evidenceProblems.join(' ')}`);}
+      entries=derived;advisories=found.advisories;audit={problems:[],advisories:[],audits:[]};
+      this.s.fallback(runId,'Liên kết assertion sau khi sửa test','Bản sửa test làm đổi văn bản assertion nên manifest được gắn lại theo tên test; assertion chưa được đối chiếu với từng bước.');
+    }
     const checkpoint = await runtime.commit(run, p.slot, `${run.title}: approved test ${p.kind ?? 'setup'} repair`);
     // Retain history, but no old suite/manifest/check may stand in for this revision.
     for (const a of artifacts.filter(a => a.kind === 'acceptance' && a.valid && a.contractVersion === run.contract.version)) this.s.store.artifacts.put({ ...a, valid: false });
     this.s.mutate(runId, r => { r.checkpoint = checkpoint; r.testRepairApproval!.appliedCheckpoint = checkpoint; });
     run = this.s.run(runId);
-    const nextManifest = this.s.artifact(runId, { kind: 'acceptance', title: 'Test manifest', content: JSON.stringify({ ...manifest.manifest, entries, ...(run.qualityPolicyVersion===3?{assertionAudit:audit.audits}:{}), revision: { previousHash: manifest.hash, proposalId: p.id } }), checkpoint });
+    const nextManifest = this.s.artifact(runId, { kind: 'acceptance', title: 'Test manifest', content: JSON.stringify({ ...manifest.manifest, entries, ...(run.qualityPolicyVersion===3?{assertionAudit:audit.audits}:{}), ...(advisories.length?{advisories}:{}), revision: { previousHash: manifest.hash, proposalId: p.id } }), checkpoint });
     this.scope.lockAcceptance(runId, allPaths, checkpoint, 'Acceptance suite (Author)', true);
     this.s.artifact(runId, { kind: 'diff', title: 'Diff Author test repair', content: p.patch, checkpoint });
     this.s.artifact(runId, { kind: 'report', title: 'Test repair receipt', content: JSON.stringify({ schemaVersion: 1, source: approval.auto ? 'auto_approved' : 'human_approved', kind: p.kind ?? 'setup', contractHash: hashContract(run.contract), assertionChanges: p.assertionChanges, proposalId: p.id, proposalHash: p.hash, previousCheckpoint: p.checkpoint, checkpoint, previousManifestHash: manifest.hash, manifestHash: nextManifest.hash, caseIds: p.caseIds, reason: p.reason }), checkpoint });

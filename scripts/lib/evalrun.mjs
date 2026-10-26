@@ -61,7 +61,8 @@ export async function runHarness({ task, mode, name, model, effort, data }) {
         interventions.push('contract_approved_unchanged');
         last = Date.now(); orch.approveContract(run.id, { contractHash: detail.contractReview.contractHash, acknowledgeWarnings: true }); continue;
       }
-      if (detail.testRepair) { interventions.push('test_repair_rejected'); orch.rejectTestRepair(run.id, detail.testRepair.id, detail.testRepair.hash); continue; }
+      // A proposal the system approved itself is not the runner's to reject; only a proposal waiting for a person is.
+      if (detail.testRepair && !detail.run.testRepairApproval) { interventions.push('test_repair_rejected'); orch.rejectTestRepair(run.id, detail.testRepair.id, detail.testRepair.hash); continue; }
       break;
     }
     await orch.idle();
