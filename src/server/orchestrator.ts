@@ -12,7 +12,7 @@ import { redactSecrets } from '../runtime/process.js';
 import { RuntimeBlockedError, type Runtime } from '../runtime/types.js';
 import { SerialQueue } from './scheduler.js';
 import type { Store } from './store.js';
-import { Blocked, CAPACITY, HttpError, QUOTA, Stopped, WAITING, FOLLOWUP_DAYS, type CandidateRecord } from './run/support.js';
+import { Blocked, CAPACITY, HttpError, QUOTA, Stopped, WAITING, type CandidateRecord } from './run/support.js';
 import { RunServices } from './run/services.js';
 import type { SkillLibrary } from '../runtime/skilllibrary.js';
 import { ScopePolicy } from './run/scope.js';

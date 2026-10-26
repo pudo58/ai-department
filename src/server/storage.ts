@@ -14,7 +14,7 @@ export interface StorageReport { computedAt: string | null; computing: boolean; 
 
 const GB = 1024 ** 3;
 /** Below this a new run is not started: copying the project and installing dependencies would fail halfway. */
-export const MIN_FREE_BYTES = 512 * 1024 ** 2;
+export const minFreeBytes = (): number => Math.max(0, Number(process.env.AIDEPT_MIN_FREE_MB ?? 512)) * 1024 ** 2;
 
 /** Free space on the drive that holds `target`, using the nearest folder that already exists. */
 export async function diskNear(target: string): Promise<DiskSpace | null> {

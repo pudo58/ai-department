@@ -178,7 +178,7 @@ describe('Python virtualenv', () => {
 
     await expect(bootstrapPython(tmp('py'), () => Promise.resolve({ ...ok(), exitCode: 1 }), () => undefined)).rejects.toThrow(RuntimeBlockedError);
     // A failing requirements install stops the task with pip's message instead of running tests against a half-built environment.
-    const failing = async (exe: string, args: string[]): Promise<ProcessResult> => {
+    const failing = async (_exe: string, args: string[]): Promise<ProcessResult> => {
       if (args.includes('venv')) mkdirSync(path.dirname(venvPython(ws)), { recursive: true }), writeFileSync(venvPython(ws), '');
       return args.includes('-r') ? { ...ok(), exitCode: 1, stderr: 'No matching distribution' } : ok();
     };

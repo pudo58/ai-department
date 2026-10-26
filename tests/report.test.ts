@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { buildReport, needsAcknowledgement, renderReportMarkdown } from '../src/core/report.js';
+import { needsAcknowledgement, renderReportMarkdown } from '../src/core/report.js';
 import { summarizeCheck } from '../src/core/checks.js';
 import { LocalRuntime } from '../src/runtime/local.js';
 import { Orchestrator } from '../src/server/orchestrator.js';

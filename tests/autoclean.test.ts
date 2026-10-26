@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { autoCleanOnce } from '../src/server/autoclean.js';
-import { diskNear, MIN_FREE_BYTES } from '../src/server/storage.js';
+import { diskNear, minFreeBytes } from '../src/server/storage.js';
 import type { DiskSpace } from '../src/server/storage.js';
 import { setup } from './helpers.js';
 
@@ -52,6 +52,6 @@ describe('disk preflight helpers', () => {
   it('finds the drive of a folder that does not exist yet', async () => {
     const found = await diskNear(path.join(tmpdir(), 'aidept-does-not-exist', 'a', 'b'));
     expect(found?.freeBytes).toBeGreaterThan(0);
-    expect(MIN_FREE_BYTES).toBeGreaterThan(0);
+    expect(minFreeBytes()).toBe(0);
   });
 });

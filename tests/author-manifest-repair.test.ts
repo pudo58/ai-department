@@ -1,5 +1,5 @@
 import {expect,it} from 'vitest';
-import {mkdirSync,mkdtempSync,writeFileSync,readFileSync,existsSync,rmSync} from 'node:fs';
+import {mkdirSync,mkdtempSync,writeFileSync,readFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';import path from 'node:path';import {pathToFileURL} from 'node:url';
 import {LocalRuntime} from '../src/runtime/local.js';import type {AgentExecution,AgentResult} from '../src/runtime/types.js';
 import {Orchestrator} from '../src/server/orchestrator.js';import {Store} from '../src/server/store.js';

@@ -1,7 +1,6 @@
 import { TestPlanView, QualityResults } from './Quality';
 import { useMemo, useState } from 'react';
 import type { Artifact, Attempt, CheckResult, ContractApprovalInput, Finding, HumanTime, Mode, Run, RunDetail } from '../shared/types';
-import { api } from './api';
 import { CHECK_LABEL, CHECK_TONE, MODE_LABEL, ROW_LABEL, ROW_TONE, STEPS, TIME_CATEGORIES, pipelineStep } from './labels';
 import { delivered } from '../core/delivery';
 import { LogConsole } from './Monitor';

@@ -3,7 +3,6 @@ import type { MonitorData, Period, RequestRow } from '../core/monitor';
 import { api } from './api';
 import { useNow } from './Monitor';
 import { AttemptDetail, PERIOD_LABEL } from './MonitorCharts';
-import { money } from './ui';
 import { LiveTab, CostTab, SystemPane } from './MonitorPanels';
 
 /** Three tabs: what happens now, what it costs, and the machine. ('overview' keeps old #/monitor links working.) */

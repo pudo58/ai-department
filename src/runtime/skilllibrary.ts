@@ -63,7 +63,7 @@ export function parseGitHubUrl(url: string): { owner: string; repo: string; ref?
  */
 export class SkillLibrary {
   readonly root: string;
-  constructor(private readonly dataDir: string, private readonly records: SkillStore, private readonly fetchImpl: typeof fetch = fetch) {
+  constructor(dataDir: string, private readonly records: SkillStore, private readonly fetchImpl: typeof fetch = fetch) {
     this.root = path.join(dataDir, 'skills');
   }
 

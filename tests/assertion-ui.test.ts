@@ -2,8 +2,6 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { TestRepairPanel } from '../src/client/TestRepair.js';
-import type { PendingTestRepair } from '../src/core/recovery.js';
 import { RunPage } from '../src/client/RunPage.js';
 import { setupV2 as setup } from './helpers.js';
 import { fence, qualityReply, qualityReport, qualityGreen } from './quality-fixtures.js';

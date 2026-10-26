@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { setupV2 as setup, setupLegacy, green } from './helpers.js';
 import { fence, plan, entries, currentPlan, qualityReply, qualityGreen, qualityReport } from './quality-fixtures.js';
-import { hashContract, sha256 } from '../src/core/contract.js';
+import { sha256 } from '../src/core/contract.js';
 import { renderReportMarkdown } from '../src/core/report.js';
 import { buildApp } from '../src/server/app.js';
 import { Orchestrator } from '../src/server/orchestrator.js';

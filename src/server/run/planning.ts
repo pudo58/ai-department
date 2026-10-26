@@ -13,7 +13,7 @@ import { redactSecrets } from '../../runtime/process.js';
 import { Stopped } from './support.js';
 import type { RunServices } from './services.js';
 import { EnvironmentChecks } from './environment.js';
-import { diskNear, MIN_FREE_BYTES } from '../storage.js';
+import { diskNear, minFreeBytes } from '../storage.js';
 import { Blocked } from './support.js';
 
 /** The first stage: workspace snapshot, optional independent interpretations, and the Planner's contract proposal. */
@@ -36,7 +36,7 @@ export class Planning {
     const runtime = this.s.runtimeFor(run);
     if (!run.baseSha) {
       const workspace = runtime.workspacePath?.(run, 'A'), disk = workspace ? await diskNear(workspace) : null;
-      if (disk && disk.freeBytes < MIN_FREE_BYTES) throw new Blocked(`Ổ ${disk.path} chỉ còn ${Math.round(disk.freeBytes / 1024 ** 2)} MB trống, không đủ để tạo bản sao làm việc. Dọn dung lượng (tab Hệ thống) rồi chạy tiếp; chưa tốn lượt AI nào.`);
+      if (disk && disk.freeBytes < minFreeBytes()) throw new Blocked(`Ổ ${disk.path} chỉ còn ${Math.round(disk.freeBytes / 1024 ** 2)} MB trống, không đủ để tạo bản sao làm việc. Dọn dung lượng (tab Hệ thống) rồi chạy tiếp; chưa tốn lượt AI nào.`);
       const setup = run.configSnapshot.setupCommand;
       this.s.log(runId, 'prepare.start', `Đang tạo bản sao làm việc${setup.length ? ` và chạy "${setup.join(' ')}" (có thể mất vài phút, tối đa ${Math.round((run.configSnapshot.limits?.setupMs ?? 20 * 60_000) / 60_000)} phút)` : ''}…`);
       const prepared = await this.s.withHeartbeat(runId, 'setup', 'Chuẩn bị bản sao/cài dependency', () => runtime.prepare(run, 'A', this.s.runtimeLog(runId, 'setup')));

@@ -9,7 +9,7 @@ import { MemoryBody } from './schemas.js';
 import type { RouteContext } from './context.js';
 
 /** Project context: approved memory, the repo map and a preview of what each role would receive. */
-export function registerMemoryRoutes({ app, store, previews, projectOf, assertProjectDir }: RouteContext): void {
+export function registerMemoryRoutes({ app, store, projectOf, assertProjectDir }: RouteContext): void {
   const memoryOf = (request: { params: unknown }) => {
     const project = projectOf(request);
     const item = store.memories.get((request.params as { mid: string }).mid);
