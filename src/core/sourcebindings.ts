@@ -7,6 +7,8 @@ import {isSafeRelative} from './scope.js';import {isTestPath} from './testpath.j
 
 export const SourceBindingSchema=z.object({bindingProtocol:z.literal(2),contractHash:z.string().regex(/^[a-f0-9]{64}$/),files:z.array(z.object({path:z.string().min(1),recipeId:z.string().min(1)})).min(1).max(200)});
 
+const HOOKS=['before','after','beforeEach','afterEach'];
+
 /** Explicit source declarations plus real syntax; names/tags never guess a missing binding. */
 export function compileSourceBindings(contract:TaskContract,file:string,recipeId:string,source:string):ManifestEntry[]{
  if(!/\.[cm]?[jt]sx?$/.test(file))throw Error(`${file}: source binding chỉ hỗ trợ JS/TS.`);
@@ -16,6 +18,8 @@ export function compileSourceBindings(contract:TaskContract,file:string,recipeId
  const outer=(n:ts.Node)=>(ts.isPropertyAccessExpression(n.parent)||ts.isCallExpression(n.parent))&&n.parent.expression===n;
  const entries:ManifestEntry[]=[],assertions:{node:ts.CallExpression;entry?:ManifestEntry}[]=[],problems:string[]=[];
  const visit=(node:ts.Node,titles:string[],entry?:ManifestEntry):void=>{
+  // Lifecycle hooks (test.before, describe.afterEach, ...) declare no test and have no name: they are read like any other code.
+  if(ts.isCallExpression(node)&&ts.isPropertyAccessExpression(node.expression)&&HOOKS.includes(node.expression.name.text)&&['describe','test','it'].includes(root(node.expression.expression)??'')){ts.forEachChild(node,child=>visit(child,titles,entry));return;}
   if(ts.isCallExpression(node)&&['describe','test','it'].includes(root(node.expression)??'')){
    const kind=root(node.expression)!,first=node.arguments[0],callback=node.arguments.find(a=>ts.isArrowFunction(a)||ts.isFunctionExpression(a));
    if(!ts.isIdentifier(node.expression)||!first||!ts.isStringLiteralLike(first)||!callback){problems.push(`${file}:${tree.getLineAndCharacterOfPosition(node.getStart(tree)).line+1}: source binding cần tên describe/test tĩnh và không dùng skip/only/each.`);return;}

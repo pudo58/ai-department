@@ -58,6 +58,16 @@ it('compiles only explicit case/step annotations and exact static source identit
  for(const broken of [source.replace('@aidept-case C-1','missing case'),source.replace('@aidept-step S-1','missing step'),source.replace('C-1/S-3','C-99/S-3'),source.replace('@aidept-step S-2','@aidept-step S-99'),source.replace("test('[R-1]","test.skip('[R-1]")])expect(()=>compileSourceBindings(contract,'tests/queue.test.js','test',broken)).toThrow();
 });
 
+it('reads the lifecycle hooks of node:test (test.before, test.afterEach, describe.after) as code, not as tests with a missing name',()=>{
+ const contract={...initialContract('Claim each ready job once.'),testPlan:reasoningPlan(initialContract('Claim each ready job once.'))};
+ const hooks=`describe('suite',()=>{\ntest.before(boot);\ntest.beforeEach(()=>{q=make();});\ntest.afterEach(async()=>{while(opened.length){opened.pop();}});\ndescribe.after(async()=>{await vite?.close();});\n// @aidept-case C-1\ntest('[R-1][C-1] all jobs',()=>{\n// @aidept-step S-1\nexpect(q.claim()).toBe('A');\n// @aidept-step S-2\nexpect(q.claim()).toBe('B');\n// @aidept-step S-3\nexpect(q.claim()).toBe('C');\n});\n});`;
+ const entries=compileSourceBindings(contract,'tests/queue.test.js','test',hooks);
+ expect(entries).toHaveLength(1);
+ expect(entries[0]!.identity).toEqual({kind:'json',file:'tests/queue.test.js',titles:['suite','[R-1][C-1] all jobs']});
+ // A hook is not a way to declare a test: skip, only, each and a nameless test are still refused.
+ for(const broken of [hooks.replace("test('[R-1]","test.skip('[R-1]"),hooks.replace("test('[R-1]","test.only('[R-1]"),hooks.replace("test('[R-1]","test.each([1])('[R-1]"),hooks.replace("test('[R-1][C-1] all jobs'","test(name"),hooks.replace('test.before(boot)','test.skip(boot)')])expect(()=>compileSourceBindings(contract,'tests/queue.test.js','test',broken),broken.slice(0,80)).toThrow();
+});
+
 it.each(['success','source','sourceRepair','invalid','weaken','interrupted'] as const)('bounded Author draft correction with real Git/Vitest: %s',async mode=>{
  const source=mkdtempSync(path.join(tmpdir(),'aidept-manifest-source-')),dataDir=mkdtempSync(path.join(tmpdir(),'aidept-manifest-data-')),store=new Store(':memory:');
  mkdirSync(path.join(source,'src'));writeFileSync(path.join(source,'src/queue.mjs'),"export function createQueue(){return {claim(){return null}}}\n");
