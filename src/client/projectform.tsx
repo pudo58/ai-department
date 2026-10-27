@@ -309,7 +309,7 @@ export function ProjectEditForm({ project, onClose, onSave, busy }: { project: P
       <Field label="Thư mục mutation" hint="Để trống để tự nhận diện; monorepo dùng đường dẫn package tương đối, ví dụ packages/api. Dấu . là gốc repo."><input value={mutationRoot} onChange={e => setMutationRoot(e.target.value)}/></Field>
       <Field label="Thư mục test regression" hint="Nơi hệ thống ghi test regression sinh từ finding đã xác nhận (mặc định tests/aidept-regressions). Vitest của project phải nhận thư mục này; nếu không, test không được thử và finding chuyển sang review thủ công."><input value={regressionDir} onChange={e => setRegressionDir(e.target.value)} placeholder="tests/aidept-regressions"/></Field>
       <Field label="Check Vitest cho regression" hint="Chỉ cần khi project có nhiều check Vitest: id của check chạy test regression."><input value={regressionRecipe} onChange={e => setRegressionRecipe(e.target.value)}/></Field>
-        <Field label="Lệnh chạy thử app (tuỳ chọn)" hint='Cho nút "Chạy thử" trên trang việc; app nhận cổng qua biến PORT. Để trống thì tự đoán (npm run dev, npm start, node server.mjs, index.html).'>
+        <Field label="Lệnh chạy thử app (tuỳ chọn)" hint='Cho nút "Chạy thử" trên trang việc; app nhận cổng qua biến PORT, hoặc ghi {PORT} vào lệnh nếu app cần cổng dạng tham số (ví dụ npm run dev -- --port {PORT} --host 127.0.0.1). Để trống thì tự đoán (npm run dev, npm start, node server.mjs, index.html; app Vite được truyền cổng sẵn).'>
           <input className="mono" value={preview} onChange={(e) => setPreview(e.target.value)} placeholder="npm run dev" spellCheck={false}/></Field>
       </AdvancedSection>
       {error && <p className="inline-error" role="alert">{error}</p>}

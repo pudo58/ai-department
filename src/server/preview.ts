@@ -17,6 +17,16 @@ const STATIC_SERVER = [
 const DEFAULT_LIFETIME_MS = 30 * 60_000;
 const START_TIMEOUT_MS = 60_000;
 
+/** In any command, this is replaced by the free port the preview chose, for apps that take their port as an argument instead of reading PORT. */
+export const PORT_TOKEN = '{PORT}';
+
+/**
+ * Vite ignores PORT and opens its own (5173), so the preview would wait for an app that is listening somewhere else. It is told the
+ * port the way it understands: after `--` so npm hands the flags to the script, on loopback only, and failing loudly if the port is taken.
+ */
+const portFlags = (script: string): string[] =>
+  /(^|[\s&|;(])vite(\s|$)/.test(script) && !/--port\b|\s-p[\s=]/.test(script) ? ['--', '--port', PORT_TOKEN, '--host', '127.0.0.1', '--strictPort'] : [];
+
 /**
  * What to run to try a project by hand, guessed from its files (read-only): a dev/start script, a server file, or
  * the bundled static server for plain HTML. The project's own `previewCommand` always wins over the guess.
@@ -26,8 +36,8 @@ export async function guessPreviewCommand(dir: string): Promise<string[] | undef
   if (pkgText) {
     try {
       const scripts = (JSON.parse(pkgText) as { scripts?: Record<string, unknown> }).scripts ?? {};
-      if (typeof scripts.dev === 'string') return ['npm', 'run', 'dev'];
-      if (typeof scripts.start === 'string') return ['npm', 'start'];
+      if (typeof scripts.dev === 'string') return ['npm', 'run', 'dev', ...portFlags(scripts.dev)];
+      if (typeof scripts.start === 'string') return ['npm', 'start', ...portFlags(scripts.start)];
     } catch { /* not JSON: fall through */ }
   }
   for (const f of ['server.mjs', 'server.js', 'index.mjs']) if (existsSync(path.join(dir, f))) return ['node', f];
@@ -61,10 +71,11 @@ export class PreviewManager {
     return entry ? { ...entry.state } : undefined;
   }
 
-  async start(runId: string, cwd: string, command: string[]): Promise<PreviewState> {
+  async start(runId: string, cwd: string, template: string[]): Promise<PreviewState> {
     this.stop(runId);
     const port = await freePort();
     const url = `http://127.0.0.1:${port}`;
+    const command = template.map((arg) => arg.replaceAll(PORT_TOKEN, String(port)));
     const [cmd, ...args] = command[0] === 'node' ? [process.execPath, ...command.slice(1)] : resolveHostCommand(command);
     const child = spawn(cmd!, args, { cwd, env: { ...scrubbedEnv('all'), PORT: String(port), HOST: '127.0.0.1', BROWSER: 'none' }, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true });
     const now = Date.now();
@@ -83,7 +94,7 @@ export class PreviewManager {
     for (;;) {
       if (exited !== undefined) { this.stop(runId); throw new Error(`App dừng ngay khi khởi động (mã ${exited}). Output:\n${state.log.slice(-1500) || '(trống)'}`); }
       try { const res = await fetch(url, { signal: AbortSignal.timeout(2000) }); await res.arrayBuffer(); break; } catch { /* not up yet */ }
-      if (Date.now() > deadline) { this.stop(runId); throw new Error(`App không trả lời ở cổng ${port} sau ${START_TIMEOUT_MS / 1000} giây. Lệnh có đọc cổng từ biến PORT không? Output:\n${state.log.slice(-1500) || '(trống)'}`); }
+      if (Date.now() > deadline) { this.stop(runId); throw new Error(`App không trả lời ở cổng ${port} sau ${START_TIMEOUT_MS / 1000} giây. Có thể app không đọc biến PORT mà tự chọn cổng riêng (Vite làm vậy). Cách xử lý: vào Sửa project → “Lệnh chạy thử app” và viết lệnh có {PORT}, ví dụ: npm run dev -- --port {PORT} --host 127.0.0.1. Output:\n${state.log.slice(-1500) || '(trống)'}`); }
       await new Promise((r) => setTimeout(r, 300));
     }
     return { ...state };

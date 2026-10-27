@@ -272,7 +272,7 @@ Bật **"Cho phép agent tạo file thiết lập chưa có"** trong form tạo/
 
 Trang task có nút **Chạy thử** khi run đã có checkpoint và không đang chạy.
 - **Nó làm gì:** bật app từ đúng bản code của run (bản sao làm việc) trên một cổng localhost trống, truyền qua `PORT`, với `HOST=127.0.0.1`. Xong thì mở link trong tab mới.
-- **Lệnh chạy:** lấy `previewCommand` của project (ô **Lệnh chạy thử app** trong Sửa project). Nếu trống thì tự đoán theo thứ tự: `npm run dev`, `npm start`, `node server.mjs`/`server.js`/`index.mjs`, hoặc server tĩnh có sẵn (`tools/preview/static-server.mjs`) cho thư mục chỉ có `index.html`. Server tĩnh không phục vụ file ẩn như `.env`.
+- **Lệnh chạy:** lấy `previewCommand` của project (ô **Lệnh chạy thử app** trong Sửa project). Nếu trống thì tự đoán theo thứ tự: `npm run dev`, `npm start`, `node server.mjs`/`server.js`/`index.mjs`, hoặc server tĩnh có sẵn (`tools/preview/static-server.mjs`) cho thư mục chỉ có `index.html`. Server tĩnh không phục vụ file ẩn như `.env`. App nhận cổng qua biến `PORT`; Vite không đọc `PORT` nên script `dev`/`start` chạy `vite` được truyền sẵn `--port <cổng> --host 127.0.0.1 --strictPort`. Với công cụ khác cần cổng dạng tham số, ghi `{PORT}` vào lệnh, ví dụ `npm run dev -- --port {PORT} --host 127.0.0.1`.
 - **Khi nào tự tắt:** sau 30 phút, khi bạn bấm Chạy tiếp, Chạy lại check, Sửa finding, Duyệt hợp đồng hay Nghiệm thu, hoặc khi server AI Department dừng.
 - **Lưu ý:** app chạy code của repo trên máy bạn, giống như check.
 - **API:** `GET /api/runs/:id/preview`, `POST /api/runs/:id/preview/start`, `POST /api/runs/:id/preview/stop`.
