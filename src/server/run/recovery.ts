@@ -1,6 +1,7 @@
 import { DiagnosisSchema as Diagnosis, diagnosisProblems, diagnosisOutputGuide, normalizeDiagnosis } from '../../core/diagnosis.js';
 import type { Diagnosis as DiagnosisValue } from '../../core/diagnosis.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
+import { isIntegrityIssue } from '../../core/checks.js';
 import { auditManifestAssertions, assertionTokens } from '../../core/authoring.js';
 import { manifestFindings, normalizeTestId } from '../../core/testplan.js';
 import { deriveTitleManifest } from '../../core/sourcebindings.js';
@@ -54,7 +55,7 @@ export class TestRecovery {
       return this.keepLocked(runId, 'Đã dùng lượt chẩn đoán cho manifest này và kết luận không còn dùng được');
     }
     const checks = latestChecks({ ...run, selectedSlot: slot }, this.s.store.checks.list(runId));
-    if (checks.some(c => c.required && (c.missingTestIds.length || c.issues?.some(i => i.kind !== 'assertion_failed')))) return;
+    if (checks.some(c => c.required && (c.missingTestIds.length || c.issues?.some(isIntegrityIssue)))) return;
     const cases = [...new Set(locked.manifest.entries.filter(e => checks.some(c => c.recipeId === e.recipeId && c.manifestHash === locked.hash && c.required && c.status === 'failed'
       && c.outcomes?.some(o => o.id === e.testId && o.status === 'failed'))).map(e => e.caseId))];
     if (!cases.length) return;

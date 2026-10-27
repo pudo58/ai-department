@@ -8,6 +8,7 @@ import { MonitorHub, normalizeMonitorTab, type MonitorTab } from './MonitorHub';
 import { ConnectPage } from './ConnectPage';
 import { SkillsPage } from './SkillsPage';
 import { PROVIDER_LABEL } from '../shared/providers';
+import { humanizeTestIds } from '../core/testids';
 import { DeleteRunDialog, RunPage } from './RunPage';
 import { Badge, ConfirmDialog, Empty, Icon, PageHeader, Pager, ThemeSwitch, ago, money, type Hue, type IconName } from './ui';
 import { PAGE_SIZES, clampPage, pageSlice } from './paging';
@@ -145,7 +146,7 @@ const PRIORITY_SHOWN = 6;
 /** First sentence of a blocker, short enough for one line in a list. */
 const brief = (text: string | null) => {
   if (!text) return '';
-  const clean = text.replace(/^(Runtime bị chặn|Cần chú ý):\s*/i, '').replace(/\s+/g, ' ').trim();
+  const clean = humanizeTestIds(text).replace(/^(Runtime bị chặn|Cần chú ý):\s*/i, '').replace(/\s+/g, ' ').trim();
   const cut = clean.search(/[.;](\s|$)/);
   const sentence = cut > 20 ? clean.slice(0, cut) : clean;
   return sentence.length > 110 ? `${sentence.slice(0, 109)}…` : sentence;

@@ -2,7 +2,7 @@ import { lockedIds, readManifest, recipeHash } from '../../core/qualityevidence.
 import { randomUUID } from 'node:crypto';
 import type { Slot } from '../../shared/types.js';
 import { ENV_PROBLEM_PREFIX } from '../../core/nodever.js';
-import { evaluateRedGreen, parseTestReport, ranNoTests, shouldRetry, summarizeCheck, summarizeFailures } from '../../core/checks.js';
+import { evaluateRedGreen, isIntegrityIssue, parseTestReport, ranNoTests, shouldRetry, summarizeCheck, summarizeFailures } from '../../core/checks.js';
 import type { RuntimeCheckResult } from '../../runtime/types.js';
 import { BUILD_RECIPES } from './support.js';
 import type { RunServices } from './services.js';
@@ -49,7 +49,7 @@ export class CheckRunner {
       result.slot = slot; result.configHash = recipeHash(run); result.manifestHash = manifest?.hash;
       this.s.store.checks.put(result);
       if(result.status==='failed')this.s.artifact(runId,{kind:'report',title:`Check failure digest ${result.id}`,content:JSON.stringify(summarizeFailures(attempts.at(-1)?.report)),checkpoint});
-      const integrity = result.issues?.filter(i => i.kind !== 'assertion_failed' && i.kind !== 'test_skipped') ?? [];
+      const integrity = result.issues?.filter(isIntegrityIssue) ?? [];
       if (integrity.length) { repairable = false; problems.push(...integrity.map(i => i.message)); }
       if (result.missingTestIds.length) { problems.push(`Check "${recipe.id}" thiếu hoặc bỏ qua test đã khóa: ${result.missingTestIds.join(', ')}`); repairable = false; }
       this.s.log(runId, 'check', `${recipe.id}@${checkpoint.slice(0, 8)}: ${result.status}${attempts.length > 1 ? ' (có retry)' : ''}`);

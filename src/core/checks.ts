@@ -6,6 +6,13 @@ import type { RuntimeCheckResult } from '../runtime/types.js';
 export interface TestOutcome { id: string; status: 'passed' | 'failed' | 'skipped'; identity?: TestIdentity; aliases?: string[] }
 export interface ParsedReport { tests: TestOutcome[]; collectionErrors: number; valid: boolean; /** First message of each failed test (JUnit only). */ failures?: string[] }
 
+/**
+ * An issue that says the evidence itself cannot be trusted (a locked test missing, an id that matches twice, a report that did not
+ * finish). A failed assertion is the code or the test being wrong, and a skipped test that nothing locked is only a warning in the
+ * report (a locked one is already listed in `missingTestIds`); neither stops a run by itself, so every gate asks this one question.
+ */
+export const isIntegrityIssue = (issue: CheckIssue): boolean => issue.kind !== 'assertion_failed' && issue.kind !== 'test_skipped';
+
 const asRecord = (v: unknown): Record<string, unknown> => (v && typeof v === 'object' ? v as Record<string, unknown> : {});
 
 const XML_ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };

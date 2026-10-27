@@ -3,6 +3,7 @@ import { TestRepairPanel } from './TestRepair.js';
 import { ExecutionPanel } from './ExecutionPanel.js';
 import type { Run, RunDetail } from '../shared/types';
 import { delivered } from '../core/delivery';
+import { humanizeTestIds } from '../core/testids';
 import { api } from './api';
 import { ContractForm } from './forms';
 import { ACTIVE, MODE_LABEL, STATUS } from './labels';
@@ -112,7 +113,7 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
     ]}/>
 
     {pageError && <div className="banner error" role="alert"><span>{pageError}</span></div>}
-    {run.blocker && <div className="banner warn"><span><strong>Cần chú ý:</strong> {run.blocker}</span></div>}
+    {run.blocker && <div className="banner warn"><span><strong>Cần chú ý:</strong> {humanizeTestIds(run.blocker)}</span></div>}
     {detail.testRepair && <TestRepairPanel proposal={detail.testRepair} busy={locked || active || run.status === 'queued'} onApprove={() => act(`/api/runs/${id}/approve-test-repair`, { proposalId: detail.testRepair!.id, proposalHash: detail.testRepair!.hash })} onReject={() => act(`/api/runs/${id}/reject-test-repair`, { proposalId: detail.testRepair!.id, proposalHash: detail.testRepair!.hash })}/>}
     {detail.pendingPaths.length > 0 && <ScopeApproval paths={detail.pendingPaths} approved={run.approvedPaths ?? []} busy={busy} onApprove={(selected) => act(`/api/runs/${id}/approve-paths`, { paths: selected, resume: true })}/>}
     {run.mode === 'single' && run.recommendation.mode !== 'single' && <div className="notice"><span><strong>Gợi ý {MODE_LABEL[run.recommendation.mode]} (chi phí dự kiến ×{run.recommendation.multiplier}):</strong> {run.recommendation.reasons.join(' ')}</span></div>}

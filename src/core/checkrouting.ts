@@ -1,5 +1,6 @@
 import type { Artifact, CheckResult, Run } from '../shared/types.js';
-import { latestChecks, readManifest } from './qualityevidence.js';
+import { latestChecks, lockedIds, readManifest } from './qualityevidence.js';
+import { isIntegrityIssue } from './checks.js';
 
 export interface CheckRoute {
   kind: 'blocked' | 'assertion' | 'implementation' | 'passed';
@@ -15,7 +16,10 @@ export function routeCheckFailure(run: Run, checks: readonly CheckResult[], arti
   let assertion = false, implementation = false;
   for (const check of current) {
     const recipe = recipes.find(r => r.id === check.recipeId)!;
-    reasons.push(...(check.issues ?? []).filter(i => i.kind !== 'assertion_failed').map(i => i.message));
+    // A skipped test is a reason to stop only when the run locked it as evidence (a missing locked test must never be repaired around).
+    // The project's own skipped tests prove nothing either way and are a warning in the report.
+    const locked = new Set(lockedIds(run, artifacts, check.recipeId));
+    reasons.push(...(check.issues ?? []).filter(i => isIntegrityIssue(i) || (i.kind === 'test_skipped' && !!i.testId && locked.has(i.testId))).map(i => i.message));
     if (check.missingTestIds.length) reasons.push(`${check.recipeId}: thiếu hoặc bỏ qua test đã khóa.`);
     if (check.status === 'incomplete' || check.status === 'flaky') reasons.push(`${check.recipeId}: check chưa hoàn tất hoặc flaky.`);
     if (recipe.reportPath && (!manifest || check.manifestHash !== manifest.hash)) reasons.push(`${check.recipeId}: report không khớp manifest hiện tại.`);
