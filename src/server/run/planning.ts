@@ -1,4 +1,4 @@
-import { deepQuality } from '../../core/qualityevidence.js';
+import { deepQuality, verifyNeedsReport } from '../../core/qualityevidence.js';
 import { planRepairProblems, planRepairNotes, casesNamedBy, UNRESOLVED_PLAN_QUESTIONS, testPlanFindings, DRAFT_PLAN_MARKER } from '../../core/testplan.js';
 import { parseTestPlanOutput, completeTestPlan, draftTestPlan } from '../../core/planfix.js';
 import { policyOf } from '../../core/policy.js';
@@ -23,6 +23,9 @@ export class Planning {
 
   async planPhase(runId: string, signal: AbortSignal): Promise<void> {
     let run = this.s.run(runId);
+    // Known before any agent is called, and nothing but the project's checks can fix it: say so now instead of after the Planner and the Author.
+    const noReport = verifyNeedsReport(run);
+    if (noReport) throw new Blocked(noReport);
     if (deepQuality(run)) {
       // A stored draft belongs to the person reviewing it. Resume cannot reopen Planner/Author or reset the repair limit.
       if (run.contract.testPlan) {

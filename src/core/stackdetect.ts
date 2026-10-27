@@ -16,6 +16,19 @@ export const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', 'cove
 const TEST_FILE = /\.(?:test|spec)\.[cm]?[jt]sx?$/;
 const NO_TEST_SCRIPT = /no test specified/i;
 
+/**
+ * `node --test <flags> <files>` written as an npm script, restated with the JUnit report a check needs and nothing else changed.
+ * Only a plain command is restated: a script with shell operators, variables, quotes or a reporter of its own is left to the caller.
+ */
+function nodeTestFromScript(script: string): string[] | undefined {
+  if (/[&|;<>`$()"']|--test-reporter/.test(script)) return undefined;
+  const tokens = script.trim().split(/\s+/);
+  if (tokens[0] !== 'node' || !tokens.includes('--test')) return undefined;
+  const rest = tokens.slice(1);
+  rest.splice(rest.indexOf('--test'), 1);
+  return ['node', '--test', '--test-reporter=spec', '--test-reporter-destination=stdout', '--test-reporter=junit', '--test-reporter-destination=.aidept-report.xml', ...rest];
+}
+
 /** Reads one file strictly inside `root`: no `..`, no symlink that resolves outside, bounded size. */
 export async function readInside(root: string, rel: string): Promise<string | undefined> {
   const full = path.resolve(root, rel);
@@ -153,7 +166,15 @@ export async function detectStack(repoDir: string, nodeVersion?: NodeVersion): P
   if (testScript !== undefined && !NO_TEST_SCRIPT.test(testScript)) {
     if (testRunner === 'Vitest') checks.push({ id: 'test', label: 'Vitest', command: ['npm', 'test', '--', '--run', '--reporter=json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" chạy Vitest (${testScript}).` });
     else if (testRunner === 'Jest') checks.push({ id: 'test', label: 'Jest', command: ['npx', 'jest', '--json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" chạy Jest (${testScript}).` });
-    else checks.push({ id: 'test', label: 'npm test', command: ['npm', 'test'], required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" là "${testScript.slice(0, 80)}" nhưng runner không có report đọc được: check chỉ dựa trên exit code, không tạo bằng chứng theo yêu cầu [R-x].` });
+    else {
+      // The script runs Node's own test runner: the same command, flags and files, with the report Verify reads to tie each test to a requirement.
+      const node = nodeTestFromScript(testScript), problem = node ? nodeTestProblem(node, nodeVersion) : undefined;
+      if (node && !problem) checks.push({ id: 'test', label: 'node --test', command: node, reportPath: '.aidept-report.xml', required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" chạy node --test (${testScript.slice(0, 80)}); thêm report JUnit để mỗi test gắn được với yêu cầu [R-x]. Cờ và file test của script được giữ nguyên.` });
+      else {
+        if (problem) notes.push(`Không gợi ý "node --test" có report: ${problem}`);
+        checks.push({ id: 'test', label: 'npm test', command: ['npm', 'test'], required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" là "${testScript.slice(0, 80)}" nhưng runner không có report đọc được: check chỉ dựa trên exit code, không tạo bằng chứng theo yêu cầu [R-x].` });
+      }
+    }
   } else if (testFiles.length > 0 && testRunner === 'Vitest') {
     checks.push({ id: 'test', label: 'Vitest', command: ['npx', 'vitest', 'run', '--reporter=json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Có ${testFiles.length} file test và Vitest nhưng chưa có script "test".` });
   } else if (testFiles.length > 0 && testRunner === 'Jest') {

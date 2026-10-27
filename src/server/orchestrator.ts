@@ -1,4 +1,4 @@
-import { deepQuality } from '../core/qualityevidence.js';
+import { deepQuality, verifyNeedsReport } from '../core/qualityevidence.js';
 import { policyOf } from '../core/policy.js';
 import { EVIDENCE_POLICY_V4 } from '../shared/regression.js';
 import { readRegressionProposals, regressionFor } from '../core/regression.js';
@@ -28,7 +28,7 @@ import { Acceptance } from './run/acceptance.js';
 import { HumanTimers } from './run/timers.js';
 import { TestRecovery } from './run/recovery.js';
 import { pendingTestRepair } from '../core/recovery.js';
-import { pendingAuthorDraft } from '../core/authordraft.js';
+import { AUTHOR_DRAFT_TITLE, pendingAuthorDraft } from '../core/authordraft.js';
 import { EnvironmentChecks } from './run/environment.js';
 import {REPLAY_TITLE} from '../core/reproduction.js';
 
@@ -183,6 +183,12 @@ export class Orchestrator {
     if (project && !run.checkpoint && ['paused', 'blocked', 'failed'].includes(run.status) && project.version !== run.configSnapshot.version && (project.approved || run.provider === 'fake')) {
       this.s.mutate(runId, (r) => { r.configSnapshot = structuredClone(project); });
       this.s.log(runId, 'config.refreshed', `Run chưa có checkpoint nên dùng cấu hình mới nhất của project (v${project.version}): module ${project.modules.join(', ')}`);
+      // The Author's last attempt was made against the old checks. A person who changed them has asked for another; a plain resume still gets none.
+      const stale = this.store.artifacts.list(runId).filter((a) => (a.title === 'Author manifest attempt' || a.title === AUTHOR_DRAFT_TITLE) && a.valid && a.contractVersion === run.contract.version);
+      if (stale.length) {
+        for (const a of stale) this.store.artifacts.put({ ...a, valid: false });
+        this.s.log(runId, 'author.reopened', 'Check của project đã đổi nên Author được làm lại một lượt (không có lượt sửa thêm).');
+      }
     }
     if (!run.checkpoint && run.context && ['paused', 'blocked', 'failed'].includes(run.status)) this.s.mutate(runId, (r) => { delete r.context; });
     return this.startRun(runId);
@@ -240,6 +246,8 @@ export class Orchestrator {
     const review = reviewContract(run.contract);
     if (input.contractHash !== review.contractHash) throw new HttpError(409, 'Hợp đồng đã thay đổi. Hãy tải lại và đọc bản hiện tại trước khi duyệt.');
     const policy = policyOf(run);
+    const noReport = verifyNeedsReport(run);
+    if (noReport) throw new HttpError(409, noReport);
     const planProblems = deepQuality(run) ? validateTestPlan(run.contract, true, policy.reasoning, policy.strict) : [];
     if (planProblems.length) throw new HttpError(400, planProblems.join(' '));
     if (policy.structured && run.contract.testPlan?.schemaVersion !== 2) throw new HttpError(409, 'Chính sách v2+ cần kế hoạch ca có căn cứ v2.');

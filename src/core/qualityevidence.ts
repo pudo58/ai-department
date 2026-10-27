@@ -7,6 +7,16 @@ import { policyOf } from './policy.js';
 export const recipeHash = (run: Run): string => sha256(canonicalJson({ checks: run.configSnapshot.checks, mutationRoot: run.configSnapshot.mutationRoot, executionMode: run.configSnapshot.executionMode, runnerImage: run.configSnapshot.runnerImage }));
 export const deepQuality = (run: Run): boolean => run.mode === 'verify' && !!run.qualityPolicyVersion;
 
+/**
+ * Verify ties each test to a case through the report a check writes. With no check that writes one the Author can never produce a valid
+ * manifest, so this is known before any agent is called, and only a change to the project's checks can fix it.
+ */
+export function verifyNeedsReport(run: Run): string | undefined {
+  if (!deepQuality(run) || run.configSnapshot.checks.some((c) => c.reportPath)) return undefined;
+  const names = run.configSnapshot.checks.map((c) => `“${c.id}”`).join(', ');
+  return `Dự án chưa có check nào xuất báo cáo test${names ? ` (hiện có ${names}, đều chỉ dựa vào mã thoát)` : ''}. Verify cần báo cáo của test runner để gắn từng test vào từng ca, nên Author không thể viết manifest hợp lệ. Vào Sửa dự án → Checks → “Gợi ý từ stack”, chọn check có report (hoặc thêm đường dẫn report cho check test), lưu lại, bấm “Duyệt policy” ở trang Dự án, rồi chạy tiếp.`;
+}
+
 export function latestChecks(run: Run, checks: readonly CheckResult[]): CheckResult[] {
   const latest = new Map<string, CheckResult>();
   for (const c of checks) if (c.valid && c.checkpoint === run.checkpoint && c.contractVersion === run.contract.version

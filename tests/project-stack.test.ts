@@ -65,6 +65,25 @@ describe('stack detector', () => {
     expect(placeholder.notes.join(' ')).toMatch(/Chưa thấy test/);
   });
 
+  it('keeps the flags and files of a "node --test" script and adds the report, so Verify has something to read', async () => {
+    const d = await detectStack(repoDir({ 'package.json': pkg({ scripts: { test: 'node --test --test-timeout=120000 tests/*.test.mjs' } }), 'tests/a.test.mjs': '' }));
+    expect(d.checks.find((c) => c.id === 'test')).toMatchObject({
+      label: 'node --test', reportPath: '.aidept-report.xml', required: true, recommended: true,
+      command: ['node', '--test', '--test-reporter=spec', '--test-reporter-destination=stdout', '--test-reporter=junit', '--test-reporter-destination=.aidept-report.xml', '--test-timeout=120000', 'tests/*.test.mjs'],
+    });
+    const plain = await detectStack(repoDir({ 'package.json': pkg({ scripts: { test: 'node --test' } }) }));
+    expect(plain.checks.find((c) => c.id === 'test')!.command.slice(0, 2)).toEqual(['node', '--test']);
+    expect(plain.checks.find((c) => c.id === 'test')!.reportPath).toBe('.aidept-report.xml');
+  });
+
+  it('leaves a script it cannot restate as it is: shell operators, variables, a reporter of its own', async () => {
+    for (const test of ['node --test --test-reporter=tap tests/*.test.mjs', 'NODE_ENV=test node --test tests/*.test.mjs', 'node --test tests/a.test.mjs && node scripts/x.mjs', 'mocha']) {
+      const d = await detectStack(repoDir({ 'package.json': pkg({ scripts: { test } }) }));
+      expect(d.checks.find((c) => c.id === 'test'), test).toMatchObject({ command: ['npm', 'test'] });
+      expect(d.checks.find((c) => c.id === 'test')!.reportPath, test).toBeUndefined();
+    }
+  });
+
   it('warns that an unknown test runner gives no report, and handles non-Node and broken repos without throwing', async () => {
     const custom = await detectStack(repoDir({ 'package.json': pkg({ scripts: { test: 'mocha' } }) }));
     expect(custom.checks.find((c) => c.id === 'test')).toMatchObject({ command: ['npm', 'test'] });

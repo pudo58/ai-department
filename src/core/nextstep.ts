@@ -1,13 +1,13 @@
 import type { Finding, RunDetail } from '../shared/types.js';
 import { blocksCompletion } from './findings.js';
 import { policyOf } from './policy.js';
-import { latestChecks } from './qualityevidence.js';
+import { latestChecks, verifyNeedsReport } from './qualityevidence.js';
 import { readVerdict } from './report.js';
 import { humanizeTestIds } from './testids.js';
 
 /** Why a stopped run is stopped, in the few kinds that tell a person what to do. `generic` keeps the old sentence. */
 export type StepCode =
-  | 'finding_open' | 'verifier_inconclusive' | 'verifier_pending' | 'evidence_missing' | 'author_stuck' | 'checks_failing'
+  | 'finding_open' | 'verifier_inconclusive' | 'verifier_pending' | 'evidence_missing' | 'author_stuck' | 'checks_failing' | 'project_check_no_report'
   | 'setup_failed' | 'capacity' | 'quota' | 'interrupted' | 'user_stop' | 'generic';
 
 /** What the page does for each: it knows how to open a form or call an endpoint for these ids, and nothing else. */
@@ -77,6 +77,13 @@ export function nextStep(d: Input): NextStep | undefined {
   if (run.stopCode) { const infra = INFRA[run.stopCode]; if (infra) return infra(run.blocker ?? ''); }
 
   const policy = policyOf(run);
+
+  // No check of the project writes a test report: no Author can make a manifest valid, whatever the contract says.
+  if (verifyNeedsReport(run)) return {
+    code: 'project_check_no_report', title: 'Dự án chưa có kiểm tra xuất báo cáo test',
+    why: `Verify cần báo cáo của test runner để gắn từng test vào từng ca, mà các check hiện có (${run.configSnapshot.checks.map((c) => `“${c.id}”`).join(', ')}) chỉ dựa vào mã thoát. Trong Sửa dự án, mục Checks, bấm “Gợi ý từ stack” và chọn check có report, lưu lại, bấm “Duyệt policy” ở trang Dự án, rồi quay lại bấm Chạy tiếp. Sửa hợp đồng không giúp được.`,
+    primary: act('edit_project', 'Sửa check của dự án'), others: [SINGLE], resumeChanges: true, after: [],
+  };
 
   // The Author left a draft that was not locked.
   const draft = d.authorDraft;
