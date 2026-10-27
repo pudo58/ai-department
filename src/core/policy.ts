@@ -34,6 +34,12 @@ export interface Policy {
   replay: EvidencePolicy['replay'];
 }
 
+/**
+ * The page asks policyOf too (what a finding offers depends on the run's policy), and a browser has no `process`. The switch is a
+ * server setting, so where there is no environment it is simply not set; nothing the page draws depends on it.
+ */
+const autoRepairSwitchedOff = (): boolean => typeof process !== 'undefined' && process.env?.AIDEPT_AUTO_TEST_REPAIR === '0';
+
 export function policyOf(run: Pick<Run, 'qualityPolicyVersion' | 'evidencePolicy'>): Policy {
   const version = run.qualityPolicyVersion ?? 0;
   const strict = version >= 4;
@@ -43,7 +49,7 @@ export function policyOf(run: Pick<Run, 'qualityPolicyVersion' | 'evidencePolicy
     version, structured: version >= 2, reasoning: version >= 3, strict,
     authorRepair: version >= 3, structuredDiagnosis: version >= 3,
     completePlan: !strict, derivedManifest: version === 3, groundDiagnosis: version === 3,
-    autoTestRepair: strict ? frozen!.autoTestRepair : process.env.AIDEPT_AUTO_TEST_REPAIR !== '0',
+    autoTestRepair: strict ? frozen!.autoTestRepair : !autoRepairSwitchedOff(),
     lenientFindings: !strict, regression: strict ? frozen!.regression : false, verdictRequired: strict,
     replay: frozen?.replay ?? EVIDENCE_POLICY_V4.replay,
   };
