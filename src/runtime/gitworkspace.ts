@@ -1,4 +1,4 @@
-import { appendFile, copyFile, lstat, mkdir, readdir, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
+import { appendFile, copyFile, lstat, mkdir, readdir, readFile, realpath, rename, rm, stat, symlink, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { execFile } from 'node:child_process';
@@ -197,6 +197,55 @@ export class GitWorkspaces {
       return await fn();
     } finally {
       await this.revert(run, slot);
+    }
+  }
+
+  /** Trial clones are siblings of the workspace with this suffix and 8 hex digits, so cleanup never looks anywhere else. */
+  private trialPrefix = (run: Run, slot: Slot) => `${path.basename(this.dir(run, slot))}-regtrial-`;
+
+  /**
+   * A throwaway clone of the exact checkpoint with `patch` applied, for trying a generated regression test before anyone is asked.
+   * The candidate is never touched, so nothing the trial writes (reports, caches, files a test config creates) can reach a later
+   * check; the clone is deleted when `fn` ends, however it ends.
+   */
+  async withTrialClone<T>(run: Run, slot: Slot, patch: string, fn: (dir: string) => Promise<T>, signal?: AbortSignal): Promise<T> {
+    if (!run.checkpoint) throw new Error('Thiếu checkpoint để thử test regression.');
+    const source = this.dir(run, slot), target = path.join(path.dirname(source), `${this.trialPrefix(run, slot)}${randomUUID().replace(/-/g, '').slice(0, 8)}`);
+    try {
+      assertProcessSucceeded(await executeFile('git', [...SAFE_GIT, 'clone', '--no-hardlinks', '--no-checkout', '-c', 'core.autocrlf=false', source, target], { timeoutMs: 120_000, signal }), 'git clone (thử regression)');
+      assertProcessSucceeded(await this.git(target, ['checkout', '--detach', run.checkpoint], signal), 'git checkout (thử regression)');
+      assertProcessSucceeded(await executeFile('git', [...SAFE_GIT, '-C', target, 'apply', '--whitespace=nowarn', '-'], { input: patch, timeoutMs: 30_000, signal }), 'git apply (thử regression)');
+      return await fn(target);
+    } finally {
+      await rm(target, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+    }
+  }
+
+  /**
+   * Gives a trial clone the candidate's installed dependencies without letting it write into them: the clone gets a node_modules folder
+   * of its own in which every installed entry is a link, so whatever a tool adds there (a cache, a marker) lands in the clone. Tool
+   * caches are not linked at all. A test that writes inside an installed package would still reach the shared copy.
+   */
+  async linkDependencies(run: Run, slot: Slot, target: string): Promise<void> {
+    const from = path.join(this.dir(run, slot), 'node_modules'), to = path.join(target, 'node_modules');
+    let entries;
+    try { entries = await readdir(from, { withFileTypes: true }); } catch { return; }
+    await mkdir(to, { recursive: true });
+    for (const entry of entries) {
+      if (/^\.(cache|vite|vitest|vite-temp|tmp)$/.test(entry.name)) continue;
+      const source = path.join(from, entry.name), dest = path.join(to, entry.name);
+      const isDir = entry.isDirectory() || (entry.isSymbolicLink() && await stat(source).then(s => s.isDirectory(), () => false));
+      if (isDir) await symlink(source, dest, process.platform === 'win32' ? 'junction' : 'dir');
+      else if (entry.isFile() || entry.isSymbolicLink()) await copyFile(source, dest).catch(() => undefined);
+    }
+  }
+
+  async recoverTrials(run: Run): Promise<void> {
+    for (const slot of ['A', 'B'] as const) {
+      const parent = path.dirname(this.dir(run, slot)), prefix = this.trialPrefix(run, slot);
+      for (const name of await readdir(parent).catch(() => [] as string[])) {
+        if (name.startsWith(prefix) && /^[a-f0-9]{8}$/.test(name.slice(prefix.length))) await rm(path.join(parent, name), { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+      }
     }
   }
 

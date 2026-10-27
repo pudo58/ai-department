@@ -5,6 +5,8 @@ import { validateOracle } from './testplan.js';
 import type { Oracle } from '../shared/quality.js';
 
 export const TEST_REPAIR_TITLE = 'Test repair proposal';
+/** Written before the Author's one diagnosis of a locked suite, so neither a restart nor "Chạy tiếp" buys a second one. */
+export const DIAGNOSIS_ATTEMPT_TITLE = 'Author test diagnosis attempt';
 export interface TestRepairProposal {
   schemaVersion: 1; checkpoint: string; contractVersion: number; slot: Slot;
   configHash: string; manifestHash: string; paths: string[]; patch: string;

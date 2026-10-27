@@ -46,22 +46,38 @@ function expr(value: JsonValue | { $ref: string; path?: string[] }): string {
   return JSON.stringify(value) ?? 'null';
 }
 
-const HELPERS = `const BLOCKED = new Set(['__proto__', 'prototype', 'constructor']);
-const outcomes = new Map();
-const at = (value, parts) => { for (const part of parts) { if (BLOCKED.has(part)) throw new Error('Unsafe property'); value = value == null ? undefined : value[part]; } return value; };
-const safe = (value) => (value === undefined ? null : JSON.parse(JSON.stringify(value)));
-const ref = (id, parts) => safe(at(outcomes.get(id)?.value, parts));
-const call = async (instance, method, args) => { try { return { value: await instance[method](...args) }; } catch (error) { return { error }; } };
-const verify = (id, outcome, expected) => {
-  const observed = outcome.error ? String(outcome.error.code ?? outcome.error.name) : at(outcome.value, expected.path);
-  if (Object.hasOwn(expected, 'throwsCode')) {
-    expect(outcome.error !== undefined, \`${REGRESSION_FAILURE_TAG}:\${id} phải throw\`).toBe(true);
-    expect(observed, \`${REGRESSION_FAILURE_TAG}:\${id}\`).toBe(expected.throwsCode);
-  } else {
-    expect(outcome.error, \`${REGRESSION_FAILURE_TAG}:\${id} không được throw\`).toBeUndefined();
-    expect(observed, \`${REGRESSION_FAILURE_TAG}:\${id}\`).toStrictEqual(expected.equals);
-  }
-};`;
+/**
+ * What the generated test needs around its calls. TypeScript gets declared types, because a project's strict typecheck usually covers its
+ * tests too and nobody may edit the file once it is locked; only the helpers a scenario uses are written, so `noUnusedLocals` stays quiet.
+ */
+function helpers(ts: boolean, uses: { ref: boolean; verify: boolean }): string {
+  const t = (typed: string) => (ts ? typed : '');
+  const lines = [
+    ...(ts ? ['type Outcome = { value?: unknown; error?: any };', 'type Expected = { path?: string[]; equals?: unknown; throwsCode?: string };'] : []),
+    `const outcomes = new Map${t('<string, Outcome>')}();`,
+    `const got = (id${t(': string')})${t(': Outcome')} => outcomes.get(id) ?? {};`,
+    `const factory = (name${t(': string')})${t(': any')} => (target${t(' as unknown as Record<string, any>')})[name];`,
+    `const call = async (instance${t(': any')}, method${t(': string')}, args${t(': unknown[]')})${t(': Promise<Outcome>')} => { try { return { value: await instance[method](...args) }; } catch (error) { return { error }; } };`,
+  ];
+  if (uses.ref || uses.verify) lines.push(
+    `const BLOCKED = new Set${t('<string>')}(['__proto__', 'prototype', 'constructor']);`,
+    `const at = (value${t(': any')}, parts${t(': readonly string[]')})${t(': any')} => { for (const part of parts) { if (BLOCKED.has(part)) throw new Error('Unsafe property'); value = value == null ? undefined : value[part]; } return value; };`);
+  if (uses.ref) lines.push(
+    `const safe = (value${t(': unknown')})${t(': any')} => (value === undefined ? null : JSON.parse(JSON.stringify(value)));`,
+    `const ref = (id${t(': string')}, parts${t(': readonly string[]')})${t(': any')} => safe(at(got(id).value, parts));`);
+  if (uses.verify) lines.push(
+    `const verify = (id${t(': string')}, outcome${t(': Outcome')}, expected${t(': Expected')}) => {`,
+    '  const observed = outcome.error ? String(outcome.error.code ?? outcome.error.name) : at(outcome.value, expected.path ?? []);',
+    "  if ('throwsCode' in expected) {",
+    `    expect(outcome.error !== undefined, \`${REGRESSION_FAILURE_TAG}:\${id} phải throw\`).toBe(true);`,
+    `    expect(observed, \`${REGRESSION_FAILURE_TAG}:\${id}\`).toBe(expected.throwsCode);`,
+    '  } else {',
+    `    expect(outcome.error, \`${REGRESSION_FAILURE_TAG}:\${id} không được throw\`).toBeUndefined();`,
+    `    expect(observed, \`${REGRESSION_FAILURE_TAG}:\${id}\`).toStrictEqual(expected.equals);`,
+    '  }',
+    '};');
+  return lines.join('\n');
+}
 
 export interface GeneratedRegression { path: string; source: string; testHash: string; title: string; identity: TestIdentity; testId: string; patch: string }
 
@@ -78,19 +94,21 @@ export function newFilePatch(file: string, content: string): string {
  */
 export function generateRegression(input: { finding: Pick<Finding, 'id' | 'title'>; scenario: FindingReproduction; recipeId: string; dir: string }): GeneratedRegression {
   const { finding, scenario } = input;
-  const extension = /\.m?ts$/.test(scenario.module) ? 'ts' : 'js';
-  const file = `${input.dir}/${slug(path.posix.basename(scenario.module))}-${finding.id}.test.${extension}`;
+  const ts = /\.m?ts$/.test(scenario.module);
+  const file = `${input.dir}/${slug(path.posix.basename(scenario.module))}-${finding.id}.test.${ts ? 'ts' : 'js'}`;
   const title = regressionTitle(finding);
-  const relative = path.posix.relative(path.posix.dirname(file), scenario.module.replace(/\\/g, '/'));
+  // A TypeScript import names the emitted file (.js for .ts): tsc rejects a .ts extension without allowImportingTsExtensions, and Vite maps it back.
+  const relative = path.posix.relative(path.posix.dirname(file), scenario.module.replace(/\\/g, '/')).replace(/\.ts$/, '.js').replace(/\.mts$/, '.mjs');
   const specifier = relative.startsWith('.') ? relative : `./${relative}`;
   const body: string[] = [];
   const argList = (args: readonly JsonValue[]) => `[${args.map(a => expr(a)).join(', ')}]`;
-  body.push(`    const instance = await target[${JSON.stringify(scenario.factory)}](...${argList(scenario.args)});`);
+  body.push(`    const instance = await factory(${JSON.stringify(scenario.factory)})(...${argList(scenario.args)});`);
   for (const step of scenario.steps) {
     body.push(`    outcomes.set(${JSON.stringify(step.id)}, await call(instance, ${JSON.stringify(step.method)}, ${argList(step.args)}));`);
-    if (step.expect) body.push(`    verify(${JSON.stringify(step.id)}, outcomes.get(${JSON.stringify(step.id)}), ${JSON.stringify(step.expect)});`);
-    else body.push(`    if (outcomes.get(${JSON.stringify(step.id)}).error) throw outcomes.get(${JSON.stringify(step.id)}).error;`);
+    if (step.expect) body.push(`    verify(${JSON.stringify(step.id)}, got(${JSON.stringify(step.id)}), ${JSON.stringify(step.expect)});`);
+    else body.push(`    if (got(${JSON.stringify(step.id)}).error) throw got(${JSON.stringify(step.id)}).error;`);
   }
+  const uses = { ref: JSON.stringify([scenario.args, scenario.steps.map(s => s.args)]).includes('"$ref"'), verify: scenario.steps.some(s => !!s.expect) };
   const comment = (text: string) => text.split(/\r?\n/).map(l => `// ${l}`.trimEnd());
   const rest = [
     '// Generated by AI Department from a counterexample that was reproduced on a clone of the checkpoint. Locked: a changed file is reported as edited.',
@@ -99,7 +117,7 @@ export function generateRegression(input: { finding: Pick<Finding, 'id' | 'title
     "import { describe, it, expect } from 'vitest';",
     `import * as target from ${JSON.stringify(specifier)};`,
     '',
-    HELPERS,
+    helpers(ts, uses),
     '',
     `describe(${JSON.stringify(REGRESSION_DESCRIBE)}, () => {`,
     `  it(${JSON.stringify(title)}, async () => {`,
@@ -173,6 +191,48 @@ export function readRegressionManifest(run: Run, artifacts: readonly Artifact[])
     const m = JSON.parse(a.content) as RegressionManifest;
     return m.schemaVersion === 1 && m.contractHash === hashContract(run.contract) && m.slot === run.selectedSlot && Array.isArray(m.entries) ? m : undefined;
   } catch { return; }
+}
+
+/**
+ * The manifest entry behind a confirmation this run already carried out: the test was applied and committed on top of the checkpoint the
+ * person confirmed on, and nothing else has been committed since. A run stopped between that commit and the Developer's turn resumes on
+ * the same transaction; any other change of checkpoint makes the confirmation stale as before.
+ */
+export function readAppliedReceipt(run: Run, finding: Finding, artifacts: readonly Artifact[]): RegressionManifest['entries'][number] | undefined {
+  const c = finding.confirmation;
+  if (c?.kind !== 'regression' || !finding.reproduction || !run.checkpoint) return;
+  const hash = scenarioHash(finding.reproduction);
+  const entry = readRegressionManifest(run, artifacts)?.entries.find(e => e.findingId === finding.id && e.scenarioHash === hash && e.proposalHash === c.proposalHash && e.receiptHash === c.receiptHash);
+  if (!entry?.appliedFrom || entry.appliedCheckpoint !== run.checkpoint) return;
+  const a = artifacts.find(a => a.title === REGRESSION_RECEIPT_TITLE && a.valid && a.contractVersion === run.contract.version && a.hash === c.receiptHash);
+  if (!a || a.hash !== sha256(a.content)) return;
+  try {
+    const r = JSON.parse(a.content) as RegressionReceipt;
+    const same = r.schemaVersion === 1 && r.findingId === finding.id && r.proposalHash === c.proposalHash && r.scenarioHash === hash && r.checkpoint === entry.appliedFrom
+      && r.contractVersion === run.contract.version && r.contractHash === hashContract(run.contract) && r.configHash === replayConfigHash(run) && r.slot === run.selectedSlot
+      && r.testHash === entry.fileHash && r.path === entry.path && r.testId === entry.testId;
+    return same ? entry : undefined;
+  } catch { return; }
+}
+
+/** A regression the run must see pass, the check it was made for, and the check that runs it now (none when no check can). */
+export interface RegressionTarget { path: string; testId: string; madeFor: string; recipeId?: string; intact: boolean }
+
+/**
+ * Every regression the run knows of (the files the project holds and the ones this run applied), each with the check that runs it now:
+ * the check it was made for, or the project's one Vitest check when that check was renamed or removed. The mapping is stated wherever it
+ * matters, and a regression with no check at all stays a reason not to accept: an unrun regression must never pass for a passing one.
+ */
+export function regressionTargets(run: Run, refs: readonly RegressionRef[], artifacts: readonly Artifact[]): RegressionTarget[] {
+  const all = new Map<string, Omit<RegressionTarget, 'recipeId'>>();
+  for (const r of refs) all.set(r.path, { path: r.path, testId: r.testId, madeFor: r.recipeId, intact: r.intact });
+  for (const e of readRegressionManifest(run, artifacts)?.entries ?? []) if (!all.has(e.path)) all.set(e.path, { path: e.path, testId: e.testId, madeFor: e.recipeId, intact: true });
+  const current = regressionRecipe(run.configSnapshot);
+  return [...all.values()].map(t => {
+    const own = run.configSnapshot.checks.find(c => c.id === t.madeFor && c.reportPath);
+    const recipeId = own?.id ?? ('recipe' in current ? current.recipe.id : undefined);
+    return recipeId ? { ...t, recipeId } : t;
+  });
 }
 
 /** The runner's first differing step in a replay, which the regression test must fail on. */

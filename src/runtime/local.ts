@@ -24,7 +24,7 @@ import { createAgyHome, hashFiles, userAgyFiles } from './agyhome.js';
 import { agyInput, agyWritePreamble, buildCliCommand, JsonlCollector } from './providers.js';
 import {
   RuntimeBlockedError,
-  type AgentExecution, type AgentResult, type ChangeSet, type CheckExecution, type PrepareResult, type Runtime, type RuntimeCheckResult, type RuntimeEvent,
+  type AgentExecution, type AgentResult, type ChangeSet, type CheckExecution, type PrepareResult, type TrialCheckExecution, type Runtime, type RuntimeCheckResult, type RuntimeEvent,
 } from './types.js';
 import { clearReport, readReport } from './report.js';
 import { streamStderr, streamTo } from './streaming.js';
@@ -315,36 +315,54 @@ export class LocalRuntime implements Runtime {
   diffSinceBase = (run: Run, slot: Slot) => this.ws.diffSinceBase(run, slot);
 
   async runCheck(exec: CheckExecution): Promise<RuntimeCheckResult> {
-    const { run, recipe, slot } = exec;
+    const { run, slot } = exec;
     const cwd = this.ws.dir(run, slot);
     const checkpoint = await this.ws.head(run, slot);
-    const execute = async (): Promise<RuntimeCheckResult> => {
-      // A report left by an earlier run must never be mistaken for this run's output.
-      if (recipe.reportPath) {
-        if (!isSafeRelative(recipe.reportPath)) throw new Error('reportPath không hợp lệ.');
-        await clearReport(cwd, recipe.reportPath);
-      }
-      const plan = planNodeTest(recipe.command, await hostNodeVersion(), parseNodeVersion(process.version), process.execPath);
-      const source = `check:${recipe.id}`;
-      if (plan.problem) {
-        // Never start a command that cannot work here: the person gets the reason instead of a bare "chưa hoàn tất".
-        exec.onEvent?.({ type: 'log', message: plan.problem, data: { source, level: 'error' } });
-        return { exitCode: null, durationMs: 0, checkpoint, incomplete: true, log: `${ENV_PROBLEM_PREFIX}${plan.problem}` };
-      }
-      if (plan.note) exec.onEvent?.({ type: 'log', message: plan.note, data: { source, level: 'warn' } });
-      const [cmd, ...args] = resolveHostCommand(plan.command);
-      const result = await executeFile(cmd!, args, { cwd, timeoutMs: recipe.timeoutMs, signal: exec.signal, maxOutputBytes: 64 * 1024 * 1024, env: await this.envFor(run, cwd), scrubSecrets: 'all', ...streamTo(exec.onEvent, source) });
-      let report: unknown;
-      if (recipe.reportPath) {
-        report = await readReport(cwd, recipe.reportPath);
-      }
-      return {
-          exitCode: result.exitCode, durationMs: result.durationMs, checkpoint, report, reportRoot: cwd,
-        incomplete: result.timedOut || (!!recipe.reportPath && report === undefined),
-        log: redactSecrets(`${result.stdout}\n${result.stderr}`.slice(-200_000)),
-      };
-    };
+    const execute = () => this.executeCheck(exec, cwd, checkpoint);
     return exec.ref === 'base' ? this.ws.withBaseOverlay(run, slot, exec.keepPaths ?? [], execute) : execute();
+  }
+
+  async runTrialChecks(exec: TrialCheckExecution): Promise<RuntimeCheckResult[]> {
+    const { run, slot } = exec;
+    return this.ws.withTrialClone(run, slot, exec.patch, async (dir) => {
+      await this.ws.linkDependencies(run, slot, dir);
+      const results: RuntimeCheckResult[] = [];
+      for (const recipe of exec.recipes) {
+        if (exec.signal?.aborted) break;
+        results.push(await this.executeCheck({ run, recipe, signal: exec.signal, onEvent: exec.onEvent }, dir, run.checkpoint!, this.ws.dir(run, slot)));
+      }
+      return results;
+    }, exec.signal);
+  }
+  recoverTrials = (run: Run) => this.ws.recoverTrials(run);
+
+  /** Runs one recipe in `cwd`. Tools are resolved for the run's own workspace (`toolRoot`), which a trial clone shares. */
+  private async executeCheck(exec: Pick<CheckExecution, 'run' | 'recipe' | 'signal' | 'onEvent'>, cwd: string, checkpoint: string, toolRoot = cwd): Promise<RuntimeCheckResult> {
+    const { run, recipe } = exec;
+    // A report left by an earlier run must never be mistaken for this run's output.
+    if (recipe.reportPath) {
+      if (!isSafeRelative(recipe.reportPath)) throw new Error('reportPath không hợp lệ.');
+      await clearReport(cwd, recipe.reportPath);
+    }
+    const plan = planNodeTest(recipe.command, await hostNodeVersion(), parseNodeVersion(process.version), process.execPath);
+    const source = `check:${recipe.id}`;
+    if (plan.problem) {
+      // Never start a command that cannot work here: the person gets the reason instead of a bare "chưa hoàn tất".
+      exec.onEvent?.({ type: 'log', message: plan.problem, data: { source, level: 'error' } });
+      return { exitCode: null, durationMs: 0, checkpoint, incomplete: true, log: `${ENV_PROBLEM_PREFIX}${plan.problem}` };
+    }
+    if (plan.note) exec.onEvent?.({ type: 'log', message: plan.note, data: { source, level: 'warn' } });
+    const [cmd, ...args] = resolveHostCommand(plan.command);
+    const result = await executeFile(cmd!, args, { cwd, timeoutMs: recipe.timeoutMs, signal: exec.signal, maxOutputBytes: 64 * 1024 * 1024, env: await this.envFor(run, toolRoot), scrubSecrets: 'all', ...streamTo(exec.onEvent, source) });
+    let report: unknown;
+    if (recipe.reportPath) {
+      report = await readReport(cwd, recipe.reportPath);
+    }
+    return {
+      exitCode: result.exitCode, durationMs: result.durationMs, checkpoint, report, reportRoot: cwd,
+      incomplete: result.timedOut || (!!recipe.reportPath && report === undefined),
+      log: redactSecrets(`${result.stdout}\n${result.stderr}`.slice(-200_000)),
+    };
   }
 
   detectMutation = (run: Run, slot: Slot) => detectMutation(this.ws.dir(run, slot), run.configSnapshot.mutationRoot);

@@ -3,7 +3,8 @@ import type { CheckResult, CheckStatus, CheckIssue, Recipe, TaskKind } from '../
 import type { TestIdentity } from '../shared/quality.js';
 import type { RuntimeCheckResult } from '../runtime/types.js';
 
-export interface TestOutcome { id: string; status: 'passed' | 'failed' | 'skipped'; identity?: TestIdentity; aliases?: string[] }
+/** `alternates`: other structured identities the same report gives this test; a locked id may meet any one of them, never two tests. */
+export interface TestOutcome { id: string; status: 'passed' | 'failed' | 'skipped'; identity?: TestIdentity; alternates?: TestIdentity[]; aliases?: string[] }
 export interface ParsedReport { tests: TestOutcome[]; collectionErrors: number; valid: boolean; /** First message of each failed test (JUnit only). */ failures?: string[] }
 
 /**
@@ -58,10 +59,12 @@ export function parseJUnit(xml: string): ParsedReport {
     const status = failure ? 'failed' : /<skipped\b/.test(body) ? 'skipped' : 'passed';
     const className = xmlAttr(m[3]!, 'classname') ?? '';
     // node:test names the file on every testcase. With it, a test is known the way a source binding knows it (file + describe
-    // titles + name), so the two can meet; reporters that give no file (Playwright, Maven) keep the classname/name identity.
+    // titles + name), so the two can meet; reporters that give no file (Playwright, Maven) keep the classname/name identity. Other
+    // reporters write a file too (pytest's xunit), and manifests locked their classname/name: that identity stays as an alternate.
     const file = xmlAttr(m[3]!, 'file');
-    const identity: TestIdentity = file ? { kind: 'json', file, titles: [...suites.filter(Boolean), name] } : { kind: 'junit', className, name };
-    tests.push({ id: `${className}::${name}`.replace(/^::/, ''), status, identity });
+    const junit: TestIdentity = { kind: 'junit', className, name };
+    const identity: TestIdentity = file ? { kind: 'json', file, titles: [...suites.filter(Boolean), name] } : junit;
+    tests.push({ id: `${className}::${name}`.replace(/^::/, ''), status, identity, ...(file ? { alternates: [junit] } : {}) });
     if (failure) failures.push(`Test "${name}" fail: ${(xmlAttr(failure[1]!, 'message') ?? 'không có message').slice(0, 300)}`);
   }
   return { tests, collectionErrors: 0, valid: true, failures };
@@ -142,8 +145,15 @@ export function summarizeCheck(
   const root = last.reportRoot ?? input.reportRoot;
   const issues: CheckIssue[] = [];
   const expected = (input.lockedTestIds ?? []).map(id => normalizeTestId(id, root));
-  const tests = (parsed?.tests ?? []).map(t => ({ ...t, id: input.structuredIds && t.identity ? identityId(t.identity, root) : normalizeTestId(t.id, root),
-    aliases: [normalizeTestId(t.id, root), ...(t.aliases ?? []).map(id => normalizeTestId(id, root))] }));
+  const tests = (parsed?.tests ?? []).map(({ alternates, ...t }) => ({ ...t, id: input.structuredIds && t.identity ? identityId(t.identity, root) : normalizeTestId(t.id, root),
+    aliases: [normalizeTestId(t.id, root), ...(t.aliases ?? []).map(id => normalizeTestId(id, root))],
+    other: input.structuredIds ? (alternates ?? []).map(i => identityId(i, root)) : [] }));
+  // A test the report knows two structured ways takes the locked id when exactly one of its identities is locked and no other test has it.
+  for (const t of tests) {
+    if (expected.includes(t.id)) continue;
+    const hits = t.other.filter(id => expected.includes(id));
+    if (hits.length === 1 && tests.filter(o => o.id === hits[0] || o.other.includes(hits[0]!)).length === 1) t.id = hits[0]!;
+  }
   // Legacy aliases are generated only from actual reporter fields, and must be one-to-one.
   const aliases: Record<string, string[]> = Object.create(null);
   for (const t of tests) for (const alias of new Set([t.id, ...t.aliases])) (aliases[alias] ??= []).push(t.id);
@@ -180,7 +190,7 @@ export function summarizeCheck(
   for (const id of missing) if (!tests.some(t => t.id === id && t.status === 'skipped')) issues.push({ kind: 'test_missing', testId: id, message: `Không tìm thấy test đã khóa: ${id}` });
   return {
     id: input.id, runId: input.runId, recipeId: input.recipe.id, checkpoint: input.checkpoint, contractVersion: input.contractVersion,
-    issues, aliases, outcomes: tests,
+    issues, aliases, outcomes: tests.map(({ other: _other, ...t }) => t),
     status, testIds: passedTests, missingTestIds: missing,
     requirementIds: [...new Set(passedTests.flatMap(extractRequirementIds))],
     attempts: attempts.map((a) => ({ exitCode: a.exitCode, log: a.log, durationMs: a.durationMs })),

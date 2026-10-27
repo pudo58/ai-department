@@ -36,7 +36,7 @@ export class RunOutcome {
       completion.ready = completion.reasons.length === 0;
     }
     const policy = policyOf(run), regressions = this.s.regressions.get(runId) ?? [];
-    if (policy.strict) completion.reasons.push(...evidenceBlockers(run, { verdict: readVerdict(artifacts, run), findings, artifacts, regressions }).filter(r => !completion.reasons.includes(r)));
+    if (policy.strict) completion.reasons.push(...evidenceBlockers(run, { verdict: readVerdict(artifacts, run), findings, artifacts, regressions, checks }).filter(r => !completion.reasons.includes(r)));
     if (policy.strict) completion.ready = completion.reasons.length === 0;
     const contractReview = reviewContract(run.contract);
     if (policy.structured && run.contract.testPlan?.schemaVersion !== 2) contractReview.problems.push('Chính sách v2+ cần kế hoạch ca có căn cứ v2.');

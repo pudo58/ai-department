@@ -47,9 +47,11 @@ Verifier (một lượt review có sẵn)       trả kịch bản `reproduction
    ↓
 Replay (node-api, bản sao đúng checkpoint) 3 probe / 60 s mỗi lượt, 30 s mỗi probe, không tự retry
    ↓ reproduced
-Sinh test bằng code (không AI)           Vitest, `tests/aidept-regressions/<module>-<findingId>.test.js`
+Sinh test bằng code (không AI)           Vitest, `tests/aidept-regressions/<module>-<findingId>.test.js` (`.test.ts` có kiểu cho project TS)
    ↓
-Thử một lần trên bản sao                 phải THẤT BẠI đúng assertion của bước replay thấy khác (`AIDEPT-REG:<bước>`)
+Thử một lần trên bản sao riêng           clone tạm của đúng checkpoint (không đụng candidate), xóa khi xong, hủy hoặc restart;
+                                         phải THẤT BẠI đúng assertion của bước replay thấy khác (`AIDEPT-REG:<bước>`)
+                                         và mọi check bắt buộc không có report đang đạt (typecheck, lint…) vẫn đạt khi có test
    ↓ failed_as_expected
 Trang task: căn cứ + kết quả replay + diff test + kết quả thử   → người dùng đọc và xác nhận bằng hash
    ↓ biên nhận (finding, scenario, checkpoint, hợp đồng, cấu hình, hash test)
@@ -60,11 +62,13 @@ Checks + ca Author + regression + mutation + Verifier   → replay lại cùng k
 resolved (`resolution.kind = verified_fix`)
 ```
 
-- Test thử không đạt (`passed_unexpectedly`, `wrong_failure`, `discovery_error`, `error`, `timeout`, `interrupted`) **không** được xác nhận bằng hash. Lỗi import/nhận file/timeout/công cụ không bị đếm là sai khác hành vi.
+- Test thử không đạt (`passed_unexpectedly`, `wrong_failure`, `discovery_error`, `breaks_checks`, `error`, `timeout`, `interrupted`) **không** được xác nhận bằng hash. Lỗi import/nhận file/timeout/công cụ không bị đếm là sai khác hành vi. `breaks_checks`: test thất bại đúng chỗ nhưng làm hỏng một check bắt buộc khác; không đề xuất, vì file sẽ bị khóa và không ai được sửa nó để chữa build.
+- Bản sao thử: Git clone của checkpoint cộng patch test. Local: thư mục `node_modules` riêng, mỗi mục đã cài là một liên kết tới candidate (cache công cụ như `.vite` không được liên kết), nên file công cụ ghi thêm vào `node_modules` nằm trong bản sao; một test ghi vào bên trong một package đã cài vẫn chạm bản dùng chung. Docker: `node_modules` gắn chỉ đọc.
+- Test TypeScript: helper có khai báo kiểu, chỉ sinh helper kịch bản dùng tới (để `noUnusedLocals` không báo), và import module bằng đuôi `.js` (tsc chấp nhận, Vite ánh xạ về `.ts`).
 - Chỉ hỗ trợ project JS/TS có đúng một check Vitest có report JSON (`vitest run`). Nhiều check Vitest → chọn một ở **Check Vitest cho regression**. Thư mục khác mặc định → **Thư mục test regression**; Vitest của project phải nhận thư mục đó. Stack chưa hỗ trợ **không** được báo là đã tạo regression: finding đi theo review thủ công với giới hạn ghi rõ trong đề xuất và báo cáo.
-- Biên nhận mất hiệu lực khi đổi checkpoint, hợp đồng, cấu hình project, scenario hoặc test (hash). **Chạy lại phản ví dụ** (`POST /api/runs/:id/findings/:fid/replay`) dùng hàng đợi và khóa của run, không gọi AI, tạo đề xuất mới nên cần xác nhận lại.
+- Biên nhận mất hiệu lực khi đổi checkpoint, hợp đồng, cấu hình project, scenario hoặc test (hash). Ngoại lệ duy nhất là chính giao dịch sửa: manifest regression ghi checkpoint lúc xác nhận (`appliedFrom`) và commit chỉ thêm đúng test đó (`appliedCheckpoint`); dừng giữa commit này và lượt Developer thì resume vẫn dùng được biên nhận, miễn là run đang ở đúng commit đó và file test còn nguyên. Commit nào khác sau đó vẫn làm biên nhận hết hiệu lực. **Chạy lại phản ví dụ** (`POST /api/runs/:id/findings/:fid/replay`) dùng hàng đợi và khóa của run, không gọi AI, tạo đề xuất mới nên cần xác nhận lại.
 - Test regression tự chứa: chỉ cần Vitest của project, không phụ thuộc database hay đường dẫn máy của AI Department. File có dòng đầu `// aidept-regression {…}` kèm hash của phần còn lại.
-- Chống tái phát: file nằm trong checkpoint bàn giao và danh sách test bị khóa (thiếu, skip, đổi tên, không có trong report → chặn). Run sau quét thư mục regression của project, khóa các file đó khỏi mọi agent và đưa ID của chúng vào danh sách phải chạy đạt. File bị sửa so với hash trong chính nó là blocker. Đổi hoặc xóa regression chưa có đường duyệt-diff tự động: sửa trực tiếp trong project rồi chạy lại. **Chạy lại check** chạy cả regression, không gọi AI.
+- Chống tái phát: file nằm trong checkpoint bàn giao và danh sách test bị khóa (thiếu, skip, đổi tên, không có trong report → chặn). Run sau quét thư mục regression của project, khóa các file đó khỏi mọi agent và đưa ID của chúng vào danh sách phải chạy đạt. File bị sửa so với hash trong chính nó là blocker. File còn nguyên chưa đủ: mỗi regression (file trong project và mục trong manifest của run) phải có kết quả **đạt** trên đúng checkpoint và cấu hình hiện tại. Regression ghi cho một check đã đổi tên hoặc bị xóa được chạy bằng check Vitest regression hiện tại, và lý do chặn ghi rõ ánh xạ đó; không có check nào chạy được thì chặn kèm tên check cũ. Đổi hoặc xóa regression chưa có đường duyệt-diff tự động: sửa trực tiếp trong project rồi chạy lại. **Chạy lại check** chạy cả regression, không gọi AI.
 
 ## 5. API
 
@@ -86,6 +90,6 @@ pnpm build
 pnpm test:reliability
 ```
 
-Nhóm test mới (agent là fixture; Git, Vitest và replay chạy thật; không dùng quota model): `policy-v4.test.ts` (chính sách, kế hoạch, chẩn đoán, verdict), `regression-loop.test.ts` (PulseGraph từ phản ví dụ đến bằng chứng sửa), `regression-edges.test.ts` (sửa không xong, xác nhận hết hiệu lực, review thủ công, bảo vệ qua các run), `regression-ui.test.ts`. Fixture trình duyệt: `pnpm exec tsx tests/fixtures/regression-ui.ts`. Các fixture v3 cũ được ghim phiên bản (`setupV3`, `pinV3`) để giữ kiểm tra tương thích.
+Nhóm test mới (agent là fixture; Git, Vitest và replay chạy thật; không dùng quota model): `policy-v4.test.ts` (chính sách, kế hoạch, chẩn đoán, verdict), `regression-loop.test.ts` (PulseGraph từ phản ví dụ đến bằng chứng sửa), `regression-edges.test.ts` (sửa không xong, xác nhận hết hiệu lực, review thủ công, bảo vệ qua các run), `regression-hardening.test.ts` (regression mất check vẫn chặn, resume sau khi khóa regression, thử trên bản sao riêng, JUnit có thuộc tính file, test TypeScript qua typecheck strict, bước tiếp theo sau khi xác nhận là sửa chứ không phải đóng tay), `regression-ui.test.ts`. Fixture trình duyệt: `pnpm exec tsx tests/fixtures/regression-ui.ts`. Các fixture v3 cũ được ghim phiên bản (`setupV3`, `pinV3`) để giữ kiểm tra tương thích.
 
 Giới hạn còn lại: regression chỉ có cho project JS/TS + Vitest và API phù hợp adapter `node-api`; chưa có sinh chuỗi ngẫu nhiên, điều khiển concurrency, fault injection, vòng sửa theo mutation hay phân tích ảnh hưởng toàn repo. Một lượt benchmark ngắn trên model thật (xem `docs/evaluation-v4-benchmark.md`) chỉ là kiểm tra ban đầu, chưa đủ kết luận ưu thế tổng quát.

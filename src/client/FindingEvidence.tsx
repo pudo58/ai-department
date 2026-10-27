@@ -9,6 +9,7 @@ const TRIAL: Record<RegressionTrial['status'], { label: string; tone: string }> 
   passed_unexpectedly: { label: 'Đạt trên mã đang lỗi: chưa tái hiện được', tone: 'bad' },
   wrong_failure: { label: 'Thất bại nhưng không phải ở bước đã thấy', tone: 'bad' },
   discovery_error: { label: 'Chưa chạy được (nhận file hoặc import)', tone: 'bad' },
+  breaks_checks: { label: 'Làm hỏng check bắt buộc khác (ví dụ typecheck)', tone: 'bad' },
   error: { label: 'Lỗi khi thử', tone: 'bad' }, timeout: { label: 'Hết thời gian', tone: 'warn' }, interrupted: { label: 'Bị gián đoạn', tone: 'warn' },
 };
 const LEVEL: Record<FindingProof['level'], { label: string; tone: string }> = {

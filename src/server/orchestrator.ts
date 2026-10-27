@@ -449,6 +449,8 @@ export class Orchestrator {
     const span=this.s.startSpan(runId,'run','Điều phối run');
     try {
       this.s.mutate(runId, (r) => { r.status = 'running'; });
+      // A regression trial cut short by a stop or a restart leaves its clone behind; it is never reused.
+      await this.runtimeFor(this.s.run(runId)).recoverTrials?.(this.s.run(runId)).catch((error: Error) => this.s.log(runId, 'regression.cleanup_failed', `Chưa dọn được bản sao thử regression: ${error.message}`));
       if (this.s.run(runId).baseSha) { await this.s.ensureContext(runId); await this.s.loadBaseFiles(runId); await this.s.refreshRegressions(runId); }
       if(this.s.run(runId).preflightRequest){
         try {

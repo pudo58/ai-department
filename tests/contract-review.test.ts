@@ -182,6 +182,8 @@ describe('behavior classification through the workflow', () => {
     }
     expect(PROMPTS.planner(run)).toContain('expected|forbidden');
     expect(PROMPTS.synthesize(run)).toContain('forbidden');
+    // Later turns may quote only the contract, so both ways of writing it copy the specification's sentences word for word.
+    for (const prompt of [PROMPTS.planner(run), PROMPTS.synthesize(run)]) { expect(prompt).toContain('NGUYÊN VĂN'); expect(prompt).toContain('SPEC.md'); }
   });
 
   it('requires evidence for a forbidden requirement, and preserves it in JSON and Markdown after checking', async () => {

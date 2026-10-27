@@ -30,7 +30,8 @@ export const DEFAULT_REGRESSION_DIR = 'tests/aidept-regressions';
 
 /** What the generated test did when it was tried once on a clone of the checkpoint, before anyone confirmed anything. */
 export interface RegressionTrial {
-  status: 'failed_as_expected' | 'passed_unexpectedly' | 'wrong_failure' | 'discovery_error' | 'error' | 'timeout' | 'interrupted';
+  /** `breaks_checks`: the test failed where it should, but adding it makes another required check that passed on the checkpoint fail (a typecheck, say). */
+  status: 'failed_as_expected' | 'passed_unexpectedly' | 'wrong_failure' | 'discovery_error' | 'breaks_checks' | 'error' | 'timeout' | 'interrupted';
   checkpoint: string; message: string; durationMs: number;
   /** Id of the test as the runner reports it, when the runner found it. */
   testId?: string;
@@ -65,7 +66,11 @@ export interface RegressionReceipt {
 /** What a repair applied before the Developer ran: the locked tests, with their file hashes and the proposals behind them. */
 export interface RegressionManifest {
   schemaVersion: 1; contractVersion: number; contractHash: string; slot: 'A' | 'B'; checkpoint: string; createdAt: string;
-  entries: { findingId: string; scenarioHash: string; recipeId: string; path: string; testId: string; identity: TestIdentity; fileHash: string; proposalHash: string; receiptHash: string }[];
+  entries: {
+    findingId: string; scenarioHash: string; recipeId: string; path: string; testId: string; identity: TestIdentity; fileHash: string; proposalHash: string; receiptHash: string;
+    /** The checkpoint the person confirmed on, and the commit that added exactly this test: a resume between the two is the same transaction. */
+    appliedFrom?: string; appliedCheckpoint?: string;
+  }[];
 }
 
 /** A regression file found in the project (shipped by an earlier run), identified by the header the generator writes. */

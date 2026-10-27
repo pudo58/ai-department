@@ -51,6 +51,12 @@ export function scaffoldNote(run: Run): string {
 Project này cho phép bạn TẠO MỚI các file thiết lập chưa có trong bản gốc: package.json, lockfile, tsconfig*.json, vite/vitest/jest/playwright config, và thêm dependency cần cho stack trong hướng dẫn của project (cài bằng npm, commit lockfile). File thiết lập đã có sẵn từ trước vẫn không được sửa. Không thêm dependency ngoài nhu cầu của hợp đồng.`;
 }
 
+/**
+ * Later turns may quote only the contract (or the original requirement), never a file it points to. A criterion that rewords the
+ * specification therefore makes every correct quotation of the specification fail, so the Planner copies its sentences instead.
+ */
+const VERBATIM_SPEC = `Câu chữ của tiêu chí: khi hành vi đã được viết thành câu trong yêu cầu gốc hoặc trong file đặc tả mà yêu cầu trỏ tới (ví dụ SPEC.md trong repo), "text" của tiêu chí phải bắt đầu bằng NGUYÊN VĂN câu đó: chép đúng từng ký tự, giữ dấu \`, tên định danh, mã lỗi và dấu câu; không viết lại bằng lời khác, không dịch. Một tiêu chí có thể gồm vài câu nguyên văn liền nhau. Cần làm rõ thì thêm câu của bạn SAU phần nguyên văn. Lý do: Author và Verifier chỉ được trích dẫn từ text của hợp đồng, nên một câu bị viết lại làm mọi trích dẫn đúng đặc tả bị từ chối.`;
+
 export const PROMPTS = {
   planner(run: Run): string {
     return `Bạn là Planner. Đọc yêu cầu gốc và đề xuất hợp đồng nghiệm thu.
@@ -60,7 +66,8 @@ ${run.originalRequirement}${projectContext(run, 'planner')}
 Kết thúc bằng một khối \`\`\`json có dạng {"requirements":[{"id":"R-1","text":"...","required":true,"manual":false,"kind":"expected|forbidden"}],"acceptanceExamples":[],"interfaces":[],"assumptions":[],"scope":[]}.
 Phân loại rõ tiêu chí: expected là hành vi mong muốn, forbidden là hành vi không được xảy ra. Chỉ nêu tiêu chí phù hợp với yêu cầu, không tự thêm để đủ loại. Nêu ví dụ cụ thể và ghi rõ giả định cần chủ task xác nhận.
 Mọi phần tử của acceptanceExamples, interfaces, assumptions, scope phải là CHUỖI văn bản, không phải object.
-Mỗi tiêu chí phải kiểm chứng được bằng test hoặc đánh dấu manual. Ràng buộc về phạm vi file, quy trình hay phong cách code không test được: đặt vào "scope"/"assumptions" hoặc đánh dấu "manual": true, đừng để thành tiêu chí bắt buộc không có test. Nêu giả định thay vì tự quyết các điểm mơ hồ.`;
+Mỗi tiêu chí phải kiểm chứng được bằng test hoặc đánh dấu manual. Ràng buộc về phạm vi file, quy trình hay phong cách code không test được: đặt vào "scope"/"assumptions" hoặc đánh dấu "manual": true, đừng để thành tiêu chí bắt buộc không có test. Nêu giả định thay vì tự quyết các điểm mơ hồ.
+${VERBATIM_SPEC}`;
   },
   interpreter(run: Run): string {
     return `Bạn diễn giải yêu cầu một cách độc lập. Bạn chưa được xem hợp đồng hay kết luận của agent khác.
@@ -76,7 +83,8 @@ ${guidanceBlock(run)}${run.interpretations.map((i, n) => `Cách hiểu ${n + 1} 
 Yêu cầu gốc:
 ${run.originalRequirement}${projectContext(run, 'planner')}
 
-Kết thúc bằng khối \`\`\`json cùng định dạng hợp đồng (requirements, acceptanceExamples, interfaces, assumptions, scope); mỗi requirement có kind expected (hành vi mong muốn) hoặc forbidden (hành vi không được xảy ra). Chỉ phân loại tiêu chí có căn cứ từ yêu cầu, không thêm tiêu chí để đủ loại; ghi điểm bất đồng chưa giải quyết vào "assumptions".`;
+Kết thúc bằng khối \`\`\`json cùng định dạng hợp đồng (requirements, acceptanceExamples, interfaces, assumptions, scope); mỗi requirement có kind expected (hành vi mong muốn) hoặc forbidden (hành vi không được xảy ra). Chỉ phân loại tiêu chí có căn cứ từ yêu cầu, không thêm tiêu chí để đủ loại; ghi điểm bất đồng chưa giải quyết vào "assumptions".
+${VERBATIM_SPEC}`;
   },
   developer(run: Run, extra = ''): string {
     return `Bạn là Developer. Triển khai hợp đồng đã duyệt trong /workspace, tự chạy thử và tự review trước khi bàn giao.

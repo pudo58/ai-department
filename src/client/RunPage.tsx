@@ -65,6 +65,7 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
     else if (a.id === 'revise_contract') setModal('contract');
     else if (a.id === 'switch_single') setModal('escalate');
     else if (a.id === 'review_findings') setTab('verify');
+    else if (a.id === 'repair_findings') void act(`/api/runs/${id}/repair`);
     else if (a.id === 'edit_project') window.location.hash = '#/projects';
     else if (a.id === 'close_finding' && a.findingId) setClosing({ id: a.findingId, title: detail.findings.find((f) => f.id === a.findingId)?.title ?? '' });
   };

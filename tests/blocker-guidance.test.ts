@@ -14,7 +14,7 @@ const budget = { spentUsd: 0, capUsd: 10 } as BudgetState;
 describe('what a person is told to do when a run is held back', () => {
   it('names both ways out of a Verifier that would not conclude, because resuming cannot change it', () => {
     const run = setup().create({ mode: 'verify' });
-    const reasons = evidenceBlockers(run, { verdict: { decision: 'abstain' }, findings: [], artifacts: [], regressions: [] });
+    const reasons = evidenceBlockers(run, { verdict: { decision: 'abstain' }, findings: [], artifacts: [], regressions: [], checks: [] });
     expect(reasons).toHaveLength(1);
     expect(reasons[0]).toContain('từ chối kết luận');
     expect(reasons[0]).toContain('Sửa hợp đồng');

@@ -9,7 +9,7 @@ import { policyOf } from '../../core/policy.js';
 import { replayConfigHash, scenarioHash } from '../../core/reproduction.js';
 import {
   REGRESSION_FAILURE_TAG, REGRESSION_MANIFEST_TITLE, REGRESSION_PROPOSAL_TITLE, REGRESSION_RECEIPT_TITLE, firstMismatch, generateRegression, readRegressionManifest,
-  readRegressionProposals, readRegressionReceipt, regressionDirOf, regressionFor, regressionReady, regressionRecipe,
+  readAppliedReceipt, readRegressionProposals, readRegressionReceipt, regressionDirOf, regressionFor, regressionReady, regressionRecipe,
 } from '../../core/regression.js';
 import { Blocked, HttpError } from './support.js';
 import type { RunServices } from './services.js';
@@ -43,8 +43,8 @@ export class Regressions {
     };
     const chosen = regressionRecipe(run.configSnapshot);
     const runtime = this.s.runtimeFor(run);
-    if ('unsupported' in chosen || !runtime.applyPatch || !runtime.workspacePath) {
-      const reason = 'unsupported' in chosen ? chosen.unsupported : 'Runtime này không áp dụng được patch trên bản sao nên chưa thử được test regression.';
+    if ('unsupported' in chosen || !runtime.runTrialChecks) {
+      const reason = 'unsupported' in chosen ? chosen.unsupported : 'Runtime này không tạo được bản sao riêng của checkpoint nên chưa thử được test regression.';
       this.s.log(runId, 'regression.unsupported', `${finding.title}: ${reason}`);
       return store({ ...base, unsupported: `${reason} Finding cần review thủ công; hệ thống không báo là đã tạo regression.` });
     }
@@ -54,23 +54,25 @@ export class Regressions {
     return store({ ...base, recipeId: chosen.recipe.id, path: generated.path, patch: generated.patch, testHash: generated.testHash, testId: generated.testId, identity: generated.identity, title: generated.title, trial });
   }
 
-  /** One run of the generated test on the checkpoint. Only "it failed on the assertion the replay saw differ" is good enough to ask a person. */
+  /**
+   * One run of the generated test on a throwaway clone of the checkpoint, never on the candidate: nothing the trial writes can reach a later
+   * check. Only "it failed on the assertion the replay saw differ" is good enough to ask a person, and only if every other required check
+   * that passes on the checkpoint (a typecheck, a lint) still passes with the test added, because nobody may edit the file once it is locked.
+   */
   private async trial(runId: string, generated: ReturnType<typeof generateRegression>, recipe: import('../../shared/types.js').Recipe, mismatchStep: string | undefined, signal: AbortSignal): Promise<RegressionTrial> {
-    const run = this.s.run(runId), runtime = this.s.runtimeFor(run), slot = run.selectedSlot, started = Date.now();
+    const run = this.s.run(runId), runtime = this.s.runtimeFor(run), started = Date.now();
     const checkpoint = run.checkpoint!;
     const done = (status: RegressionTrial['status'], message: string, extra: Partial<RegressionTrial> = {}): RegressionTrial => ({ status, checkpoint, message, durationMs: Date.now() - started, ...extra });
+    const passing = new Set(latestChecks(run, this.s.store.checks.list(runId)).filter(c => c.status === 'passed').map(c => c.recipeId));
+    const others = run.configSnapshot.checks.filter(c => c.required && !c.reportPath && c.id !== recipe.id && passing.has(c.id));
     try {
-      await runtime.revert(run, slot);
-      await runtime.applyPatch!(run, slot, generated.patch);
-      const workspace = runtime.workspacePath!(run, slot);
-      const result = await this.s.withHeartbeat(runId, `check:regression`, 'Thử test regression trên checkpoint', () => runtime.runCheck({
-        run, slot, ref: 'candidate', signal, onEvent: this.s.runtimeLog(runId, 'check:regression'),
-        recipe: { ...recipe, command: [...recipe.command, generated.path], required: false, timeoutMs: Math.min(recipe.timeoutMs, 120_000) },
+      const [result, ...rest] = await this.s.withHeartbeat(runId, `check:regression`, 'Thử test regression trên bản sao của checkpoint', () => runtime.runTrialChecks!({
+        run, slot: run.selectedSlot, patch: generated.patch, signal, onEvent: this.s.runtimeLog(runId, 'check:regression'),
+        recipes: [{ ...recipe, command: [...recipe.command, generated.path], required: false, timeoutMs: Math.min(recipe.timeoutMs, 120_000) }, ...others],
       }));
-      if (signal.aborted) return done('interrupted', 'Đã hủy lượt thử test regression.');
+      if (signal.aborted || !result) return done('interrupted', 'Đã hủy lượt thử test regression.');
       const parsed = parseTestReport(result.report);
-      const root = result.reportRoot ?? workspace;
-      const test = parsed.tests.find(t => t.identity && identityId(t.identity, root) === generated.testId);
+      const test = parsed.tests.find(t => t.identity && identityId(t.identity, result.reportRoot) === generated.testId);
       if (!parsed.valid || parsed.collectionErrors || !test) {
         const why = summarizeFailures(result.report, 2).join(' ') || (result.incomplete ? 'check chưa hoàn tất (timeout hoặc thiếu report)' : 'runner không tìm thấy test mới');
         return done(result.incomplete && result.durationMs > recipe.timeoutMs ? 'timeout' : 'discovery_error', `Test regression chưa chạy được (${why.slice(0, 400)}). Đây là lỗi nhận file/import của cấu hình test, không phải bằng chứng về finding; đặt regressionDir vào thư mục mà Vitest đã nhận, rồi chạy lại phản ví dụ.`);
@@ -81,11 +83,15 @@ export class Regressions {
       if (mismatchStep && !failureText(result.report, generated.title)?.includes(`${REGRESSION_FAILURE_TAG}:${mismatchStep}`)) {
         return done('wrong_failure', `Test regression thất bại nhưng không phải ở bước ${mismatchStep} mà replay thấy khác (${failure ?? 'không có thông báo'}).`, { testId: generated.testId, failure });
       }
+      if (rest.length < others.length) return done('interrupted', 'Đã hủy lượt thử trước khi chạy xong các check bắt buộc khác.', { testId: generated.testId, failure });
+      const broken = others.filter((_, i) => rest[i]!.exitCode !== 0 || rest[i]!.incomplete);
+      if (broken.length) {
+        const tail = broken.map(c => `${c.id}: ${rest[others.indexOf(c)]!.log.trim().split('\n').slice(-3).join(' ').slice(0, 300)}`).join(' | ');
+        return done('breaks_checks', `Test regression thất bại đúng ở bước ${mismatchStep ?? '?'}, nhưng thêm nó vào làm check bắt buộc ${broken.map(c => `“${c.id}”`).join(', ')} (đang đạt trên checkpoint) không đạt nữa (${tail}). Không đề xuất test này: file sẽ bị khóa và không ai được sửa nó để chữa build.`, { testId: generated.testId, failure });
+      }
       return done('failed_as_expected', `Test regression thất bại đúng ở assertion của bước ${mismatchStep ?? '?'}: ${failure ?? ''}`.trim(), { testId: generated.testId, failure });
     } catch (error) {
       return done(signal.aborted ? 'interrupted' : 'error', `Không thử được test regression: ${(error as Error).message.slice(0, 300)}`);
-    } finally {
-      await runtime.revert(this.s.run(runId), slot).catch(() => undefined);
     }
   }
 
@@ -112,11 +118,16 @@ export class Regressions {
     return { ...finding, confirmed: true, status: 'open', confirmation: { kind: 'manual', at: this.s.stamp(), reason } };
   }
 
-  /** Whether the confirmation on a finding still refers to the proposal, scenario, checkpoint, contract and configuration that exist now. */
+  /**
+   * Whether the confirmation on a finding still refers to the proposal, scenario, checkpoint, contract and configuration that exist now, or
+   * to the regression this run applied for it on exactly that basis, with nothing committed since and the test file untouched.
+   */
   confirmationValid(run: Run, finding: Finding, artifacts: readonly Artifact[]): boolean {
     const c = finding.confirmation;
     if (!c) return false;
     if (c.kind === 'manual') return !!c.reason;
+    const applied = readAppliedReceipt(run, finding, artifacts);
+    if (applied) return (this.s.regressions.get(run.id) ?? []).some(r => r.path === applied.path && r.intact);
     const proposal = regressionFor(readRegressionProposals(run, artifacts), finding);
     return !!proposal && regressionReady(proposal) && !!readRegressionReceipt(run, finding, proposal, artifacts);
   }
@@ -127,7 +138,7 @@ export class Regressions {
    */
   async applyConfirmed(runId: string, targets: readonly Finding[]): Promise<void> {
     let run = this.s.run(runId);
-    const runtime = this.s.runtimeFor(run);
+    const runtime = this.s.runtimeFor(run), appliedFrom = run.checkpoint!;
     const artifacts = this.s.store.artifacts.list(runId);
     const existing = readRegressionManifest(run, artifacts);
     const staged: { finding: Finding; proposal: PendingRegression; receiptHash: string }[] = [];
@@ -155,7 +166,7 @@ export class Regressions {
     this.scope.lockAcceptance(runId, expected, checkpoint, 'Acceptance suite (Regression)', true);
     const manifest: RegressionManifest = {
       schemaVersion: 1, contractVersion: run.contract.version, contractHash: hashContract(run.contract), slot: run.selectedSlot, checkpoint, createdAt: this.s.stamp(),
-      entries: [...(existing?.entries ?? []), ...staged.map(x => ({ findingId: x.finding.id, scenarioHash: x.proposal.scenarioHash, recipeId: x.proposal.recipeId!, path: x.proposal.path!, testId: x.proposal.testId!, identity: x.proposal.identity!, fileHash: x.proposal.testHash!, proposalHash: x.proposal.hash, receiptHash: x.receiptHash }))],
+      entries: [...(existing?.entries ?? []), ...staged.map(x => ({ findingId: x.finding.id, scenarioHash: x.proposal.scenarioHash, recipeId: x.proposal.recipeId!, path: x.proposal.path!, testId: x.proposal.testId!, identity: x.proposal.identity!, fileHash: x.proposal.testHash!, proposalHash: x.proposal.hash, receiptHash: x.receiptHash, appliedFrom, appliedCheckpoint: checkpoint }))],
     };
     for (const a of artifacts.filter(a => a.title === REGRESSION_MANIFEST_TITLE && a.valid && a.contractVersion === run.contract.version)) this.s.store.artifacts.put({ ...a, valid: false });
     this.s.artifact(runId, { kind: 'report', title: REGRESSION_MANIFEST_TITLE, content: JSON.stringify(manifest), checkpoint });

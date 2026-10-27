@@ -256,10 +256,13 @@ describe('a diagnosis never edits tests by itself and never hands a contradictio
     expect(d.artifacts.filter(a => a.title === 'Author diagnosis correction attempt')).toHaveLength(1);
     expect(diagnoses(f.calls)).toBe(2);
     expect(developers(f.calls)).toBe(1);
+    // The card says what the blocker says: "Chạy tiếp" changes nothing here, the plan in the contract does.
+    expect(d.nextStep).toMatchObject({ code: 'diagnosis_stopped', resumeChanges: false, primary: { id: 'revise_contract' } });
     f.orch.resumeRun(f.run.id); await f.orch.idle();
     expect(diagnoses(f.calls)).toBe(2);
     expect(developers(f.calls)).toBe(1);
     expect(f.orch.detail(f.run.id).run.status).toBe('blocked');
+    expect(f.orch.detail(f.run.id).nextStep?.code).toBe('diagnosis_stopped');
     f.store.close();
   }, 120000);
 
@@ -270,6 +273,8 @@ describe('a diagnosis never edits tests by itself and never hands a contradictio
     expect(d.run.status).toBe('blocked');
     expect(d.run.blocker).toContain('chưa chắc');
     expect(d.run.blocker).toContain('Developer không được gọi');
+    expect(d.nextStep).toMatchObject({ code: 'diagnosis_stopped', resumeChanges: false, primary: { id: 'revise_contract' } });
+    expect(d.nextStep!.others.map(o => o.id)).toEqual(['switch_single']);
     expect(developers(f.calls)).toBe(1);
     f.store.close();
   }, 120000);

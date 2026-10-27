@@ -11,7 +11,7 @@ import { assertProcessSucceeded, assertSetupSucceeded, executeFile, redactSecret
 import { buildCliCommand, JsonlCollector, type CliProvider } from './providers.js';
 import {
   RuntimeBlockedError,
-  type AgentExecution, type AgentResult, type ChangeSet, type CheckExecution, type PrepareResult,
+  type AgentExecution, type AgentResult, type ChangeSet, type CheckExecution, type PrepareResult, type TrialCheckExecution,
   type Runtime, type RuntimeAttestation, type RuntimeCheckResult, type RuntimeEvent,
 } from './types.js';
 import { clearReport, readReport } from './report.js';
@@ -145,6 +145,28 @@ export class DockerRuntime implements Runtime {
     };
     return exec.ref === 'base' ? this.ws.withBaseOverlay(run, slot, exec.keepPaths ?? [], execute) : execute();
   }
+
+  /** The trial clone is the container's workspace; the candidate's dependencies are mounted read-only, as for mutation. */
+  async runTrialChecks(exec: TrialCheckExecution): Promise<RuntimeCheckResult[]> {
+    await this.assertAttested(exec.run, false);
+    const { run, slot } = exec;
+    const deps = (await mutationDependencies(this.ws.dir(run, slot))).flatMap(({ relative, directory }) => ['-v', `${directory}:/workspace/${relative === '.' ? '' : `${relative}/`}node_modules:ro`]);
+    return this.ws.withTrialClone(run, slot, exec.patch, async (dir) => {
+      const results: RuntimeCheckResult[] = [];
+      for (const recipe of exec.recipes) {
+        if (exec.signal?.aborted) break;
+        if (recipe.reportPath && !isSafeRelative(recipe.reportPath)) throw new Error('reportPath không hợp lệ.');
+        const name = `trial-${run.id}-${slot}-${recipe.id}`, stream = streamTo(exec.onEvent, `check:${recipe.id}`);
+        const args = [...this.hardening(name, 'none'), '-v', `${dir}:/workspace`, ...deps, '-e', 'HOME=/tmp', run.configSnapshot.runnerImage, ...recipe.command];
+        const result = await this.supervised(name, () => executeFile('docker', args, { timeoutMs: recipe.timeoutMs, signal: exec.signal, ...stream, maxOutputBytes: 64 * 1024 * 1024 }));
+        const report = recipe.reportPath ? await readReport(dir, recipe.reportPath) : undefined;
+        results.push({ exitCode: result.exitCode, durationMs: result.durationMs, checkpoint: run.checkpoint!, report, reportRoot: '/workspace',
+          incomplete: result.timedOut || (!!recipe.reportPath && report === undefined), log: redactSecrets(`${result.stdout}\n${result.stderr}`.slice(-200_000)) });
+      }
+      return results;
+    }, exec.signal);
+  }
+  recoverTrials = (run: Run) => this.ws.recoverTrials(run);
 
   detectMutation = (run: Run, slot: Slot) => detectMutation(this.ws.dir(run, slot), run.configSnapshot.mutationRoot);
   async runMutation(execution: MutationExecution) {

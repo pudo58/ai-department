@@ -31,6 +31,11 @@ export interface CheckExecution {
   ref: 'base' | 'candidate'; keepPaths?: string[];
   onEvent?: (event: RuntimeEvent) => void; signal?: AbortSignal;
 }
+/** Checks run, in order, on a throwaway clone of the run's checkpoint with `patch` applied; the candidate workspace is never touched. */
+export interface TrialCheckExecution {
+  run: Run; slot: Slot; patch: string; recipes: Recipe[];
+  onEvent?: (event: RuntimeEvent) => void; signal?: AbortSignal;
+}
 export interface RuntimeCheckResult {
   /** Root as seen by the reporter, which can differ from the host workspace in Docker. */
   reportRoot?: string;
@@ -58,6 +63,10 @@ export interface Runtime {
   /** Applies an explicitly approved test repair to the exact checkpoint. Never used by Developer. */
   applyPatch?(run: Run, slot: Slot, patch: string): Promise<void>;
   runCheck(execution: CheckExecution): Promise<RuntimeCheckResult>;
+  /** For trying a generated regression test before anyone confirms it. Absent where no separate clone can be made. */
+  runTrialChecks?(execution: TrialCheckExecution): Promise<RuntimeCheckResult[]>;
+  /** Removes trial clones a stopped server left behind. */
+  recoverTrials?(run: Run): Promise<void>;
   detectMutation?(run: Run, slot: Slot): Promise<MutationCapability>;
   runMutation?(execution: MutationExecution): Promise<MutationResult>;
   recoverMutation?(run: Run): Promise<void>;

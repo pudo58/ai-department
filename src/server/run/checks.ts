@@ -1,4 +1,5 @@
 import { lockedIds, readManifest, recipeHash } from '../../core/qualityevidence.js';
+import { regressionTargets } from '../../core/regression.js';
 import { randomUUID } from 'node:crypto';
 import type { Slot } from '../../shared/types.js';
 import { ENV_PROBLEM_PREFIX } from '../../core/nodever.js';
@@ -38,7 +39,8 @@ export class CheckRunner {
       const previous = this.s.store.checks.list(runId).filter((c) => c.recipeId === recipe.id && c.quarantined).pop();
       const artifacts = this.s.store.artifacts.list(runId);
       const manifest = readManifest(run, artifacts);
-      const expected = lockedIds(run, artifacts, recipe.id, this.s.regressions.get(runId) ?? []);
+      // A regression whose own check was renamed or removed runs, and is locked, under the check that runs regressions now.
+      const expected = lockedIds(run, artifacts, recipe.id, regressionTargets(run, this.s.regressions.get(runId) ?? [], artifacts).flatMap(t => t.recipeId ? [{ recipeId: t.recipeId, testId: t.testId }] : []));
       const workspace = runtime.workspacePath?.(run, slot);
       // Normalize the reporter namespace before comparing it with the locked manifest.
       const result = summarizeCheck({

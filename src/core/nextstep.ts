@@ -1,17 +1,19 @@
 import type { Finding, RunDetail } from '../shared/types.js';
 import { blocksCompletion } from './findings.js';
 import { policyOf } from './policy.js';
-import { latestChecks, verifyNeedsReport } from './qualityevidence.js';
+import { latestChecks, readManifest, verifyNeedsReport } from './qualityevidence.js';
+import { DIAGNOSIS_ATTEMPT_TITLE } from './recovery.js';
 import { readVerdict } from './report.js';
+import { readFindingReplays } from './reproduction.js';
 import { humanizeTestIds } from './testids.js';
 
 /** Why a stopped run is stopped, in the few kinds that tell a person what to do. `generic` keeps the old sentence. */
 export type StepCode =
-  | 'finding_open' | 'verifier_inconclusive' | 'verifier_pending' | 'evidence_missing' | 'author_stuck' | 'checks_failing' | 'checks_flaky' | 'project_check_no_report'
+  | 'finding_open' | 'diagnosis_stopped' | 'verifier_inconclusive' | 'verifier_pending' | 'evidence_missing' | 'author_stuck' | 'checks_failing' | 'checks_flaky' | 'project_check_no_report'
   | 'setup_failed' | 'capacity' | 'quota' | 'interrupted' | 'user_stop' | 'generic';
 
 /** What the page does for each: it knows how to open a form or call an endpoint for these ids, and nothing else. */
-export type StepActionId = 'close_finding' | 'review_findings' | 'switch_single' | 'revise_contract' | 'edit_project' | 'resume' | 'recheck';
+export type StepActionId = 'close_finding' | 'review_findings' | 'repair_findings' | 'switch_single' | 'revise_contract' | 'edit_project' | 'resume' | 'recheck';
 export interface StepAction { id: StepActionId; label: string; /** Whether doing it spends an agent's time (and money). */ cost: 'free' | 'ai'; findingId?: string }
 
 export interface NextStep {
@@ -107,6 +109,16 @@ export function nextStep(d: Input): NextStep | undefined {
 
   // A required check is failing: the code or the test is wrong, and an agent can work on it.
   const failing = latestChecks(run, d.checks).filter((c) => c.required && (c.status === 'failed' || c.status === 'incomplete'));
+  // v4 spends one Author diagnosis per locked test suite. Once it is spent and did not conclude "the code is wrong", "Chạy tiếp" stops at
+  // the same place without calling the Developer: only a new contract version (a new suite) or another mode moves the run.
+  const manifestHash = readManifest(run, d.artifacts)?.hash;
+  const diagnosed = policy.strict && !!manifestHash && d.artifacts.some((a) => a.title === DIAGNOSIS_ATTEMPT_TITLE && a.contractVersion === run.contract.version && (() => { try { return JSON.parse(a.content).manifestHash === manifestHash; } catch { return false; } })());
+  const blamedCode = d.artifacts.some((a) => a.title === 'Author test diagnosis result' && a.valid && a.contractVersion === run.contract.version && a.checkpoint === run.checkpoint && (() => { try { return JSON.parse(a.content).decision === 'implementation'; } catch { return false; } })());
+  if (failing.some((c) => c.status === 'failed') && diagnosed && !blamedCode) return {
+    code: 'diagnosis_stopped', title: 'Test đang trượt và chẩn đoán của Author không dùng được',
+    why: 'Author đã dùng lượt chẩn đoán cho bộ test này mà chưa kết luận được lỗi ở code, nên Developer không được gọi để đoán. Chạy tiếp sẽ dừng lại đúng chỗ này. Đọc chẩn đoán trong lịch sử run; nếu test sai, sửa kế hoạch ca trong hợp đồng để Author viết lại bộ test ở phiên bản mới; hoặc chuyển chế độ.',
+    primary: REVISE('Sửa kế hoạch ca trong hợp đồng'), others: [SINGLE], resumeChanges: false, after: [],
+  };
   if (failing.length) return {
     code: 'checks_failing', title: `Có ${failing.length > 1 ? `${failing.length} kiểm tra` : 'một kiểm tra'} đang không đạt`,
     why: `Kiểm tra ${ids(failing.map((c) => `“${c.recipeId}”`))} chưa đạt. Chạy tiếp để Developer sửa (tốn AI), hoặc chạy lại kiểm tra nếu bạn vừa sửa cấu hình (không tốn AI).`,
@@ -139,6 +151,23 @@ export function nextStep(d: Input): NextStep | undefined {
     const f = open.find((x) => x.severity === 'blocker') ?? open[0]!;
     const more = open.length > 1 ? ` (còn ${open.length - 1} phát hiện khác sau đó)` : '';
     const after = [...(inconclusive ? ['Verifier chưa kết luận được: cần chuyển sang Single hoặc bổ sung ví dụ vào hợp đồng.'] : []), ...(open.length > 1 ? [`Còn ${open.length - 1} phát hiện khác của Verifier.`] : [])];
+    // A confirmed finding with a counterexample the runner can replay is proven fixed by the runner, so the move is the repair. After a
+    // repair that did not prove it, the confirmation belongs to the checkpoint before it: the person replays and confirms again first.
+    // Closing by hand is the move only when the runner truly cannot check a repair of this finding.
+    const lastReplay = readFindingReplays(run, d.artifacts).filter((r) => r.findingId === f.id).at(-1);
+    const provable = !!f.reproduction && lastReplay?.status !== 'unsupported';
+    if (f.confirmed && provable) {
+      const since = f.confirmation?.at ?? f.createdAt;
+      const repaired = d.artifacts.some((a) => a.valid && a.kind === 'diff' && a.title.startsWith('Diff sửa finding') && a.createdAt >= since);
+      return {
+        code: 'finding_open', title: repaired ? `Bản sửa chưa được chứng minh cho một phát hiện đã xác nhận${more}` : `Phát hiện đã xác nhận, chờ sửa${more}`,
+        why: repaired
+          ? `Phát hiện: “${first(f.title)}”. Developer đã sửa nhưng runner vẫn chưa thấy phản ví dụ hết sai, nên lỗi vẫn mở. Mở chi tiết, chạy lại phản ví dụ trên bản hiện tại (không tốn AI), xác nhận lại đề xuất mới rồi nhờ Developer sửa tiếp.`
+          : `Phát hiện: “${first(f.title)}”. Bạn đã xác nhận lỗi; chưa có bản sửa nào. Nhờ Developer sửa (tốn AI): runner chạy lại phản ví dụ${f.confirmation?.kind === 'regression' ? ' và test regression đã khóa' : ''} để chứng minh bản sửa.`,
+        primary: repaired ? act('review_findings', 'Xem và chạy lại phản ví dụ') : act('repair_findings', 'Nhờ Developer sửa phát hiện đã xác nhận', 'ai'),
+        others: repaired ? [] : [act('review_findings', 'Xem chi tiết phát hiện')], resumeChanges: false, after,
+      };
+    }
     if (f.confirmed) return {
       code: 'finding_open', title: `Chờ bạn đóng một phát hiện của Verifier${more}`,
       why: `Phát hiện: “${first(f.title)}”. Máy không có cách chạy thử để chứng minh bản sửa, nên chỉ bạn đóng được. Hãy tự thử trên app; nếu thấy đúng, đóng lại kèm lý do.`,

@@ -7,6 +7,7 @@ afterEach(cleanupFixtures);
 import { renderReportMarkdown } from '../src/core/report.js';
 import { evidenceBlockers } from '../src/core/findingproof.js';
 import { generateRegression, parseRegressionFile } from '../src/core/regression.js';
+import { passed, regressionRun } from './v4-fixtures.js';
 
 const readdirWorkspace = (workspace: string): boolean => existsSync(path.join(workspace, 'tests/aidept-regressions')) && readdirSync(path.join(workspace, 'tests/aidept-regressions')).length > 0;
 
@@ -235,10 +236,10 @@ describe('delivered regressions are protected and re-applied', () => {
     expect(parseRegressionFile(delivered.path, delivered.source.replace(/\n/g, '\r\n'))).toMatchObject({ intact: true, findingId: 'fnd_0a0a0a0a' });
   });
 
-  it('reports an edited regression as a blocker and an intact one as nothing', () => {
-    const run = { qualityPolicyVersion: 4, mode: 'verify', checkpoint: 'cp' } as never;
+  it('reports an edited regression as a blocker and an intact one that passed as nothing', () => {
+    const run = regressionRun();
     const ref = { path: 'tests/aidept-regressions/x.test.js', recipeId: 'test', testId: 't', identity: { kind: 'json', file: 'x', titles: ['a'] }, findingId: 'f', scenarioHash: 'h', intact: true } as const;
-    const input = (r: unknown) => ({ verdict: { decision: 'pass' }, findings: [], artifacts: [], regressions: [r] as never });
+    const input = (r: unknown) => ({ verdict: { decision: 'pass' }, findings: [], artifacts: [], regressions: [r] as never, checks: [passed(run, 'test', 't')] });
     expect(evidenceBlockers(run, input(ref))).toEqual([]);
     expect(evidenceBlockers(run, input({ ...ref, intact: false })).join(' ')).toContain('đã bị sửa');
   });

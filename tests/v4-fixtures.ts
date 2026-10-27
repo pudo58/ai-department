@@ -7,12 +7,13 @@ import { Store } from '../src/server/store.js';
 import { Orchestrator } from '../src/server/orchestrator.js';
 import { buildApp } from '../src/server/app.js';
 import type { AgentExecution } from '../src/runtime/types.js';
-import type { ProjectProfile, Run } from '../src/shared/types.js';
+import type { CheckResult, ProjectProfile, Recipe, Run } from '../src/shared/types.js';
+import { recipeHash } from '../src/core/qualityevidence.js';
 import type { TaskContract } from '../src/shared/types.js';
 import { RISK_GROUPS, type TestPlan } from '../src/shared/quality.js';
 import type { FindingReproduction } from '../src/shared/reproduction.js';
 import { identityId } from '../src/core/testids.js';
-import { profile } from './helpers.js';
+import { profile, setup } from './helpers.js';
 import { fence } from './quality-fixtures.js';
 
 export const REQUIREMENT = 'blockedBy identifies the first unsuccessful dependency in dependsOn order.';
@@ -88,6 +89,17 @@ export interface V4Options {
   /** What the Author answers when asked to write tests, instead of writing them; it writes no file. */
   authorReply?: (x: AgentExecution, dir: string) => string;
 }
+
+/** A v4 Verify run on a checkpoint whose project has the given checks (by default one Vitest check with a report). */
+export const regressionRun = (checks: Recipe[] = [{ id: 'test', command: ['node', 'node_modules/vitest/vitest.mjs', 'run'], reportPath: 'r.json', required: true, timeoutMs: 1000 }]): Run => {
+  const run = setup().create({ mode: 'verify' });
+  return { ...run, qualityPolicyVersion: 4, checkpoint: 'c'.repeat(40), configSnapshot: { ...run.configSnapshot, checks } };
+};
+/** The result of `recipeId` on the run's current checkpoint and configuration, with the given test ids passing (or failing). */
+export const passed = (run: Run, recipeId: string, ...testIds: string[]): CheckResult => ({
+  id: `chk_${recipeId}`, runId: run.id, recipeId, checkpoint: run.checkpoint!, contractVersion: run.contract.version, status: 'passed', attempts: [], testIds, missingTestIds: [], required: true,
+  requirementIds: [], quarantined: false, valid: true, createdAt: '', slot: run.selectedSlot, configHash: recipeHash(run), outcomes: testIds.map(id => ({ id, status: 'passed' as const })),
+});
 
 const dirs: string[] = [];
 /** Test files register this with `afterEach`; the browser fixture, which runs outside Vitest, simply never calls it. */

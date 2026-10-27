@@ -1,7 +1,10 @@
-import type { Artifact, Finding, Run } from '../shared/types.js';
+import type { Artifact, CheckResult, Finding, Run } from '../shared/types.js';
 import type { FindingProof, RegressionRef } from '../shared/regression.js';
 import { policyOf } from './policy.js';
 import { readFindingReplays, scenarioHash } from './reproduction.js';
+import { latestChecks } from './qualityevidence.js';
+import { regressionTargets } from './regression.js';
+import { normalizeTestId } from './testids.js';
 
 /**
  * The ladder the report and the page show for each finding. Only `proven_fixed` means the runner demonstrated the repair:
@@ -33,7 +36,7 @@ export function findingProofs(run: Run, findings: readonly Finding[], artifacts:
 /** Chạy tiếp cannot change an abstention, so the two ways out are named: give the Verifier something to check against, or accept without it. */
 export const ABSTAIN_NEXT_STEP = ' Thường do hợp đồng chưa có ví dụ cụ thể để đối chiếu. Cách 1: bấm “Sửa hợp đồng”, thêm câu mẫu kèm kết quả mong đợi ở ô “Ví dụ đúng/sai”, rồi duyệt lại. Cách 2 (chấp nhận không có kiểm chứng độc lập): bấm “Chuyển chế độ” và chọn Single.';
 
-export function evidenceBlockers(run: Run, input: { verdict: { decision: string } | null; findings: readonly Finding[]; artifacts: readonly Artifact[]; regressions: readonly RegressionRef[] }): string[] {
+export function evidenceBlockers(run: Run, input: { verdict: { decision: string } | null; findings: readonly Finding[]; artifacts: readonly Artifact[]; regressions: readonly RegressionRef[]; checks: readonly CheckResult[] }): string[] {
   const policy = policyOf(run);
   if (!policy.strict) return [];
   const reasons: string[] = [];
@@ -45,6 +48,15 @@ export function evidenceBlockers(run: Run, input: { verdict: { decision: string 
     else if (v.decision === 'abstain') reasons.push(`Verifier từ chối kết luận (abstain) cho checkpoint hiện tại; chưa có kiểm chứng độc lập.${ABSTAIN_NEXT_STEP}`);
   }
   for (const ref of input.regressions.filter(r => !r.intact)) reasons.push(`Test regression ${ref.path} không còn khớp hash ghi trong chính nó: đã bị sửa. Đổi hoặc xóa regression chỉ qua diff có duyệt.`);
+  // An intact file proves nothing by itself: each regression needs its own passing result on this checkpoint and configuration.
+  const live = latestChecks(run, input.checks);
+  for (const t of regressionTargets(run, input.regressions, input.artifacts).filter(t => t.intact)) {
+    if (!t.recipeId) { reasons.push(`Test regression ${t.path} được tạo cho check “${t.madeFor}”, nhưng cấu hình hiện tại không còn check đó và không có check Vitest có report nào để chạy nó. Thêm lại check “${t.madeFor}” hoặc chọn check chạy regression ở Sửa dự án → regressionRecipe, rồi bấm “Chạy lại kiểm tra”.`); continue; }
+    const outcome = live.find(c => c.recipeId === t.recipeId)?.outcomes?.find(o => normalizeTestId(o.id) === normalizeTestId(t.testId));
+    if (outcome?.status === 'passed') continue;
+    const moved = t.recipeId !== t.madeFor ? ` (tạo cho check “${t.madeFor}”, nay chạy bằng check “${t.recipeId}”)` : '';
+    reasons.push(`Test regression ${t.path}${moved} chưa có kết quả đạt trên checkpoint và cấu hình hiện tại: ${outcome?.status === 'failed' ? 'test thất bại' : 'check chưa chạy hoặc không nhận file này'}.`);
+  }
   const replays = readFindingReplays(run, input.artifacts);
   for (const f of input.findings.filter(f => f.contractVersion === run.contract.version && f.status === 'resolved' && f.resolution?.kind === 'verified_fix' && f.reproduction)) {
     const now = replays.filter(r => r.findingId === f.id && r.checkpoint === run.checkpoint && r.scenarioHash === scenarioHash(f.reproduction!)).at(-1);

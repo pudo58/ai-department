@@ -10,7 +10,7 @@ import path from 'node:path';
 import { parseOutput } from '../../core/outputs.js';
 import { contractText, originalRequirementBlock } from '../../core/prompts.js';
 import { deepQuality, latestChecks, readManifest } from '../../core/qualityevidence.js';
-import { pendingTestRepair, TEST_REPAIR_TITLE, testRepairConfigHash, type TestRepairProposal } from '../../core/recovery.js';
+import { DIAGNOSIS_ATTEMPT_TITLE, pendingTestRepair, TEST_REPAIR_TITLE, testRepairConfigHash, type TestRepairProposal } from '../../core/recovery.js';
 import { evaluateChanges } from '../../core/scope.js';
 import { hashContract, sha256 } from '../../core/contract.js';
 import { unsafeTestPatch, validAssertionChanges } from '../../core/recovery.js';
@@ -21,7 +21,7 @@ import type { RunServices } from './services.js';
 import type { ScopePolicy } from './scope.js';
 import { Blocked, HttpError } from './support.js';
 
-const REVIEW = 'Author test diagnosis attempt';
+const REVIEW = DIAGNOSIS_ATTEMPT_TITLE;
 /** A run may apply this many valid Author test corrections by itself; a further one waits for a person. */
 const MAX_AUTO_TEST_REPAIRS = 3;
 
@@ -68,6 +68,7 @@ export class TestRecovery {
       const request = (extra='') => this.s.attempt(runId, { role: 'author', stage: 'repair', slot, signal, prompt: `Bạn là Author chẩn đoán test thất bại. Đối chiếu hợp đồng, setup test và lỗi chạy thật; không lấy việc code hiện tại làm chuẩn đúng.
 ${contractText(run.contract)}
 ${originalRequirementBlock(run)}
+Mọi quote trong oracle phải chép nguyên văn từ text của tiêu chí trong hợp đồng ở trên (hoặc từ yêu cầu gốc), không lấy từ một file trong repo như SPEC.md: quote không nằm trong text đó bị từ chối.
 Ca lỗi: ${cases.join(', ')}
 Bằng chứng runner: ${problems.join('\n').slice(0, 16000)}
 Nếu lỗi implementation: KHÔNG sửa file, trả decision implementation. Nếu chưa đủ bằng chứng: KHÔNG sửa file, trả ambiguous và câu hỏi cụ thể.
