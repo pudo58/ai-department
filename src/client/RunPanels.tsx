@@ -48,10 +48,10 @@ export function ScopeApproval({ paths, approved, busy, onApprove }: { paths: str
   </section>;
 }
 
-export function ReasonModal({ title, description, onClose, onSave, busy }: { title: string; description: string; onClose: () => void; onSave: (reason: string) => Promise<void>; busy: boolean }) {
-  const [reason, setReason] = useState('');
+export function ReasonModal({ title, description, onClose, onSave, busy, minLength = 3, suggestion = '' }: { title: string; description: string; onClose: () => void; onSave: (reason: string) => Promise<void>; busy: boolean; minLength?: number; suggestion?: string }) {
+  const [reason, setReason] = useState(suggestion);
   return <Modal title={title} subtitle={description} onClose={onClose}><form onSubmit={(e) => { e.preventDefault(); void onSave(reason); }}>
-    <Field label="Lý do"><textarea autoFocus required minLength={3} rows={4} value={reason} onChange={(e) => setReason(e.target.value)}/></Field>
+    <Field label="Lý do"><textarea autoFocus required minLength={minLength} rows={4} value={reason} onChange={(e) => setReason(e.target.value)}/></Field>
     <div className="modal-footer"><button type="button" className="button" onClick={onClose}>Hủy</button><button className="button primary" disabled={busy}>Xác nhận</button></div>
   </form></Modal>;
 }

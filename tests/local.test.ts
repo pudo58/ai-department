@@ -160,7 +160,7 @@ describe('a repo with no test script: node --test, JUnit and re-checking without
 
     const blocked = orchestrator.detail(run.id);
     expect(blocked.completion.ready).toBe(false);
-    expect(blocked.completion.reasons.join(' ')).toMatch(/typecheck.*fail/);
+    expect(blocked.completion.reasons.join(' ')).toMatch(/typecheck.*không đạt/);
     expect(blocked.checks.filter((c) => c.recipeId === 'typecheck').every((c) => c.status === 'failed' && c.requirementIds.length === 0 && c.testIds.length === 0)).toBe(true);
     expect(store.logs.list({ runId: run.id, source: 'check:typecheck', limit: 200 }).map((l) => l.message).join('\n')).toMatch(/TS2322: boom/);
 

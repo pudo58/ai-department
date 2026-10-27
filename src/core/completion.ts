@@ -37,11 +37,11 @@ export function evaluateCompletion(run: Run, checks: readonly CheckResult[], fin
   for (const recipe of run.configSnapshot.checks.filter((r) => r.required)) {
     const mine = live.filter((c) => c.recipeId === recipe.id);
     const latest = mine[mine.length - 1];
-    if (!latest) reasons.push(`Check bắt buộc "${recipe.id}" chưa chạy trên checkpoint hiện tại.`);
+    if (!latest) reasons.push(`Kiểm tra bắt buộc "${recipe.id}" chưa chạy trên bản code hiện tại.`);
     // Results recorded before zero-test reports counted as incomplete still say "passed"; they prove nothing either.
     else if (recipe.reportPath && latest.status === 'passed' && ranNoTests(latest)) reasons.push(`Check "${recipe.id}" không chạy test nào: lệnh check hoặc mẫu file không khớp test của repo.`);
-    else if (latest.status === 'incomplete') reasons.push(ranNoTests(latest) ? `Check "${recipe.id}" không chạy test nào: lệnh check hoặc mẫu file không khớp test của repo.` : `Check "${recipe.id}" chưa hoàn tất (thiếu report/timeout).`);
-    else if (latest.status === 'failed') reasons.push(`Check "${recipe.id}" đang fail.`);
+    else if (latest.status === 'incomplete') reasons.push(ranNoTests(latest) ? `Check "${recipe.id}" không chạy test nào: lệnh check hoặc mẫu file không khớp test của repo.` : `Kiểm tra "${recipe.id}" chưa chạy xong (hết giờ hoặc không có báo cáo).`);
+    else if (latest.status === 'failed') reasons.push(`Kiểm tra "${recipe.id}" đang không đạt.`);
     else if (latest.status === 'flaky' && !latest.quarantined) reasons.push(`Check "${recipe.id}" flaky, cần quarantine có lý do hoặc sửa.`);
     else if (latest.missingTestIds.length) reasons.push(`Check "${recipe.id}" thiếu ${latest.missingTestIds.length} acceptance test đã khóa.`);
   }
@@ -50,7 +50,7 @@ export function evaluateCompletion(run: Run, checks: readonly CheckResult[], fin
     // When no current test carries any [R-x] tag, resuming cannot change the outcome; say what would.
     const tagged = live.some((c) => c.requirementIds.length > 0);
     reasons.push(tagged
-      ? `Yêu cầu chưa được xác minh: ${unverified.join(', ')}.`
+      ? `Chưa có test chạy đạt cho yêu cầu: ${unverified.join(', ')}. Bấm Chạy tiếp không đổi được điều này: yêu cầu chỉ kiểm bằng mắt thì đánh dấu “Thủ công” trong hợp đồng, yêu cầu kiểm bằng máy thì thêm ví dụ để có test.`
       : `${unverified.length} yêu cầu chưa có test nào xác minh (${unverified.join(', ')}): không test nào trong lần check gần nhất chạy được và gắn thẻ [R-x]. Bấm Chạy tiếp sẽ không đổi kết quả; cần sửa check của project cho chạy đúng test, hoặc sửa hợp đồng để đánh dấu "Thủ công" các yêu cầu chỉ kiểm được bằng mắt.`);
   }
   const open = findings.filter((f) => f.contractVersion === run.contract.version && blocksCompletion(f, policyOf(run).strict));

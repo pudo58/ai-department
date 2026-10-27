@@ -104,6 +104,12 @@ details > summary:hover { color: var(--text); }
 .banner strong, .notice strong { color: inherit; font-weight: 600; }
 .notice-line { margin: 0; padding: 7px 11px; border-radius: var(--radius-sm); background: var(--bg-subtle); color: var(--text-2); font-size: .87rem; }
 .notice-line.warn { background: var(--orange-bg); color: var(--orange-text); }
+/* The one thing to do next for a stopped run: what is in the way, why, and the move that gets it going. */
+.next-step { flex-direction: column; gap: 6px; padding: 14px 18px; border-left: 3px solid var(--warn); }
+.next-step .step-label { font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; color: var(--warn-text); }
+.next-step .step-title { font-size: 1.02rem; }
+.next-step p { margin: 0; }
+.next-step .row-actions { margin: 6px 0 0; }
 
 /* ---------- cards ---------- */
 .card, .panel, .panel-card, .chart-card, .recent, .topology, .table-card {

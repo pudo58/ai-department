@@ -1,4 +1,5 @@
 import { spawn, type ChildProcess } from 'node:child_process';
+import { SetupFailedError } from './types.js';
 
 /** On Windows `kill()` only ends the direct child; agents and test runners leave workers behind, so end the whole tree. */
 function killTree(child: ChildProcess): void {
@@ -94,6 +95,11 @@ export function assertProcessSucceeded(result: ProcessResult, operation: string)
   if (result.timedOut || result.exitCode !== 0) {
     throw new Error(`${operation} ${result.timedOut ? 'timed out' : `failed (${result.exitCode ?? 'no exit code'})`}: ${result.stderr.slice(0, 2000)}`);
   }
+}
+
+/** The same check for the project's setup command, failing with an error the run can tell apart from every other one. */
+export function assertSetupSucceeded(result: ProcessResult): void {
+  try { assertProcessSucceeded(result, 'setup command'); } catch (error) { throw new SetupFailedError((error as Error).message); }
 }
 
 export function redactSecrets(value: string): string {

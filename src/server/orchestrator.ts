@@ -4,7 +4,7 @@ import { EVIDENCE_POLICY_V4 } from '../shared/regression.js';
 import { readRegressionProposals, regressionFor } from '../core/regression.js';
 import { validateTestPlan } from '../core/testplan.js';
 import { randomUUID } from 'node:crypto';
-import type { CheckResult, ContractApprovalInput, Finding, HumanTime, Mode, ProjectProfile, Run, RunDetail, RunStatus, Slot, TaskContract, TaskKind } from '../shared/types.js';
+import type { CheckResult, ContractApprovalInput, Finding, HumanTime, Mode, ProjectProfile, Run, RunDetail, RunStatus, Slot, StopCode, TaskContract, TaskKind } from '../shared/types.js';
 import { budgetState, checkEscalation, remainingFor } from '../core/budget.js';
 import { approveContract, sha256, initialContract, isApproved, reviewContract, reviseContract, validateContract } from '../core/contract.js';
 import { type AcceptanceReport } from '../core/report.js';
@@ -12,7 +12,7 @@ import { MODE_MULTIPLIER, recommendMode } from '../core/routing.js';
 import { classifyPath, isSafeRelative, normalizePath } from '../core/scope.js';
 import { selectCandidate } from '../core/selection.js';
 import { redactSecrets } from '../runtime/process.js';
-import { RuntimeBlockedError, type Runtime } from '../runtime/types.js';
+import { RuntimeBlockedError, SetupFailedError, type Runtime } from '../runtime/types.js';
 import { SerialQueue } from './scheduler.js';
 import type { Store } from './store.js';
 import { Blocked, CAPACITY, HttpError, QUOTA, Stopped, WAITING, type CandidateRecord } from './run/support.js';
@@ -127,8 +127,12 @@ export class Orchestrator {
       this.store.attempts.put({ ...attempt, status: 'interrupted', endedAt: this.s.stamp(), error: 'Server dừng khi attempt đang chạy.' });
     }
     for (const run of this.store.runs.list().filter((r) => r.status === 'running' || r.status === 'queued')) {
-      this.s.mutate(run.id, (r) => { r.status = 'paused'; r.blocker = `Bị gián đoạn ở giai đoạn "${r.stage}". Resume sẽ chạy lại giai đoạn từ checkpoint đã chấp nhận.`; });
+      this.s.mutate(run.id, (r) => { r.status = 'paused'; r.stopCode = 'interrupted'; r.blocker = `Bị gián đoạn ở giai đoạn "${r.stage}". Resume sẽ chạy lại giai đoạn từ checkpoint đã chấp nhận.`; });
       this.s.log(run.id, 'recovery', 'Run bị gián đoạn và được tạm dừng.');
+    }
+    // Runs an older version left on a checkpoint before their latest repair are put back on it as the server starts, so what the page shows is true.
+    for (const run of this.store.runs.list().filter((r) => ['paused', 'blocked', 'failed'].includes(r.status))) {
+      try { this.candidates.adoptLatestCommit(run.id, run.selectedSlot); } catch (error) { this.s.log(run.id, 'checkpoint.heal_failed', `Chưa chữa được checkpoint: ${(error as Error).message}`); }
     }
   }
 
@@ -158,6 +162,8 @@ export class Orchestrator {
     const run = this.s.run(runId);
     if (!run.testRepairApproval && pendingTestRepair(run, this.store.artifacts.list(runId))) throw new HttpError(409, 'Có đề xuất sửa test đang chờ duyệt; hãy đọc diff và quyết định trước khi chạy tiếp.');
     if (!['draft', 'paused', 'blocked', 'failed'].includes(run.status)) throw new HttpError(409, `Không thể bắt đầu run ở trạng thái ${run.status}.`);
+    // Before anything is kept or discarded: a run that an older version moved back to a checkpoint it had already repaired past goes forward again.
+    this.candidates.adoptLatestCommit(runId, run.selectedSlot);
     // An explicit retry of a terminal failure authorizes another bounded batch; crash-resume does not.
     if (run.status === 'failed') this.authorizeDeveloperRetry(runId, 'Người dùng yêu cầu thử lại run thất bại.');
     // "Run again" must actually try again; failed candidates are only kept across an escalation.
@@ -187,7 +193,7 @@ export class Orchestrator {
     const run = this.s.run(runId);
     this.aborts.get(runId)?.abort();
     this.queue.dequeue(runId);
-    if (run.status === 'queued') this.s.mutate(runId, (r) => { r.status = 'paused'; r.blocker = 'Đã dừng bởi người dùng.'; delete r.pendingAction; });
+    if (run.status === 'queued') this.s.mutate(runId, (r) => { r.status = 'paused'; r.stopCode = 'user_stop'; r.blocker = 'Đã dừng bởi người dùng.'; delete r.pendingAction; });
     for (const attempt of this.store.attempts.list(runId).filter((a) => a.status === 'running')) void this.runtimeFor(run).stop(attempt.id);
     this.s.log(runId, 'run.stop', 'Người dùng yêu cầu dừng.');
     return this.s.run(runId);
@@ -420,7 +426,7 @@ export class Orchestrator {
   // ----------------------------------------------------------------- driver and build flow
 
   private enqueue(runId: string): Run {
-    this.s.mutate(runId, (r) => { r.status = 'queued'; r.blocker = null; });
+    this.s.mutate(runId, (r) => { r.status = 'queued'; r.blocker = null; delete r.stopCode; });
     this.queue.enqueue(runId);
     return this.s.run(runId);
   }
@@ -505,13 +511,14 @@ export class Orchestrator {
 
   private recordStop(runId: string, error: unknown, signal: AbortSignal): void {
     const message = redactSecrets(error instanceof Error ? error.message : String(error));
-    let status: RunStatus = 'failed', blocker = message;
-    if (signal.aborted || error instanceof Stopped) { status = 'paused'; blocker = 'Đã dừng bởi người dùng.'; }
+    let status: RunStatus = 'failed', blocker = message, stopCode: StopCode | undefined;
+    if (signal.aborted || error instanceof Stopped) { status = 'paused'; blocker = 'Đã dừng bởi người dùng.'; stopCode = 'user_stop'; }
     else if (error instanceof Blocked) status = 'blocked';
     else if (error instanceof RuntimeBlockedError) { status = 'blocked'; blocker = `Runtime bị chặn: ${message}`; }
-    else if (CAPACITY.test(message)) { status = 'blocked'; blocker = `Máy chủ của model đang quá tải (${message}). Đây không phải lỗi của task; đợi vài phút rồi bấm Chạy tiếp. Công việc đã làm vẫn được giữ.`; this.s.log(runId, 'capacity', blocker); }
-    else if (QUOTA.test(message)) { status = 'blocked'; blocker = `Có thể đã chạm quota: ${message}. Chờ rồi resume; không tự đổi provider.`; this.s.log(runId, 'quota', blocker); }
-    this.s.mutate(runId, (r) => { r.status = status; r.blocker = blocker; });
+    else if (error instanceof SetupFailedError) stopCode = 'setup_failed';
+    else if (CAPACITY.test(message)) { status = 'blocked'; stopCode = 'capacity'; blocker = `Máy chủ của model đang quá tải (${message}). Đây không phải lỗi của task; đợi vài phút rồi bấm Chạy tiếp. Công việc đã làm vẫn được giữ.`; this.s.log(runId, 'capacity', blocker); }
+    else if (QUOTA.test(message)) { status = 'blocked'; stopCode = 'quota'; blocker = `Có thể đã chạm quota: ${message}. Chờ rồi resume; không tự đổi provider.`; this.s.log(runId, 'quota', blocker); }
+    this.s.mutate(runId, (r) => { r.status = status; r.blocker = blocker; if (stopCode) r.stopCode = stopCode; else delete r.stopCode; });
     this.s.log(runId, `run.${status}`, blocker);
   }
 
@@ -525,6 +532,7 @@ export class Orchestrator {
     const slots: Slot[] = run.mode === 'compare' ? ['A', 'B'] : ['A'];
     const records = new Map<Slot, CandidateRecord>();
     for (const slot of slots) {
+      this.candidates.adoptLatestCommit(runId, slot);
       const existing = this.candidates.candidateRecord(runId, slot);
       if (existing) { records.set(slot, existing); continue; }
       if (slot === 'B') {
@@ -566,6 +574,7 @@ export class Orchestrator {
    * the work is done but the check itself was wrong (e.g. a missing `test` script), so no tokens are spent.
    */
   private async recheckPhase(runId: string, signal: AbortSignal, checksOnly = true): Promise<void> {
+    this.candidates.adoptLatestCommit(runId, this.s.run(runId).selectedSlot);
     const run = this.s.run(runId);
     const slot = run.selectedSlot;
     this.s.mutate(runId, (r) => { r.stage = 'implement'; });

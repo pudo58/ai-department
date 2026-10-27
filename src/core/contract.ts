@@ -35,6 +35,8 @@ export function reviewContract(contract: TaskContract): ContractReview {
   if (!contract.requirements.some((r) => r.kind === 'forbidden')) warnings.push({ code: 'missing_forbidden', message: 'Chưa có tiêu chí về hành vi không được xảy ra.' });
   if (!contract.acceptanceExamples.some((text) => text.trim())) warnings.push({ code: 'missing_examples', message: 'Chưa có ví dụ nghiệm thu cụ thể.' });
   if (contract.assumptions.some((text) => text.trim())) warnings.push({ code: 'assumptions_present', message: 'Hợp đồng có giả định cần bạn xác nhận.' });
+  // Said here, while it costs nothing: with no case for an Author to write a test for, Verify has no automated evidence and its Verifier tends to decline to conclude at the very end.
+  if (contract.testPlan && !contract.testPlan.cases.some((c) => c.method === 'automated')) warnings.push({ code: 'no_automated_case', message: 'Kế hoạch ca không có ca tự động nào, nên Verify không có test để chạy và Verifier có thể từ chối kết luận ở cuối. Thêm ví dụ cụ thể và đánh dấu yêu cầu là tự động, hoặc chuyển sang chế độ Single.' });
   // Form-only findings in the test plan: the person approves knowing about them, rather than being locked out by them.
   const advisories = testPlanFindings(contract).advisories;
   advisories.slice(0, 12).forEach((message) => warnings.push({ code: 'plan_advisory', message: `Kế hoạch ca: ${message}` }));

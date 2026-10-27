@@ -1,6 +1,6 @@
 import { MutationChecks } from './mutation.js';
 import { randomUUID } from 'node:crypto';
-import type { Finding, Independence } from '../../shared/types.js';
+import type { Finding, Independence, Slot } from '../../shared/types.js';
 import { budgetState, remainingFor } from '../../core/budget.js';
 import { gateFinding, needsAutoRepair } from '../../core/findings.js';
 import { FindingsSchema, parseOutput } from '../../core/outputs.js';
@@ -8,7 +8,8 @@ import { PROMPTS } from '../../core/prompts.js';
 import { readVerdict, type VerifierVerdict } from '../../core/report.js';
 import { evaluateChanges } from '../../core/scope.js';
 import { reviewDiff } from '../../core/reviewdiff.js';
-import { Blocked, verifierNarrative } from './support.js';
+import { Blocked, verifierNarrative, type CandidateRecord } from './support.js';
+import { isTestPath } from '../../core/testpath.js';
 import type { RunServices } from './services.js';
 import type { ScopePolicy } from './scope.js';
 import type { RunOutcome } from './outcome.js';
@@ -175,6 +176,21 @@ export class Verification {
     this.outcome.finish(runId);
   }
 
+  /**
+   * The repair is a new commit and the head of the run. The stored candidate has to say so: "Chạy tiếp" and "Chạy lại check" take the
+   * checkpoint from it, and one still pointing at the version before the repair moved the run back while the working copy stayed on the
+   * repaired commit, so every report then belonged to another checkpoint.
+   */
+  private recordRepair(runId: string, slot: Slot, checkpoint: string, files: readonly string[], problems: readonly string[]): void {
+    const stored = this.s.store.artifacts.get(`cand-${runId}-${slot}`);
+    if (!stored || !stored.valid || stored.contractVersion !== this.s.run(runId).contract.version) return;
+    const record = JSON.parse(stored.content) as CandidateRecord;
+    record.checkpoint = checkpoint; record.success = problems.length === 0; record.fatal = false; record.problems = [...problems];
+    record.changedFiles = [...new Set([...record.changedFiles, ...files])];
+    record.testFiles = [...new Set([...record.testFiles, ...files.filter((f) => isTestPath(f))])];
+    this.s.store.artifacts.put({ ...this.s.baseArtifact(runId, { kind: 'checkpoint', title: `Candidate ${slot}`, content: JSON.stringify(record), checkpoint }), id: `cand-${runId}-${slot}` });
+  }
+
   /** One repair round on confirmed findings, then fresh checks on the new checkpoint. */
   async repairPhase(runId: string, signal: AbortSignal, extraTargets: Finding[] = []): Promise<void> {
     let run = this.s.run(runId);
@@ -207,6 +223,7 @@ export class Verification {
     this.s.mutate(runId, (r) => { r.checkpoint = checkpoint; r.repairCount += 1; });
     this.s.artifact(runId, { kind: 'diff', title: `Diff sửa finding @ ${checkpoint.slice(0, 8)}`, content: changes.patch, checkpoint });
     const outcome = await this.checks.runChecks(runId, slot, checkpoint, [], signal);
+    this.recordRepair(runId, slot, checkpoint, changes.files, outcome.problems);
     if (outcome.problems.length) { this.outcome.park(runId, 'blocked', outcome.problems.join(' ')); return; }
     const priorReplays=readFindingReplays(run,this.s.store.artifacts.list(runId));
     const afterReplays=await new FindingReplays(this.s).runBatch(runId,targets,signal);

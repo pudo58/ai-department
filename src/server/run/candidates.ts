@@ -161,6 +161,29 @@ export class CandidateBuilder {
     return JSON.parse(artifact.content) as CandidateRecord;
   }
 
+  /**
+   * Runs an older version had already moved back: a repair committed a newer checkpoint, but the stored candidate (and then the run) went
+   * back to the one before it, so the working copy and the run disagreed and every report belonged to another checkpoint. Every commit
+   * leaves a diff that names its checkpoint; the newest one is the working copy's real head, and a candidate pointing elsewhere is brought
+   * forward to it. Compare runs keep one candidate per slot and are left alone.
+   */
+  adoptLatestCommit(runId: string, slot: Slot): void {
+    const run = this.s.run(runId);
+    if (!run.checkpoint || run.mode === 'compare') return;
+    const head = this.s.store.artifacts.list(runId).filter((a) => a.kind === 'diff' && a.valid && !!a.checkpoint && a.contractVersion === run.contract.version).at(-1)?.checkpoint;
+    if (!head) return;
+    if (head !== run.checkpoint) {
+      this.s.mutate(runId, (r) => { r.checkpoint = head; });
+      this.s.log(runId, 'checkpoint.healed', `Checkpoint của run quay về bản mới nhất đã ghi nhận (${head.slice(0, 8)}) thay vì ${run.checkpoint.slice(0, 8)}.`);
+    }
+    const record = this.candidateRecord(runId, slot);
+    if (!record || record.checkpoint === head) return;
+    const live = latestChecks({ ...this.s.run(runId), selectedSlot: slot }, this.s.store.checks.list(runId)).filter((c) => c.required);
+    const success = run.configSnapshot.checks.filter((r) => r.required).every((r) => live.some((c) => c.recipeId === r.id && c.status === 'passed'));
+    const healed: CandidateRecord = { ...record, checkpoint: head, success, fatal: false, problems: success ? [] : record.problems };
+    this.s.store.artifacts.put({ ...this.s.baseArtifact(runId, { kind: 'checkpoint', title: `Candidate ${slot}`, content: JSON.stringify(healed), checkpoint: head }), id: `cand-${runId}-${slot}` });
+  }
+
   evaluateCandidate(record: CandidateRecord): CandidateEval {
     return { slot: record.slot, eliminatedBecause: record.success ? null : record.problems.join(' ') || 'Không đạt check bắt buộc.', changedFiles: record.changedFiles.length, newToolIssues: record.newToolIssues, flakyChecks: record.flakyChecks };
   }

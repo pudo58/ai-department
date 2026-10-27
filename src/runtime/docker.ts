@@ -7,7 +7,7 @@ import type { Role, Run, Slot } from '../shared/types.js';
 import { isSafeRelative } from '../core/scope.js';
 import { notAnalyzed, type AnalysisTool, type ToolReport } from '../core/tools.js';
 import { GitWorkspaces } from './gitworkspace.js';
-import { assertProcessSucceeded, executeFile, redactSecrets, type ProcessResult } from './process.js';
+import { assertProcessSucceeded, assertSetupSucceeded, executeFile, redactSecrets, type ProcessResult } from './process.js';
 import { buildCliCommand, JsonlCollector, type CliProvider } from './providers.js';
 import {
   RuntimeBlockedError,
@@ -60,7 +60,7 @@ export class DockerRuntime implements Runtime {
     const setup = run.configSnapshot.setupCommand;
     if (setup.length) {
       const out = await this.inContainer(run, `setup-${run.id}-${slot}`, run.configSnapshot.agentNetwork, ws, setup, undefined, run.configSnapshot.limits?.setupMs ?? DEFAULT_SETUP_MS, undefined, undefined, streamTo(onEvent, 'setup'));
-      assertProcessSucceeded(out, 'setup command');
+      assertSetupSucceeded(out);
       await this.ws.assertCleanAfterSetup(ws);
     }
     return result;

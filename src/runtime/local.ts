@@ -17,7 +17,7 @@ import { claudeSkillPlugin, codexWorkspaceSkills } from './skillmount.js';
 import { notAnalyzed, type AnalysisTool, type ToolReport } from '../core/tools.js';
 import { GitWorkspaces } from './gitworkspace.js';
 import { resolveCodexCommand, resolveHostCommand } from './hostcommand.js';
-import { assertProcessSucceeded, executeFile, redactSecrets } from './process.js';
+import { assertProcessSucceeded, assertSetupSucceeded, executeFile, redactSecrets } from './process.js';
 import { resolveCodexModel } from './codexmodel.js';
 import { cachedCliStatus, resolveAgyCommand, resolveClaudeCommand } from './agentclis.js';
 import { createAgyHome, hashFiles, userAgyFiles } from './agyhome.js';
@@ -124,7 +124,7 @@ export class LocalRuntime implements Runtime {
     if (setup.length) {
       const [cmd, ...args] = resolveHostCommand(setup);
       const out = await executeFile(cmd!, args, { cwd: ws, timeoutMs: run.configSnapshot.limits?.setupMs ?? DEFAULT_SETUP_MS, env: this.toolchains.env(ws, homes), scrubSecrets: 'provider', ...streamTo(onEvent, 'setup') });
-      assertProcessSucceeded(out, 'setup command');
+      assertSetupSucceeded(out);
       await this.ws.assertCleanAfterSetup(ws);
     }
     return result;

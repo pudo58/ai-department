@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { budgetCeiling, offeredBudget } from '../src/core/budget.js';
 import { evaluateCompletion } from '../src/core/completion.js';
+import { initialContract, reviewContract } from '../src/core/contract.js';
 import { evidenceBlockers } from '../src/core/findingproof.js';
 import type { BudgetState, Finding } from '../src/shared/types.js';
+import { reasoningPlan } from './reasoning-fixtures.js';
 import { setup } from './helpers.js';
+import { manualOnlyPlan, v4Fixture, cleanupFixtures } from './v4-fixtures.js';
 
 const finding = (contractVersion: number): Finding => ({ id: 'f', runId: 'r', category: 'behavior', severity: 'major', title: 'Không xử lý đoạn văn nhiều câu', location: 'src/lib/parser.ts', evidence: 'e', suggestion: 's', status: 'open', confirmed: true, checkpoint: 'c', contractVersion, createdAt: '' });
 const budget = { spentUsd: 0, capUsd: 10 } as BudgetState;
@@ -27,6 +30,25 @@ describe('what a person is told to do when a run is held back', () => {
     const older = { ...run, qualityPolicyVersion: 3 as const };
     expect(evaluateCompletion(older, [], [finding(run.contract.version)], budget).reasons.find(r => r.includes('finding blocker/major'))).toBe('1 finding blocker/major chưa xử lý.');
   });
+});
+
+describe('what the contract says early about what Verify cannot do', () => {
+  const codes = (contract: ReturnType<typeof initialContract>) => reviewContract(contract).warnings.map(w => w.code);
+
+  it('warns, while it costs nothing, when no case of the plan is automated', () => {
+    const base = initialContract('Phân biệt các câu phức tạp.');
+    expect(codes({ ...base, testPlan: manualOnlyPlan() })).toContain('no_automated_case');
+    expect(codes({ ...base, testPlan: reasoningPlan(base) })).not.toContain('no_automated_case');
+    expect(codes(base)).not.toContain('no_automated_case');
+  });
+
+  it('shows on a real run waiting for approval, where it has to be read and acknowledged like every other warning', async () => {
+    const f = await v4Fixture({ manualOnly: true });
+    const review = f.orch.detail(f.run.id).contractReview;
+    expect(review.warnings.map(w => w.code)).toContain('no_automated_case');
+    expect(() => f.orch.approveContract(f.run.id, { contractHash: review.contractHash })).toThrow(/cảnh báo/);
+    cleanupFixtures();
+  }, 60000);
 });
 
 describe('the budget a mode switch starts from', () => {

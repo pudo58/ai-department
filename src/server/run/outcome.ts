@@ -1,5 +1,6 @@
 import { degradedOf, readVerdict } from '../../core/report.js';
 import { policyOf } from '../../core/policy.js';
+import { nextStep } from '../../core/nextstep.js';
 import { evidenceBlockers, findingProofs } from '../../core/findingproof.js';
 import { readRegressionProposals } from '../../core/regression.js';
 import { qualityDetail, deepQuality } from '../../core/qualityevidence.js';
@@ -41,7 +42,8 @@ export class RunOutcome {
     if (policy.structured && run.contract.testPlan?.schemaVersion !== 2) contractReview.problems.push('Chính sách v2+ cần kế hoạch ca có căn cứ v2.');
     if(policy.reasoning&&run.contract.testPlan)contractReview.problems.push(...validateTestPlan(run.contract,true,true,policy.strict).filter(p=>!contractReview.problems.includes(p)));
     if (deepQuality(run) && !run.contract.testPlan) contractReview.problems.push(...validateTestPlan(run.contract, true));
-    return {
+    const events = this.s.store.events(runId);
+    const full: RunDetail = {
       planReview: readTestPlanReview(run.contract, artifacts, contractReview.contractHash),
       ...(degradedOf(artifacts).items ? { degraded: degradedOf(artifacts) } : {}),
       execution:executionMetrics(run,attempts,this.s.now().getTime()), authorDraft:pendingAuthorDraft(run,artifacts),
@@ -49,10 +51,12 @@ export class RunOutcome {
       findingReplays:readFindingReplays(run,artifacts),
       ...(policy.strict?{regressionProposals:readRegressionProposals(run,artifacts),findingProofs:findingProofs(run,findings,artifacts),regressionFiles:regressions}:{}),
       quality, contractReview, testRepair: pendingTestRepair(run, artifacts),
-      run, attempts, artifacts: this.s.store.artifacts.list(runId), findings, checks, events: this.s.store.events(runId),
+      run, attempts, artifacts: this.s.store.artifacts.list(runId), findings, checks, events, stops: events.filter((e) => e.type === 'run.blocked' || e.type === 'run.failed').length,
       matrix: buildMatrix(run, checks), completion, budget,
       pendingPaths: this.scope.pendingPaths(runId), runningCheck: this.s.runningChecks.get(runId),
     };
+    const step = nextStep(full);
+    return step ? { ...full, nextStep: step } : full;
   }
 
   finish(runId: string): void {
@@ -64,7 +68,7 @@ export class RunOutcome {
   }
 
   park(runId: string, status: 'blocked' | 'failed', blocker: string): void {
-    this.s.mutate(runId, (r) => { r.status = status; r.blocker = blocker; });
+    this.s.mutate(runId, (r) => { r.status = status; r.blocker = blocker; delete r.stopCode; });
     this.s.log(runId, `run.${status}`, blocker);
   }
 

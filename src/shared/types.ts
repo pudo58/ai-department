@@ -5,6 +5,8 @@ export type ProviderName = 'codex' | 'claude' | 'antigravity' | 'fake';
 export type Role = 'planner' | 'author' | 'developer' | 'verifier' | 'investigator';
 export type Stage = 'prepare' | 'implement' | 'repair' | 'verify';
 export type RunStatus = 'draft' | 'awaiting_approval' | 'queued' | 'running' | 'paused' | 'blocked' | 'awaiting_acceptance' | 'completed' | 'failed';
+/** Why a run stopped when the cause is not in the evidence: the project's setup, the provider, or the person. Set where the stop is recorded, cleared when the run starts again. */
+export type StopCode = 'setup_failed' | 'capacity' | 'quota' | 'interrupted' | 'user_stop';
 export type Slot = 'A' | 'B';
 export type TaskKind = 'bugfix' | 'feature' | 'refactor';
 export type CheckStatus = 'passed' | 'failed' | 'flaky' | 'incomplete';
@@ -53,7 +55,7 @@ export interface ProjectProfile {
 }
 export interface Requirement { id: string; text: string; required: boolean; manual: boolean; kind?: 'expected' | 'forbidden' }
 export interface TaskContract { version: number; requirements: Requirement[]; acceptanceExamples: string[]; interfaces: string[]; assumptions: string[]; scope: string[]; testPlan?: TestPlan; approvedHash?: string; approvedAt?: string }
-export type ContractWarningCode = 'missing_expected' | 'missing_forbidden' | 'missing_examples' | 'assumptions_present' | 'plan_advisory';
+export type ContractWarningCode = 'missing_expected' | 'missing_forbidden' | 'missing_examples' | 'assumptions_present' | 'plan_advisory' | 'no_automated_case';
 export interface ContractReview {
   contractHash: string; contractVersion: number; problems: string[];
   warnings: { code: ContractWarningCode; message: string }[];
@@ -95,6 +97,7 @@ export interface Run {
   signals: string[]; recommendation: { mode: Mode; reasons: string[]; multiplier: number };
   escalations: { from: Mode; to: Mode; reason: string; at: string }[];
   usage: UsageRecord[]; humanTime: HumanTime[]; repairCount: number; blocker: string | null;
+  stopCode?: StopCode;
   createdAt: string; updatedAt: string; acceptedAt?: string; followupUntil?: string;
   delivery?: Delivery;
   contractReviewReceipt?: ContractReviewReceipt;
@@ -147,7 +150,7 @@ export interface PhaseBudget { allocatedUsd: number; spentUsd: number }
 export interface BudgetState { capUsd: number; spentUsd: number; estimated: boolean; phases: Record<Stage, PhaseBudget> }
 /** A check the system is running right now, so the UI can show the test program live. */
 export interface RunningCheck { recipeId: string; command: string; ref: 'base' | 'candidate'; startedAt: string }
-export interface RunDetail { planReview?: TestPlanReview; quality: QualityDetail; contractReview: ContractReview; testRepair?: import('../core/recovery.js').PendingTestRepair; runningCheck?: RunningCheck; /** Files the agent tried to change outside the allowed modules, awaiting a person's decision. */ pendingPaths: string[]; matrix: MatrixRow[]; completion: CompletionState; budget: BudgetState; run: Run; attempts: Attempt[]; artifacts: Artifact[]; findings: Finding[]; checks: CheckResult[]; events: TraceEvent[] }
+export interface RunDetail { /** The one thing a person does next to get a stopped run moving; see core/nextstep.ts. */ nextStep?: import('../core/nextstep.js').NextStep; /** How many times the run stopped for a reason other than the person stopping it (blocked or failed). */ stops?: number; planReview?: TestPlanReview; quality: QualityDetail; contractReview: ContractReview; testRepair?: import('../core/recovery.js').PendingTestRepair; runningCheck?: RunningCheck; /** Files the agent tried to change outside the allowed modules, awaiting a person's decision. */ pendingPaths: string[]; matrix: MatrixRow[]; completion: CompletionState; budget: BudgetState; run: Run; attempts: Attempt[]; artifacts: Artifact[]; findings: Finding[]; checks: CheckResult[]; events: TraceEvent[] }
 export interface Health { node: string; docker: boolean; dockerMessage: string; codex: boolean; claude: boolean; localCodex: boolean; fake: boolean; liveReady: boolean; limitations: string[]; codexVersion?: string; /** Claude Code installed and signed in on this machine. */ localClaude?: boolean; disk?: { path: string; freeBytes: number; totalBytes: number; level: 'ok' | 'warn' | 'critical' } }
 export interface SuggestedCheck {
   id: string; label: string; command: string[]; required: boolean; timeoutMs: number; reportPath?: string;

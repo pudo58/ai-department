@@ -86,6 +86,12 @@ export interface RuntimeAttestation {
   providers: Partial<Record<'codex' | 'claude', { version: string; authVolume: string }>>;
 }
 
+/** The project's own setup command (install dependencies) failed, so there is no working copy to work in; only the project's setup can fix it. */
+export class SetupFailedError extends Error {
+  readonly code = 'SETUP_FAILED';
+  constructor(message: string) { super(message); this.name = 'SetupFailedError'; }
+}
+
 export class RuntimeBlockedError extends Error {
   readonly code = 'RUNTIME_BLOCKED';
   constructor(message: string) { super(message); this.name = 'RuntimeBlockedError'; }

@@ -234,7 +234,7 @@ describe('several checks per project, including checks without a report', () => 
     expect(detail.run.status).toBe('failed');
     expect(detail.matrix[0]!.status).toBe('verified');
     expect(detail.completion.ready).toBe(false);
-    expect(detail.completion.reasons.join(' ')).toMatch(/typecheck.*fail/);
+    expect(detail.completion.reasons.join(' ')).toMatch(/typecheck.*không đạt/);
     await expect(orchestrator.acceptRun(run.id)).rejects.toThrow();
   });
 

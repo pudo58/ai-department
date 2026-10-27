@@ -4,6 +4,8 @@ import { ExecutionPanel } from './ExecutionPanel.js';
 import type { Run, RunDetail } from '../shared/types';
 import { delivered } from '../core/delivery';
 import { humanizeTestIds } from '../core/testids';
+import type { StepAction } from '../core/nextstep';
+import { NextStepCard } from './NextStepCard';
 import { api } from './api';
 import { ContractForm } from './forms';
 import { ACTIVE, MODE_LABEL, STATUS } from './labels';
@@ -35,6 +37,7 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
   const [loadError, setLoadError] = useState('');
   const [busy, setBusy] = useState(false);
   const [modal, setModal] = useState<'contract' | 'escalate' | 'reject' | 'delete' | null>(null);
+  const [closing, setClosing] = useState<{ id: string; title: string } | null>(null);
 
   const refresh = useCallback(async () => { try { setDetail(await api<RunDetail>(`/api/runs/${id}`)); setLoadError(''); } catch (e) { setLoadError((e as Error).message); } }, [id]);
   const active = detail ? ACTIVE.includes(detail.run.status) : false;
@@ -54,6 +57,17 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
   const { run } = detail;
   const delivering = run.delivery?.status === 'in_progress';
   const locked = busy || delivering;
+  // When "Chạy tiếp" cannot change anything the card says what to do instead, and the button stops inviting another press.
+  const stuck = detail.nextStep?.resumeChanges === false;
+  const onStep = (a: StepAction) => {
+    if (a.id === 'resume') void act(`/api/runs/${id}/resume`);
+    else if (a.id === 'recheck') void act(`/api/runs/${id}/recheck`, { refreshConfig: true });
+    else if (a.id === 'revise_contract') setModal('contract');
+    else if (a.id === 'switch_single') setModal('escalate');
+    else if (a.id === 'review_findings') setTab('verify');
+    else if (a.id === 'edit_project') window.location.hash = '#/projects';
+    else if (a.id === 'close_finding' && a.findingId) setClosing({ id: a.findingId, title: detail.findings.find((f) => f.id === a.findingId)?.title ?? '' });
+  };
   const status = delivering ? { label: 'Đang giao kết quả', tone: 'blue' }
     : run.delivery?.status === 'failed' ? { label: 'Chưa giao được kết quả', tone: 'red' }
     : run.delivery?.status === 'unknown' || (run.status === 'completed' && !delivered(run)) ? { label: 'Chưa xác nhận giao', tone: 'orange' } : STATUS[run.status];
@@ -87,7 +101,7 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
         </dl>
       </div>
       <div className="action-bar" aria-label="Hành động">
-        {waiting && !detail.testRepair && <button className="button primary" disabled={busy} onClick={() => void act(`/api/runs/${id}/${run.status === 'draft' ? 'start' : 'resume'}`)}>{run.status === 'draft' ? 'Bắt đầu' : 'Chạy tiếp'}</button>}
+        {waiting && !detail.testRepair && <button className={`button${stuck ? '' : ' primary'}`} disabled={busy || stuck} title={stuck ? 'Chạy tiếp sẽ không đổi kết quả. Hãy làm việc ở khung “Việc cần làm” bên dưới.' : undefined} onClick={() => void act(`/api/runs/${id}/${run.status === 'draft' ? 'start' : 'resume'}`)}>{run.status === 'draft' ? 'Bắt đầu' : 'Chạy tiếp'}</button>}
         {run.status === 'awaiting_approval' && <>
           <button className="button primary" disabled={locked} onClick={() => setTab('contract')}>Xem và duyệt hợp đồng</button>
           <button className="button" onClick={() => setModal('contract')}>Sửa hợp đồng</button></>}
@@ -109,11 +123,13 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
       { label: 'Chi phí', value: money(detail.budget.spentUsd), sub: `trên ${money(detail.budget.capUsd)} · ${Math.round(budgetPct)}% ngân sách`, tone: detail.budget.spentUsd > detail.budget.capUsd ? 'warn' : undefined },
       { label: 'Token', value: count(tokens), sub: detail.budget.estimated ? 'gồm phần ước tính' : 'theo báo cáo của AI' },
       { label: 'Thời gian AI', value: duration(aiTime), sub: `${detail.attempts.length} lượt agent` },
-      { label: 'Công của bạn', value: duration(humanTime), sub: `${run.repairCount} vòng sửa` },
+      { label: 'Công của bạn', value: duration(humanTime), sub: `${run.repairCount} vòng sửa · dừng ${detail.stops ?? 0} lần` },
     ]}/>
 
     {pageError && <div className="banner error" role="alert"><span>{pageError}</span></div>}
-    {run.blocker && <div className="banner warn"><span><strong>Cần chú ý:</strong> {humanizeTestIds(run.blocker)}</span></div>}
+    {detail.nextStep
+      ? <NextStepCard step={detail.nextStep} busy={locked} onAction={onStep}/>
+      : run.blocker && <div className="banner warn"><span><strong>Cần chú ý:</strong> {humanizeTestIds(run.blocker)}</span></div>}
     {detail.testRepair && <TestRepairPanel proposal={detail.testRepair} busy={locked || active || run.status === 'queued'} onApprove={() => act(`/api/runs/${id}/approve-test-repair`, { proposalId: detail.testRepair!.id, proposalHash: detail.testRepair!.hash })} onReject={() => act(`/api/runs/${id}/reject-test-repair`, { proposalId: detail.testRepair!.id, proposalHash: detail.testRepair!.hash })}/>}
     {detail.pendingPaths.length > 0 && <ScopeApproval paths={detail.pendingPaths} approved={run.approvedPaths ?? []} busy={busy} onApprove={(selected) => act(`/api/runs/${id}/approve-paths`, { paths: selected, resume: true })}/>}
     {run.mode === 'single' && run.recommendation.mode !== 'single' && <div className="notice"><span><strong>Gợi ý {MODE_LABEL[run.recommendation.mode]} (chi phí dự kiến ×{run.recommendation.multiplier}):</strong> {run.recommendation.reasons.join(' ')}</span></div>}
@@ -137,6 +153,7 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
     {modal === 'contract' && <ContractForm run={run} busy={busy} onClose={() => setModal(null)} onSave={async (contract) => { const { version: _v, approvedHash: _h, approvedAt: _a, ...body } = contract; await act(`/api/runs/${id}/contract`, body); }}/>}
     {modal === 'reject' && <ReasonModal title="Từ chối nghiệm thu" description="Lý do được ghi lại; chi phí và công sửa vẫn thuộc task này." busy={busy} onClose={() => setModal(null)} onSave={(reason) => act(`/api/runs/${id}/reject`, { reason })}/>}
     {modal === 'escalate' && <EscalateModal run={run} busy={busy} onClose={() => setModal(null)} onSave={(body) => act(`/api/runs/${id}/escalate`, body)}/>}
+    {closing && <ReasonModal title="Đóng phát hiện bằng review thủ công" description={`“${closing.title}”. Ghi bạn đã thử gì và thấy gì (ít nhất 10 ký tự). Báo cáo sẽ ghi đây là quyết định của bạn, không phải do máy chứng minh.`} minLength={10} suggestion="Đã thử trên app và thấy đúng: " busy={busy} onClose={() => setClosing(null)} onSave={async (reason) => { await act(`/api/runs/${id}/findings/${closing.id}/resolve`, { reason }); setClosing(null); }}/>}
     {modal === 'delete' && <DeleteRunDialog run={run} onClose={() => setModal(null)} onDeleted={onDeleted}/>}
   </>;
 }
