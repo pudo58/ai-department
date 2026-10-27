@@ -37,10 +37,12 @@ export const RunBody = z.object({
   mode: z.enum(['single', 'clarify', 'verify', 'compare']).default('single'), provider: z.enum(['fake', 'codex', 'claude']).default('fake'),
   budgetUsd: z.number().positive().max(1000), signals: z.array(z.string().max(40)).max(10).default([]),
   taskKind: z.enum(['bugfix', 'feature', 'refactor']).optional(),
+  /** Omitted: the project's default design snapshot; `snapshotId: null`: none. The server fixes the hash. */
+  design: z.object({ snapshotId: z.string().max(40).nullable(), targetIds: z.array(z.string().min(1).max(200)).max(200).optional() }).optional(),
 });
 export const ContractBody = z.object({
   testPlan: TestPlanSchema.optional(),
-  requirements: z.array(z.object({ id: z.string(), text: z.string().max(8000), required: z.boolean(), manual: z.boolean(), kind: z.enum(['expected', 'forbidden']).optional() })).min(1).max(50),
+  requirements: z.array(z.object({ id: z.string(), text: z.string().max(8000), required: z.boolean(), manual: z.boolean(), kind: z.enum(['expected', 'forbidden']).optional(), designRefs: z.array(z.object({ nodeId: z.string().min(1).max(200), fieldPath: z.string().min(1).max(300) })).max(50).optional() })).min(1).max(50),
   acceptanceExamples: z.array(z.string().max(4000)).max(100), interfaces: z.array(z.string().max(4000)).max(100),
   assumptions: z.array(z.string().max(4000)).max(100), scope: z.array(z.string().max(500)).max(100),
 });

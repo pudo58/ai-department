@@ -29,6 +29,8 @@ export class Acceptance {
     }
     return buildReport({
       planReview: detail.planReview,
+      // Every turn that was given the design counts, whichever contract version it ran under: the Planner's turn precedes the version it proposes.
+      design: this.s.designs?.describe?.(run, detail.artifacts.filter((a) => a.title === 'Design input receipt' && !!a.attemptId).map((a) => ({ role: (JSON.parse(a.content) as { role: string }).role, attemptId: a.attemptId! })), detail.artifacts.filter((a) => a.title === 'Design input check' && (JSON.parse(a.content) as { unchanged: boolean }).unchanged === false).length),
       findingReplays:detail.findingReplays,findingProofs:detail.findingProofs,regressionFiles:detail.regressionFiles,regressionProposals:detail.regressionProposals,assertionAudit:readManifest(run,detail.artifacts)?.manifest.assertionAudit,
       environment:detail.environment,
       quality: detail.quality, liveChecks: latestChecks(run, detail.checks), run, attempts: detail.attempts, checks: detail.checks, findings: detail.findings, artifacts: detail.artifacts, matrix: detail.matrix,

@@ -1,0 +1,455 @@
+{
+  "generatedAt": "2026-10-27T17:15:04.800Z",
+  "commit": "43a4a0e",
+  "tests": {
+    "total": 136,
+    "passed": 136,
+    "failed": 0,
+    "suites": [
+      {
+        "file": "figma-core.test.ts",
+        "passed": 34,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 32
+      },
+      {
+        "file": "figma-design-run.test.ts",
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 9976
+      },
+      {
+        "file": "figma-exporter-e2e.test.ts",
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 1376
+      },
+      {
+        "file": "figma-exporter-edges.test.ts",
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 12201
+      },
+      {
+        "file": "figma-installer.test.ts",
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 697
+      },
+      {
+        "file": "figma-snapshots.test.ts",
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 6212
+      },
+      {
+        "file": "figma-transport.test.ts",
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 97
+      },
+      {
+        "file": "figma-ui.test.ts",
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 2490
+      },
+      {
+        "file": "figma-validator.test.ts",
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "ms": 15
+      }
+    ],
+    "exitCode": 0
+  },
+  "exports": [
+    {
+      "name": "một frame (selection)",
+      "scope": "selection",
+      "status": "review_ready",
+      "durationMs": 156,
+      "nodes": 6,
+      "pages": 0,
+      "bytes": 33935,
+      "chunks": 8,
+      "chunkRequests": 8,
+      "peakUnackedChunks": 2,
+      "blockers": [],
+      "limits": [],
+      "coverage": {
+        "structureComplete": true,
+        "fieldCoverage": {
+          "all": {
+            "total": 546,
+            "read": 84,
+            "mixed": 2,
+            "notApplicable": 460,
+            "unsupported": 0,
+            "unavailable": 0,
+            "error": 0
+          },
+          "byGroup": {
+            "common": {
+              "total": 120,
+              "read": 47,
+              "mixed": 0,
+              "notApplicable": 73,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "layout": {
+              "total": 180,
+              "read": 9,
+              "mixed": 0,
+              "notApplicable": 171,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "paint": {
+              "total": 120,
+              "read": 16,
+              "mixed": 0,
+              "notApplicable": 104,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "style": {
+              "total": 24,
+              "read": 2,
+              "mixed": 0,
+              "notApplicable": 22,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "prototype": {
+              "total": 36,
+              "read": 1,
+              "mixed": 0,
+              "notApplicable": 35,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "text": {
+              "total": 44,
+              "read": 5,
+              "mixed": 2,
+              "notApplicable": 37,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "instance": {
+              "total": 6,
+              "read": 3,
+              "mixed": 0,
+              "notApplicable": 3,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "vector": {
+              "total": 16,
+              "read": 1,
+              "mixed": 0,
+              "notApplicable": 15,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            }
+          }
+        },
+        "dependencyCoverage": {
+          "total": 5,
+          "resolved": 5,
+          "dependencyOnly": 1,
+          "unavailable": 0
+        },
+        "assetCoverage": {
+          "total": 3,
+          "stored": 3,
+          "missing": 0,
+          "oversize": 0,
+          "error": 0,
+          "previewOnly": 1
+        },
+        "sourceIdentity": "verified",
+        "consistency": "unchanged_across_passes"
+      },
+      "files": 15,
+      "snapshotHash": "80277346668a",
+      "consistency": "unchanged_across_passes"
+    },
+    {
+      "name": "toàn bộ file (golden, 3 trang)",
+      "scope": "file",
+      "status": "review_ready",
+      "durationMs": 177,
+      "nodes": 12,
+      "pages": 3,
+      "bytes": 52238,
+      "chunks": 9,
+      "chunkRequests": 9,
+      "peakUnackedChunks": 2,
+      "blockers": [],
+      "limits": [],
+      "coverage": {
+        "structureComplete": true,
+        "fieldCoverage": {
+          "all": {
+            "total": 870,
+            "read": 129,
+            "mixed": 2,
+            "notApplicable": 739,
+            "unsupported": 0,
+            "unavailable": 0,
+            "error": 0
+          },
+          "byGroup": {
+            "common": {
+              "total": 240,
+              "read": 74,
+              "mixed": 0,
+              "notApplicable": 166,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "layout": {
+              "total": 270,
+              "read": 9,
+              "mixed": 0,
+              "notApplicable": 261,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "paint": {
+              "total": 180,
+              "read": 22,
+              "mixed": 0,
+              "notApplicable": 158,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "style": {
+              "total": 36,
+              "read": 2,
+              "mixed": 0,
+              "notApplicable": 34,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "prototype": {
+              "total": 54,
+              "read": 1,
+              "mixed": 0,
+              "notApplicable": 53,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "text": {
+              "total": 44,
+              "read": 5,
+              "mixed": 2,
+              "notApplicable": 37,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "instance": {
+              "total": 6,
+              "read": 3,
+              "mixed": 0,
+              "notApplicable": 3,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "vector": {
+              "total": 16,
+              "read": 1,
+              "mixed": 0,
+              "notApplicable": 15,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "component": {
+              "total": 24,
+              "read": 12,
+              "mixed": 0,
+              "notApplicable": 12,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            }
+          }
+        },
+        "dependencyCoverage": {
+          "total": 5,
+          "resolved": 5,
+          "dependencyOnly": 0,
+          "unavailable": 0
+        },
+        "assetCoverage": {
+          "total": 4,
+          "stored": 4,
+          "missing": 0,
+          "oversize": 0,
+          "error": 0,
+          "previewOnly": 2
+        },
+        "sourceIdentity": "verified",
+        "consistency": "unchanged_across_passes"
+      },
+      "files": 28,
+      "snapshotHash": "3ed0b594512f",
+      "consistency": "unchanged_across_passes"
+    },
+    {
+      "name": "frame lớn (1.800 node thêm)",
+      "scope": "selection",
+      "status": "review_ready",
+      "durationMs": 5290,
+      "nodes": 1806,
+      "pages": 0,
+      "bytes": 8550851,
+      "chunks": 51,
+      "chunkRequests": 51,
+      "peakUnackedChunks": 2,
+      "blockers": [],
+      "limits": [],
+      "coverage": {
+        "structureComplete": true,
+        "fieldCoverage": {
+          "all": {
+            "total": 158946,
+            "read": 18084,
+            "mixed": 2,
+            "notApplicable": 140860,
+            "unsupported": 0,
+            "unavailable": 0,
+            "error": 0
+          },
+          "byGroup": {
+            "common": {
+              "total": 36120,
+              "read": 12647,
+              "mixed": 0,
+              "notApplicable": 23473,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "layout": {
+              "total": 54180,
+              "read": 9,
+              "mixed": 0,
+              "notApplicable": 54171,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "paint": {
+              "total": 36120,
+              "read": 5416,
+              "mixed": 0,
+              "notApplicable": 30704,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "style": {
+              "total": 7224,
+              "read": 2,
+              "mixed": 0,
+              "notApplicable": 7222,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "prototype": {
+              "total": 10836,
+              "read": 1,
+              "mixed": 0,
+              "notApplicable": 10835,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "text": {
+              "total": 44,
+              "read": 5,
+              "mixed": 2,
+              "notApplicable": 37,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "instance": {
+              "total": 6,
+              "read": 3,
+              "mixed": 0,
+              "notApplicable": 3,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            },
+            "vector": {
+              "total": 14416,
+              "read": 1,
+              "mixed": 0,
+              "notApplicable": 14415,
+              "unsupported": 0,
+              "unavailable": 0,
+              "error": 0
+            }
+          }
+        },
+        "dependencyCoverage": {
+          "total": 5,
+          "resolved": 5,
+          "dependencyOnly": 1,
+          "unavailable": 0
+        },
+        "assetCoverage": {
+          "total": 3,
+          "stored": 3,
+          "missing": 0,
+          "oversize": 0,
+          "error": 0,
+          "previewOnly": 1
+        },
+        "sourceIdentity": "verified",
+        "consistency": "unchanged_across_passes"
+      },
+      "files": 15,
+      "snapshotHash": "b00080522ac6",
+      "consistency": "unchanged_across_passes"
+    }
+  ],
+  "live": {
+    "figmaDesktop": "chưa xác nhận",
+    "installerUserScope": "chưa xác nhận",
+    "qualificationFile": "chưa xác nhận",
+    "ci": "chưa chạy trên GitHub Windows/Linux"
+  }
+}

@@ -11,6 +11,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { fileURLToPath } from 'node:url';
+import { buildExporter } from '../plugins/figma-exporter/build.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
@@ -53,6 +54,10 @@ cpSync(path.join(root, 'scripts', 'cli.mjs'), path.join(out, 'app', 'cli.mjs'));
 cpSync(path.join(root, 'src', 'runtime', 'mutation-worker.cjs'), path.join(out, 'app', 'mutation-worker.cjs'));
 cpSync(path.join(root, 'src', 'runtime', 'reproduction-worker.cjs'), path.join(out, 'app', 'reproduction-worker.cjs'));
 
+step('Dựng plugin Figma Exporter (mẫu để máy đích chuẩn bị bundle, không cần build lại)');
+run(process.execPath, [path.join(root, 'scripts', 'check-exporter.mjs')]);
+await buildExporter({ outDir: path.join(out, 'figma-exporter') });
+
 step('Chép công cụ, mẫu Docker, script khởi động và hướng dẫn');
 cpSync(path.join(root, 'tools'), path.join(out, 'tools'), { recursive: true });
 cpSync(path.join(root, 'docker'), path.join(out, 'docker'), { recursive: true });
@@ -68,7 +73,7 @@ const manifest = {
   name: 'ai-department', version: source.version,
   description: 'Phòng làm việc của các AI viết code (Codex, Claude Code, Antigravity) chạy trên máy bạn: giao việc, kiểm chứng, nghiệm thu.',
   type: 'module', bin: { 'ai-department': 'app/cli.mjs' }, engines: { node: '>=18' },
-  files: ['app/', 'dist/', 'tools/', 'docker/', 'start.cmd', 'start.sh', 'README.md', 'LICENSE'],
+  files: ['app/', 'dist/', 'figma-exporter/', 'tools/', 'docker/', 'start.cmd', 'start.sh', 'README.md', 'LICENSE'],
   keywords: ['ai', 'codex', 'claude', 'agents', 'code-review'], license: source.license ?? 'UNLICENSED',
 };
 writeFileSync(path.join(out, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`);

@@ -21,6 +21,7 @@ export const TestPlanSchema = z.object({
     priority: z.enum(TEST_PRIORITIES), preconditions: text, actions: text, expected: text, oracle: OracleSchema.optional(),
     steps: z.array(z.object({ id: z.string().max(8000).optional(), before: z.string().max(8000).optional(), after: z.string().max(8000).optional(), requirementIds: z.array(z.string()).max(50).optional(), action: text, expected: text })).min(1).max(30).optional(),
     invariants: z.array(text).min(1).max(30).optional(),
+    designRefs: z.array(z.object({ nodeId: z.string().min(1).max(200), fieldPath: z.string().min(1).max(300) })).max(50).optional(),
     method: z.enum(['automated', 'manual']), required: z.boolean() })).max(200),
   notApplicable: z.array(z.object({ group: z.enum(RISK_GROUPS), reason: text })).max(7), questions: z.array(text).max(50),
 });

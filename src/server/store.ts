@@ -4,6 +4,7 @@ import path from 'node:path';
 import { redactSecrets } from '../runtime/process.js';
 import type { LogLevel } from '../runtime/describe.js';
 import { usageCost } from '../core/budget.js';
+import type { DesignSnapshot, FigmaExportJob, InstallJob } from '../shared/design.js';
 import type { Artifact, Attempt, CheckResult, Finding, MemoryItem, SkillRecord, ProjectProfile, ProviderName, Run, RunSummary, TraceEvent, UsageRecord } from '../shared/types.js';
 
 export type { LogLevel };
@@ -97,6 +98,9 @@ export class Store {
   readonly checks: Collection<CheckResult>;
   readonly memories: Collection<MemoryItem>;
   readonly skills: Collection<SkillRecord>;
+  readonly designSnapshots: Collection<DesignSnapshot>;
+  readonly designJobs: Collection<FigmaExportJob>;
+  readonly installJobs: Collection<InstallJob>;
   readonly logs: LogStore;
 
   constructor(file: string) {
@@ -111,6 +115,9 @@ export class Store {
     this.checks = new Collection(this.db, 'checks', (c) => c.runId);
     this.memories = new Collection(this.db, 'memories', (m) => m.projectId);
     this.skills = new Collection(this.db, 'skills', () => null);
+    this.designSnapshots = new Collection(this.db, 'design_snapshots', () => null);
+    this.designJobs = new Collection(this.db, 'design_jobs', (j) => j.connectionId);
+    this.installJobs = new Collection(this.db, 'install_jobs', (j) => j.adapter);
     this.logs = new LogStore(this.db);
     this.db.exec('CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, run_id TEXT NOT NULL, json TEXT NOT NULL); CREATE INDEX IF NOT EXISTS events_run ON events(run_id);');
   }

@@ -72,8 +72,8 @@ export class DockerRuntime implements Runtime {
     return probeEnvironment(run,ws,this.name,(command,timeoutMs)=>this.inContainer(run,`preflight-${run.id}-${slot}`,'none',ws,command,undefined,timeoutMs,undefined,signal),signal);
   }
 
-  private inContainer(run: Run, name: string, network: string, ws: string, cmd: string[], auth: { volume: string } | undefined, timeoutMs: number, input?: string, signal?: AbortSignal, stream: { onStdout?: (c: string) => void; onStderr?: (c: string) => void } = {}, readOnly = false): Promise<ProcessResult> {
-    const args = [...this.hardening(name, network), '-v', `${ws}:/workspace${readOnly ? ':ro' : ''}`, ...(auth ? ['-v', `${auth.volume}:/auth`, '-e', 'HOME=/auth'] : ['-e', 'HOME=/tmp']), run.configSnapshot.runnerImage, ...cmd];
+  private inContainer(run: Run, name: string, network: string, ws: string, cmd: string[], auth: { volume: string } | undefined, timeoutMs: number, input?: string, signal?: AbortSignal, stream: { onStdout?: (c: string) => void; onStderr?: (c: string) => void } = {}, readOnly = false, designDir?: string): Promise<ProcessResult> {
+    const args = [...this.hardening(name, network), '-v', `${ws}:/workspace${readOnly ? ':ro' : ''}`, ...(designDir ? ['-v', `${designDir}:/aidept-design:ro`] : []), ...(auth ? ['-v', `${auth.volume}:/auth`, '-e', 'HOME=/auth'] : ['-e', 'HOME=/tmp']), run.configSnapshot.runnerImage, ...cmd];
     return this.supervised(name, () => executeFile('docker', args, { timeoutMs, input, signal, ...stream, maxOutputBytes: 64 * 1024 * 1024 }));
   }
 
@@ -104,7 +104,7 @@ export class DockerRuntime implements Runtime {
     const collector = new JsonlCollector({ provider, previousCumulativeUsage: exec.previousUsage, onEvent: exec.onEvent });
     const cmd = buildCliCommand({ provider, model: config.model, effort: config.effort, sessionId: exec.sessionId, singleAgent: run.mode === 'single', readOnly: exec.readOnly });
     const result = await this.inContainer(run, this.container(attempt.id), run.configSnapshot.agentNetwork, this.ws.dir(run, attempt.slot), cmd,
-      { volume: registered.authVolume }, run.configSnapshot.limits?.agentMs ?? DEFAULT_AGENT_MS, exec.prompt, exec.signal, { onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent) }, exec.readOnly);
+      { volume: registered.authVolume }, run.configSnapshot.limits?.agentMs ?? DEFAULT_AGENT_MS, exec.prompt, exec.signal, { onStdout: (chunk) => collector.push(chunk), ...streamStderr(exec.onEvent) }, exec.readOnly, exec.design?.hostDir);
     collector.finish();
     if (result.timedOut) throw new Error('Agent hết thời gian cho phép.');
     if (collector.failure) throw new Error(redactSecrets(collector.failure));

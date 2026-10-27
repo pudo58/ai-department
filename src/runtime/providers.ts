@@ -192,7 +192,9 @@ export interface CliCommandOptions { provider: CliProvider; model: string; effor
   /** Claude: plugin folders for this session only, holding the role's approved skills. */
   pluginDirs?: string[];
   /** Claude: at least one loaded skill ships scripts, so the interpreters they need are allowed too. */
-  skillScripts?: boolean }
+  skillScripts?: boolean;
+  /** A folder outside the workspace the agent may read (design snapshot files). Claude and Antigravity need it named; Codex reads any path. */
+  designDir?: string }
 
 /** Interpreters an approved skill's scripts may need; allowed only when such a skill is loaded. */
 export const SKILL_SCRIPT_TOOLS = ['Bash(python *)', 'Bash(python3 *)', 'Bash(bash *)', 'Bash(sh *)'];
@@ -203,7 +205,7 @@ export function buildCliCommand(options: CliCommandOptions): string[] {
     // headless mode refuses every shell command. agy warns that --mode plan "has no effect" next to
     // --disable-slash-commands, yet its log shows plan mode applied. Never resumed: each call is fresh.
     // Model ids such as gemini-3.8-flash-high carry their thinking level, so --effort is only sent without a model.
-    const args = ['agy', '--input-format', 'stream-json', '--output-format', 'stream-json', '--mode', options.write ? 'accept-edits' : 'plan', '--disable-slash-commands', `--add-dir=${options.workdir ?? '.'}`];
+    const args = ['agy', '--input-format', 'stream-json', '--output-format', 'stream-json', '--mode', options.write ? 'accept-edits' : 'plan', '--disable-slash-commands', `--add-dir=${options.workdir ?? '.'}`, ...(options.designDir ? [`--add-dir=${options.designDir}`] : [])];
     if (options.model) args.push('--model', options.model);
     else if (options.effort && /^[a-z]+$/.test(options.effort)) args.push('--effort', options.effort);
     // The prompt arrives on stdin; `--print=` (empty) switches on print mode and must come last.
@@ -228,6 +230,7 @@ export function buildCliCommand(options: CliCommandOptions): string[] {
     const args = ['claude', '-p', '--output-format', 'stream-json', '--verbose', '--setting-sources', 'project,local', '--strict-mcp-config',
       '--permission-mode', options.readOnly ? 'dontAsk' : 'acceptEdits', '--allowedTools', ...(options.readOnly ? ['Read', 'Glob', 'Grep'] : [...LOCAL_CLAUDE_TOOLS, ...skills])];
     for (const dir of options.pluginDirs ?? []) args.push('--plugin-dir', dir);
+    if (options.designDir) args.push('--add-dir', options.designDir);
     if (options.model) args.push('--model', options.model);
     if (options.sessionId) args.push('--resume', options.sessionId);
     if (options.readOnly) args.push('--disallowedTools', 'Write,Edit,NotebookEdit,Bash,Agent,Task');

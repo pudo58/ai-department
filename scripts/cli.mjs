@@ -67,6 +67,8 @@ function npmInstall(dir, spec) {
 process.chdir(home);
 process.env.AIDEPT_STATIC_DIR ??= path.join(pkgDir, 'dist', 'client');
 process.env.AIDEPT_TOOLS_DIR ??= path.join(pkgDir, 'tools');
+// The Figma Exporter plugin, already built: the server only writes the manifest and UI for its own port from it.
+process.env.AIDEPT_EXPORTER_TEMPLATE ??= path.join(pkgDir, 'figma-exporter');
 if (option('port')) process.env.AIDEPT_PORT = option('port');
 const port = Number(process.env.AIDEPT_PORT ?? 4310);
 const url = `http://127.0.0.1:${port}`;

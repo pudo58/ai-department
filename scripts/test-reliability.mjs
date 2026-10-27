@@ -6,6 +6,9 @@ import { fileURLToPath } from 'node:url';
 const reliabilityTests = [
   // v4 evidence policy and the counterexample → regression loop.
   'tests/policy-v4.test.ts', 'tests/regression-loop.test.ts', 'tests/regression-edges.test.ts', 'tests/regression-hardening.test.ts', 'tests/regression-ui.test.ts', 'tests/eval-v4.test.ts',
+  // Figma Exporter: fake Figma through the built plugin, its UI and the real server; transport, validation, snapshots, installer, tasks and page.
+  'tests/figma-core.test.ts', 'tests/figma-validator.test.ts', 'tests/figma-transport.test.ts', 'tests/figma-installer.test.ts', 'tests/figma-snapshots.test.ts',
+  'tests/figma-exporter-e2e.test.ts', 'tests/figma-exporter-edges.test.ts', 'tests/figma-design-run.test.ts', 'tests/figma-ui.test.ts',
   // Fallbacks, plan normalization, hardening and the evaluation pilot.
   'tests/nodeadend.test.ts', 'tests/planfix.test.ts', 'tests/hardening.test.ts', 'tests/pilot.test.ts',
   'tests/author-manifest-repair.test.ts',

@@ -7,13 +7,14 @@ import { ACTIVE, MODE_LABEL, NEEDS_YOU, runStatus, pipelineStep, STEPS } from '.
 import { MonitorHub, normalizeMonitorTab, type MonitorTab } from './MonitorHub';
 import { ConnectPage } from './ConnectPage';
 import { SkillsPage } from './SkillsPage';
+import { McpPage } from './McpPage';
 import { PROVIDER_LABEL } from '../shared/providers';
 import { humanizeTestIds } from '../core/testids';
 import { DeleteRunDialog, RunPage } from './RunPage';
 import { Badge, ConfirmDialog, Empty, Icon, PageHeader, Pager, ThemeSwitch, ago, money, type Hue, type IconName } from './ui';
 import { PAGE_SIZES, clampPage, pageSlice } from './paging';
 
-type View = { name: 'runs' } | { name: 'run'; id: string } | { name: 'projects' } | { name: 'skills' } | { name: 'connect' } | { name: 'monitor'; tab: MonitorTab };
+type View = { name: 'runs' } | { name: 'run'; id: string } | { name: 'projects' } | { name: 'skills' } | { name: 'mcp' } | { name: 'connect' } | { name: 'monitor'; tab: MonitorTab };
 
 const parseHash = (): View => {
   const [, name, arg] = window.location.hash.split('/');
@@ -21,6 +22,7 @@ const parseHash = (): View => {
   if (name === 'projects') return { name: 'projects' };
   if (name === 'connect') return { name: 'connect' };
   if (name === 'skills') return { name: 'skills' };
+  if (name === 'mcp') return { name: 'mcp' };
   if (name === 'monitor') return { name: 'monitor', tab: normalizeMonitorTab(arg) };
   // Links from before the pages were merged.
   if (name === 'console') return { name: 'monitor', tab: 'overview' };
@@ -28,7 +30,7 @@ const parseHash = (): View => {
   if (name === 'system') return { name: 'monitor', tab: 'system' };
   return { name: 'runs' };
 };
-const hashOf = (view: View) => (view.name === 'runs' ? '#/' : view.name === 'run' ? `#/run/${view.id}` : view.name === 'monitor' ? (view.tab === 'overview' ? '#/monitor' : `#/monitor/${view.tab}`) : view.name === 'connect' ? '#/connect' : view.name === 'skills' ? '#/skills' : '#/projects');
+const hashOf = (view: View) => (view.name === 'runs' ? '#/' : view.name === 'run' ? `#/run/${view.id}` : view.name === 'monitor' ? (view.tab === 'overview' ? '#/monitor' : `#/monitor/${view.tab}`) : view.name === 'connect' ? '#/connect' : view.name === 'skills' ? '#/skills' : view.name === 'mcp' ? '#/mcp' : '#/projects');
 
 const SIDEBAR_KEY = 'aidept-sidebar';
 
@@ -63,7 +65,7 @@ export function App() {
   }
 
   const waiting = runs.filter((r) => inFilter(r, 'attention')).length;
-  const nav: [string, string, IconName, number | undefined][] = [['runs', 'Công việc', 'flow', waiting || undefined], ['projects', 'Dự án', 'folder', undefined], ['skills', 'Skill', 'layers', undefined], ['monitor', 'Theo dõi', 'activity', undefined], ['connect', 'Kết nối AI', 'shield', undefined]];
+  const nav: [string, string, IconName, number | undefined][] = [['runs', 'Công việc', 'flow', waiting || undefined], ['projects', 'Dự án', 'folder', undefined], ['skills', 'Skill', 'layers', undefined], ['monitor', 'Theo dõi', 'activity', undefined], ['mcp', 'MCP', 'terminal', undefined], ['connect', 'Kết nối AI', 'shield', undefined]];
   const current = view.name === 'run' ? 'runs' : view.name;
   const ready = health?.liveReady;
   return <div className={`app-shell${collapsed ? ' collapsed' : ''}`}>
@@ -91,6 +93,7 @@ export function App() {
       {view.name === 'run' && <RunPage key={view.id} id={view.id} onBack={() => go({ name: 'runs' })} onDeleted={async () => { go({ name: 'runs' }); await load(); }}/>}
       {view.name === 'projects' && <ProjectsView projects={projects} runs={runs} onEdit={setEditing} onContext={(p) => setContextFor(p.id)} onCreate={() => setModal('project')} onDelete={(project) => setDeleting({ project })} onApprove={async (id) => { await api(`/api/projects/${id}/approve`, 'POST', {}); await load(); }}/>}
       {view.name === 'skills' && <SkillsPage/>}
+      {view.name === 'mcp' && <McpPage/>}
       {view.name === 'connect' && <ConnectPage projects={projects} onProjectsChanged={load}/>}
       {view.name === 'monitor' && <MonitorHub tab={view.tab} onTab={(tab) => go({ name: 'monitor', tab })}/>}
     </main>

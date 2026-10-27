@@ -1,4 +1,5 @@
 import { TestPlanEditor } from './Quality';
+import { DesignPicker, designField, type DesignChoice } from './DesignBinding';
 import { useState, type FormEvent } from 'react';
 import type { Mode, ProjectProfile, ProviderName, Run, TaskContract } from '../shared/types';
 import { PROVIDER_LABEL } from '../shared/providers';
@@ -20,7 +21,8 @@ export function RunForm({ projects, onClose, onSave, busy }: { projects: Project
   const [budget, setBudget] = useState(projects[0]?.singleBudgetUsd || 5);
   const [taskKind, setTaskKind] = useState<'' | 'bugfix' | 'refactor'>('');
   const [signals, setSignals] = useState<string[]>([]); const [error, setError] = useState('');
-  async function submit(e: FormEvent) { e.preventDefault(); setError(''); try { await onSave({ projectId, title: title.trim(), originalRequirement: requirement.trim(), mode, provider, budgetUsd: budget, signals, ...(taskKind ? { taskKind } : {}) }); } catch (e) { setError((e as Error).message); } }
+  const [design, setDesign] = useState<DesignChoice>({ kind: 'default' });
+  async function submit(e: FormEvent) { e.preventDefault(); setError(''); try { await onSave({ projectId, title: title.trim(), originalRequirement: requirement.trim(), mode, provider, budgetUsd: budget, signals, ...designField(design), ...(taskKind ? { taskKind } : {}) }); } catch (e) { setError((e as Error).message); } }
   return <Modal title="Giao việc" subtitle="Viết yêu cầu như nói với một đồng nghiệp. Bằng chứng sẽ gắn với từng bản làm xong." onClose={onClose}><form onSubmit={submit}>
     <Field label="Dự án"><select required value={projectId} onChange={e => { setProjectId(e.target.value); setBudget(projects.find(p => p.id === e.target.value)?.singleBudgetUsd || 5); }}>{projects.map(p => <option key={p.id} value={p.id}>{p.name}{p.approved ? '' : ' · Chưa duyệt policy'}</option>)}</select></Field>
     <Field label="Tên việc"><input required maxLength={180} value={title} onChange={e => setTitle(e.target.value)} placeholder="Ví dụ: Ngăn tạo đơn trùng khi retry"/></Field>
@@ -28,6 +30,7 @@ export function RunForm({ projects, onClose, onSave, busy }: { projects: Project
     <div className="mode-options">{(['single', 'clarify', 'verify', 'compare'] as Mode[]).map(value => <button key={value} className={`mode-option ${mode === value ? 'selected' : ''}`} type="button" onClick={() => setMode(value)}><strong>{value === 'single' ? 'Single' : `Team · ${value}`}</strong><small>{modeDescriptions[value]}</small></button>)}</div>
     <div className="form-grid"><Field label="Cách chạy" hint={provider === 'fake' ? 'Không gọi AI, chỉ thử luồng làm việc.' : roleSummary(projects.find(p => p.id === projectId))}><select value={provider} onChange={e => setProvider(e.target.value as ProviderName)}><option value="codex">Chạy thật · theo vai của project</option><option value="fake">Mô phỏng · không gọi AI</option></select></Field><Field label="Ngân sách (USD)"><input required type="number" min="0.1" step="0.1" value={budget} onChange={e => setBudget(Number(e.target.value))}/></Field></div>
     <Field label="Loại việc (tùy chọn)" hint="Bugfix: cần test fail trên code cũ và pass trên code mới. Refactor: hành vi giữ nguyên, test pass cả hai. Bỏ trống nếu không chắc."><select value={taskKind} onChange={e => setTaskKind(e.target.value as '' | 'bugfix' | 'refactor')}><option value="">Không chỉ định</option><option value="bugfix">Bugfix</option><option value="refactor">Refactor</option></select></Field>
+    <DesignPicker value={design} onChange={setDesign}/>
     {provider === 'fake' && <p className="notice">Mô phỏng chỉ kiểm tra workflow. Không chạy agent, không sửa repository và không chứng minh task đã đạt.</p>}
     <details className="advanced"><summary>Dấu hiệu rủi ro cho đề xuất chế độ</summary><div className="check-options">{[['ambiguity', 'Yêu cầu còn nhiều cách hiểu'], ['permissions', 'Quyền truy cập'], ['concurrency', 'Concurrency / retry'], ['public-api', 'Public API dùng chung'], ['alternatives', 'Có hai hướng giải']].map(([value, label]) => <label key={value}><input type="checkbox" checked={signals.includes(value)} onChange={e => setSignals(current => e.target.checked ? [...current, value] : current.filter(x => x !== value))}/>{label}</label>)}</div></details>
     {error && <p className="inline-error" role="alert">{error}</p>}<div className="modal-footer"><button type="button" className="button secondary" onClick={onClose}>Hủy</button><button className="button primary" disabled={busy || !projects.length}>{busy ? 'Đang tạo…' : 'Giao việc'}</button></div>

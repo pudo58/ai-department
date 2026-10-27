@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>AI Department Exporter</title>
+<style>
+  :root { color-scheme: light dark; font-family: Inter, system-ui, sans-serif; font-size: 12px; }
+  body { margin: 0; padding: 16px; color: var(--figma-color-text, #222); background: var(--figma-color-bg, #fff); }
+  h1 { font-size: 14px; margin: 0 0 12px; }
+  p { margin: 0 0 8px; line-height: 1.45; }
+  .muted { color: var(--figma-color-text-secondary, #666); }
+  .small { font-size: 11px; margin-top: 16px; }
+  input { width: 100%; box-sizing: border-box; padding: 8px; margin: 8px 0; font-size: 16px; letter-spacing: 3px; text-align: center; border: 1px solid var(--figma-color-border, #ccc); border-radius: 6px; background: transparent; color: inherit; }
+  button { padding: 8px 12px; margin-right: 8px; border-radius: 6px; border: 1px solid var(--figma-color-border, #ccc); background: var(--figma-color-bg-brand, #0d99ff); color: var(--figma-color-text-onbrand, #fff); cursor: pointer; }
+  button#cancel, button#disconnect { background: transparent; color: inherit; }
+  progress { width: 100%; margin: 8px 0; }
+  [hidden] { display: none !important; }
+  #view[data-view="lost"] #status { color: #d97706; }
+</style>
+</head>
+<body>
+<div id="view" data-view="unpaired">
+  <h1>AI Department Exporter</h1>
+  <p id="status" role="status"></p>
+  <p id="detail" class="muted"></p>
+  <input id="code" inputmode="numeric" maxlength="8" placeholder="Mã ghép đôi 8 chữ số" autocomplete="off" aria-label="Mã ghép đôi">
+  <progress id="bar" hidden></progress>
+  <div><button id="pair">Ghép đôi</button><button id="cancel" hidden>Hủy export</button><button id="disconnect" hidden>Ngắt kết nối</button></div>
+  <p class="muted small">Plugin chỉ đọc file đang mở rồi gửi tới AI Department trên máy này. Nó không sửa thiết kế và không chạy lệnh nhận từ nơi khác.</p>
+</div>
+<script>window.__AIDEPT__ = /*__AIDEPT_CONFIG__*/null;</script>
+<script>/*__UI_SCRIPT__*/</script>
+</body>
+</html>

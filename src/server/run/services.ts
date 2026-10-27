@@ -21,6 +21,7 @@ import type { ResolvedSkill } from '../../runtime/types.js';
 import type { SkillLibrary } from '../../runtime/skilllibrary.js';
 import { HttpError, Blocked, Stopped } from './support.js';
 import type { ExecutionSpan, RetryReason } from '../../shared/execution.js';
+import type { AttemptDesign, DesignProvider } from './design.js';
 
 export type SkillDelivery = 'plugin' | 'workspace' | 'prompt';
 export interface SkillUse { name: string; hash: string; delivery: SkillDelivery; hasScripts: boolean }
@@ -41,6 +42,8 @@ export class RunServices {
   readonly deliveryLocks = new Set<string>();
   /** Generated regression tests present in each run's working copy (scanned when a run starts and after tests are added). */
   readonly regressions = new Map<string, RegressionRef[]>();
+  /** The design snapshot integration; absent in tests and servers that do not have one. A run with no design source never touches it. */
+  designs?: DesignProvider;
 
   isDelivering(id: string): boolean { return this.deliveryLocks.has(id) || this.run(id).delivery?.status === 'in_progress'; }
   /**
@@ -160,12 +163,21 @@ export class RunServices {
     if (input.signal.aborted) throw new Stopped();
     const state = budgetState(run, this.store.attempts.list(runId));
     if (remainingFor(state, input.stage) <= 0) throw new Blocked(`Hết ngân sách cho giai đoạn "${input.stage}" (${state.spentUsd.toFixed(2)}/${state.capUsd.toFixed(2)} USD). Chưa hoàn thành.`);
+    // A design the task is bound to must be usable before any agent is paid for: published, unchanged, and holding what the plan depends on.
+    const designProblems = this.designs?.problems(run) ?? [];
+    if (designProblems.length) throw new Blocked(designProblems.join(' '));
     const config = run.configSnapshot.roles[input.role];
     const attempt: Attempt = {
       id: `att_${randomUUID().slice(0, 8)}`, runId, slot: input.slot, independence: input.independence, role: input.role, stage: input.stage,
       provider: run.provider === 'fake' ? 'fake' : config.provider, model: config.model || 'default', status: 'running', startedAt: this.stamp(),
       checkpoint: run.checkpoint, contractVersion: run.contract.version,
     };
+    // The independent interpreter reads the original requirement alone, so it is not given the design either.
+    let design: AttemptDesign | undefined;
+    if (!(input.independence?.independent && input.stage === 'prepare')) {
+      try { design = await this.designs?.prepare(run, input.role, attempt.id); }
+      catch (error) { throw error instanceof Blocked || error instanceof Stopped ? error : new Blocked(error instanceof Error ? error.message : String(error)); }
+    }
     this.store.attempts.put(attempt);
     this.mutate(runId, (r) => { r.stage = input.stage; });
     this.log(runId, 'attempt.start', `${input.role} (${input.slot}) bắt đầu ở giai đoạn ${input.stage}.`, { attempt: attempt.id, independence: input.independence });
@@ -173,8 +185,9 @@ export class RunServices {
     const raw: string[] = [];
     const runtime = this.runtimeFor(run);
     const loaded = await this.loadSkills(runId, input.noSkills ? [] : config.skills ?? [], input.role, attempt.provider, runtime.name);
-    const prompt = loaded.delivery === 'prompt' ? `${input.prompt}${skillPromptBlock(loaded.skills)}` : input.prompt;
+    const prompt = `${loaded.delivery === 'prompt' ? `${input.prompt}${skillPromptBlock(loaded.skills)}` : input.prompt}${design?.block ?? ''}`;
     this.artifact(runId,{kind:'context',title:'Agent input receipt',content:JSON.stringify({schemaVersion:1,role:input.role,promptChars:prompt.length,promptHash:sha256(prompt),contractVersion:run.contract.version,checkpoint:run.checkpoint,sources:this.store.artifacts.list(runId).filter(a=>a.valid && a.contractVersion===run.contract.version && ['Test plan','Test manifest'].includes(a.title)).map(a=>({id:a.id,hash:a.hash}))}),checkpoint:run.checkpoint,attemptId:attempt.id});
+    if (design) this.artifact(runId, { kind: 'context', title: 'Design input receipt', content: JSON.stringify(design.receipt), checkpoint: run.checkpoint, attemptId: attempt.id });
     try {
       const source = `agent:${input.role}`;
       const relay = this.runtimeLog(runId, source, attempt.id);
@@ -183,7 +196,7 @@ export class RunServices {
         this.endSpan(runId,queued);
         if(input.signal.aborted)throw new Stopped();
         return this.withHeartbeat(runId, source, `${input.role} (${input.slot})`, () => runtime.runAgent({
-        run, attempt, role: input.role, prompt, readOnly: input.readOnly, signal: input.signal, skills: loaded.delivery === 'prompt' ? undefined : loaded.skills,
+        run, attempt, role: input.role, prompt, readOnly: input.readOnly, signal: input.signal, design: design?.exec, skills: loaded.delivery === 'prompt' ? undefined : loaded.skills,
         sessionId: input.resumeSession?.sessionId, previousUsage: input.resumeSession?.cumulative,
         onEvent: (event) => {
           if (event.type === 'provider.raw') {
@@ -194,6 +207,12 @@ export class RunServices {
         },
       }), attempt.id);
       }).finally(()=>this.endSpan(runId,queued,input.signal.aborted?'interrupted':'completed'));
+      // What the agent could read is checked against what it was given; a changed copy is never used as the source again.
+      if (design) {
+        let unchanged = true;
+        try { design.verifyAfter(); } catch (error) { unchanged = false; throw error; }
+        finally { this.artifact(runId, { kind: 'context', title: 'Design input check', content: JSON.stringify({ attemptId: attempt.id, hashBefore: design.receipt.hashBefore, hashAfter: design.receipt.hashAfter, unchanged }), checkpoint: run.checkpoint, attemptId: attempt.id }); }
+      }
       this.recordContext(runId, prompt, attempt.id, loaded.skills.map((s) => ({ name: s.name, hash: s.hash, delivery: loaded.delivery, hasScripts: s.hasScripts })));
       // Raw output is persisted before anything parses it.
       this.artifact(runId, { kind: 'raw', title: `Raw ${input.role} ${attempt.id}`, content: raw.join('\n') || redactSecrets(result.output), checkpoint: run.checkpoint, attemptId: attempt.id });

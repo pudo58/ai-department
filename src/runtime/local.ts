@@ -207,7 +207,7 @@ export class LocalRuntime implements Runtime {
     if (!status.loggedIn) throw new RuntimeBlockedError('Claude Code chưa đăng nhập. Xem trang Kết nối AI.');
     const collector = new JsonlCollector({ provider: 'claude', previousCumulativeUsage: exec.previousUsage, onEvent: exec.onEvent });
     const plugin = exec.skills?.length ? await claudeSkillPlugin(this.options.dataDir, exec.attempt.id, exec.skills) : undefined;
-    const cmd = buildCliCommand({ provider: 'claude', model: config.model, sessionId: exec.sessionId, singleAgent: run.mode === 'single', readOnly: exec.readOnly, workdir: cwd, local: true,
+    const cmd = buildCliCommand({ provider: 'claude', designDir: exec.design?.hostDir, model: config.model, sessionId: exec.sessionId, singleAgent: run.mode === 'single', readOnly: exec.readOnly, workdir: cwd, local: true,
       pluginDirs: plugin ? [plugin.dir] : [], skillScripts: !!exec.skills?.some((s) => s.hasScripts) });
     const [exe, ...prefixArgs] = this.options.claudeCommand ?? resolveClaudeCommand();
     const result = await executeFile(exe!, [...prefixArgs, ...cmd.slice(1)], {
@@ -248,7 +248,7 @@ export class LocalRuntime implements Runtime {
     const userBefore = await hashFiles(userFiles);
     const home = await createAgyHome(path.join(this.options.dataDir, 'agy'), cwd, write);
     const collector = new JsonlCollector({ provider: 'antigravity', onEvent: exec.onEvent });
-    const cmd = buildCliCommand({ provider: 'antigravity', model: config.model, effort: config.effort, singleAgent: run.mode === 'single', readOnly: exec.readOnly, workdir: cwd, write });
+    const cmd = buildCliCommand({ provider: 'antigravity', designDir: exec.design?.hostDir, model: config.model, effort: config.effort, singleAgent: run.mode === 'single', readOnly: exec.readOnly, workdir: cwd, write });
     const [exe, ...prefixArgs] = this.options.agyCommand ?? resolveAgyCommand();
     const result = await executeFile(exe!, [...prefixArgs, ...cmd.slice(1)], {
       cwd, env: home.env, input: agyInput(exec.prompt, write ? agyWritePreamble(cwd) : undefined), signal: exec.signal,

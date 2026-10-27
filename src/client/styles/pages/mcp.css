@@ -1,0 +1,16 @@
+/* MCP page: the Figma card, the install steps, the export list and the snapshot review. */
+.panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.panel-heading h2 { font-size: 1.05rem; font-weight: 650; }
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin: 14px 0; }
+.status-grid dt { color: var(--text-2); font-size: .78rem; margin-bottom: 4px; }
+.status-grid dd { margin: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.status-grid small { color: var(--text-2); font-size: .76rem; line-height: 1.4; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.steps { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 6px; }
+.steps li { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+.checklist { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 6px; }
+.checklist label { display: flex; gap: 8px; align-items: flex-start; }
+.indent { display: flex; gap: 8px; align-items: center; margin-left: 22px; }
+.preview-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.preview-strip img { object-fit: contain; background: var(--bg-muted); border: 1px solid var(--border); border-radius: 6px; }
+.modal-body { display: grid; gap: 12px; }

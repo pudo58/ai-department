@@ -14,16 +14,21 @@ import { registerProviderRoutes } from './routes/providers.js';
 import { registerRunRoutes } from './routes/runs.js';
 import { registerSystemRoutes } from './routes/system.js';
 import { registerSkillRoutes } from './routes/skills.js';
+import { registerFigmaRoutes } from './routes/figma.js';
+import type { FigmaService } from './figma/service.js';
 import type { SkillLibrary } from '../runtime/skilllibrary.js';
 import { startAutoClean } from './autoclean.js';
 
-export interface AppOptions { store: Store; orchestrator: Orchestrator; dataDir: string; port: number; staticDir?: string; skills?: SkillLibrary; /** Only the real server turns this on; tests never delete folders in the background. */ autoClean?: boolean }
+const PLUGIN_PREFIX = '/api/figma-exporter/';
+
+export interface AppOptions { store: Store; orchestrator: Orchestrator; dataDir: string; port: number; staticDir?: string; skills?: SkillLibrary; /** Only the real server turns this on; tests never delete folders in the background. */ autoClean?: boolean;
+  /** The Figma integration (installer, exporter hub, snapshots). Without it the routes for it are not served. */ figma?: FigmaService }
 
 /**
  * Loopback-only API. Defence in depth for a local tool a browser can reach: Host must be a loopback name
  * (blocks DNS rebinding), Origin must match on writes, and writes need the per-process CSRF token.
  */
-export async function buildApp({ store, orchestrator, dataDir, port, staticDir, skills, autoClean }: AppOptions): Promise<FastifyInstance> {
+export async function buildApp({ store, orchestrator, dataDir, port, staticDir, skills, autoClean, figma }: AppOptions): Promise<FastifyInstance> {
   const app = Fastify({ logger: false, bodyLimit: 1_000_000 });
   const token = randomBytes(24).toString('hex');
   const hosts = new Set(['127.0.0.1', 'localhost', '[::1]'].flatMap((h) => [`${h}:${port}`, `${h}:5173`]));
@@ -31,6 +36,12 @@ export async function buildApp({ store, orchestrator, dataDir, port, staticDir, 
 
   app.addHook('onRequest', async (request, reply) => {
     if (!hosts.has(String(request.headers.host ?? '').toLowerCase())) return reply.code(403).send({ error: 'Host không được phép.' });
+    // The Exporter plugin has its own authentication (a pairing code, then a session token). Its iframe has an opaque origin (the string
+    // "null"), so only that origin, or none at all, reaches this namespace, and nothing else is let through by this exception.
+    if (request.url.startsWith(PLUGIN_PREFIX)) {
+      const from = request.headers.origin;
+      return from === undefined || from === 'null' ? undefined : reply.code(403).send({ error: 'Origin không được phép.' });
+    }
     if (request.method === 'GET' || request.method === 'HEAD') return;
     const origin = request.headers.origin;
     if (origin !== undefined && !origins.has(origin)) return reply.code(403).send({ error: 'Origin không được phép.' });
@@ -38,9 +49,11 @@ export async function buildApp({ store, orchestrator, dataDir, port, staticDir, 
     const expected = Buffer.from(token);
     if (sent.length !== expected.length || !timingSafeEqual(sent, expected)) return reply.code(403).send({ error: 'Thiếu hoặc sai CSRF token.' });
   });
-  app.addHook('onSend', async (_request, reply) => {
+  app.addHook('onSend', async (request, reply) => {
+    if (request.url.startsWith(PLUGIN_PREFIX) && request.headers.origin === 'null') reply.header('Access-Control-Allow-Origin', 'null').header('Vary', 'Origin');
     reply.header('Cache-Control', 'no-store').header('X-Content-Type-Options', 'nosniff').header('X-Frame-Options', 'DENY')
-      .header('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; frame-ancestors 'none'");
+      // A route may set a stricter policy of its own (a design file served as data); the page's default applies to everything else.
+      .header('Content-Security-Policy', reply.getHeader('content-security-policy') ?? "default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; frame-ancestors 'none'");
   });
   app.setErrorHandler((error: Error & { statusCode?: number; issues?: unknown }, _request, reply) => {
     if (error instanceof z.ZodError) return reply.code(400).send({ error: 'invalid', message: error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ') });
@@ -60,6 +73,7 @@ export async function buildApp({ store, orchestrator, dataDir, port, staticDir, 
   registerPreviewRoutes(context);
   registerMonitorRoutes(context);
   registerSkillRoutes(context);
+  if (figma) { registerFigmaRoutes(context, figma); app.addHook('onClose', async () => figma.stop()); }
   if (autoClean) {
     const stop = startAutoClean({ store, dataDir, stopPreview: (id) => context.previews.stop(id) });
     app.addHook('onClose', async () => stop());

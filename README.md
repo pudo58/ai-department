@@ -31,6 +31,7 @@ Giữ tiền tố `./`: `npm publish release/ai-department` được npm hiểu 
 - `src/runtime/`: chạy agent và check (Local, Docker, Fake), workspace git, cài công cụ build (`toolchain.ts`, `pythonenv.ts`).
 - `src/server/orchestrator.ts`: mặt công khai của một run (tạo, chạy, dừng, duyệt, nghiệm thu) và vòng điều khiển qua các giai đoạn. Việc của từng giai đoạn nằm ở `src/server/run/`: `services.ts` (store, runtime, đồng hồ, một lượt agent), `planning.ts`, `candidates.ts` (vòng Developer, test do Author viết), `checks.ts`, `verification.ts`, `scope.ts` (được sửa gì), `outcome.ts` (trạng thái và read model), `acceptance.ts`, `timers.ts`.
 - `src/server/app.ts`: bảo vệ loopback (Host, Origin, CSRF) và nối các nhóm route trong `src/server/routes/` (`providers`, `projects`, `memory`, `runs`, `previews`, `system`, `monitor`); `routes/schemas.ts` giữ các schema body.
+- `plugins/figma-exporter/` và `src/server/figma/`: plugin Figma đọc thiết kế (main, UI, protocol dùng chung ở `src/shared/figma.ts`) và phía server (ghép đôi, nhận chunk, kiểm chứng `src/core/figmavalidate.ts`, snapshot, cài Figma Desktop). Xem mục “MCP: thiết kế Figma”.
 - `src/client/`: giao diện React; mỗi trang lớn tách phần thân (`RunPage`, `MonitorHub`, `Monitor`) khỏi các panel của nó (`RunPanels`, `MonitorPanels`, `MonitorCharts`).
 
 ## Trạng thái triển khai
@@ -204,6 +205,17 @@ Nếu agent sửa file ngoài `modules` của project, patch bị từ chối v�
 - Chưa làm: tự cài Go và Rust (nặng, cần toolchain đầy đủ), Node theo phiên bản của project, và chế độ Docker (image runner chưa có JDK).
 
 Giới hạn: phần tải và cài JDK/Maven/Gradle đã test với máy chủ giả (tải, checksum, giải nén, chia sẻ một lần tải) và phần Maven/Gradle chưa chạy với bản thật; venv và PATH đã chạy với Python thật, nhưng `pip install` từ PyPI chưa được chạy thử. Với pnpm/yarn, lệnh cài đặt gợi ý đi qua `npx` vì Windows không chạy trực tiếp `.cmd`; Bun chưa được hỗ trợ chạy trực tiếp.
+
+## MCP: thiết kế Figma
+
+Tab **MCP** kết nối trực tiếp với Figma Desktop (không qua MCP server hay Figma REST API): cài Figma Desktop và plugin **AI Department Exporter**, đăng nhập trên Figma, ghép đôi bằng mã 8 chữ số, chọn frame/trang/toàn bộ file, export thành snapshot, xem kiểm kê và giới hạn, rồi duyệt. Task dùng snapshot đã duyệt qua hợp đồng (khóa theo hash); mọi vai nhận cùng nguồn.
+
+```bash
+pnpm typecheck:exporter   # plugin: main kiểm với @figma/plugin-typings đã pin, UI kiểm với DOM
+pnpm build:exporter       # dựng plugins/figma-exporter/dist (pnpm build cũng làm bước này)
+```
+
+Cách dùng, thuật toán đọc, bảng hỗ trợ, giới hạn và **phần chưa xác nhận trên Figma thật**: [docs/figma-exporter.md](docs/figma-exporter.md). Bằng chứng fixture: [docs/figma-exporter-evidence.md](docs/figma-exporter-evidence.md). Đặc tả gốc: [docs/figma-exporter-plan.md](docs/figma-exporter-plan.md).
 
 ## Skill
 

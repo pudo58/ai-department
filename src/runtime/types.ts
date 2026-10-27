@@ -17,6 +17,8 @@ export interface AgentExecution {
   onEvent?: (event: RuntimeEvent) => void; signal?: AbortSignal;
   /** Approved skills for this role that the runtime loads natively (Claude plugin dir, Codex `.agents/skills`). */
   skills?: ResolvedSkill[];
+  /** The design snapshot files this turn may read: a read-only folder on the host and where the agent sees it. */
+  design?: { hostDir: string; mountPath: string };
 }
 /** A library skill ready to hand to an agent: its folder on disk plus what a prompt fallback needs. */
 export interface ResolvedSkill { name: string; dir: string; hash: string; description: string; body: string; hasScripts: boolean }

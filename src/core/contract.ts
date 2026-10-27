@@ -1,4 +1,5 @@
 import { testPlanFindings, validateTestPlan } from './testplan.js';
+import type { DesignBinding } from '../shared/design.js';
 import { createHash } from 'node:crypto';
 import type { ContractReview, TaskContract } from '../shared/types.js';
 
@@ -69,8 +70,17 @@ export const isApproved = (contract: TaskContract): boolean => !!contract.approv
 /** Any content change bumps the version and drops the approval; all evidence tied to older versions goes stale. */
 export function reviseContract(current: TaskContract, next: Omit<TaskContract, 'version' | 'approvedHash' | 'approvedAt'>): TaskContract {
   // Approval state and version belong to the decision, never to the proposed content.
-  const { approvedHash: _hash, approvedAt: _at, version: _version, ...content } = next as TaskContract;
-  const draft: TaskContract = { ...content, version: current.version };
+  // The design binding is the server's to write: a proposal (a Planner's output, a form) can neither set nor drop it.
+  const { approvedHash: _hash, approvedAt: _at, version: _version, design: _design, ...content } = next as TaskContract;
+  const draft: TaskContract = { ...content, version: current.version, ...(current.design ? { design: current.design } : {}) };
+  if (hashContract(draft) === hashContract(current)) return current;
+  return { ...draft, version: current.version + 1 };
+}
+
+/** The only way a design binding changes: an explicit choice that bumps the version and drops the approval, like any other contract change. */
+export function bindDesign(current: TaskContract, binding: DesignBinding | undefined): TaskContract {
+  const { approvedHash: _hash, approvedAt: _at, design: _old, ...content } = current;
+  const draft: TaskContract = { ...content, ...(binding ? { design: binding } : {}), version: current.version };
   if (hashContract(draft) === hashContract(current)) return current;
   return { ...draft, version: current.version + 1 };
 }

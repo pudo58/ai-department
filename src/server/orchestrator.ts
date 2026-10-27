@@ -6,7 +6,7 @@ import { validateTestPlan } from '../core/testplan.js';
 import { randomUUID } from 'node:crypto';
 import type { CheckResult, ContractApprovalInput, Finding, HumanTime, Mode, ProjectProfile, Run, RunDetail, RunStatus, Slot, StopCode, TaskContract, TaskKind } from '../shared/types.js';
 import { budgetState, checkEscalation, remainingFor } from '../core/budget.js';
-import { approveContract, sha256, initialContract, isApproved, reviewContract, reviseContract, validateContract } from '../core/contract.js';
+import { approveContract, bindDesign, sha256, initialContract, isApproved, reviewContract, reviseContract, validateContract } from '../core/contract.js';
 import { type AcceptanceReport } from '../core/report.js';
 import { MODE_MULTIPLIER, recommendMode } from '../core/routing.js';
 import { classifyPath, isSafeRelative, normalizePath } from '../core/scope.js';
@@ -37,8 +37,10 @@ export { HttpError };
 export interface CreateRunInput {
   projectId: string; title: string; originalRequirement: string; mode: Mode; provider: Run['provider'];
   budgetUsd: number; signals: string[]; taskKind?: TaskKind;
+  /** The design snapshot for this task. Left out: the project's default; `snapshotId: null`: none. */
+  design?: { snapshotId: string | null; targetIds?: string[] };
 }
-export interface OrchestratorOptions { agentSlots?: number; now?: () => Date; /** How often a long step reports "still running" (default 30s). */ heartbeatMs?: number; /** Library the roles' skills come from; without it assigned skills are skipped with a warning. */ skills?: SkillLibrary }
+export interface OrchestratorOptions { /** The design snapshot integration, when the server has one. */ designs?: import('./run/design.js').DesignProvider & { bind(input: { snapshotId: string; targetIds?: string[] }): import('../shared/design.js').DesignBinding; remove?(runId: string): void }; agentSlots?: number; now?: () => Date; /** How often a long step reports "still running" (default 30s). */ heartbeatMs?: number; /** Library the roles' skills come from; without it assigned skills are skipped with a warning. */ skills?: SkillLibrary }
 
 /**
  * The public face of a run: lifecycle (create, start, stop, resume, delete), the person's decisions (approve a
@@ -59,10 +61,12 @@ export class Orchestrator {
   private readonly timers: HumanTimers;
   private readonly acceptance: Acceptance;
   private readonly recovery: TestRecovery;
+  private readonly designs?: OrchestratorOptions['designs'];
 
   constructor(private readonly store: Store, private readonly runtimeFor: (run: Run) => Runtime, options: OrchestratorOptions = {}) {
     this.now = options.now ?? (() => new Date());
     this.s = new RunServices(store, runtimeFor, this.now, options.agentSlots ?? 3, options.heartbeatMs ?? 30_000, options.skills);
+    this.designs = options.designs; this.s.designs = options.designs;
     this.scope = new ScopePolicy(this.s);
     this.outcome = new RunOutcome(this.s, this.scope);
     this.checks = new CheckRunner(this.s);
@@ -141,13 +145,17 @@ export class Orchestrator {
     if (!project) throw new HttpError(404, 'Project không tồn tại.');
     if (input.provider !== 'fake' && !project.approved) throw new HttpError(409, 'Project chưa duyệt policy; chỉ run mô phỏng được phép.');
     if (!(input.budgetUsd > 0)) throw new HttpError(400, 'Ngân sách phải lớn hơn 0.');
+    // The source is fixed here, so a later "latest" or a resume can never pick another: the contract holds the snapshot and its hash.
+    const wanted = input.design === undefined ? (project.designSource ? { snapshotId: project.designSource.snapshotId } : undefined) : input.design.snapshotId ? { snapshotId: input.design.snapshotId, targetIds: input.design.targetIds } : undefined;
+    if (wanted && !this.designs) throw new HttpError(409, 'Server chưa bật tích hợp nguồn thiết kế.');
+    const design = wanted ? this.designs!.bind(wanted) : undefined;
     const recommendation = recommendMode(input.signals);
     const now = this.s.stamp();
     const budget = input.mode === 'single' ? input.budgetUsd : input.budgetUsd * MODE_MULTIPLIER[input.mode];
     const run: Run = {
       id: `run_${randomUUID().slice(0, 8)}`, executionSpans: [], projectId: project.id, title: input.title, originalRequirement: input.originalRequirement,
       mode: input.mode, initialMode: input.mode, taskKind: input.taskKind, selectedSlot: 'A', provider: input.provider,
-      status: 'draft', stage: 'prepare', ...(input.mode === 'verify' ? { qualityPolicyVersion: 4 as const, evidencePolicy: structuredClone(EVIDENCE_POLICY_V4) } : {}), contract: initialContract(input.originalRequirement), interpretations: [],
+      status: 'draft', stage: 'prepare', ...(input.mode === 'verify' ? { qualityPolicyVersion: 4 as const, evidencePolicy: structuredClone(EVIDENCE_POLICY_V4) } : {}), contract: { ...initialContract(input.originalRequirement), ...(design ? { design } : {}) }, interpretations: [],
       baseSha: null, checkpoint: null, branch: null, budgetUsd: budget, baseBudgetUsd: input.budgetUsd,
       configSnapshot: structuredClone(project), signals: input.signals, recommendation, escalations: [], usage: [], humanTime: [],
       repairCount: 0, blocker: null, createdAt: now, updatedAt: now,
@@ -214,6 +222,7 @@ export class Orchestrator {
     if (this.busy(run)) throw new HttpError(409, 'Việc đang chạy; bấm Dừng rồi mới xoá được.');
     this.forget(runId);
     this.store.purgeRun(runId);
+    this.designs?.remove?.(runId);
     return run;
   }
 
@@ -226,6 +235,7 @@ export class Orchestrator {
     if (working.length) throw new HttpError(409, `Dự án còn ${working.length} việc đang chạy; dừng chúng rồi mới xoá được.`);
     runs.forEach((r) => this.forget(r.id));
     this.store.purgeProject(projectId);
+    runs.forEach((r) => this.designs?.remove?.(r.id));
     return { project, runs };
   }
 
@@ -290,6 +300,20 @@ export class Orchestrator {
     this.invalidateEvidence(runId, revised.version);
     this.s.mutate(runId, (r) => { r.contract = revised; delete r.contractReviewReceipt; delete r.testRepairApproval; r.status = 'awaiting_approval'; r.blocker = null; });
     this.s.log(runId, 'contract.revised', `Hợp đồng lên v${revised.version}; bằng chứng cũ mất hiệu lực.`);
+    return this.s.run(runId);
+  }
+
+  /** Chooses another design snapshot (or none) for a task that is waiting: a contract change, so the version rises and approval is asked again. */
+  setDesign(runId: string, input: { snapshotId: string | null; targetIds?: string[] }): Run {
+    this.s.assertNotDelivering(runId);
+    const run = this.s.run(runId);
+    if (!WAITING.includes(run.status)) throw new HttpError(409, 'Không thể đổi nguồn thiết kế khi run đang chạy.');
+    if (input.snapshotId && !this.designs) throw new HttpError(409, 'Server chưa bật tích hợp nguồn thiết kế.');
+    const revised = bindDesign(run.contract, input.snapshotId ? this.designs!.bind({ snapshotId: input.snapshotId, targetIds: input.targetIds }) : undefined);
+    if (revised === run.contract) return run;
+    this.invalidateEvidence(runId, revised.version);
+    this.s.mutate(runId, (r) => { r.contract = revised; delete r.contractReviewReceipt; delete r.testRepairApproval; r.status = 'awaiting_approval'; r.blocker = null; });
+    this.s.log(runId, 'contract.design', `Nguồn thiết kế đổi (${input.snapshotId ?? 'không dùng'}); hợp đồng lên v${revised.version}, bằng chứng cũ mất hiệu lực.`);
     return this.s.run(runId);
   }
 

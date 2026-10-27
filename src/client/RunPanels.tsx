@@ -8,6 +8,7 @@ import { LogConsole } from './Monitor';
 import { readVerdict } from '../core/report';
 import {FindingReplayResults} from './FindingReplays';
 import { FindingActions, FindingProofList } from './FindingEvidence';
+import { DesignBindingView } from './DesignBinding';
 import { policyOf } from '../core/policy';
 import { Badge, DiffView, Empty, Field, Icon, Modal, dateTime, duration, money } from './ui';
 
@@ -100,6 +101,7 @@ export function ContractPanel({ detail, busy = false, onApprove }: { detail: Run
     <section className="panel"><h2>Yêu cầu gốc</h2><p style={{ whiteSpace: 'pre-wrap' }}>{run.originalRequirement}</p></section>
     <div className="panel">
     <div className="card-head"><h2>Hợp đồng v{run.contract.version}</h2><Badge tone={run.contract.approvedHash ? 'good' : 'warn'}>{run.contract.approvedHash ? 'Đã duyệt' : 'Chưa duyệt'}</Badge></div>
+    <DesignBindingView run={run} canChange={!!onApprove && ['awaiting_approval', 'draft', 'paused', 'blocked', 'failed'].includes(run.status)}/>
     <table className="compact" style={{ marginTop: 12 }}><thead><tr><th>Mã</th><th>Tiêu chí</th><th>Hành vi</th><th>Kiểm tra</th></tr></thead><tbody>{run.contract.requirements.map((r) => <tr key={r.id}><td><code>{r.id}</code></td><td>{r.text}</td><td>{r.kind === 'forbidden' ? 'Không được xảy ra' : 'Mong muốn'}</td><td>{r.required ? 'Bắt buộc' : 'Tùy chọn'}{r.manual ? ' · thủ công' : ''}</td></tr>)}</tbody></table>
     {list('Ví dụ nghiệm thu', run.contract.acceptanceExamples)}{list('Interface', run.contract.interfaces)}{list('Giả định cần xác nhận', run.contract.assumptions)}{list('Phạm vi', run.contract.scope)}
     <h3>Kế hoạch ca kiểm thử</h3>

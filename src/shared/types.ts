@@ -29,6 +29,8 @@ export interface SkillCandidate {
 export interface Recipe { id: string; command: string[]; required: boolean; timeoutMs: number; reportPath?: string }
 export interface ProjectProfile {
   id: string; name: string; repository: string; version: number; approved: boolean;
+  /** Default design snapshot for new runs of this project; a run may pick another or none. */
+  designSource?: { snapshotId: string };
   modules: string[]; protectedPaths: string[]; checks: Recipe[];
   roles: Record<Role, RoleConfig>; runnerImage: string; setupCommand: string[];
   agentNetwork: string; authVolume?: string; policyRules: string[];
@@ -53,8 +55,10 @@ export interface ProjectProfile {
   contextBudget?: Partial<Record<ContextRole, number>>;
   singleBudgetUsd: number; currency: 'USD'; createdAt: string;
 }
-export interface Requirement { id: string; text: string; required: boolean; manual: boolean; kind?: 'expected' | 'forbidden' }
-export interface TaskContract { version: number; requirements: Requirement[]; acceptanceExamples: string[]; interfaces: string[]; assumptions: string[]; scope: string[]; testPlan?: TestPlan; approvedHash?: string; approvedAt?: string }
+export interface Requirement { id: string; text: string; required: boolean; manual: boolean; kind?: 'expected' | 'forbidden';
+  /** Design fields this requirement depends on (with a design source bound); each must exist in the snapshot and have been read. */
+  designRefs?: import('./design.js').DesignRef[] }
+export interface TaskContract { version: number; requirements: Requirement[]; /** The design snapshot this task uses. Written by the server only, and part of the contract hash. */ design?: import('./design.js').DesignBinding; acceptanceExamples: string[]; interfaces: string[]; assumptions: string[]; scope: string[]; testPlan?: TestPlan; approvedHash?: string; approvedAt?: string }
 export type ContractWarningCode = 'missing_expected' | 'missing_forbidden' | 'missing_examples' | 'assumptions_present' | 'plan_advisory' | 'no_automated_case';
 export interface ContractReview {
   contractHash: string; contractVersion: number; problems: string[];

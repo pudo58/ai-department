@@ -1,4 +1,5 @@
 import type { QualityDetail, TestPlanReview,AssertionAudit } from '../shared/quality.js';
+import type { DesignReportFacts } from '../shared/design.js';
 import type { Artifact, Attempt, BudgetState, CheckResult, CompletionState, Delivery, DeliveryTarget, Finding, MatrixRow, Run } from '../shared/types.js';
 import { delivered, deliveryMatches } from './delivery.js';
 import { extractRequirementIds } from './checks.js';
@@ -34,6 +35,8 @@ export interface AcceptanceReport {
   quality: QualityDetail; qualityPolicyVersion?: 1 | 2 | 3 | 4;
   /** v4: each finding on the ladder from suspected to proven fixed, and the regression tests the project now holds. */
   findingProofs?: FindingProof[]; regressionFiles?: RegressionRef[]; regressionProposals?: PendingRegression[];
+  /** The design snapshot the task was bound to, and what each role was given. Absent for a task without one. */
+  design?: DesignReportFacts;
   generatedAt: string; runId: string; title: string; requirement: string; mode: Run['mode']; provider: Run['provider'];
   /** ready: every automatic condition holds and nothing needs a second look; with_warnings: acceptable only after the person reads the warnings. */
   readiness: 'ready' | 'ready_with_warnings' | 'not_ready'; notReadyReasons: string[];
@@ -62,6 +65,8 @@ export interface ReportInput {
   matrix: readonly MatrixRow[]; completion: CompletionState; budget: BudgetState;
   changes: { available: boolean; files: ChangedFile[]; patch: string };
   deliveryTarget?: DeliveryTarget; now?: Date;
+  /** The design source the task used, when it had one. */
+  design?: DesignReportFacts;
 }
 
 const MAX_PATCH_CHARS = 300_000;
@@ -198,6 +203,14 @@ export function buildReport(input: ReportInput): AcceptanceReport {
     const role = (a.attemptId && roleOf.get(a.attemptId)) || '?';
     for (const s of used) skillsUsed.set(`${role}:${s.name}`, { role, name: s.name, delivery: s.delivery, hasScripts: s.hasScripts });
   }
+  if (input.design) {
+    const d = input.design;
+    if (!d.usable) warn(`Nguồn thiết kế của task không còn dùng được: ${d.problems.join(' ')}`);
+    if (d.limited) warn(`Nguồn thiết kế có giới hạn đã chấp nhận (${d.acknowledged.length}): ${d.acknowledged.slice(0, 3).map((i) => short(i.message, 120)).join(' | ')}`);
+    if (d.identity === 'user_attested') info('Nguồn thiết kế do người dùng xác nhận (plugin không trả được file key), chưa được đối chiếu tự động.');
+    if (d.changedByAgent) warn(`${d.changedByAgent} lượt agent đã làm thư mục dữ liệu thiết kế thay đổi so với bản được cấp; bản đó không được dùng làm nguồn.`);
+    info('Chưa có kiểm chứng hình ảnh (visual verification): dữ liệu thiết kế chỉ là căn cứ, không chứng minh giao diện cuối giống thiết kế.');
+  }
   const skills = [...skillsUsed.values()];
   const scripted = [...new Set(skills.filter((s) => s.hasScripts).map((s) => s.name))];
   if (scripted.length) info(`Agent được nạp skill có kèm script (${scripted.join(', ')}): agent có thể đã chạy các script đó trong bản sao làm việc.`);
@@ -215,6 +228,7 @@ export function buildReport(input: ReportInput): AcceptanceReport {
     execution:executionMetrics(run,attempts,(input.now??new Date()).getTime()),
     environment:input.environment,
     ...(policyOf(run).strict ? { findingProofs: input.findingProofs ?? [], regressionFiles: input.regressionFiles ?? [], regressionProposals: input.regressionProposals ?? [] } : {}),
+    ...(input.design ? { design: input.design } : {}),
     quality, qualityPolicyVersion: run.qualityPolicyVersion, generatedAt: (input.now ?? new Date()).toISOString(), runId: run.id, title: run.title, requirement: run.originalRequirement, mode: run.mode, provider: run.provider,
     readiness, notReadyReasons: completion.reasons, checkpoint: run.checkpoint, baseSha: run.baseSha,
     requirements: matrix.map((r) => ({ id: r.requirementId, text: r.text, required: r.required, manual: r.manual, kind: r.kind ?? 'expected', status: r.status, tests: testsByReq.get(r.requirementId) ?? [] })),
@@ -288,6 +302,13 @@ export function renderReportMarkdown(r: AcceptanceReport): string {
   if (r.regressionProposals?.length) out.push('', '## Đề xuất test regression', '', ...r.regressionProposals.map(p => p.unsupported ? `- ${p.findingId}: không tạo được — ${p.unsupported}` : `- ${p.findingId}: \`${p.path}\` — thử trên checkpoint: **${p.trial?.status ?? 'chưa thử'}**. ${p.trial?.message ?? ''}`));
   if (r.regressionFiles?.length) out.push('', '## Test regression đang khóa trong project', '', ...r.regressionFiles.map(x => `- \`${x.path}\` (${x.intact ? 'nguyên vẹn' : '**đã bị sửa**'}) — finding ${x.findingId}`));
   if(r.findingReplays?.length)out.push('','## Phản ví dụ đã chạy','',...r.findingReplays.flatMap(p=>[`- ${p.findingId} @ ${p.checkpoint.slice(0,8)}: **${p.status}** (${p.durationMs} ms). ${p.message}`,...(p.oracle?[`  - Căn cứ: ${p.oracle.references.map(r=>`${r.requirementId}: ${r.quote}`).join('; ')}. ${p.oracle.explanation}`]:[]),...p.observations.filter(o=>o.matched!==undefined).map(o=>`  - ${o.stepId}: expected=${JSON.stringify(o.expected)}; actual=${JSON.stringify(o.actual)} (${o.actualType??'JSON'}); matched=${o.matched}`)]));
+  if (r.design) {
+    const d = r.design;
+    out.push('', '## Nguồn thiết kế', '', `- Snapshot \`${d.snapshotId}\` (hash \`${d.snapshotHash.slice(0, 12)}\`) từ file “${d.fileName.replace(/[|\n]/g, ' ')}”: **${d.label}**; ${d.identity === 'verified' ? 'đã đối chiếu file key' : 'nguồn do người dùng xác nhận'}.`,
+      `- Target: ${d.targetIds.length ? d.targetIds.join(', ') : 'mọi node gốc của snapshot'}. ${d.counts.nodes} node, ${d.counts.components} component, ${d.counts.styles} style, ${d.counts.variables} variable, ${d.counts.assets} tài nguyên.`,
+      `- Đã cấp cho: ${d.inputs.length ? d.inputs.map((i) => `${i.role} (${i.attempts} lượt)`).join(', ') : 'chưa lượt nào'}. Biên nhận chứng minh dữ liệu đã được cấp, không chứng minh model đã đọc hết.`,
+      ...d.acknowledged.map((i) => `- Giới hạn đã chấp nhận: ${i.message}`), '- Chưa có kiểm chứng hình ảnh (visual verification).');
+  }
   if (r.skills.length) out.push('', '## Skill đã dùng', '', ...r.skills.map((s) => `- ${s.role}: ${s.name}${s.hasScripts ? ' (có script)' : ''}`));
   out.push('', '## Công sức', '', `- Chi phí: ~$${r.effort.costUsd.toFixed(2)}${r.effort.estimated ? ' (ước tính)' : ''} · ${r.effort.tokens.toLocaleString('en-US')} token · ${r.effort.attempts} lượt agent · ${mins(r.effort.aiMs)} thời gian AI · ${r.effort.repairs} vòng sửa`, `- Công của bạn: ${mins(r.effort.humanMs)}`);
   out.push('', '## Nhận kết quả', '', `Trạng thái giao: **${r.delivery.status}**${r.delivery.delivered ? ' (đã giao đúng checkpoint và hợp đồng)' : ' (chưa xác nhận giao thành công)'}`,

@@ -14,6 +14,8 @@ export interface TestCase {
   /** Properties that must remain true after each transition in steps. */
   invariants?: string[];
   oracle?: Oracle;
+  /** Design fields this case depends on; they do not replace the requirement clause that grounds the case. */
+  designRefs?: import('./design.js').DesignRef[];
 }
 export interface TestPlan { schemaVersion: 1 | 2; statefulModelVersion?: 1; reasoningVersion?: 1; cases: TestCase[]; notApplicable: { group: RiskGroup; reason: string }[]; questions: string[] }
 export interface TestPlanReview {

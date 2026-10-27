@@ -10,9 +10,11 @@
   },
   "scripts": {
     "dev": "concurrently -k \"tsx watch src/server/main.ts\" \"vite --host 127.0.0.1\"",
-    "build": "tsc --noEmit && node scripts/check-client.mjs && vite build",
+    "build": "tsc --noEmit && node scripts/check-client.mjs && node scripts/check-exporter.mjs && node scripts/build-figma-exporter.mjs && vite build",
     "start": "tsx src/server/main.ts",
-    "typecheck": "tsc --noEmit && node scripts/check-client.mjs",
+    "typecheck": "tsc --noEmit && node scripts/check-client.mjs && node scripts/check-exporter.mjs",
+    "build:exporter": "node scripts/build-figma-exporter.mjs",
+    "typecheck:exporter": "node scripts/check-exporter.mjs",
     "typecheck:client": "node scripts/check-client.mjs",
     "test": "vitest run",
     "test:reliability": "node scripts/test-reliability.mjs",
@@ -30,6 +32,7 @@
     "zod": "4.1.12"
   },
   "devDependencies": {
+    "@figma/plugin-typings": "1.142.0",
     "@stryker-mutator/core": "9.6.1",
     "@stryker-mutator/vitest-runner": "9.6.1",
     "@types/node": "24.9.1",
