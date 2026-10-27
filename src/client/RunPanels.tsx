@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import type { Artifact, Attempt, CheckResult, ContractApprovalInput, Finding, HumanTime, Mode, Run, RunDetail } from '../shared/types';
 import { CHECK_LABEL, CHECK_TONE, MODE_LABEL, ROW_LABEL, ROW_TONE, STEPS, TIME_CATEGORIES, pipelineStep } from './labels';
 import { delivered } from '../core/delivery';
+import { budgetCeiling, offeredBudget } from '../core/budget';
 import { LogConsole } from './Monitor';
 import { readVerdict } from '../core/report';
 import {FindingReplayResults} from './FindingReplays';
@@ -59,11 +60,13 @@ export function EscalateModal({ run, onClose, onSave, busy }: { run: Run; onClos
   const options = (['single', 'clarify', 'verify', 'compare'] as Mode[]).filter((m) => m !== run.mode);
   const [mode, setMode] = useState<Mode>(options[0]!);
   const [reason, setReason] = useState('');
-  const [cap, setCap] = useState(run.budgetUsd);
-  const ceiling = run.baseBudgetUsd * 3;
+  const [cap, setCap] = useState(() => offeredBudget(run, options[0]!));
+  // Each mode has its own ceiling, and the budget on offer follows the mode, so the default is always one the server accepts.
+  const ceiling = budgetCeiling(run.baseBudgetUsd, mode);
+  const choose = (next: Mode) => { setMode(next); setCap(offeredBudget(run, next)); };
   return <Modal title="Chuyển chế độ" subtitle="Lịch sử và chi phí được giữ nguyên; chỉ chuyển khi có ngân sách thật để thực hiện." onClose={onClose}><form onSubmit={(e) => { e.preventDefault(); void onSave({ mode, reason, budgetUsd: cap }); }}>
-    <Field label="Chế độ mới"><select value={mode} onChange={(e) => setMode(e.target.value as Mode)}>{options.map((m) => <option key={m} value={m}>{MODE_LABEL[m]}</option>)}</select></Field>
-    <Field label="Tổng ngân sách task (USD)" hint={`Trần Team: ${money(ceiling)} (3× Single ${money(run.baseBudgetUsd)}). Tăng ngân sách là quyết định của bạn.`}><input type="number" min="0.01" step="0.01" max={ceiling} value={cap} onChange={(e) => setCap(Number(e.target.value))}/></Field>
+    <Field label="Chế độ mới"><select value={mode} onChange={(e) => choose(e.target.value as Mode)}>{options.map((m) => <option key={m} value={m}>{MODE_LABEL[m]}</option>)}</select></Field>
+    <Field label="Tổng ngân sách task (USD)" hint={mode === 'single' ? `Trần Single: ${money(ceiling)} (bằng ngân sách Single ban đầu). Chi phí đã tiêu vẫn được tính.` : `Trần Team: ${money(ceiling)} (3× Single ${money(run.baseBudgetUsd)}). Tăng ngân sách là quyết định của bạn.`}><input type="number" min="0.01" step="0.01" max={ceiling} value={cap} onChange={(e) => setCap(Number(e.target.value))}/></Field>
     <Field label="Lý do"><textarea required minLength={3} rows={3} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ví dụ: hai lượt sửa không tiến triển, hướng hiện tại bế tắc"/></Field>
     <div className="modal-footer"><button type="button" className="button" onClick={onClose}>Hủy</button><button className="button primary" disabled={busy}>Chuyển chế độ</button></div>
   </form></Modal>;

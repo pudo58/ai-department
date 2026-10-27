@@ -19,6 +19,9 @@ export function budgetCeiling(baseBudgetUsd: number, mode: Mode): number {
   return mode === 'single' ? baseBudgetUsd : baseBudgetUsd * TEAM_CAP_MULTIPLIER;
 }
 
+/** The budget a mode switch starts from: what the task has now, but never above what the new mode allows (a person should not have to work that out). */
+export const offeredBudget = (run: Pick<Run, 'budgetUsd' | 'baseBudgetUsd'>, to: Mode): number => Math.min(run.budgetUsd, budgetCeiling(run.baseBudgetUsd, to));
+
 export function allocate(capUsd: number): Record<Stage, number> {
   return Object.fromEntries(STAGES.map((s) => [s, capUsd * PHASE_SHARE[s]])) as Record<Stage, number>;
 }

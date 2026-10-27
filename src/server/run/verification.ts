@@ -219,7 +219,8 @@ export class Verification {
       }
       f.status = 'resolved'; this.s.store.findings.put(f);
     }
-    this.s.log(runId, 'repair.done', `Checks đạt trên checkpoint mới; ${targets.filter(f=>f.status==='resolved').length}/${targets.length} finding đã xác nhận có đủ căn cứ đánh dấu xử lý.`);
+    const proven=targets.filter(f=>f.status==='resolved').length;
+    this.s.log(runId, 'repair.done', `Checks đạt trên checkpoint mới; ${proven}/${targets.length} finding đã xác nhận có đủ căn cứ đánh dấu xử lý.${proven<targets.length?' Finding chưa có phản ví dụ chạy được để chứng minh nên vẫn mở: hãy tự thử bản sửa rồi bấm “Đóng bằng review thủ công…” ở tab Kiểm chứng.':''}`);
     await new MutationChecks(this.s).run(runId, signal);
     if (run.mode === 'verify' || run.mode === 'compare') await this.independentVerifier(runId, signal);
     this.outcome.finish(runId);

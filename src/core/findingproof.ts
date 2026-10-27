@@ -30,6 +30,9 @@ export function findingProofs(run: Run, findings: readonly Finding[], artifacts:
  * v4 reasons that stop acceptance beyond the checks themselves. A warning that is ticked never passes these:
  * the Verifier's verdict for this very checkpoint, an edited regression test, and a "fixed" finding the runner can still reproduce.
  */
+/** Chạy tiếp cannot change an abstention, so the two ways out are named: give the Verifier something to check against, or accept without it. */
+export const ABSTAIN_NEXT_STEP = ' Thường do hợp đồng chưa có ví dụ cụ thể để đối chiếu. Cách 1: bấm “Sửa hợp đồng”, thêm câu mẫu kèm kết quả mong đợi ở ô “Ví dụ đúng/sai”, rồi duyệt lại. Cách 2 (chấp nhận không có kiểm chứng độc lập): bấm “Chuyển chế độ” và chọn Single.';
+
 export function evidenceBlockers(run: Run, input: { verdict: { decision: string } | null; findings: readonly Finding[]; artifacts: readonly Artifact[]; regressions: readonly RegressionRef[] }): string[] {
   const policy = policyOf(run);
   if (!policy.strict) return [];
@@ -39,7 +42,7 @@ export function evidenceBlockers(run: Run, input: { verdict: { decision: string 
     if (!v) reasons.push('Chưa có kết luận Verifier cho đúng checkpoint hiện tại.');
     else if (v.decision === 'skipped') reasons.push('Verifier bị bỏ qua (hết ngân sách kiểm chứng cuối), nên chưa có kiểm chứng độc lập cho checkpoint hiện tại.');
     else if (v.decision === 'unparsed') reasons.push('Kết luận của Verifier không đọc được, nên chưa có kiểm chứng độc lập cho checkpoint hiện tại.');
-    else if (v.decision === 'abstain') reasons.push('Verifier từ chối kết luận (abstain) cho checkpoint hiện tại; chưa có kiểm chứng độc lập.');
+    else if (v.decision === 'abstain') reasons.push(`Verifier từ chối kết luận (abstain) cho checkpoint hiện tại; chưa có kiểm chứng độc lập.${ABSTAIN_NEXT_STEP}`);
   }
   for (const ref of input.regressions.filter(r => !r.intact)) reasons.push(`Test regression ${ref.path} không còn khớp hash ghi trong chính nó: đã bị sửa. Đổi hoặc xóa regression chỉ qua diff có duyệt.`);
   const replays = readFindingReplays(run, input.artifacts);

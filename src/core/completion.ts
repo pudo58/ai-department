@@ -25,6 +25,9 @@ export function buildMatrix(run: Run, checks: readonly CheckResult[]): MatrixRow
   });
 }
 
+/** What a person does about an open finding under the v4 policy, where nothing but the runner's proof or their own reasons closes it. */
+export const FINDING_NEXT_STEP = ' Việc cần làm (tab Kiểm chứng): nếu bạn đã tự thử và thấy đúng, bấm “Đóng bằng review thủ công…” và ghi lý do; nếu chưa sửa, bấm “Xác nhận bằng review thủ công…” rồi “Sửa … finding đã xác nhận”.';
+
 export function evaluateCompletion(run: Run, checks: readonly CheckResult[], findings: readonly Finding[], budget: BudgetState): CompletionState {
   const reasons: string[] = [];
   if (run.provider === 'fake') reasons.push('Run mô phỏng: không có bằng chứng thật, không thể nghiệm thu.');
@@ -51,7 +54,7 @@ export function evaluateCompletion(run: Run, checks: readonly CheckResult[], fin
       : `${unverified.length} yêu cầu chưa có test nào xác minh (${unverified.join(', ')}): không test nào trong lần check gần nhất chạy được và gắn thẻ [R-x]. Bấm Chạy tiếp sẽ không đổi kết quả; cần sửa check của project cho chạy đúng test, hoặc sửa hợp đồng để đánh dấu "Thủ công" các yêu cầu chỉ kiểm được bằng mắt.`);
   }
   const open = findings.filter((f) => f.contractVersion === run.contract.version && blocksCompletion(f, policyOf(run).strict));
-  if (open.length) reasons.push(`${open.length} finding blocker/major chưa xử lý.`);
+  if (open.length) reasons.push(`${open.length} finding blocker/major chưa xử lý.${policyOf(run).strict ? FINDING_NEXT_STEP : ''}`);
   if (budget.spentUsd > budget.capUsd + 1e-9) reasons.push('Đã vượt ngân sách của task.');
   return { ready: reasons.length === 0, reasons };
 }
