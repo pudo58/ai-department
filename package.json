@@ -10,9 +10,10 @@
   },
   "scripts": {
     "dev": "concurrently -k \"tsx watch src/server/main.ts\" \"vite --host 127.0.0.1\"",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && node scripts/check-client.mjs && vite build",
     "start": "tsx src/server/main.ts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && node scripts/check-client.mjs",
+    "typecheck:client": "node scripts/check-client.mjs",
     "test": "vitest run",
     "test:reliability": "node scripts/test-reliability.mjs",
     "eval": "tsx src/evaluation/cli.ts",

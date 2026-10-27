@@ -175,8 +175,8 @@ ${extra}` });
    * flagged as a degraded run and the receipt says the system, not a person, approved it. AIDEPT_AUTO_TEST_REPAIR=0 restores the manual gate.
    */
   private autoApprove(runId: string, caseIds: readonly string[], reason: string): void {
-    // v4 freezes this at false: only a person who read the diff applies a correction.
-    if (!policyOf(this.s.run(runId)).autoTestRepair) return;
+    // v4 freezes this at false: only a person who read the diff applies a correction. Older runs follow the operator's switch.
+    if (!policyOf(this.s.run(runId)).autoTestRepair || process.env.AIDEPT_AUTO_TEST_REPAIR === '0') return;
     const run = this.s.run(runId), artifacts = this.s.store.artifacts.list(runId);
     if (artifacts.filter(a => a.title === 'Test repair receipt' && a.valid && a.contractVersion === run.contract.version).length >= MAX_AUTO_TEST_REPAIRS) return;
     const pending = pendingTestRepair(run, artifacts);

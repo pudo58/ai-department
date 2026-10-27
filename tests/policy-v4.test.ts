@@ -28,8 +28,9 @@ describe('the v4 policy is one frozen record, not scattered conditions', () => {
     process.env.AIDEPT_AUTO_TEST_REPAIR = '1';
     expect(policyOf({ qualityPolicyVersion: 4, evidencePolicy: EVIDENCE_POLICY_V4 })).toMatchObject({ strict: true, autoTestRepair: false, completePlan: false, derivedManifest: false, groundDiagnosis: false, lenientFindings: false, regression: true, verdictRequired: true });
     expect(policyForVersion(3)).toMatchObject({ strict: false, autoTestRepair: true, completePlan: true, derivedManifest: true, groundDiagnosis: true, regression: false });
+    // The policy does not read the environment (the page asks it too); the server applies the switch where it acts.
     process.env.AIDEPT_AUTO_TEST_REPAIR = '0';
-    expect(policyForVersion(3).autoTestRepair).toBe(false);
+    expect(policyForVersion(3).autoTestRepair).toBe(true);
     expect(policyForVersion(2)).toMatchObject({ structured: true, reasoning: false, authorRepair: false });
   });
   it('freezes the replay limits that were promised (3 probes, 30 s each, 60 s per batch)', () => {

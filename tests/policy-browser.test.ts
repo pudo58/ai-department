@@ -23,13 +23,17 @@ describe('policyOf in a browser (no `process`)', () => {
     expect(seen.v4).toMatchObject({ version: 4, strict: true, autoTestRepair: false });
   });
 
-  it('still honours AIDEPT_AUTO_TEST_REPAIR=0 where there is an environment (the server)', () => {
+  // The page and the server must read the same policy, so the policy never depends on the environment. The operator's
+  // AIDEPT_AUTO_TEST_REPAIR switch is applied where the server applies a repair; tests/diagnosis-v3.test.ts covers both settings.
+  it('gives the same answer whatever the environment says', () => {
     const saved = process.env.AIDEPT_AUTO_TEST_REPAIR;
     try {
-      process.env.AIDEPT_AUTO_TEST_REPAIR = '0';
-      expect(policyOf({ qualityPolicyVersion: 3 }).autoTestRepair).toBe(false);
-      process.env.AIDEPT_AUTO_TEST_REPAIR = '1';
-      expect(policyOf({ qualityPolicyVersion: 3 }).autoTestRepair).toBe(true);
+      const answers = ['0', '1', undefined].map((value) => {
+        if (value === undefined) delete process.env.AIDEPT_AUTO_TEST_REPAIR; else process.env.AIDEPT_AUTO_TEST_REPAIR = value;
+        return policyOf({ qualityPolicyVersion: 3 });
+      });
+      expect(answers[1]).toEqual(answers[0]);
+      expect(answers[2]).toEqual(answers[0]);
     } finally { if (saved === undefined) delete process.env.AIDEPT_AUTO_TEST_REPAIR; else process.env.AIDEPT_AUTO_TEST_REPAIR = saved; }
   });
 });
