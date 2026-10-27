@@ -53,6 +53,20 @@ export function draftArgv(d: Pick<CheckDraft, 'command'>): string[] | null {
 /** Does a draft already run this exact command? Compares argv, so spacing and quoting do not matter. */
 export const sameCommand = (d: Pick<CheckDraft, 'command'>, argv: readonly string[]) => JSON.stringify(draftArgv(d)) === JSON.stringify(argv);
 
+/**
+ * A suggested check applied to the form. One that writes a report takes the place of the check of the same name that does not (a "test"
+ * with only an exit code can never be evidence for a requirement), instead of being added beside it under another name and running the
+ * tests twice. A check that is already there is left alone.
+ */
+export function applySuggestion(drafts: readonly CheckDraft[], s: SuggestedCheck): CheckDraft[] {
+  if (drafts.some((d) => sameCommand(d, s.command))) return [...drafts];
+  const at = s.reportPath ? drafts.findIndex((d) => d.id === s.id && !d.reportPath.trim()) : -1;
+  if (at < 0) return [...drafts, draftFromSuggestion(s, drafts)];
+  const next = [...drafts];
+  next[at] = { ...newDraft(s, drafts.filter((_, i) => i !== at)), key: drafts[at]!.key };
+  return next;
+}
+
 /** Validates the drafts and converts them to recipes for the API. Throws a message a person can act on. */
 export function toRecipes(drafts: readonly CheckDraft[]): Recipe[] {
   if (!drafts.length) throw new Error('Cần ít nhất một check.');

@@ -4,7 +4,7 @@ import { isExperimental } from '../shared/providers';
 import type { Role, RoleConfig, SkillRecord, StackDetection } from '../shared/types';
 import { api } from './api';
 import { formatCommandLine } from './argv';
-import { CHECK_PRESETS, draftFromSuggestion, newDraft, sameCommand, type CheckDraft } from './checkdraft';
+import { CHECK_PRESETS, applySuggestion, newDraft, sameCommand, type CheckDraft } from './checkdraft';
 import { Field } from './ui';
 
 /** Add, edit and remove the project's checks. Each row is one command; a row with no report path is judged by exit code only. */
@@ -65,10 +65,7 @@ export function DetectPanel({ detect, canDetect, guidance, onGuidance, drafts, o
   const addSelected = () => {
     if (!result) return;
     let next = drafts;
-    for (const s of result.checks.filter((c) => selected.has(c.id))) {
-      if (next.some((d) => sameCommand(d, s.command))) continue;
-      next = [...next, draftFromSuggestion(s, next)];
-    }
+    for (const s of result.checks.filter((c) => selected.has(c.id))) next = applySuggestion(next, s);
     onDrafts(next);
   };
   const suggestedSetup = result ? formatCommandLine(result.setupCommand) : '';

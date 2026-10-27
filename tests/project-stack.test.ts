@@ -6,7 +6,7 @@ import { summarizeCheck } from '../src/core/checks.js';
 import { guidanceBlock, PROMPTS } from '../src/core/prompts.js';
 import { detectStack, parseLooseJson, readInside } from '../src/core/stackdetect.js';
 import { GUIDANCE_MAX_CHARS, normalizeGuidance } from '../src/shared/guidance.js';
-import { newDraft, toDrafts, toRecipes, uniqueCheckId } from '../src/client/checkdraft.js';
+import { applySuggestion, newDraft, toDrafts, toRecipes, uniqueCheckId } from '../src/client/checkdraft.js';
 import { green, report, setup } from './helpers.js';
 
 const repoDir = (files: Record<string, string>) => {
@@ -74,6 +74,21 @@ describe('stack detector', () => {
     const plain = await detectStack(repoDir({ 'package.json': pkg({ scripts: { test: 'node --test' } }) }));
     expect(plain.checks.find((c) => c.id === 'test')!.command.slice(0, 2)).toEqual(['node', '--test']);
     expect(plain.checks.find((c) => c.id === 'test')!.reportPath).toBe('.aidept-report.xml');
+  });
+
+  it('applies a suggested check with a report in place of the check of the same name that has none, and adds anything else', () => {
+    const old = toDrafts([{ id: 'test', command: ['npm', 'test'], required: true, timeoutMs: 600_000 }, { id: 'typecheck', command: ['npx', 'tsc', '--noEmit'], required: true, timeoutMs: 600_000 }]);
+    const node = { id: 'test', label: 'node --test', command: ['node', '--test', '--test-reporter=junit', '--test-reporter-destination=.aidept-report.xml', 'tests/*.test.mjs'], reportPath: '.aidept-report.xml', required: true, timeoutMs: 600_000, recommended: true, reason: '' };
+    const replaced = applySuggestion(old, node);
+    expect(replaced.map((d) => d.id)).toEqual(['test', 'typecheck']);
+    expect(replaced[0]).toMatchObject({ reportPath: '.aidept-report.xml', command: node.command.join(' ') });
+    expect(replaced[0]!.key).toBe(old[0]!.key);
+    expect(applySuggestion(replaced, node)).toEqual(replaced);
+    // A suggestion without a report does not push out a check, and a name nobody has is simply added.
+    expect(applySuggestion(old, { ...node, reportPath: undefined }).map((d) => d.id)).toEqual(['test', 'typecheck', 'test-2']);
+    expect(applySuggestion(old, { ...node, id: 'unit' }).map((d) => d.id)).toEqual(['test', 'typecheck', 'unit']);
+    // A check that already has a report is kept next to the new one.
+    expect(applySuggestion(replaced, { ...node, command: ['node', '--test', 'other'] }).map((d) => d.id)).toEqual(['test', 'typecheck', 'test-2']);
   });
 
   it('leaves a script it cannot restate as it is: shell operators, variables, a reporter of its own', async () => {

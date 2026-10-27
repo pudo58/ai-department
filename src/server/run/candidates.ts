@@ -1,4 +1,4 @@
-import { deepQuality } from '../../core/qualityevidence.js';
+import { deepQuality, verifyNeedsReport } from '../../core/qualityevidence.js';
 import { policyOf } from '../../core/policy.js';
 import { normalizeTestId, manifestFindings } from '../../core/testplan.js';
 import { hashContract } from '../../core/contract.js';
@@ -203,6 +203,9 @@ export class CandidateBuilder {
     // no correction can fix, so the step is settled here, without an agent, and the Developer goes on.
     const cases = run.contract.testPlan?.cases;
     if (deepQuality(run) && cases && !cases.some(c => c.method === 'automated')) return this.lockWithoutAuthor(runId);
+    // The Author needs a check that writes a report to tie its tests to the cases; without one every manifest it writes is invalid, so it is not asked.
+    const noReport = verifyNeedsReport(run);
+    if (noReport) throw new Blocked(noReport);
     const runtime = this.s.runtimeFor(run);
     const independence: Independence = { independent: true, reason: 'Author chỉ nhận hợp đồng; chưa có kế hoạch triển khai của Developer.' };
     // A non-test file inside the allowed modules (a .md note, a helper) is a slip the Author can fix, so it gets one retry

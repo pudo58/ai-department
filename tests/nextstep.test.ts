@@ -119,6 +119,23 @@ describe('a project whose checks write no test report', () => {
     expect(() => f.orch.approveContract(f.run.id, { contractHash: f.orch.detail(f.run.id).contractReview.contractHash, acknowledgeWarnings: true })).toThrow(/xuất báo cáo test/);
   }, 90000);
 
+  it('does not spend the Author\'s new turn while the project still has no check with a report', async () => {
+    const f = await v4Fixture({ authorReply: () => 'Không thể tạo test: manifest không hợp lệ.' });
+    await f.approve(f.run.id);
+    const authors = () => f.calls.filter((c) => c === 'author').length;
+    expect(authors()).toBe(1);
+    // The person edited and approved the project but its checks still have no report.
+    const project = f.store.projects.get('prj_test')!;
+    f.store.projects.put({ ...project, version: project.version + 1, checks: [reportless] });
+    f.orch.resumeRun(f.run.id); await f.orch.idle();
+    expect(authors()).toBe(1);
+    expect(f.orch.detail(f.run.id).nextStep?.code).toBe('project_check_no_report');
+    // Once a check writes a report the Author does get the new turn.
+    f.store.projects.put({ ...project, version: project.version + 2, checks: [{ ...reportless, reportPath: '.aidept-report.json' }] });
+    f.orch.resumeRun(f.run.id); await f.orch.idle();
+    expect(authors()).toBe(2);
+  }, 120000);
+
   it('gives the Author one new turn when the person changed the project after it failed, and none for a plain resume', async () => {
     const f = await v4Fixture({ authorReply: () => 'Không thể tạo test: manifest không hợp lệ.' });
     await f.approve(f.run.id);
