@@ -7,7 +7,7 @@ import { humanizeTestIds } from './testids.js';
 
 /** Why a stopped run is stopped, in the few kinds that tell a person what to do. `generic` keeps the old sentence. */
 export type StepCode =
-  | 'finding_open' | 'verifier_inconclusive' | 'verifier_pending' | 'evidence_missing' | 'author_stuck' | 'checks_failing' | 'project_check_no_report'
+  | 'finding_open' | 'verifier_inconclusive' | 'verifier_pending' | 'evidence_missing' | 'author_stuck' | 'checks_failing' | 'checks_flaky' | 'project_check_no_report'
   | 'setup_failed' | 'capacity' | 'quota' | 'interrupted' | 'user_stop' | 'generic';
 
 /** What the page does for each: it knows how to open a form or call an endpoint for these ids, and nothing else. */
@@ -111,6 +111,14 @@ export function nextStep(d: Input): NextStep | undefined {
     code: 'checks_failing', title: `Có ${failing.length > 1 ? `${failing.length} kiểm tra` : 'một kiểm tra'} đang không đạt`,
     why: `Kiểm tra ${ids(failing.map((c) => `“${c.recipeId}”`))} chưa đạt. Chạy tiếp để Developer sửa (tốn AI), hoặc chạy lại kiểm tra nếu bạn vừa sửa cấu hình (không tốn AI).`,
     primary: act('resume', 'Chạy tiếp để sửa', 'ai'), others: [act('recheck', 'Chạy lại kiểm tra')], resumeChanges: true, after: [],
+  };
+
+  // A check that failed and then passed on its retry is no evidence; running it again is free and settles it.
+  const flaky = latestChecks(run, d.checks).filter((c) => c.required && c.status === 'flaky' && !c.quarantined);
+  if (flaky.length) return {
+    code: 'checks_flaky', title: 'Một kiểm tra lúc đạt lúc không',
+    why: `Kiểm tra ${ids(flaky.map((c) => `“${c.recipeId}”`))} trượt ở lần chạy đầu rồi đạt khi chạy lại, nên chưa được tính là bằng chứng. Chạy lại kiểm tra (không tốn AI): nếu đạt ngay lần đầu thì run đi tiếp. Nếu lần nào cũng lúc đạt lúc không, có test của dự án không ổn định (thường do máy đang bận hoặc test chờ quá lâu).`,
+    primary: act('recheck', 'Chạy lại kiểm tra'), others: [], resumeChanges: false, after: [],
   };
 
   // Everything passes but a required requirement has no test behind it.

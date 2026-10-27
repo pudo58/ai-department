@@ -59,6 +59,16 @@ describe('what a person is told to do, from the state a run is really in', () =>
     expect(step.why).toContain('“e2e”');
   });
 
+  it('a check that failed and then passed on its retry: check again for free, not "edit the contract"', () => {
+    const run = blockedRun();
+    const flaky = { ...failingCheck(run, 'test-2'), status: 'flaky' as const };
+    const step = wellFormed(nextStep(input(run, { checks: [flaky], matrix: [row({ requirementId: 'R-1' })] })));
+    expect(step).toMatchObject({ code: 'checks_flaky', resumeChanges: false });
+    expect(step.primary).toMatchObject({ id: 'recheck', cost: 'free' });
+    expect(step.why).toContain('“test-2”');
+    expect(nextStep(input(run, { checks: [{ ...flaky, quarantined: true }], matrix: [row({ requirementId: 'R-1' })] }))?.code).toBe('evidence_missing');
+  });
+
   it('asks for the requirement, not for another run, when it has no test behind it', () => {
     const step = wellFormed(nextStep(input(blockedRun(), { matrix: [row({ requirementId: 'R-3' }), row({ requirementId: 'R-4', status: 'verified' }), row({ requirementId: 'R-5', manual: true })] })));
     expect(step).toMatchObject({ code: 'evidence_missing', resumeChanges: false });

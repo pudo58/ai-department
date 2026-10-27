@@ -46,15 +46,22 @@ function completeXml(xml: string): boolean {
  */
 export function parseJUnit(xml: string): ParsedReport {
   if (!completeXml(xml)) return { tests: [], collectionErrors: 0, valid: false };
-  const tests: TestOutcome[] = [], failures: string[] = [];
-  for (const m of xml.matchAll(/<testcase\b([^>]*?)(?:\/>|>([\s\S]*?)<\/testcase>)/g)) {
-    const name = xmlAttr(m[1]!, 'name');
+  const tests: TestOutcome[] = [], failures: string[] = [], suites: string[] = [];
+  // `<testsuite>` (not `<testsuites>`) opens a describe block; its name is one title of every test inside it.
+  for (const m of xml.matchAll(/<testsuite\b([^>]*?)(\/?)>|<\/testsuite>|<testcase\b([^>]*?)(?:\/>|>([\s\S]*?)<\/testcase>)/g)) {
+    if (m[0].startsWith('</')) { suites.pop(); continue; }
+    if (m[0].startsWith('<testsuite')) { if (!m[2]) suites.push(xmlAttr(m[1]!, 'name') ?? ''); continue; }
+    const name = xmlAttr(m[3]!, 'name');
     if (!name) continue;
-    const body = m[2] ?? '';
+    const body = m[4] ?? '';
     const failure = /<(?:failure|error)\b([^>]*)/.exec(body);
     const status = failure ? 'failed' : /<skipped\b/.test(body) ? 'skipped' : 'passed';
-    const className = xmlAttr(m[1]!, 'classname') ?? '';
-    tests.push({ id: `${className}::${name}`.replace(/^::/, ''), status, identity: { kind: 'junit', className, name } });
+    const className = xmlAttr(m[3]!, 'classname') ?? '';
+    // node:test names the file on every testcase. With it, a test is known the way a source binding knows it (file + describe
+    // titles + name), so the two can meet; reporters that give no file (Playwright, Maven) keep the classname/name identity.
+    const file = xmlAttr(m[3]!, 'file');
+    const identity: TestIdentity = file ? { kind: 'json', file, titles: [...suites.filter(Boolean), name] } : { kind: 'junit', className, name };
+    tests.push({ id: `${className}::${name}`.replace(/^::/, ''), status, identity });
     if (failure) failures.push(`Test "${name}" fail: ${(xmlAttr(failure[1]!, 'message') ?? 'không có message').slice(0, 300)}`);
   }
   return { tests, collectionErrors: 0, valid: true, failures };
