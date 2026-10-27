@@ -6,6 +6,8 @@ import { isTestPath } from './testpath.js';
 import { executionMetrics } from './execution.js';
 import type { EnvironmentProbe, ExecutionMetrics, VerifierScope } from '../shared/execution.js';
 import type {FindingReplay} from '../shared/reproduction.js';
+import type { FindingProof, PendingRegression, RegressionRef } from '../shared/regression.js';
+import { policyOf } from './policy.js';
 
 export interface ChangedFile { path: string; added: number; removed: number; status: 'added' | 'modified' | 'deleted' | 'renamed' }
 export interface ReportWarning { level: 'warn' | 'info'; text: string }
@@ -29,7 +31,9 @@ export interface AcceptanceReport {
   findingReplays?: FindingReplay[];
   planReview?: TestPlanReview;
   execution?: ExecutionMetrics; environment?: EnvironmentProbe;
-  quality: QualityDetail; qualityPolicyVersion?: 1 | 2 | 3;
+  quality: QualityDetail; qualityPolicyVersion?: 1 | 2 | 3 | 4;
+  /** v4: each finding on the ladder from suspected to proven fixed, and the regression tests the project now holds. */
+  findingProofs?: FindingProof[]; regressionFiles?: RegressionRef[]; regressionProposals?: PendingRegression[];
   generatedAt: string; runId: string; title: string; requirement: string; mode: Run['mode']; provider: Run['provider'];
   /** ready: every automatic condition holds and nothing needs a second look; with_warnings: acceptable only after the person reads the warnings. */
   readiness: 'ready' | 'ready_with_warnings' | 'not_ready'; notReadyReasons: string[];
@@ -49,6 +53,7 @@ export interface AcceptanceReport {
 
 export interface ReportInput {
   findingReplays?: FindingReplay[];
+  findingProofs?: FindingProof[]; regressionFiles?: RegressionRef[]; regressionProposals?: PendingRegression[];
   assertionAudit?: AssertionAudit[];
   planReview?: TestPlanReview;
   environment?: EnvironmentProbe;
@@ -151,6 +156,15 @@ export function buildReport(input: ReportInput): AcceptanceReport {
     if(replay&&['error','unsupported','timeout','interrupted','in_progress'].includes(replay.status))warn(`Tái hiện ${finding.title}: ${replay.status}. ${replay.message}`);
     if(replay?.status==='reproduced'&&finding.status==='resolved')warn(`Finding đã đánh dấu xử lý nhưng phản ví dụ còn tái hiện ở checkpoint này: ${finding.title}.`);
   }
+  if (policyOf(run).strict) {
+    for (const p of input.findingProofs ?? []) {
+      if (p.level === 'manual_decision') warn(`Finding "${p.title}" được đóng bằng review thủ công, không phải bằng chứng sửa xong do runner xác minh. ${p.note}`);
+      else if (p.level === 'proven_fixed' && p.regression === 'unsupported') warn(`Finding "${p.title}" đã được chứng minh sửa bằng phản ví dụ, nhưng chưa có test regression trong project: ${p.note}`);
+    }
+    for (const proposal of input.regressionProposals ?? []) if (proposal.unsupported) warn(`Chưa có test regression tự động cho finding ${proposal.findingId}: ${proposal.unsupported}`);
+    const held = input.regressionFiles ?? [];
+    if (held.length) info(`Project đang giữ ${held.length} test regression đã khóa: ${held.map(r => r.path).join(', ')}.`);
+  }
   for (const c of checkRows) {
     if (c.skipped) warn(`Check "${c.id}" có ${c.skipped} test bị bỏ qua nên không phải bằng chứng${c.skippedNames.length ? `: ${c.skippedNames.slice(0, 3).map((n) => short(n, 90)).join('; ')}${c.skippedNames.length > 3 ? '…' : ''}` : ''}.`);
     if (c.status === 'flaky') warn(`Check "${c.id}" flaky: fail rồi pass khi chạy lại.`);
@@ -200,6 +214,7 @@ export function buildReport(input: ReportInput): AcceptanceReport {
     findingReplays,
     execution:executionMetrics(run,attempts,(input.now??new Date()).getTime()),
     environment:input.environment,
+    ...(policyOf(run).strict ? { findingProofs: input.findingProofs ?? [], regressionFiles: input.regressionFiles ?? [], regressionProposals: input.regressionProposals ?? [] } : {}),
     quality, qualityPolicyVersion: run.qualityPolicyVersion, generatedAt: (input.now ?? new Date()).toISOString(), runId: run.id, title: run.title, requirement: run.originalRequirement, mode: run.mode, provider: run.provider,
     readiness, notReadyReasons: completion.reasons, checkpoint: run.checkpoint, baseSha: run.baseSha,
     requirements: matrix.map((r) => ({ id: r.requirementId, text: r.text, required: r.required, manual: r.manual, kind: r.kind ?? 'expected', status: r.status, tests: testsByReq.get(r.requirementId) ?? [] })),
@@ -240,8 +255,8 @@ export function renderReportMarkdown(r: AcceptanceReport): string {
   out.push('', '## Các ca đã khai báo và rủi ro còn lại', '');
   if (!r.quality.enabled) out.push('Chưa áp dụng kiểm thử sâu cho run này.');
   else {
-    out.push('| Ca | Bắt buộc | Kết quả | Test chứng minh |', '|---|---|---|---|');
-    for (const c of r.quality.cases) out.push(`| ${c.caseId} | ${c.required ? 'Có' : 'Bổ sung'} | ${c.status} | ${c.tests.join('; ').replace(/\|/g, '/')} |`);
+    out.push('| Ca | Bắt buộc | Kết quả | Bước có assertion | Test chứng minh |', '|---|---|---|---|---|');
+    for (const c of r.quality.cases) out.push(`| ${c.caseId} | ${c.required ? 'Có' : 'Bổ sung'} | ${c.status} | ${c.stepsLinked ? `${c.stepsLinked.linked}/${c.stepsLinked.total}` : '—'} | ${c.tests.join('; ').replace(/\|/g, '/')} |`);
     out.push('', `Manifest: ${r.quality.manifestHash ?? 'chưa có'}; thời gian check: ${mins(r.quality.testMs)}.`, '', `Mutation: ${r.quality.capability.status} — ${r.quality.capability.reason}`);
     if (r.quality.mutation) {
       const m = r.quality.mutation;
@@ -265,6 +280,13 @@ export function renderReportMarkdown(r: AcceptanceReport): string {
   else if (!r.verifier.verdict) out.push('_Bản code này chưa có kết luận Verifier._');
   else out.push(`Kết luận: **${r.verifier.verdict.decision}**`, '', r.verifier.verdict.summary || '_Không có tóm tắt._');
   if (r.verifier.findings.length) out.push('', ...r.verifier.findings.map((f) => `- [${f.severity}/${f.status}] ${f.title}${f.location ? ` (${f.location})` : ''}`));
+  if (r.findingProofs?.length) {
+    const label: Record<FindingProof['level'], string> = { proven_fixed: 'ĐÃ CHỨNG MINH SỬA XONG', reproduced: 'tái hiện được, chưa sửa', not_reproduced: 'không còn tái hiện, chưa có bằng chứng trước/sau', unverified: 'chưa kiểm chứng', manual_decision: 'đóng bằng quyết định thủ công' };
+    out.push('', '## Finding: từ nghi ngờ đến chứng minh', '', 'Chỉ mục "ĐÃ CHỨNG MINH SỬA XONG" là runner đã thấy cùng kịch bản thất bại trước khi sửa và đạt sau khi sửa.', '', '| Finding | Mức | Phản ví dụ trước → sau | Regression | Ghi chú |', '|---|---|---|---|---|');
+    for (const p of r.findingProofs) out.push(`| ${p.title.replace(/\|/g, '/')} (${p.severity}) | ${label[p.level]} | ${p.replayBefore ?? '—'} → ${p.replayAfter ?? '—'} | ${p.regression ?? '—'}${p.regressionBefore ? ` (${p.regressionBefore} → ${p.regressionAfter ?? '?'})` : ''}${p.regressionTestId ? `<br>${p.regressionTestId.replace(/\|/g, '/')}` : ''} | ${p.note.replace(/\|/g, '/')} |`);
+  }
+  if (r.regressionProposals?.length) out.push('', '## Đề xuất test regression', '', ...r.regressionProposals.map(p => p.unsupported ? `- ${p.findingId}: không tạo được — ${p.unsupported}` : `- ${p.findingId}: \`${p.path}\` — thử trên checkpoint: **${p.trial?.status ?? 'chưa thử'}**. ${p.trial?.message ?? ''}`));
+  if (r.regressionFiles?.length) out.push('', '## Test regression đang khóa trong project', '', ...r.regressionFiles.map(x => `- \`${x.path}\` (${x.intact ? 'nguyên vẹn' : '**đã bị sửa**'}) — finding ${x.findingId}`));
   if(r.findingReplays?.length)out.push('','## Phản ví dụ đã chạy','',...r.findingReplays.flatMap(p=>[`- ${p.findingId} @ ${p.checkpoint.slice(0,8)}: **${p.status}** (${p.durationMs} ms). ${p.message}`,...(p.oracle?[`  - Căn cứ: ${p.oracle.references.map(r=>`${r.requirementId}: ${r.quote}`).join('; ')}. ${p.oracle.explanation}`]:[]),...p.observations.filter(o=>o.matched!==undefined).map(o=>`  - ${o.stepId}: expected=${JSON.stringify(o.expected)}; actual=${JSON.stringify(o.actual)} (${o.actualType??'JSON'}); matched=${o.matched}`)]));
   if (r.skills.length) out.push('', '## Skill đã dùng', '', ...r.skills.map((s) => `- ${s.role}: ${s.name}${s.hasScripts ? ' (có script)' : ''}`));
   out.push('', '## Công sức', '', `- Chi phí: ~$${r.effort.costUsd.toFixed(2)}${r.effort.estimated ? ' (ước tính)' : ''} · ${r.effort.tokens.toLocaleString('en-US')} token · ${r.effort.attempts} lượt agent · ${mins(r.effort.aiMs)} thời gian AI · ${r.effort.repairs} vòng sửa`, `- Công của bạn: ${mins(r.effort.humanMs)}`);

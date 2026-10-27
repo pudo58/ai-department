@@ -1,0 +1,11 @@
+{
+ "id": "reopen-limit-off-by-one",
+ "description": "One reopening more than maxReopens is allowed",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "if (t.reopenCount >= maxReopens)",
+   "replace": "if (t.reopenCount > maxReopens)"
+  }
+ ]
+}

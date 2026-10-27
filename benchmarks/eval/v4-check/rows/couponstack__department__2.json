@@ -1,0 +1,119 @@
+{
+  "assignmentId": "couponstack:department:2",
+  "taskId": "couponstack",
+  "repetition": 2,
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "startedAt": "2026-10-26T15:19:35.399Z",
+  "endedAt": "2026-10-26T15:23:00.506Z",
+  "arm": "department",
+  "mode": "verify",
+  "runId": "run_cf933a7d",
+  "status": "blocked",
+  "blocker": "Manifest Author vẫn chưa hợp lệ sau một lượt sửa: Không tìm thấy khối ```json hoặc một giá trị JSON hoàn chỉnh ở cuối phản hồi.",
+  "limitReached": false,
+  "stoppedByOrchestrator": null,
+  "automaticMs": 195552,
+  "reachedDeveloper": false,
+  "readiness": "not_ready",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "evidenceComplete": false,
+  "ready": false,
+  "grader": {
+    "passed": 0,
+    "total": 33,
+    "failed": [
+      "definitions rejects invalid definitions with INVALID_INPUT",
+      "definitions rejects invalid requests with INVALID_INPUT",
+      "definitions reports duplicate and unknown codes",
+      "pricing prices an order without codes",
+      "pricing applies one percent coupon and one fixed coupon",
+      "pricing rounds a percent discount down",
+      "pricing applies percent coupons before fixed ones whatever the order of the codes",
+      "pricing applies each percent coupon to what is left, in the order of the codes",
+      "pricing applies fixed coupons in the order of the codes and stacks them",
+      "pricing limits a coupon by its cap",
+      "pricing never takes more than what is left, so the total never goes below zero",
+      "pricing takes a percent coupon of what the earlier coupons left, then caps it",
+      "pricing leaves the engine untouched by a quote",
+      "eligibility honours validFrom and validTo as a half-open interval",
+      "eligibility measures minSubtotal on the subtotal before any discount, and accepts exactly the minimum",
+      "eligibility limits total uses and counts redemptions of all customers",
+      "eligibility limits uses per customer without limiting others",
+      "eligibility reports the first ineligible coupon in the order of the codes, and the first failing rule of that coupon",
+      "eligibility checks the rules of one coupon in the specified order",
+      "stacking lets a non-stackable coupon stand alone and refuses it with any other code",
+      "stacking lets any number of stackable coupons be combined",
+      "redeeming prices like quote, counts one use of each coupon and returns the order id",
+      "redeeming counts nothing and remembers nothing when one coupon is not eligible",
+      "redeeming returns the first result for an equal request and counts nothing a second time",
+      "redeeming replays the first result even when the coupon has been used up or has expired since",
+      "redeeming treats an equal request written with other key order and the same codes as the same order",
+      "redeeming refuses the same order id with a different request and counts nothing",
+      "redeeming returns copies, so changing a result does not change what is remembered",
+      "cancelling gives every counted use back and returns the cancelled status",
+      "cancelling gives nothing back a second time",
+      "cancelling frees a place under maxUses and perCustomer",
+      "cancelling refuses unknown orders and a redemption of a cancelled order id",
+      "cancelling does not remember an order that failed, so there is nothing to cancel"
+    ],
+    "loadError": false
+  },
+  "graderPass": false,
+  "falseReady": false,
+  "costUsd": 0.553398,
+  "estimatedCost": true,
+  "attempts": 4,
+  "roles": [
+    "planner:prepare:completed",
+    "author:prepare:completed",
+    "author:implement:completed",
+    "author:implement:completed"
+  ],
+  "retries": [
+    {
+      "reason": "invalid_output",
+      "count": 1
+    }
+  ],
+  "findings": [],
+  "findingsReproduced": 0,
+  "regressionsProposed": 0,
+  "regressionsCreated": 0,
+  "authorTestsWrong": {
+    "diagnosedAsTestError": 0,
+    "diagnoses": 0,
+    "proposals": 0,
+    "approved": 0
+  },
+  "interventions": [
+    {
+      "round": 1,
+      "kind": "contract",
+      "action": "approve",
+      "note": "Plan is valid under v4 and states SPEC rules 1-9; the three assumptions ask about behavior the SPEC does not decide (overflow, error precedence, how often now() is read) and no rule is added for them.",
+      "at": "2026-10-26T15:21:15.153Z"
+    }
+  ],
+  "repairRounds": 0,
+  "completionReasons": [
+    "Chưa có checkpoint được chấp nhận.",
+    "Check bắt buộc \"test\" chưa chạy trên checkpoint hiện tại.",
+    "10 yêu cầu chưa có test nào xác minh (R-1, R-2, R-3, R-4, R-5, R-6, R-7, R-8, R-9, R-10): không test nào trong lần check gần nhất chạy được và gắn thẻ [R-x]. Bấm Chạy tiếp sẽ không đổi kết quả; cần sửa check của project cho chạy đúng test, hoặc sửa hợp đồng để đánh dấu \"Thủ công\" các yêu cầu chỉ kiểm được bằng mắt.",
+    "Thiếu manifest test do Author khóa trước Developer.",
+    "C-1: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-2: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-3: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-4: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-5: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-6: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-7: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-8: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-9: ca bắt buộc chưa có bằng chứng đạt.",
+    "C-10: ca bắt buộc chưa có bằng chứng đạt.",
+    "Chưa có kết luận Verifier cho đúng checkpoint hiện tại."
+  ],
+  "usageTokens": 370462
+}

@@ -1,0 +1,4 @@
+{
+  "dropCases": ["C-18", "C-19", "C-20"],
+  "note": "Form-only revision: C-18, C-19 and C-20 are 'not applicable' statements written as non-required automated cases (preconditions/actions 'Không áp dụng', no steps, quotes that are not clauses). The same groups are already declared in notApplicable with reasons, so the cases are dropped; no test coverage or expected result is removed or added."
+}

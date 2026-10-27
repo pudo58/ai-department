@@ -1,0 +1,11 @@
+{
+ "id": "customer-reply-reopens-unassigned",
+ "description": "A customer reply puts the ticket back to open",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "customerReply: (id) => move(find(id), ['pending'], 'assigned'),",
+   "replace": "customerReply: (id) => move(find(id), ['pending'], 'open'),"
+  }
+ ]
+}

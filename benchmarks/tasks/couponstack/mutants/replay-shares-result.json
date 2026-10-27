@@ -1,0 +1,15 @@
+{
+ "id": "replay-shares-result",
+ "description": "A caller can change the remembered result",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "return structuredClone(seen.result);",
+   "replace": "return seen.result;"
+  },
+  {
+   "find": "result: structuredClone(result), status",
+   "replace": "result, status"
+  }
+ ]
+}

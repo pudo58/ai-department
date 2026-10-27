@@ -3,6 +3,7 @@ import type { BudgetState, CheckResult, CompletionState, Finding, MatrixRow, Run
 import { ranNoTests } from './checks.js';
 import { isApproved } from './contract.js';
 import { blocksCompletion } from './findings.js';
+import { policyOf } from './policy.js';
 
 /** Evidence must belong to the live checkpoint and contract version, and come from an unquarantined passed check. */
 export function currentChecks(run: Run, checks: readonly CheckResult[]): CheckResult[] {
@@ -49,7 +50,7 @@ export function evaluateCompletion(run: Run, checks: readonly CheckResult[], fin
       ? `Yêu cầu chưa được xác minh: ${unverified.join(', ')}.`
       : `${unverified.length} yêu cầu chưa có test nào xác minh (${unverified.join(', ')}): không test nào trong lần check gần nhất chạy được và gắn thẻ [R-x]. Bấm Chạy tiếp sẽ không đổi kết quả; cần sửa check của project cho chạy đúng test, hoặc sửa hợp đồng để đánh dấu "Thủ công" các yêu cầu chỉ kiểm được bằng mắt.`);
   }
-  const open = findings.filter((f) => f.contractVersion === run.contract.version && blocksCompletion(f));
+  const open = findings.filter((f) => f.contractVersion === run.contract.version && blocksCompletion(f, policyOf(run).strict));
   if (open.length) reasons.push(`${open.length} finding blocker/major chưa xử lý.`);
   if (budget.spentUsd > budget.capUsd + 1e-9) reasons.push('Đã vượt ngân sách của task.');
   return { ready: reasons.length === 0, reasons };

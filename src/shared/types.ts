@@ -1,4 +1,5 @@
 import type { TestPlan, TestPlanReview, QualityDetail, MutationCapability } from './quality.js';
+import type { EvidencePolicy } from './regression.js';
 export type Mode = 'single' | 'clarify' | 'verify' | 'compare';
 export type ProviderName = 'codex' | 'claude' | 'antigravity' | 'fake';
 export type Role = 'planner' | 'author' | 'developer' | 'verifier' | 'investigator';
@@ -32,6 +33,10 @@ export interface ProjectProfile {
   limits?: { agentMs?: number; setupMs?: number };
   /** Selected relative package directory when automatic mutation detection is ambiguous. */
   mutationRoot?: string;
+  /** Folder (relative to the repository) where generated regression tests are written; defaults to tests/aidept-regressions. */
+  regressionDir?: string;
+  /** Id of the Vitest check that runs generated regression tests; needed only when the project has more than one Vitest check. */
+  regressionRecipe?: string;
   /** 'local' runs the agent and checks directly on this machine (no isolation); missing means docker. */
   executionMode?: 'docker' | 'local';
   /** Project owner's notes on stack, conventions, commands and things to avoid. Text for the agents to read, never executed. */
@@ -76,7 +81,9 @@ export interface Run {
    * confirmed findings. Stored with the run, so a request made just before a restart is still carried out on resume;
    * cleared when that drive ends (finished, blocked or stopped by the person).
    */
-  pendingAction?: 'recheck' | 'repair';
+  pendingAction?: 'recheck' | 'repair' | 'replay';
+  /** The finding (and the regression proposal it was shown with) a queued `replay` action re-runs; no AI is involved. */
+  pendingReplay?: { findingId: string; proposalHash?: string };
   preflightReturnStatus?: RunStatus;
   authorDraftRequest?: { attemptId: string; draftHash: string };
   id: string; projectId: string; title: string; originalRequirement: string; mode: Mode;
@@ -91,7 +98,9 @@ export interface Run {
   createdAt: string; updatedAt: string; acceptedAt?: string; followupUntil?: string;
   delivery?: Delivery;
   contractReviewReceipt?: ContractReviewReceipt;
-  qualityPolicyVersion?: 1 | 2 | 3;
+  qualityPolicyVersion?: 1 | 2 | 3 | 4;
+  /** Evidence rules frozen when a v4 run was created; later environment or code changes cannot loosen them. */
+  evidencePolicy?: EvidencePolicy;
   /** A human-approved test-only proposal; persisted before enqueue so restart cannot lose its intent. */
   testRepairApproval?: { artifactId: string; artifactHash: string; appliedCheckpoint?: string; /** Applied by the system after every check passed, not by a person. */ auto?: boolean };
   /** Project context frozen for this run on first use, so later memory edits cannot change a run in flight. */
@@ -114,13 +123,21 @@ export interface RunDetail {
   /** Set when automatic fallbacks weakened this run's evidence; see degradedOf in core/report.ts. */
   degraded?: import('../core/report.js').DegradedRun;
   findingReplays?: import('./reproduction.js').FindingReplay[];
+  /** v4: the regression test proposed for each reproduced finding, and the ladder from "suspected" to "proven fixed". */
+  regressionProposals?: import('./regression.js').PendingRegression[];
+  findingProofs?: import('./regression.js').FindingProof[];
+  regressionFiles?: import('./regression.js').RegressionRef[];
   execution?: import('./execution.js').ExecutionMetrics;
   environment?: import('./execution.js').EnvironmentProbe;
   authorDraft?: import('./execution.js').PendingAuthorDraft;
 }
 export interface Attempt { id: string; slot: Slot; independence?: Independence; runId: string; role: Role; stage: Stage; provider: ProviderName; model: string; sessionId?: string; status: 'running' | 'completed' | 'failed' | 'interrupted'; startedAt: string; endedAt?: string; containerId?: string; checkpoint: string | null; contractVersion: number; error?: string }
 export interface Artifact { id: string; runId: string; attemptId?: string; kind: 'raw' | 'context' | 'reuse' | 'diff' | 'report' | 'acceptance' | 'interpretation' | 'tool' | 'checkpoint'; title: string; content: string; hash: string; checkpoint: string | null; contractVersion: number; valid: boolean; createdAt: string }
-export interface Finding { id: string; runId: string; category: 'behavior' | 'design'; severity: 'blocker' | 'major' | 'minor'; code?: string; title: string; location: string; rule?: string; precedent?: string; evidence: string; suggestion: string; status: 'open' | 'disputed' | 'resolved'; confirmed: boolean; checkpoint: string | null; contractVersion: number; dispute?: string; createdAt: string; reproduction?: import('./reproduction.js').FindingReproduction; reproductionLimitation?: string; /** An automatic repair round already tried this unconfirmed finding; it stays visible but no longer blocks. */ attempted?: boolean }
+export interface Finding { id: string; runId: string; category: 'behavior' | 'design'; severity: 'blocker' | 'major' | 'minor'; code?: string; title: string; location: string; rule?: string; precedent?: string; evidence: string; suggestion: string; status: 'open' | 'disputed' | 'resolved'; confirmed: boolean; checkpoint: string | null; contractVersion: number; dispute?: string; createdAt: string; reproduction?: import('./reproduction.js').FindingReproduction; reproductionLimitation?: string; /** An automatic repair round already tried this unconfirmed finding; it stays visible but no longer blocks. */ attempted?: boolean;
+  /** v4: how the person confirmed it: against the exact regression proposal they read, or by a reasoned manual review. */
+  confirmation?: import('./regression.js').FindingConfirmation;
+  /** v4: how it was closed. Only `verified_fix` means the runner proved the repair; `manual_review` is a person's recorded decision. */
+  resolution?: import('./regression.js').FindingResolution }
 export interface CheckResult { issues?: CheckIssue[]; aliases?: Record<string, string[]>; slot?: Slot; configHash?: string; manifestHash?: string; outcomes?: { id: string; status: 'passed' | 'failed' | 'skipped' }[]; id: string; runId: string; recipeId: string; checkpoint: string; contractVersion: number; status: CheckStatus; attempts: { exitCode: number | null; log: string; durationMs: number }[]; testIds: string[]; missingTestIds: string[]; required: boolean; requirementIds: string[]; quarantined: boolean; quarantineReason?: string; valid: boolean; createdAt: string; /** Test tallies read from the report, when the runner produced one. */ counts?: { passed: number; failed: number; skipped: number }; skippedTestIds?: string[] }
 export interface CheckIssue { kind: 'assertion_failed' | 'test_missing' | 'test_skipped' | 'report_error' | 'identity_ambiguous' | 'collection_error' | 'environment' | 'checkpoint_mismatch'; message: string; testId?: string }
 export interface TraceEvent { id: number; runId: string; type: string; message: string; data?: unknown; createdAt: string }

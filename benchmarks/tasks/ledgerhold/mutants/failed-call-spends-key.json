@@ -1,0 +1,11 @@
+{
+ "id": "failed-call-spends-key",
+ "description": "A call that fails still uses up its key",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "const result = run();\n    remembered.set(key, { signature, result: structuredClone(result) });",
+   "replace": "remembered.set(key, { signature, result: null });\n    const result = run();\n    remembered.get(key).result = structuredClone(result);"
+  }
+ ]
+}

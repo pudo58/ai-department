@@ -1,0 +1,11 @@
+{
+ "id": "max-uses-off-by-one",
+ "description": "One use more than maxUses is allowed",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "(counted.get(d.code) ?? 0) >= d.maxUses",
+   "replace": "(counted.get(d.code) ?? 0) > d.maxUses"
+  }
+ ]
+}

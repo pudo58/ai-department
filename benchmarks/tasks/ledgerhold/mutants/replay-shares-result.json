@@ -1,0 +1,11 @@
+{
+ "id": "replay-shares-result",
+ "description": "A caller can change the remembered result",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "remembered.set(key, { signature, result: structuredClone(result) });\n    return structuredClone(result);",
+   "replace": "remembered.set(key, { signature, result });\n    return result;"
+  }
+ ]
+}

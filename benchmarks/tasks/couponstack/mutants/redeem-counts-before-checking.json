@@ -1,0 +1,11 @@
+{
+ "id": "redeem-counts-before-checking",
+ "description": "Uses are counted before the order is found eligible",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "const priced = price(request);\n      const result = { orderId, ...priced };\n      for (const { code } of priced.discounts) bump(code, customer, 1);",
+   "replace": "for (const code of request.codes ?? []) bump(code, customer, 1);\n      const priced = price(request);\n      const result = { orderId, ...priced };"
+  }
+ ]
+}

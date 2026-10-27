@@ -1,0 +1,11 @@
+{
+ "id": "failed-merge-changes-target",
+ "description": "A merge that fails has already raised the priority of the target",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "const live = ['open', 'assigned', 'pending'];",
+   "replace": "const live = ['open', 'assigned', 'pending']; if (RANK[source.priority] > RANK[target.priority]) target.priority = source.priority;"
+  }
+ ]
+}

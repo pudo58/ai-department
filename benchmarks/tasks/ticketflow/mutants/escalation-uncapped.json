@@ -1,0 +1,11 @@
+{
+ "id": "escalation-uncapped",
+ "description": "Urgent tickets escalate past urgent",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "Math.min(RANK[t.priority] + 1, 3)",
+   "replace": "RANK[t.priority] + 1"
+  }
+ ]
+}

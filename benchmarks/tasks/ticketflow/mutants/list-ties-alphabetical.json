@@ -1,0 +1,11 @@
+{
+ "id": "list-ties-alphabetical",
+ "description": "Tickets of equal priority are sorted by id",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "a.t.seq - b.t.seq",
+   "replace": "(a.t.id < b.t.id ? -1 : 1)"
+  }
+ ]
+}

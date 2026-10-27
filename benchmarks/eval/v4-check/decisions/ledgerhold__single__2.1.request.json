@@ -1,0 +1,156 @@
+{
+  "assignment": "v4check-ledgerhold__single__2",
+  "arm": "single",
+  "task": "ledgerhold",
+  "round": 1,
+  "kind": "contract",
+  "contractHash": "4927b52c8b995fffbd496e1bdc0e081b7e864a8584d9b5f0c1e0da3535ed3855",
+  "version": 2,
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "createLedger() tạo ledger đồng bộ với now mặc định trả về 0 và holdTtl mặc định là 60; caller cũng có thể await các phương thức.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-2",
+      "text": "createLedger ném lỗi có code INVALID_INPUT nếu holdTtl không phải số nguyên an toàn dương.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-3",
+      "text": "Tên tài khoản, holdId và key rỗng hoặc không phải chuỗi gây lỗi INVALID_INPUT; amount không phải số nguyên an toàn dương gây lỗi INVALID_AMOUNT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-4",
+      "text": "Lỗi nghiệp vụ là Error có thuộc tính code kiểu chuỗi. Tài khoản chưa mở gây UNKNOWN_ACCOUNT; holdId chưa từng được cấp gây UNKNOWN_HOLD.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-5",
+      "text": "open(account) tạo tài khoản với total, held, available đều bằng 0 và trả balance view; mở trùng gây ACCOUNT_EXISTS và không đổi trạng thái.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-6",
+      "text": "Balance view có đúng các giá trị total, held, available; available bằng total trừ tổng tiền của các hold đang active tại thời điểm now().",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-7",
+      "text": "Hold active khi now() < createdAt + holdTtl và expired khi now() >= createdAt + holdTtl; hold hết hạn không còn được tính vào held.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-8",
+      "text": "deposit(account, amount, key) cộng amount vào total và trả balance view mới.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-9",
+      "text": "hold chỉ tạo hold khi available >= amount; thiếu tiền gây INSUFFICIENT_FUNDS và không cấp holdId hay tăng bộ đếm. Thành công trả {holdId, amount, expiresAt}, với holdId theo thứ tự h1, h2, … và expiresAt = now() + holdTtl.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-10",
+      "text": "capture trên hold active trừ amount khỏi total và đóng hold; phần hold chưa capture lập tức trở thành available. Amount vượt số tiền hold gây OVER_CAPTURE.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-11",
+      "text": "capture hoặc release hold đã hết hạn gây HOLD_EXPIRED; hold đã capture hoặc release gây HOLD_CLOSED. release hold active đóng hold mà không trừ total và trả balance view của tài khoản.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-12",
+      "text": "getHold trả {holdId, account, amount, status}; status phản ánh active, expired, captured hoặc released tại now(). Hold captured/released giữ nguyên trạng thái.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-13",
+      "text": "transfer yêu cầu hai tài khoản khác nhau và đã mở; from === to gây SAME_ACCOUNT, tài khoản chưa mở gây UNKNOWN_ACCOUNT. Chuyển nhiều hơn available(from) gây INSUFFICIENT_FUNDS. Thành công trả {from, to} gồm hai balance view.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-14",
+      "text": "Mọi thao tác thất bại không làm thay đổi trạng thái liên quan; key của thao tác thất bại vẫn có thể dùng cho một lời gọi sau.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-15",
+      "text": "Key được chia sẻ trong toàn ledger. Gọi lại cùng key, method và arguments sau lần thành công trả deep copy kết quả đã nhớ, không áp dụng hiệu ứng lần nữa, kể cả khi thời gian hoặc số dư đã thay đổi.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-16",
+      "text": "Dùng lại key thành công với method hoặc arguments khác gây KEY_REUSED và không đổi trạng thái.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-17",
+      "text": "Không có persistence, network, timers hoặc cleanup; không thêm hành vi ngoài hợp đồng.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    }
+  ],
+  "acceptanceExamples": [
+    "Với holdTtl=10, now=5, mở tài khoản A, nạp 1000 và giữ 400: balance(A) là {total:1000, held:400, available:600}; hold trả {holdId:\"h1\", amount:400, expiresAt:15}.",
+    "Tại now=15, hold h1 hết hạn: balance(A) có held=0 và getHold(\"h1\").status là \"expired\"; release(\"h1\", key) lỗi HOLD_EXPIRED.",
+    "Với 1000 khả dụng, hold 400 rồi capture 250: total còn 750, hold đóng và available là 750.",
+    "Chuyển 300 từ A sang B trả hai balance view tương ứng; chuyển số tiền vượt available của A lỗi INSUFFICIENT_FUNDS và không đổi số dư A hoặc B.",
+    "Nạp bằng key K một lần rồi gọi lại cùng method, arguments và K trả lại kết quả ban đầu dưới dạng deep copy, không cộng tiền lần nữa; dùng K cho method khác lỗi KEY_REUSED."
+  ],
+  "interfaces": [
+    "Export createLedger({ now = () => 0, holdTtl = 60 } = {}).",
+    "Ledger cung cấp open(account), deposit(account, amount, key), hold(account, amount, key), capture(holdId, amount, key), release(holdId, key), transfer(from, to, amount, key), balance(account), getHold(holdId).",
+    "Inputs và results là giá trị JSON thuần; phương thức đồng bộ và có thể được caller await."
+  ],
+  "assumptions": [
+    "Không đặt thêm yêu cầu về kiểu dữ liệu hoặc tính hợp lệ của now ngoài mô tả đã cho; yêu cầu chỉ nêu now là hàm trả số nguyên an toàn không âm.",
+    "Không áp đặt thứ tự ưu tiên lỗi khi một lời gọi đồng thời vi phạm nhiều quy tắc; ví dụ nghiệm thu chỉ kiểm tra từng điều kiện độc lập."
+  ],
+  "scope": [
+    "Triển khai in-memory trong src/ledger.js theo public API.",
+    "SPEC.md là tài liệu có thẩm quyền; không đọc dự án lân cận hoặc dữ liệu controller.",
+    "Không thay đổi dependencies, cấu hình, SPEC hoặc scaffold test; không mở rộng hành vi ngoài hợp đồng.",
+    "Giữ mã nguồn gọn; các ràng buộc quy trình và phạm vi file cần rà soát thủ công."
+  ],
+  "problems": [],
+  "warnings": [
+    "Hợp đồng có giả định cần bạn xác nhận."
+  ]
+}

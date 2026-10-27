@@ -181,6 +181,8 @@ export function ProjectForm({ onClose, onSave, busy }: { onClose: () => void; on
   const [setup, setSetup] = useState('npm ci');
   const [image, setImage] = useState('node:24-bookworm-slim');
   const [mutationRoot, setMutationRoot] = useState('');
+  const [regressionDir, setRegressionDir] = useState('');
+  const [regressionRecipe, setRegressionRecipe] = useState('');
   const [allowScaffold, setAllowScaffold] = useState(false);
   const [detection, setDetection] = useState<Detection | null>(null);
   const [error, setError] = useState('');
@@ -214,7 +216,7 @@ export function ProjectForm({ onClose, onSave, busy }: { onClose: () => void; on
     try {
       const checks = toRecipes(drafts);
       const setupCommand = commandOf('Lệnh cài đặt', setup);
-      await onSave({ name: name.trim() || folderName(repository), repository: repository.trim(), modules: modulesOf(scope, modules), checks, guidance, ...(mutationRoot.trim() ? { mutationRoot: mutationRoot.trim() } : {}), allowScaffold, singleBudgetUsd: budget, roles: roleConfig, runnerImage: image, executionMode, ...(executionMode === 'local' ? { setupCommand } : {}) });
+      await onSave({ name: name.trim() || folderName(repository), repository: repository.trim(), modules: modulesOf(scope, modules), checks, guidance, ...(mutationRoot.trim() ? { mutationRoot: mutationRoot.trim() } : {}), ...(regressionDir.trim() ? { regressionDir: regressionDir.trim() } : {}), ...(regressionRecipe.trim() ? { regressionRecipe: regressionRecipe.trim() } : {}), allowScaffold, singleBudgetUsd: budget, roles: roleConfig, runnerImage: image, executionMode, ...(executionMode === 'local' ? { setupCommand } : {}) });
     } catch (e) { setError((e as Error).message); }
   }
 
@@ -244,6 +246,8 @@ export function ProjectForm({ onClose, onSave, busy }: { onClose: () => void; on
       <ScopeSection scope={scope} onScope={setScope} modules={modules} onModules={setModules}/>
       <AdvancedSection guidance={guidance} onGuidance={setGuidance} executionMode={executionMode} onMode={setExecutionMode} setup={setup} onSetup={(t) => { setSetup(t); touch('setup'); }} allowScaffold={allowScaffold} onScaffold={setAllowScaffold}>
       <Field label="Thư mục mutation" hint="Để trống để tự nhận diện; monorepo dùng đường dẫn package tương đối, ví dụ packages/api. Dấu . là gốc repo."><input value={mutationRoot} onChange={e => setMutationRoot(e.target.value)}/></Field>
+      <Field label="Thư mục test regression" hint="Nơi hệ thống ghi test regression sinh từ finding đã xác nhận (mặc định tests/aidept-regressions). Vitest của project phải nhận thư mục này; nếu không, test không được thử và finding chuyển sang review thủ công."><input value={regressionDir} onChange={e => setRegressionDir(e.target.value)} placeholder="tests/aidept-regressions"/></Field>
+      <Field label="Check Vitest cho regression" hint="Chỉ cần khi project có nhiều check Vitest: id của check chạy test regression."><input value={regressionRecipe} onChange={e => setRegressionRecipe(e.target.value)}/></Field>
         {executionMode === 'docker' && <Field label="Runner image"><input className="mono" value={image} onChange={(e) => setImage(e.target.value)} required spellCheck={false}/></Field>}
       </AdvancedSection>
       {error && <p className="inline-error" role="alert">{error}</p>}
@@ -274,6 +278,8 @@ export function ProjectEditForm({ project, onClose, onSave, busy }: { project: P
   const [setup, setSetup] = useState(formatCommandLine(project.setupCommand));
   const [preview, setPreview] = useState(formatCommandLine(project.previewCommand ?? []));
   const [mutationRoot, setMutationRoot] = useState(project.mutationRoot ?? '');
+  const [regressionDir, setRegressionDir] = useState(project.regressionDir ?? '');
+  const [regressionRecipe, setRegressionRecipe] = useState(project.regressionRecipe ?? '');
   const [allowScaffold, setAllowScaffold] = useState(!!project.allowScaffold);
   const [error, setError] = useState('');
   // Models or effort set per role only show in the full table, so open it when the project uses them.
@@ -283,7 +289,7 @@ export function ProjectEditForm({ project, onClose, onSave, busy }: { project: P
     event.preventDefault(); setError('');
     try {
       const checks = toRecipes(drafts);
-      await onSave({ name: name.trim(), modules: modulesOf(scope, modules), checks, setupCommand: commandOf('Lệnh cài đặt', setup), guidance, mutationRoot: mutationRoot.trim(), executionMode, previewCommand: commandOf('Lệnh chạy thử', preview), allowScaffold, roles: roleConfig, singleBudgetUsd: budget });
+      await onSave({ name: name.trim(), modules: modulesOf(scope, modules), checks, setupCommand: commandOf('Lệnh cài đặt', setup), guidance, mutationRoot: mutationRoot.trim(), ...(regressionDir.trim() !== (project.regressionDir ?? '') ? { regressionDir: regressionDir.trim() } : {}), ...(regressionRecipe.trim() !== (project.regressionRecipe ?? '') ? { regressionRecipe: regressionRecipe.trim() } : {}), executionMode, previewCommand: commandOf('Lệnh chạy thử', preview), allowScaffold, roles: roleConfig, singleBudgetUsd: budget });
     } catch (e) { setError((e as Error).message); }
   }
 
@@ -301,6 +307,8 @@ export function ProjectEditForm({ project, onClose, onSave, busy }: { project: P
       <ScopeSection scope={scope} onScope={setScope} modules={modules} onModules={setModules}/>
       <AdvancedSection guidance={guidance} onGuidance={setGuidance} executionMode={executionMode} onMode={setExecutionMode} setup={setup} onSetup={setSetup} allowScaffold={allowScaffold} onScaffold={setAllowScaffold}>
       <Field label="Thư mục mutation" hint="Để trống để tự nhận diện; monorepo dùng đường dẫn package tương đối, ví dụ packages/api. Dấu . là gốc repo."><input value={mutationRoot} onChange={e => setMutationRoot(e.target.value)}/></Field>
+      <Field label="Thư mục test regression" hint="Nơi hệ thống ghi test regression sinh từ finding đã xác nhận (mặc định tests/aidept-regressions). Vitest của project phải nhận thư mục này; nếu không, test không được thử và finding chuyển sang review thủ công."><input value={regressionDir} onChange={e => setRegressionDir(e.target.value)} placeholder="tests/aidept-regressions"/></Field>
+      <Field label="Check Vitest cho regression" hint="Chỉ cần khi project có nhiều check Vitest: id của check chạy test regression."><input value={regressionRecipe} onChange={e => setRegressionRecipe(e.target.value)}/></Field>
         <Field label="Lệnh chạy thử app (tuỳ chọn)" hint='Cho nút "Chạy thử" trên trang việc; app nhận cổng qua biến PORT. Để trống thì tự đoán (npm run dev, npm start, node server.mjs, index.html).'>
           <input className="mono" value={preview} onChange={(e) => setPreview(e.target.value)} placeholder="npm run dev" spellCheck={false}/></Field>
       </AdvancedSection>

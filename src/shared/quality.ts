@@ -44,6 +44,8 @@ export interface CaseEvidence {
   caseId: string; requirementIds: string[]; required: boolean; method: TestCase['method'];
   status: 'passed' | 'failed' | 'missing' | 'manual_pending'; tests: string[]; reasons: string[];
   checkpoint: string | null; slot: Slot; contractVersion: number; manifestHash: string | null;
+  /** How many of the approved steps of this case have an assertion bound to them in the locked manifest (a trace, not a proof that the assertion is right). */
+  stepsLinked?: { linked: number; total: number };
 }
 export interface MutationCapability {
   status: 'available' | 'unsupported' | 'missing_tool' | 'ambiguous'; reason: string;

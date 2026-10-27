@@ -1,0 +1,11 @@
+{
+ "id": "total-can-go-negative",
+ "description": "A discount may exceed what is left",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "Math.min(wanted, d.cap ?? Infinity, running)",
+   "replace": "Math.min(wanted, d.cap ?? Infinity)"
+  }
+ ]
+}

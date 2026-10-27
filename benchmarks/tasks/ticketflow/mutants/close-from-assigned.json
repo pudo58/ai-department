@@ -1,0 +1,11 @@
+{
+ "id": "close-from-assigned",
+ "description": "close works on an assigned ticket",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "close: (id) => move(find(id), ['resolved'], 'closed'),",
+   "replace": "close: (id) => move(find(id), ['resolved', 'assigned'], 'closed'),"
+  }
+ ]
+}

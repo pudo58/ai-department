@@ -1,4 +1,5 @@
 import { deepQuality } from '../../core/qualityevidence.js';
+import { policyOf } from '../../core/policy.js';
 import { normalizeTestId, manifestFindings } from '../../core/testplan.js';
 import { hashContract } from '../../core/contract.js';
 import type { TestManifest } from '../../shared/quality.js';
@@ -182,7 +183,7 @@ export class CandidateBuilder {
     let extra = '';
     let authorOutput = '', authorAttemptId = '';
     if (deepQuality(run) && this.s.store.artifacts.list(runId).some(a => a.title === 'Author manifest attempt' && a.valid && a.contractVersion === run.contract.version)) {
-      if (run.qualityPolicyVersion === 3 && pendingAuthorDraft(run,this.s.store.artifacts.list(runId))) return this.repairAuthorManifest(runId,signal);
+      if (policyOf(run).authorRepair && pendingAuthorDraft(run,this.s.store.artifacts.list(runId))) return this.repairAuthorManifest(runId,signal);
       throw new Blocked('Author chưa tạo được manifest hợp lệ. Sửa hợp đồng hoặc kế hoạch ca để thử lượt mới; không tự gọi lại AI.');
     }
     if (deepQuality(run)) this.s.artifact(runId, { kind: 'report', title: 'Author manifest attempt', content: JSON.stringify({ schemaVersion: 1, source: 'author', contractHash: hashContract(run.contract) }), checkpoint: run.checkpoint });
@@ -216,16 +217,17 @@ export class CandidateBuilder {
       throw new Blocked(testProblems.length ? `Test Author chưa an toàn trước khi khóa: ${testProblems.join('; ')}` : `Author chỉ được thêm file test (tests/, *.test.ts, *.spec.ts) trong module cho phép. Vi phạm: ${violations.join(', ')}`);
     }
     let manifest: TestManifest | undefined;
+    const policy = policyOf(run);
     if (deepQuality(run)) {
       try {
-        const structured = (run.qualityPolicyVersion??0) >= 2;
+        const structured = policy.structured;
         const normalized = await resolveAuthorManifest(run.contract,authorOutput,structured,runtime.workspacePath?.(run,'A'),changes.files);
-        const found = manifestFindings(run.contract, normalized, run.configSnapshot.checks, changes.files), problems = [...found.blocking];
+        const found = manifestFindings(run.contract, normalized, run.configSnapshot.checks, changes.files, { strict: policy.strict }), problems = [...found.blocking];
         const audit=await auditManifestAssertions(run.contract,normalized,runtime.workspacePath?.(run,'A'),changes.files);
         problems.push(...audit.problems);
         const advisories = [...new Set([...found.advisories, ...audit.advisories])];
         // Binding gaps are not worth blocking on, but the one correction round exists to close them while it is still free to use.
-        if (run.qualityPolicyVersion === 3) problems.push(...advisories);
+        if (policy.authorRepair) problems.push(...advisories);
         if (problems.length) throw new Error(problems.join(' '));
         manifest = { schemaVersion: structured ? 2 : 1, source: 'author', contractHash: hashContract(run.contract), contractVersion: run.contract.version, slot: 'A', entries: normalized, ...(run.contract.testPlan?.reasoningVersion===1?{assertionAudit:audit.audits}:{}), ...(advisories.length ? { advisories } : {}) };
       } catch (error) {
@@ -233,7 +235,7 @@ export class CandidateBuilder {
         this.s.artifact(runId,{kind:'report',title:AUTHOR_DRAFT_TITLE,content:JSON.stringify(draft),checkpoint:run.checkpoint,attemptId:authorAttemptId});
         this.s.log(runId,'author.draft_saved','Manifest Author chưa hợp lệ; giữ draft trước khi hoàn nguyên.');
         await runtime.revert(run, 'A');
-        if (run.qualityPolicyVersion === 3) return this.repairAuthorManifest(runId,signal);
+        if (policy.authorRepair) return this.repairAuthorManifest(runId,signal);
         throw new Blocked(`Manifest Author không hợp lệ: ${(error as Error).message}`);
       }
     }
@@ -296,7 +298,7 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
           else if(!same.some(n=>n.testId===e.testId&&sameMembers(n.requirementIds,e.requirementIds)))problems.push(`${e.caseId}: lượt sửa đổi tập yêu cầu liên kết của test (${e.requirementIds.join(', ')}).`);
         }
       }catch{/* Source AST guard still preserves actual test names and setup in a schema-invalid draft. */}
-      const found=manifestFindings(run.contract,entries,run.configSnapshot.checks,changes.files);problems.push(...found.blocking);
+      const found=manifestFindings(run.contract,entries,run.configSnapshot.checks,changes.files,{strict:policyOf(run).strict});problems.push(...found.blocking);
       const audit=await auditManifestAssertions(run.contract,entries,workspace,changes.files);problems.push(...audit.problems);
       if(problems.length)throw new Error(problems.join(' '));
       const advisories=[...new Set([...found.advisories,...audit.advisories])];
@@ -322,7 +324,7 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
    */
   private async acceptDerivedManifest(runId:string,draft:AuthorDraft&{artifactId?:string}):Promise<boolean>{
     const run=this.s.run(runId),runtime=this.s.runtimeFor(run),workspace=runtime.workspacePath?.(run,'A');
-    if(run.qualityPolicyVersion!==3||!runtime.applyPatch||!workspace||!draft.patch||!draft.paths.length||draft.paths.some(p=>!isTestPath(p))||!evaluateChanges(draft.paths,this.scope.scopeFor(runId)).accepted)return false;
+    if(!policyOf(run).derivedManifest||!runtime.applyPatch||!workspace||!draft.patch||!draft.paths.length||draft.paths.some(p=>!isTestPath(p))||!evaluateChanges(draft.paths,this.scope.scopeFor(runId)).accepted)return false;
     const recipes=run.configSnapshot.checks;
     try{
       await runtime.revert(run,'A');
@@ -362,7 +364,7 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
     const runtime=this.s.runtimeFor(run);if(!runtime.applyPatch)throw new Blocked('Runtime chưa hỗ trợ áp dụng draft.');
     const scope=evaluateChanges(draft.paths,{...this.scope.scopeFor(runId),lockedPaths:[]});
     if(!draft.patch || draft.paths.some(p=>!isTestPath(p)) || !scope.accepted)throw new Blocked('Draft không chỉ sửa file test trong phạm vi.');
-    const structured=(run.qualityPolicyVersion??0)>=2;
+    const structured=policyOf(run).structured;
     let applied=false;
     let entries:TestManifest['entries'];
     try {
@@ -374,7 +376,7 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
       entries=await resolveAuthorManifest(run.contract,draft.output,structured,runtime.workspacePath?.(run,'A'),draft.paths);
     } catch(error) { if(applied)await runtime.revert(run,'A');throw new Blocked(`Draft vẫn chưa hợp lệ: ${(error as Error).message}`); }
     const normalized=entries.map(e=>({...e,path:e.path.replace(/\\/g,'/'),testId:normalizeTestId(e.testId)}));
-    const found=manifestFindings(run.contract,normalized,run.configSnapshot.checks,draft.paths),problems=[...found.blocking];
+    const found=manifestFindings(run.contract,normalized,run.configSnapshot.checks,draft.paths,{strict:policyOf(run).strict}),problems=[...found.blocking];
     if(problems.length){if(applied)await runtime.revert(run,'A');throw new Blocked(`Draft vẫn chưa hợp lệ: ${problems.join(' ')}`);}
     try{
       // An Author's first draft precedes the first checkpoint; Git still has the frozen base HEAD.

@@ -1,0 +1,126 @@
+{
+  "assignment": "v4check-ticketflow__single__1",
+  "arm": "single",
+  "task": "ticketflow",
+  "round": 1,
+  "kind": "contract",
+  "contractHash": "c61a7408ab882042b401132686a262f1f5b5870f910c28200c4b0917b658c03b",
+  "version": 2,
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "createTickets accepts the documented defaults. Invalid reopenWindow, maxReopens, or escalateAfter values cause an Error with code INVALID_INPUT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-2",
+      "text": "create requires nonempty string id and subject, and a priority of low, normal, high, or urgent; invalid values cause INVALID_INPUT. Reusing any previously used id causes ID_TAKEN.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-3",
+      "text": "A new ticket is open, has no assignee, and has reopenCount 0. Its view includes the documented fields, with assignee null when unassigned.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-4",
+      "text": "Unknown ticket ids cause UNKNOWN_TICKET. assign requires a nonempty string agent and otherwise causes INVALID_INPUT. Errors are Error objects with a string code, and failed calls leave ticket state unchanged.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-5",
+      "text": "assign works from open, assigned, and pending, sets status to assigned, and sets or replaces the assignee. wait transitions assigned to pending. customerReply transitions pending to assigned and keeps the assignee. resolve transitions assigned to resolved and records the call time. close transitions resolved to closed. Invalid transitions cause BAD_STATE.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-6",
+      "text": "reopen transitions resolved to assigned, keeps the assignee, and increments reopenCount. When reopenCount is already at least maxReopens, it fails with REOPEN_LIMIT without changing state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-7",
+      "text": "A resolved ticket is shown as closed when now() is at least resolvedAt + reopenWindow, including through get, list, and other methods. Before that time it remains resolved and may be reopened. Resolving again after reopening starts a new window.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-8",
+      "text": "A ticket not assigned before createdAt + escalateAfter becomes escalated when that time is reached and stays escalated after later assignment. A ticket assigned before that threshold does not escalate under this rule. Escalation raises effectivePriority by one level, capped at urgent; otherwise effectivePriority equals priority.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-9",
+      "text": "merge rejects identical ids with SAME_TICKET and requires both tickets to be open, assigned, or pending, otherwise failing with BAD_STATE. It marks the source merged with mergedInto set to the target id; the source cannot change status again. The target keeps its status and assignee, receives the higher priority, and remains escalated if either ticket was escalated at merge time.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-10",
+      "text": "Each changing method returns the affected ticket's view after the change; merge returns the target view. get and list return views as of now(). mergedInto appears only on merged-ticket views.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-11",
+      "text": "list validates a supplied status against the six documented statuses, causing INVALID_INPUT for an invalid status; a supplied assignee must be a string. It applies all supplied filters and sorts by effectivePriority from urgent to low, then by creation order.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-12",
+      "text": "The service does not read wall-clock time or use persistence, network access, timers, or cleanup.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    },
+    {
+      "id": "R-13",
+      "text": "The implementation does not introduce behavior beyond the specified ticket workflow.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    }
+  ],
+  "acceptanceExamples": [
+    "With now initially 0, create ticket T1 with subject Help; its view is open with normal priority, normal effectivePriority, null assignee, and reopenCount 0.",
+    "With reopenWindow 10, create and assign T1 at time 0, resolve at time 3, and get it at time 12; it remains resolved. At time 13 it is closed.",
+    "With escalateAfter 5, create low-priority T1 at time 0 and leave it unassigned; at time 5 its effectivePriority is normal. Assigning it afterward does not remove escalation.",
+    "With maxReopens 1, resolve and reopen T1 once; a second reopen after resolving it again fails with REOPEN_LIMIT and leaves it resolved.",
+    "Create two eligible tickets with different priorities and merge the lower-priority ticket into the higher-priority one; the source view is merged with mergedInto set, and the target retains its status and assignee."
+  ],
+  "interfaces": [
+    "Export createTickets({ now = () => 0, reopenWindow = 100, maxReopens = 2, escalateAfter = 50 } = {}).",
+    "The returned service exposes create({ id, subject, priority = 'normal' }), assign(id, agent), wait(id), customerReply(id), resolve(id), reopen(id), close(id), merge(sourceId, targetId), get(id), and list({ status, assignee } = {}).",
+    "Methods are synchronous; inputs and results are plain JSON values. Error results are thrown Error objects with a string code."
+  ],
+  "assumptions": [
+    "now is supplied as a nondecreasing clock returning nonnegative safe-integer minutes; behavior for a clock that violates this contract is unspecified.",
+    "Omitted list filters impose no restriction; an explicitly supplied assignee is matched as a string, including an empty string."
+  ],
+  "scope": [
+    "Implement the in-memory workflow in src/tickets.js.",
+    "Use only the public API for acceptance checks; do not alter dependencies, configuration, SPEC.md, or the scaffold test."
+  ],
+  "problems": [],
+  "warnings": [
+    "Hợp đồng có giả định cần bạn xác nhận."
+  ]
+}

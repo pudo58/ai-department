@@ -1,0 +1,972 @@
+{
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "complete": "12/12",
+  "perArm": [
+    {
+      "arm": "department",
+      "runs": 6,
+      "graderPass": 4,
+      "evidenceComplete": 5,
+      "falseReady": 1,
+      "findingsReproduced": 1,
+      "regressionsCreated": 1,
+      "authorTestsWrong": 0,
+      "interventions": 9,
+      "meanMinutes": 6.100672222222222,
+      "meanCostUsd": 1.0150479000000001,
+      "blocked": 1,
+      "failed": 0,
+      "scoreMean": 0.8282828282828283
+    },
+    {
+      "arm": "single",
+      "runs": 6,
+      "graderPass": 6,
+      "evidenceComplete": 6,
+      "falseReady": 0,
+      "findingsReproduced": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": 0,
+      "interventions": 6,
+      "meanMinutes": 2.7101694444444444,
+      "meanCostUsd": 0.8980075,
+      "blocked": 0,
+      "failed": 0,
+      "scoreMean": 1
+    }
+  ],
+  "rows": [
+    {
+      "assignmentId": "ticketflow:department:1",
+      "taskId": "ticketflow",
+      "repetition": 1,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T14:51:24.762Z",
+      "endedAt": "2026-10-26T14:59:15.275Z",
+      "arm": "department",
+      "mode": "verify",
+      "runId": "run_39fd2f71",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 426518,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 29,
+        "total": 29,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 1.1938925999999999,
+      "estimatedCost": true,
+      "attempts": 6,
+      "roles": [
+        "planner:prepare:completed",
+        "author:prepare:completed",
+        "author:prepare:completed",
+        "author:implement:completed",
+        "developer:implement:completed",
+        "verifier:verify:completed"
+      ],
+      "retries": [
+        {
+          "reason": "invalid_output",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "revise",
+          "note": "Form-only revision against SPEC rule 5/6: R-14 (no wall clock/persistence/timers) cannot be tested through the public API, so it is marked manual as the planner prompt prescribes; the Author's question about merge priority is answered by SPEC rule 5 (base priority), so it is removed and recorded as an assumption; C-12 contained only the unanswered question instead of an expected result and is dropped (C-11 still covers merge). No expected result was added or changed.",
+          "at": "2026-10-26T14:54:58.234Z"
+        },
+        {
+          "round": 2,
+          "kind": "contract",
+          "action": "approve",
+          "note": "After the form-only revision the plan states SPEC rules 1-7 without adding or dropping behavior; each step's expected result follows the cited rule.",
+          "at": "2026-10-26T14:55:09.831Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 892073
+    },
+    {
+      "assignmentId": "ledgerhold:department:1",
+      "taskId": "ledgerhold",
+      "repetition": 1,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T14:59:15.277Z",
+      "endedAt": "2026-10-26T15:04:29.274Z",
+      "arm": "department",
+      "mode": "verify",
+      "runId": "run_08ce268c",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 290725,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 32,
+        "total": 32,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 0.9213378000000001,
+      "estimatedCost": true,
+      "attempts": 5,
+      "roles": [
+        "planner:prepare:completed",
+        "author:prepare:completed",
+        "author:implement:completed",
+        "developer:implement:completed",
+        "verifier:verify:completed"
+      ],
+      "retries": [],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Plan is valid under v4 (no blocking problems); read against SPEC rules 1-10: cases cover validation, balances/holds, capture/release, transfer atomicity and idempotent keys; scenario numbers follow the cited rules. Two advisory notes about step clauses were left as written.",
+          "at": "2026-10-26T15:01:23.772Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 700147
+    },
+    {
+      "assignmentId": "ticketflow:single:1",
+      "taskId": "ticketflow",
+      "repetition": 1,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:04:29.276Z",
+      "endedAt": "2026-10-26T15:07:52.146Z",
+      "arm": "single",
+      "mode": "single",
+      "runId": "run_5bcd5e22",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 190159,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 29,
+        "total": 29,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 0.7803126,
+      "estimatedCost": true,
+      "attempts": 3,
+      "roles": [
+        "planner:prepare:completed",
+        "developer:implement:completed",
+        "developer:repair:completed"
+      ],
+      "retries": [
+        {
+          "reason": "missing_evidence",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Contract restates SPEC rules 1-7 without adding or dropping behavior; two assumptions only record what the SPEC leaves unspecified.",
+          "at": "2026-10-26T15:05:11.234Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 906429
+    },
+    {
+      "assignmentId": "couponstack:single:1",
+      "taskId": "couponstack",
+      "repetition": 1,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:07:52.147Z",
+      "endedAt": "2026-10-26T15:11:17.531Z",
+      "arm": "single",
+      "mode": "single",
+      "runId": "run_026648f5",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 189207,
+      "reachedDeveloper": true,
+      "readiness": "ready",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 33,
+        "total": 33,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 1.4662212,
+      "estimatedCost": true,
+      "attempts": 4,
+      "roles": [
+        "planner:prepare:completed",
+        "developer:implement:completed",
+        "developer:repair:completed",
+        "developer:repair:completed"
+      ],
+      "retries": [
+        {
+          "reason": "missing_evidence",
+          "count": 1
+        },
+        {
+          "reason": "check_failure",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Contract restates SPEC rules 1-9; the two assumptions ask about behavior the SPEC does not decide (safe-integer overflow, invalid now()), which stays unspecified: approval does not add a rule for them.",
+          "at": "2026-10-26T15:08:22.943Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 1881302
+    },
+    {
+      "assignmentId": "ledgerhold:single:2",
+      "taskId": "ledgerhold",
+      "repetition": 2,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:11:17.533Z",
+      "endedAt": "2026-10-26T15:13:27.130Z",
+      "arm": "single",
+      "mode": "single",
+      "runId": "run_f34e2bb3",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 118379,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 32,
+        "total": 32,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 0.4915596,
+      "estimatedCost": true,
+      "attempts": 3,
+      "roles": [
+        "planner:prepare:completed",
+        "developer:implement:completed",
+        "developer:repair:completed"
+      ],
+      "retries": [
+        {
+          "reason": "missing_evidence",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Contract restates SPEC rules 1-10 (R-1..R-16) without adding or dropping behavior; both assumptions only record what the SPEC leaves unspecified.",
+          "at": "2026-10-26T15:11:50.002Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 567414
+    },
+    {
+      "assignmentId": "ledgerhold:department:2",
+      "taskId": "ledgerhold",
+      "repetition": 2,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:13:27.132Z",
+      "endedAt": "2026-10-26T15:19:35.398Z",
+      "arm": "department",
+      "mode": "verify",
+      "runId": "run_dfa227ef",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 331822,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 32,
+        "total": 32,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 0.8586174000000001,
+      "estimatedCost": true,
+      "attempts": 6,
+      "roles": [
+        "planner:prepare:completed",
+        "author:prepare:completed",
+        "author:prepare:completed",
+        "author:implement:completed",
+        "developer:implement:completed",
+        "verifier:verify:completed"
+      ],
+      "retries": [
+        {
+          "reason": "invalid_output",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "revise",
+          "note": "Form-only revision: C-18, C-19 and C-20 are 'not applicable' statements written as non-required automated cases (preconditions/actions 'Không áp dụng', no steps, quotes that are not clauses). The same groups are already declared in notApplicable with reasons, so the cases are dropped; no test coverage or expected result is removed or added.",
+          "at": "2026-10-26T15:16:30.200Z"
+        },
+        {
+          "round": 2,
+          "kind": "contract",
+          "action": "approve",
+          "note": "After dropping the three not-applicable placeholder cases the plan has no blocking problems; remaining cases state SPEC rules 1-10 and were read in round 1.",
+          "at": "2026-10-26T15:16:43.363Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 702413
+    },
+    {
+      "assignmentId": "couponstack:department:2",
+      "taskId": "couponstack",
+      "repetition": 2,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:19:35.399Z",
+      "endedAt": "2026-10-26T15:23:00.506Z",
+      "arm": "department",
+      "mode": "verify",
+      "runId": "run_cf933a7d",
+      "status": "blocked",
+      "blocker": "Manifest Author vẫn chưa hợp lệ sau một lượt sửa: Không tìm thấy khối ```json hoặc một giá trị JSON hoàn chỉnh ở cuối phản hồi.",
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 195552,
+      "reachedDeveloper": false,
+      "readiness": "not_ready",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": false,
+      "ready": false,
+      "grader": {
+        "passed": 0,
+        "total": 33,
+        "failed": [
+          "definitions rejects invalid definitions with INVALID_INPUT",
+          "definitions rejects invalid requests with INVALID_INPUT",
+          "definitions reports duplicate and unknown codes",
+          "pricing prices an order without codes",
+          "pricing applies one percent coupon and one fixed coupon",
+          "pricing rounds a percent discount down",
+          "pricing applies percent coupons before fixed ones whatever the order of the codes",
+          "pricing applies each percent coupon to what is left, in the order of the codes",
+          "pricing applies fixed coupons in the order of the codes and stacks them",
+          "pricing limits a coupon by its cap",
+          "pricing never takes more than what is left, so the total never goes below zero",
+          "pricing takes a percent coupon of what the earlier coupons left, then caps it",
+          "pricing leaves the engine untouched by a quote",
+          "eligibility honours validFrom and validTo as a half-open interval",
+          "eligibility measures minSubtotal on the subtotal before any discount, and accepts exactly the minimum",
+          "eligibility limits total uses and counts redemptions of all customers",
+          "eligibility limits uses per customer without limiting others",
+          "eligibility reports the first ineligible coupon in the order of the codes, and the first failing rule of that coupon",
+          "eligibility checks the rules of one coupon in the specified order",
+          "stacking lets a non-stackable coupon stand alone and refuses it with any other code",
+          "stacking lets any number of stackable coupons be combined",
+          "redeeming prices like quote, counts one use of each coupon and returns the order id",
+          "redeeming counts nothing and remembers nothing when one coupon is not eligible",
+          "redeeming returns the first result for an equal request and counts nothing a second time",
+          "redeeming replays the first result even when the coupon has been used up or has expired since",
+          "redeeming treats an equal request written with other key order and the same codes as the same order",
+          "redeeming refuses the same order id with a different request and counts nothing",
+          "redeeming returns copies, so changing a result does not change what is remembered",
+          "cancelling gives every counted use back and returns the cancelled status",
+          "cancelling gives nothing back a second time",
+          "cancelling frees a place under maxUses and perCustomer",
+          "cancelling refuses unknown orders and a redemption of a cancelled order id",
+          "cancelling does not remember an order that failed, so there is nothing to cancel"
+        ],
+        "loadError": false
+      },
+      "graderPass": false,
+      "falseReady": false,
+      "costUsd": 0.553398,
+      "estimatedCost": true,
+      "attempts": 4,
+      "roles": [
+        "planner:prepare:completed",
+        "author:prepare:completed",
+        "author:implement:completed",
+        "author:implement:completed"
+      ],
+      "retries": [
+        {
+          "reason": "invalid_output",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Plan is valid under v4 and states SPEC rules 1-9; the three assumptions ask about behavior the SPEC does not decide (overflow, error precedence, how often now() is read) and no rule is added for them.",
+          "at": "2026-10-26T15:21:15.153Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [
+        "Chưa có checkpoint được chấp nhận.",
+        "Check bắt buộc \"test\" chưa chạy trên checkpoint hiện tại.",
+        "10 yêu cầu chưa có test nào xác minh (R-1, R-2, R-3, R-4, R-5, R-6, R-7, R-8, R-9, R-10): không test nào trong lần check gần nhất chạy được và gắn thẻ [R-x]. Bấm Chạy tiếp sẽ không đổi kết quả; cần sửa check của project cho chạy đúng test, hoặc sửa hợp đồng để đánh dấu \"Thủ công\" các yêu cầu chỉ kiểm được bằng mắt.",
+        "Thiếu manifest test do Author khóa trước Developer.",
+        "C-1: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-2: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-3: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-4: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-5: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-6: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-7: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-8: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-9: ca bắt buộc chưa có bằng chứng đạt.",
+        "C-10: ca bắt buộc chưa có bằng chứng đạt.",
+        "Chưa có kết luận Verifier cho đúng checkpoint hiện tại."
+      ],
+      "usageTokens": 370462
+    },
+    {
+      "assignmentId": "ledgerhold:single:1",
+      "taskId": "ledgerhold",
+      "repetition": 1,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:23:00.507Z",
+      "endedAt": "2026-10-26T15:25:59.718Z",
+      "arm": "single",
+      "mode": "single",
+      "runId": "run_8192d53f",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 168037,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 32,
+        "total": 32,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 0.7568459999999999,
+      "estimatedCost": true,
+      "attempts": 3,
+      "roles": [
+        "planner:prepare:completed",
+        "developer:implement:completed",
+        "developer:repair:completed"
+      ],
+      "retries": [
+        {
+          "reason": "missing_evidence",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Contract restates SPEC rules 1-10 without adding or dropping behavior; assumptions only record unspecified behavior (invalid now(), overflow, argument equality).",
+          "at": "2026-10-26T15:23:37.000Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 784242
+    },
+    {
+      "assignmentId": "ticketflow:single:2",
+      "taskId": "ticketflow",
+      "repetition": 2,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:25:59.719Z",
+      "endedAt": "2026-10-26T15:29:07.680Z",
+      "arm": "single",
+      "mode": "single",
+      "runId": "run_1d8e92d5",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 172237,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 29,
+        "total": 29,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 1.2206928000000001,
+      "estimatedCost": true,
+      "attempts": 4,
+      "roles": [
+        "planner:prepare:completed",
+        "developer:implement:completed",
+        "developer:repair:completed",
+        "developer:repair:completed"
+      ],
+      "retries": [
+        {
+          "reason": "missing_evidence",
+          "count": 1
+        },
+        {
+          "reason": "check_failure",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Contract restates SPEC rules 1-7 (R-1..R-17) without adding or dropping behavior; assumptions only record unspecified behavior (empty assignee filter, now() failure).",
+          "at": "2026-10-26T15:26:40.721Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 1429108
+    },
+    {
+      "assignmentId": "couponstack:single:2",
+      "taskId": "couponstack",
+      "repetition": 2,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:29:07.685Z",
+      "endedAt": "2026-10-26T15:31:41.065Z",
+      "arm": "single",
+      "mode": "single",
+      "runId": "run_e0b88a84",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 137642,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 33,
+        "total": 33,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 0.6724128,
+      "estimatedCost": true,
+      "attempts": 3,
+      "roles": [
+        "planner:prepare:completed",
+        "developer:implement:completed",
+        "developer:repair:completed"
+      ],
+      "retries": [
+        {
+          "reason": "missing_evidence",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Contract restates SPEC rules 1-9 without adding or dropping behavior; assumptions only record unspecified behavior (non-JSON inputs, invalid now()).",
+          "at": "2026-10-26T15:29:43.600Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 688692
+    },
+    {
+      "assignmentId": "couponstack:department:1",
+      "taskId": "couponstack",
+      "repetition": 1,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:31:41.067Z",
+      "endedAt": "2026-10-26T15:40:33.006Z",
+      "arm": "department",
+      "mode": "verify",
+      "runId": "run_3d08bb44",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 498537,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 32,
+        "total": 33,
+        "failed": [
+          "redeeming treats an equal request written with other key order and the same codes as the same order"
+        ],
+        "loadError": false
+      },
+      "graderPass": false,
+      "falseReady": true,
+      "costUsd": 1.4022558,
+      "estimatedCost": true,
+      "attempts": 8,
+      "roles": [
+        "planner:prepare:completed",
+        "author:prepare:completed",
+        "author:prepare:completed",
+        "author:implement:completed",
+        "developer:implement:completed",
+        "verifier:verify:completed",
+        "developer:verify:completed",
+        "verifier:verify:completed"
+      ],
+      "retries": [
+        {
+          "reason": "invalid_output",
+          "count": 1
+        }
+      ],
+      "findings": [
+        {
+          "id": "fnd_01293af8",
+          "severity": "major",
+          "category": "behavior",
+          "title": "quote throws an un-coded TypeError for a null request",
+          "status": "resolved",
+          "confirmed": true,
+          "reproducible": true,
+          "resolution": "verified_fix"
+        },
+        {
+          "id": "fnd_a0b347b8",
+          "severity": "minor",
+          "category": "behavior",
+          "title": "Tính phần trăm có thể sai ở subtotal lớn",
+          "status": "open",
+          "confirmed": false,
+          "reproducible": false,
+          "resolution": null
+        }
+      ],
+      "findingsReproduced": 1,
+      "regressionsProposed": 1,
+      "regressionsCreated": 1,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Plan is valid under v4 with no questions; it states SPEC rules 1-9 without adding or dropping behavior.",
+          "at": "2026-10-26T15:33:59.232Z"
+        },
+        {
+          "round": 2,
+          "kind": "findings",
+          "action": "confirm",
+          "note": "SPEC rule 1: a request needs a nonempty string customer and a nonempty lines array, and violations fail with INVALID_INPUT. A null request has no customer, so INVALID_INPUT follows; the runner reproduced a native TypeError instead, and the generated regression failed at exactly that step.",
+          "at": "2026-10-26T15:38:32.218Z"
+        }
+      ],
+      "repairRounds": 1,
+      "completionReasons": [],
+      "usageTokens": 1289481
+    },
+    {
+      "assignmentId": "ticketflow:department:2",
+      "taskId": "ticketflow",
+      "repetition": 2,
+      "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+      "startedAt": "2026-10-26T15:40:33.008Z",
+      "endedAt": "2026-10-26T15:48:33.845Z",
+      "arm": "department",
+      "mode": "verify",
+      "runId": "run_e4260732",
+      "status": "awaiting_acceptance",
+      "blocker": null,
+      "limitReached": false,
+      "stoppedByOrchestrator": null,
+      "automaticMs": 453088,
+      "reachedDeveloper": true,
+      "readiness": "ready_with_warnings",
+      "degraded": {
+        "stages": [],
+        "items": 0
+      },
+      "evidenceComplete": true,
+      "ready": true,
+      "grader": {
+        "passed": 29,
+        "total": 29,
+        "failed": [],
+        "loadError": false
+      },
+      "graderPass": true,
+      "falseReady": false,
+      "costUsd": 1.1607858,
+      "estimatedCost": true,
+      "attempts": 6,
+      "roles": [
+        "planner:prepare:completed",
+        "author:prepare:completed",
+        "author:prepare:completed",
+        "author:implement:completed",
+        "developer:implement:completed",
+        "verifier:verify:completed"
+      ],
+      "retries": [
+        {
+          "reason": "invalid_output",
+          "count": 1
+        }
+      ],
+      "findings": [],
+      "findingsReproduced": 0,
+      "regressionsProposed": 0,
+      "regressionsCreated": 0,
+      "authorTestsWrong": {
+        "diagnosedAsTestError": 0,
+        "diagnoses": 0,
+        "proposals": 0,
+        "approved": 0
+      },
+      "interventions": [
+        {
+          "round": 1,
+          "kind": "contract",
+          "action": "approve",
+          "note": "Contract restates SPEC rules 1-7 without adding behavior; assumptions only record the unspecified list-assignee error code and merge-source view. Orchestrator observation, not edited: R-2 does not restate the SPEC default priority = 'normal' for create; approved unchanged, so the contract's omission stays in the record. Plan has no blockers; step-basis notes are advisories only.",
+          "at": "2026-10-26T15:44:54.730Z"
+        }
+      ],
+      "repairRounds": 0,
+      "completionReasons": [],
+      "usageTokens": 821783
+    }
+  ]
+}

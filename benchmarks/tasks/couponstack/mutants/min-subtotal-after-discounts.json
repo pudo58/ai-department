@@ -1,0 +1,15 @@
+{
+ "id": "min-subtotal-after-discounts",
+ "description": "minSubtotal is checked against the running amount after earlier coupons",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "if (subtotal < d.minSubtotal) throw fail('MIN_SUBTOTAL');",
+   "replace": "if (subtotal - discountsSoFar(picked, d, subtotal) < d.minSubtotal) throw fail('MIN_SUBTOTAL');"
+  },
+  {
+   "find": "export function createCoupons(",
+   "replace": "const discountsSoFar = (picked, d, subtotal) => picked.filter((x) => x.kind === 'percent' && x !== d).reduce((sum, x) => sum + Math.floor((subtotal * x.value) / 100), 0);\nexport function createCoupons("
+  }
+ ]
+}

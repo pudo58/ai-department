@@ -1,0 +1,1136 @@
+{
+  "action": "revise",
+  "note": "Form-only revision: C-18, C-19 and C-20 are 'not applicable' statements written as non-required automated cases (preconditions/actions 'Không áp dụng', no steps, quotes that are not clauses). The same groups are already declared in notApplicable with reasons, so the cases are dropped; no test coverage or expected result is removed or added.",
+  "contract": {
+    "requirements": [
+      {
+        "id": "R-1",
+        "text": "`createLedger({ now = () => 0, holdTtl = 60 } = {})` tạo ledger đồng bộ; `holdTtl` không phải số nguyên an toàn dương thì ném Error có code `INVALID_INPUT`.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-2",
+        "text": "Tên tài khoản, holdId và key phải là chuỗi không rỗng; vi phạm thì ném Error có code `INVALID_INPUT`. Amount không phải số nguyên an toàn dương thì ném Error có code `INVALID_AMOUNT`. Mọi lỗi được nêu trong hợp đồng là Error có thuộc tính `code` dạng chuỗi.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-3",
+        "text": "`open(account)` tạo tài khoản với số dư 0 và trả balance view `{ total, held, available }`. Mở tài khoản đã tồn tại ném `ACCOUNT_EXISTS` và không đổi trạng thái. Tài khoản chưa mở được dùng ở thao tác yêu cầu tài khoản thì ném `UNKNOWN_ACCOUNT`.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-4",
+        "text": "`balance(account)` trả `{ total, held, available }` tại thời điểm `now()`: `held` là tổng các hold đang active và `available = total - held`. Hold active khi `now() < createdAt + holdTtl`; tại hoặc sau thời điểm đó hold expired và không còn được tính vào `held`.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-5",
+        "text": "`deposit(account, amount, key)` cộng amount vào total và trả balance view của tài khoản.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-6",
+        "text": "`hold(account, amount, key)` dành amount từ available; nếu available nhỏ hơn amount thì ném `INSUFFICIENT_FUNDS` và không tạo hold. Nếu thành công, trả `{ holdId, amount, expiresAt }`, với holdId lần lượt là `h1`, `h2`, … và `expiresAt = now() + holdTtl`. Bộ đếm chỉ tăng khi tạo hold thành công.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-7",
+        "text": "`capture(holdId, amount, key)` trên hold active trừ amount khỏi total và đóng hold; phần chưa capture được giải phóng. Amount lớn hơn amount của hold ném `OVER_CAPTURE`. Hold expired ném `HOLD_EXPIRED`; hold đã captured hoặc released ném `HOLD_CLOSED`. Thành công trả balance view của tài khoản giữ hold.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-8",
+        "text": "`release(holdId, key)` đóng hold active mà không trừ tiền và trả balance view của tài khoản giữ hold. Hold expired ném `HOLD_EXPIRED`; hold đã captured hoặc released ném `HOLD_CLOSED`.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-9",
+        "text": "`getHold(holdId)` trả `{ holdId, account, amount, status }`, trong đó status phản ánh `active`, `expired`, `captured` hoặc `released` tại `now()`. Hold chưa từng được cấp ném `UNKNOWN_HOLD`; hold đã captured hoặc released giữ nguyên trạng thái đó.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-10",
+        "text": "`transfer(from, to, amount, key)` chuyển tiền từ available của from sang to và trả `{ from, to }` gồm hai balance view. Hai tài khoản phải khác nhau (`SAME_ACCOUNT`) và đều tồn tại (`UNKNOWN_ACCOUNT`). Nếu available của from nhỏ hơn amount thì ném `INSUFFICIENT_FUNDS`. Mọi transfer thất bại không thay đổi trạng thái tài khoản nào.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-11",
+        "text": "Các thao tác có key dùng chung một không gian key trong ledger. Lần gọi thành công đầu tiên ghi nhớ method, arguments và kết quả. Gọi lại cùng key, method và arguments không áp dụng hiệu ứng lần nữa, mà trả deep copy của kết quả đã ghi nhớ, kể cả khi thời gian hoặc số dư đã đổi. Dùng key với method hoặc arguments khác ném `KEY_REUSED` và không đổi trạng thái.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      },
+      {
+        "id": "R-12",
+        "text": "Lời gọi thất bại không chiếm key; key đó có thể được dùng lại sau cho bất kỳ thao tác nào.",
+        "required": true,
+        "manual": false,
+        "kind": "expected"
+      }
+    ],
+    "testPlan": {
+      "schemaVersion": 2,
+      "statefulModelVersion": 1,
+      "reasoningVersion": 1,
+      "cases": [
+        {
+          "id": "C-1",
+          "group": "happy",
+          "risk": "Ledger không được tạo đồng bộ hoặc tài khoản mới không bắt đầu ở số dư 0.",
+          "priority": "high",
+          "preconditions": "Không có ledger hoặc tài khoản nào được tạo.",
+          "actions": "Tạo ledger mặc định rồi mở tài khoản A.",
+          "expected": "Tạo ledger đồng bộ; open trả { total: 0, held: 0, available: 0 }.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-1",
+                "quote": "`createLedger({ now = () => 0, holdTtl = 60 } = {})` tạo ledger đồng bộ;"
+              },
+              {
+                "requirementId": "R-3",
+                "quote": "`open(account)` tạo tài khoản với số dư 0 và trả balance view `{ total, held, available }`."
+              }
+            ],
+            "explanation": "R-1 quy định ledger được tạo đồng bộ; R-3 quy định số dư ban đầu và dạng kết quả của open."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Chưa có ledger; đồng hồ mặc định trả 0.",
+              "after": "Ledger được tạo; chưa có tài khoản.",
+              "requirementIds": [
+                "R-1"
+              ],
+              "action": "Gọi createLedger() và kiểm tra giá trị trả về không phải Promise.",
+              "expected": "Nhận ledger đồng bộ với các phương thức trong interface."
+            },
+            {
+              "id": "S-2",
+              "before": "Ledger tồn tại; chưa có tài khoản; đồng hồ là 0.",
+              "after": "Tài khoản A tồn tại với total 0 và không có hold.",
+              "requirementIds": [
+                "R-3"
+              ],
+              "action": "Gọi ledger.open('A').",
+              "expected": "Nhận { total: 0, held: 0, available: 0 }."
+            }
+          ],
+          "invariants": [
+            "Sau mỗi bước, các giá trị trạng thái quan sát được qua interface công khai phù hợp với trạng thái tài khoản đã mở."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-1",
+            "R-3"
+          ]
+        },
+        {
+          "id": "C-2",
+          "group": "boundary",
+          "risk": "holdTtl không hợp lệ có thể được chấp nhận thay vì bị từ chối.",
+          "priority": "high",
+          "preconditions": "Chưa tạo ledger.",
+          "actions": "Tạo ledger lần lượt với holdTtl bằng 0, -1, 1.5 và Number.MAX_SAFE_INTEGER + 1.",
+          "expected": "Mỗi lời gọi ném Error có code INVALID_INPUT.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-1",
+                "quote": "`holdTtl` không phải số nguyên an toàn dương thì ném Error có code `INVALID_INPUT`."
+              }
+            ],
+            "explanation": "Số 0 là giá trị biên không dương; R-1 yêu cầu từ chối."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Chưa có ledger; chưa có holdTtl được áp dụng.",
+              "after": "Không có ledger được tạo bởi lời gọi này.",
+              "requirementIds": [
+                "R-1"
+              ],
+              "action": "Gọi createLedger({ holdTtl: 0 }).",
+              "expected": "Ném Error có code INVALID_INPUT."
+            }
+          ],
+          "invariants": [
+            "Lời gọi tạo ledger với holdTtl không phải số nguyên an toàn dương không trả về ledger hợp lệ."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-1"
+          ]
+        },
+        {
+          "id": "C-3",
+          "group": "boundary",
+          "risk": "Đầu vào rỗng, sai kiểu hoặc amount không hợp lệ có thể không được kiểm tra đúng.",
+          "priority": "high",
+          "preconditions": "Tạo ledger mặc định; mở tài khoản A.",
+          "actions": "Thử tên tài khoản rỗng, holdId rỗng, key rỗng và amount bằng 0; mỗi trường hợp là lời gọi độc lập.",
+          "expected": "Các trường chuỗi rỗng ném INVALID_INPUT; amount 0 ném INVALID_AMOUNT; mọi lỗi là Error có code dạng chuỗi.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-2",
+                "quote": "Tên tài khoản, holdId và key phải là chuỗi không rỗng; vi phạm thì ném Error có code `INVALID_INPUT`. Amount không phải số nguyên an toàn dương thì ném Error có code `INVALID_AMOUNT`. Mọi lỗi được nêu trong hợp đồng là Error có thuộc tính `code` dạng chuỗi."
+              }
+            ],
+            "explanation": "R-2 quy định mã lỗi cho chuỗi rỗng và amount không phải số nguyên an toàn dương, cùng hình dạng lỗi."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Ledger tồn tại; tài khoản A đã mở; chưa có giao dịch.",
+              "after": "Không có giao dịch thành công phát sinh từ lời gọi có key rỗng.",
+              "requirementIds": [
+                "R-2"
+              ],
+              "action": "Gọi deposit('A', 1, '').",
+              "expected": "Ném Error có code INVALID_INPUT."
+            },
+            {
+              "id": "S-2",
+              "before": "Ledger và tài khoản A như sau S-1; key rỗng chưa bị chiếm.",
+              "after": "Không có giao dịch thành công phát sinh từ amount 0.",
+              "requirementIds": [
+                "R-2"
+              ],
+              "action": "Gọi deposit('A', 0, 'k').",
+              "expected": "Ném Error có code INVALID_AMOUNT."
+            }
+          ],
+          "invariants": [
+            "Lời gọi thất bại không tạo thay đổi số dư."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-2"
+          ]
+        },
+        {
+          "id": "C-4",
+          "group": "state",
+          "risk": "Mở trùng tài khoản hoặc dùng tài khoản chưa mở có thể làm sai trạng thái hay mã lỗi.",
+          "priority": "high",
+          "preconditions": "Tạo ledger mặc định.",
+          "actions": "Mở A, nạp tiền, thử mở lại A, rồi đọc số dư; thử deposit trên tài khoản chưa mở B.",
+          "expected": "Mở lại A ném ACCOUNT_EXISTS và không đổi số dư; deposit trên B ném UNKNOWN_ACCOUNT.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-3",
+                "quote": "Mở tài khoản đã tồn tại ném `ACCOUNT_EXISTS` và không đổi trạng thái. Tài khoản chưa mở được dùng ở thao tác yêu cầu tài khoản thì ném `UNKNOWN_ACCOUNT`."
+              },
+              {
+                "requirementId": "R-5",
+                "quote": "`deposit(account, amount, key)` cộng amount vào total và trả balance view của tài khoản."
+              }
+            ],
+            "explanation": "Chuỗi thao tác xác nhận trạng thái sau nạp tiền, lỗi khi mở trùng không làm đổi trạng thái, và lỗi tài khoản chưa mở."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "Ledger tồn tại; A chưa mở.",
+              "after": "A mở với balance { total: 0, held: 0, available: 0 }.",
+              "requirementIds": [
+                "R-3"
+              ],
+              "action": "Gọi open('A').",
+              "expected": "Nhận balance view bằng 0."
+            },
+            {
+              "id": "S-2",
+              "before": "A mở với tổng 0; không có hold.",
+              "after": "A mở với total 100, held 0, available 100.",
+              "requirementIds": [
+                "R-5"
+              ],
+              "action": "Gọi deposit('A', 100, 'd1').",
+              "expected": "Nhận { total: 100, held: 0, available: 100 }."
+            },
+            {
+              "id": "S-3",
+              "before": "A có total 100, held 0, available 100.",
+              "after": "A vẫn có total 100, held 0, available 100.",
+              "requirementIds": [
+                "R-3"
+              ],
+              "action": "Gọi open('A'), sau đó gọi balance('A').",
+              "expected": "open ném Error có code ACCOUNT_EXISTS; balance vẫn là { total: 100, held: 0, available: 100 }."
+            },
+            {
+              "id": "S-4",
+              "before": "A vẫn có total 100; B chưa mở.",
+              "after": "Trạng thái tài khoản không đổi.",
+              "requirementIds": [
+                "R-3"
+              ],
+              "action": "Gọi deposit('B', 1, 'd2').",
+              "expected": "Ném Error có code UNKNOWN_ACCOUNT."
+            }
+          ],
+          "invariants": [
+            "Sau mỗi bước, lời gọi thất bại không làm đổi số dư tài khoản đã mở."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-3",
+            "R-5"
+          ]
+        },
+        {
+          "id": "C-5",
+          "group": "happy",
+          "risk": "Deposit có thể cộng sai số tiền hoặc trả balance view sai.",
+          "priority": "high",
+          "preconditions": "Tạo ledger mặc định; mở A.",
+          "actions": "Nạp 250 cents vào A.",
+          "expected": "Deposit trả { total: 250, held: 0, available: 250 }.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-5",
+                "quote": "`deposit(account, amount, key)` cộng amount vào total và trả balance view của tài khoản."
+              }
+            ],
+            "explanation": "Deposit tăng total đúng bằng amount; không có hold nên held bằng 0 và available bằng total."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A mở; total 0, held 0, available 0.",
+              "after": "A có total 250, held 0, available 250.",
+              "requirementIds": [
+                "R-5"
+              ],
+              "action": "Gọi deposit('A', 250, 'd1').",
+              "expected": "Nhận { total: 250, held: 0, available: 250 }."
+            }
+          ],
+          "invariants": [
+            "available bằng total trừ held."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-5"
+          ]
+        },
+        {
+          "id": "C-6",
+          "group": "state",
+          "risk": "Tính held hoặc trạng thái hold có thể sai tại đúng thời điểm hết hạn.",
+          "priority": "high",
+          "preconditions": "Tạo ledger với now là hàm trả biến t, holdTtl 60; mở A và nạp 1000 cents.",
+          "actions": "Tạo hold 700 khi t=10; đọc balance và getHold khi t=69; sau đó đọc lại khi t=70.",
+          "expected": "Hold h1 hết hạn tại 70; ở 69 held=700 và status active; tại 70 held=0 và status expired.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-4",
+                "quote": "Hold active khi `now() < createdAt + holdTtl`; tại hoặc sau thời điểm đó hold expired và không còn được tính vào `held`."
+              },
+              {
+                "requirementId": "R-6",
+                "quote": "Nếu thành công, trả `{ holdId, amount, expiresAt }`, với holdId lần lượt là `h1`, `h2`, … và `expiresAt = now() + holdTtl`."
+              },
+              {
+                "requirementId": "R-9",
+                "quote": "`getHold(holdId)` trả `{ holdId, account, amount, status }`, trong đó status phản ánh `active`, `expired`, `captured` hoặc `released` tại `now()`."
+              }
+            ],
+            "explanation": "t=10 và holdTtl=60 cho expiresAt=70. Theo R-4 hold active khi t<70 và expired khi t>=70; R-9 quy định status quan sát được."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "t=10; A có total 1000, held 0, available 1000; chưa có hold.",
+              "after": "t=10; A có hold h1 amount 700, expiresAt 70; total 1000, held 700, available 300.",
+              "requirementIds": [
+                "R-4",
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 700, 'h1').",
+              "expected": "Nhận { holdId: 'h1', amount: 700, expiresAt: 70 }."
+            },
+            {
+              "id": "S-2",
+              "before": "t=10; h1 vừa tạo với createdAt 10 và hết hạn tại 70.",
+              "after": "t=69; h1 vẫn chưa hết hạn.",
+              "requirementIds": [
+                "R-4",
+                "R-9"
+              ],
+              "action": "Đặt t=69, gọi balance('A') và getHold('h1').",
+              "expected": "Balance là { total: 1000, held: 700, available: 300 }; status là active."
+            },
+            {
+              "id": "S-3",
+              "before": "t=69; h1 active; balance total 1000, held 700, available 300.",
+              "after": "t=70; h1 expired và không còn được tính vào held.",
+              "requirementIds": [
+                "R-4",
+                "R-9"
+              ],
+              "action": "Đặt t=70, gọi balance('A') và getHold('h1').",
+              "expected": "Balance là { total: 1000, held: 0, available: 1000 }; status là expired."
+            }
+          ],
+          "invariants": [
+            "Sau mỗi bước, available bằng total trừ held.",
+            "Một hold chỉ được tính vào held khi now() nhỏ hơn expiresAt."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-4",
+            "R-6",
+            "R-9"
+          ]
+        },
+        {
+          "id": "C-7",
+          "group": "boundary",
+          "risk": "Hold có thể từ chối amount bằng available hoặc tạo hold sau khi thiếu tiền.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A và nạp 1000 cents.",
+          "actions": "Giữ đúng 1000; thử giữ thêm 1; kiểm tra hold kế tiếp sau khi giải phóng hold đầu.",
+          "expected": "Giữ đúng available thành công; thiếu 1 ném INSUFFICIENT_FUNDS và không tăng bộ đếm; hold kế tiếp có id h2.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-6",
+                "quote": "nếu available nhỏ hơn amount thì ném `INSUFFICIENT_FUNDS` và không tạo hold."
+              },
+              {
+                "requirementId": "R-8",
+                "quote": "`release(holdId, key)` đóng hold active mà không trừ tiền và trả balance view của tài khoản giữ hold."
+              }
+            ],
+            "explanation": "Hold đúng bằng available được phép theo hợp đồng gốc; lần gọi thiếu tiền không tạo hold nên bộ đếm không tăng. Release giải phóng hold để quan sát id tiếp theo."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A có total 1000, held 0, available 1000; chưa cấp hold.",
+              "after": "A có hold h1 amount 1000; total 1000, held 1000, available 0.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 1000, 'k1').",
+              "expected": "Nhận holdId h1 và expiresAt bằng now()+holdTtl."
+            },
+            {
+              "id": "S-2",
+              "before": "A có available 0; hold kế tiếp nếu tạo thành công phải là h2.",
+              "after": "Số dư và bộ đếm hold không đổi.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 1, 'k2').",
+              "expected": "Ném Error có code INSUFFICIENT_FUNDS."
+            },
+            {
+              "id": "S-3",
+              "before": "A có h1 active amount 1000; bộ đếm thành công gần nhất là h1.",
+              "after": "h1 released; A có held 0 và available 1000.",
+              "requirementIds": [
+                "R-8"
+              ],
+              "action": "Gọi release('h1', 'k3').",
+              "expected": "Nhận balance { total: 1000, held: 0, available: 1000 }."
+            },
+            {
+              "id": "S-4",
+              "before": "A có available 1000; h1 đã released; lần tạo hold tiếp theo là h2.",
+              "after": "A có hold h2 amount 1.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 1, 'k4').",
+              "expected": "Nhận holdId h2."
+            }
+          ],
+          "invariants": [
+            "Hold chỉ được tạo nếu available đủ amount.",
+            "Bộ đếm chỉ tiến khi hold được tạo thành công."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-6",
+            "R-8"
+          ]
+        },
+        {
+          "id": "C-8",
+          "group": "state",
+          "risk": "Capture có thể trừ sai số dư, không giải phóng phần còn lại hoặc không đóng hold.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A, nạp 1000, tạo hold 500.",
+          "actions": "Capture 200 rồi đọc balance và getHold.",
+          "expected": "Total còn 800; hold captured; 300 còn lại được giải phóng, nên held=0 và available=800.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-7",
+                "quote": "`capture(holdId, amount, key)` trên hold active trừ amount khỏi total và đóng hold; phần chưa capture được giải phóng."
+              },
+              {
+                "requirementId": "R-9",
+                "quote": "hold đã captured hoặc released giữ nguyên trạng thái đó."
+              }
+            ],
+            "explanation": "Capture 200 từ total 1000 cho total 800; đóng hold giải phóng 300 chưa capture. getHold cho status captured."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A có total 1000, held 0, available 1000; chưa có hold.",
+              "after": "A có h1 active amount 500; total 1000, held 500, available 500.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 500, 'h1').",
+              "expected": "Nhận holdId h1."
+            },
+            {
+              "id": "S-2",
+              "before": "h1 active amount 500; A total 1000, held 500, available 500.",
+              "after": "h1 captured; A total 800, held 0, available 800.",
+              "requirementIds": [
+                "R-7",
+                "R-9"
+              ],
+              "action": "Gọi capture('h1', 200, 'c1'), sau đó gọi getHold('h1').",
+              "expected": "Capture trả { total: 800, held: 0, available: 800 }; status là captured."
+            }
+          ],
+          "invariants": [
+            "Sau mỗi bước, available bằng total trừ held.",
+            "Hold captured không còn được tính vào held."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-7",
+            "R-9"
+          ]
+        },
+        {
+          "id": "C-9",
+          "group": "boundary",
+          "risk": "Capture vượt amount hold có thể làm thay đổi tiền hoặc đóng hold sai.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A, nạp 1000, tạo hold 500.",
+          "actions": "Thử capture 501, sau đó capture hợp lệ 500 trên cùng hold.",
+          "expected": "Lần đầu ném OVER_CAPTURE và không đổi trạng thái; lần sau thành công.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-7",
+                "quote": "Amount lớn hơn amount của hold ném `OVER_CAPTURE`."
+              },
+              {
+                "requirementId": "R-12",
+                "quote": "Lời gọi thất bại không chiếm key; key đó có thể được dùng lại sau cho bất kỳ thao tác nào."
+              }
+            ],
+            "explanation": "Capture 501 vượt hold 500 nên thất bại; lần gọi sau dùng key khác để xác nhận hold vẫn active và có thể capture amount hợp lệ."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A total 1000, held 500, available 500; h1 active amount 500.",
+              "after": "A và h1 không đổi.",
+              "requirementIds": [
+                "R-7"
+              ],
+              "action": "Gọi capture('h1', 501, 'c1').",
+              "expected": "Ném Error có code OVER_CAPTURE."
+            },
+            {
+              "id": "S-2",
+              "before": "A total 1000, held 500, available 500; h1 vẫn active amount 500.",
+              "after": "h1 captured; A total 500, held 0, available 500.",
+              "requirementIds": [
+                "R-7",
+                "R-9"
+              ],
+              "action": "Gọi capture('h1', 500, 'c2'), sau đó getHold('h1').",
+              "expected": "Capture thành công; balance { total: 500, held: 0, available: 500 }, status captured."
+            }
+          ],
+          "invariants": [
+            "Lỗi capture không làm thay đổi số dư hoặc trạng thái hold.",
+            "available bằng total trừ held."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-7",
+            "R-12"
+          ]
+        },
+        {
+          "id": "C-10",
+          "group": "state",
+          "risk": "Release có thể trừ tiền, giữ lại hold hoặc không ghi nhận trạng thái đóng.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A, nạp 600, tạo hold 400.",
+          "actions": "Release hold rồi kiểm tra balance và trạng thái hold.",
+          "expected": "Total không đổi, held=0, available=600 và status released.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-8",
+                "quote": "đóng hold active mà không trừ tiền và trả balance view của tài khoản giữ hold."
+              },
+              {
+                "requirementId": "R-9",
+                "quote": "hold đã captured hoặc released giữ nguyên trạng thái đó."
+              }
+            ],
+            "explanation": "Release đóng hold mà không chi tiêu; getHold xác nhận trạng thái released."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A total 600, held 0, available 600; chưa có hold.",
+              "after": "A total 600, held 400, available 200; h1 active.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 400, 'h1').",
+              "expected": "Nhận h1."
+            },
+            {
+              "id": "S-2",
+              "before": "h1 active; A total 600, held 400, available 200.",
+              "after": "h1 released; A total 600, held 0, available 600.",
+              "requirementIds": [
+                "R-8",
+                "R-9"
+              ],
+              "action": "Gọi release('h1', 'r1'), sau đó getHold('h1').",
+              "expected": "Release trả { total: 600, held: 0, available: 600 }; status released."
+            }
+          ],
+          "invariants": [
+            "Release không trừ tiền khỏi total.",
+            "available bằng total trừ held."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-8",
+            "R-9"
+          ]
+        },
+        {
+          "id": "C-11",
+          "group": "state",
+          "risk": "Hold expired hoặc đã đóng có thể bị capture/release lần nữa thay vì trả lỗi tương ứng.",
+          "priority": "high",
+          "preconditions": "Tạo ledger với now là biến t, holdTtl 60; mở A, nạp 1000.",
+          "actions": "Tạo hold tại t=0; tại t=60 thử capture; tạo hold mới rồi release và thử release lần nữa.",
+          "expected": "Hold hết hạn ném HOLD_EXPIRED; hold đã release ném HOLD_CLOSED.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-7",
+                "quote": "Hold expired ném `HOLD_EXPIRED`; hold đã captured hoặc released ném `HOLD_CLOSED`."
+              },
+              {
+                "requirementId": "R-8",
+                "quote": "Hold expired ném `HOLD_EXPIRED`; hold đã captured hoặc released ném `HOLD_CLOSED`."
+              },
+              {
+                "requirementId": "R-9",
+                "quote": "hold đã captured hoặc released giữ nguyên trạng thái đó."
+              }
+            ],
+            "explanation": "Tại đúng expiresAt, hold đã expired; release lần hai trên hold released phải báo HOLD_CLOSED và không đổi trạng thái."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "t=0; A total 1000, held 0, available 1000.",
+              "after": "t=0; h1 active amount 100; expiresAt 60.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 100, 'h1').",
+              "expected": "Nhận h1, expiresAt 60."
+            },
+            {
+              "id": "S-2",
+              "before": "t=0; h1 active; A total 1000, held 100, available 900.",
+              "after": "t=60; h1 expired; A total 1000, held 0, available 1000.",
+              "requirementIds": [
+                "R-4",
+                "R-7"
+              ],
+              "action": "Đặt t=60 rồi gọi capture('h1', 50, 'c1').",
+              "expected": "Ném Error có code HOLD_EXPIRED."
+            },
+            {
+              "id": "S-3",
+              "before": "t=60; h1 expired; A total 1000, held 0, available 1000.",
+              "after": "t=60; h2 active amount 100; A total 1000, held 100, available 900.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 100, 'h2').",
+              "expected": "Nhận holdId h2."
+            },
+            {
+              "id": "S-4",
+              "before": "t=60; h2 active.",
+              "after": "t=60; h2 released; A total 1000, held 0, available 1000.",
+              "requirementIds": [
+                "R-8",
+                "R-9"
+              ],
+              "action": "Gọi release('h2', 'r1').",
+              "expected": "Nhận balance { total: 1000, held: 0, available: 1000 }."
+            },
+            {
+              "id": "S-5",
+              "before": "t=60; h2 đã released; A total 1000, held 0, available 1000.",
+              "after": "Trạng thái và số dư không đổi.",
+              "requirementIds": [
+                "R-8",
+                "R-9"
+              ],
+              "action": "Gọi release('h2', 'r2'), sau đó getHold('h2').",
+              "expected": "Release ném Error có code HOLD_CLOSED; status vẫn released."
+            }
+          ],
+          "invariants": [
+            "Lời gọi capture/release thất bại không làm đổi số dư.",
+            "Hold đã đóng giữ nguyên trạng thái đóng."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-7",
+            "R-8",
+            "R-9"
+          ]
+        },
+        {
+          "id": "C-12",
+          "group": "happy",
+          "risk": "Transfer có thể ghi sai số tiền ở một hoặc cả hai tài khoản.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A và B; nạp 1000 vào A.",
+          "actions": "Chuyển 400 cents từ A sang B.",
+          "expected": "A còn 600; B có 400; kết quả chứa cả hai balance view.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-10",
+                "quote": "`transfer(from, to, amount, key)` chuyển tiền từ available của from sang to và trả `{ from, to }` gồm hai balance view."
+              }
+            ],
+            "explanation": "Transfer 400 trừ 400 khỏi A và cộng 400 vào B; cả hai balance view được trả."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A total 1000, held 0, available 1000; B total 0, held 0, available 0.",
+              "after": "A total 600, held 0, available 600; B total 400, held 0, available 400.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Gọi transfer('A', 'B', 400, 't1').",
+              "expected": "Nhận { from: { total: 600, held: 0, available: 600 }, to: { total: 400, held: 0, available: 400 } }."
+            }
+          ],
+          "invariants": [
+            "Tổng tiền giữa A và B được bảo toàn bởi transfer thành công.",
+            "available bằng total trừ held ở cả hai tài khoản."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-10"
+          ]
+        },
+        {
+          "id": "C-13",
+          "group": "boundary",
+          "risk": "Transfer có thể bỏ qua funds đang held hoặc làm thay đổi một phần trạng thái khi thất bại.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A và B; nạp 1000 vào A; tạo hold 700 trên A.",
+          "actions": "Thử chuyển 301 từ A sang B; sau đó đọc balance hai tài khoản.",
+          "expected": "Transfer ném INSUFFICIENT_FUNDS; cả hai balance không đổi.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-10",
+                "quote": "Nếu available của from nhỏ hơn amount thì ném `INSUFFICIENT_FUNDS`. Mọi transfer thất bại không thay đổi trạng thái tài khoản nào."
+              },
+              {
+                "requirementId": "R-6",
+                "quote": "`hold(account, amount, key)` dành amount từ available;"
+              }
+            ],
+            "explanation": "Sau khi giữ 700, A chỉ còn available 300 nên chuyển 301 phải thất bại và không đổi cả A lẫn B."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A total 1000, held 0, available 1000; B total 0, held 0, available 0.",
+              "after": "A total 1000, held 700, available 300; B không đổi.",
+              "requirementIds": [
+                "R-6"
+              ],
+              "action": "Gọi hold('A', 700, 'h1').",
+              "expected": "Nhận holdId h1."
+            },
+            {
+              "id": "S-2",
+              "before": "A total 1000, held 700, available 300; B total 0, held 0, available 0.",
+              "after": "A và B giữ nguyên balance như trước lời gọi.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Gọi transfer('A', 'B', 301, 't1'), sau đó balance('A') và balance('B').",
+              "expected": "Transfer ném Error có code INSUFFICIENT_FUNDS; balance A là { total: 1000, held: 700, available: 300 }, balance B là { total: 0, held: 0, available: 0 }."
+            }
+          ],
+          "invariants": [
+            "Transfer thất bại không đổi số dư tài khoản nào.",
+            "available bằng total trừ held."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-10",
+            "R-6"
+          ]
+        },
+        {
+          "id": "C-14",
+          "group": "boundary",
+          "risk": "Transfer có thể cho phép chuyển giữa cùng tài khoản hoặc chấp nhận tài khoản chưa tồn tại.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A.",
+          "actions": "Thử transfer A sang A; thử transfer A sang tài khoản chưa mở B.",
+          "expected": "Lời gọi cùng tài khoản ném SAME_ACCOUNT; tài khoản chưa mở ném UNKNOWN_ACCOUNT.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-10",
+                "quote": "Hai tài khoản phải khác nhau (`SAME_ACCOUNT`) và đều tồn tại (`UNKNOWN_ACCOUNT`)."
+              }
+            ],
+            "explanation": "R-10 quy định riêng mã lỗi cho tài khoản trùng và tài khoản không tồn tại."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A mở với balance 0; B chưa mở.",
+              "after": "A vẫn balance 0; B vẫn chưa mở.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Gọi transfer('A', 'A', 1, 't1').",
+              "expected": "Ném Error có code SAME_ACCOUNT."
+            },
+            {
+              "id": "S-2",
+              "before": "A mở với balance 0; B chưa mở.",
+              "after": "Trạng thái tài khoản không đổi.",
+              "requirementIds": [
+                "R-10"
+              ],
+              "action": "Gọi transfer('A', 'B', 1, 't2').",
+              "expected": "Ném Error có code UNKNOWN_ACCOUNT."
+            }
+          ],
+          "invariants": [
+            "Transfer thất bại không làm đổi trạng thái tài khoản."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-10"
+          ]
+        },
+        {
+          "id": "C-15",
+          "group": "consistency",
+          "risk": "Retry cùng key có thể áp dụng hiệu ứng lần hai hoặc trả tham chiếu kết quả có thể bị sửa.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A; đặt giờ t=0.",
+          "actions": "Deposit 100 với key k; thay đổi số dư bằng deposit khác; retry deposit ban đầu; đọc balance.",
+          "expected": "Retry trả deep copy kết quả lần đầu (total 100) và balance cuối là 150.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-11",
+                "quote": "Gọi lại cùng key, method và arguments không áp dụng hiệu ứng lần nữa, mà trả deep copy của kết quả đã ghi nhớ, kể cả khi thời gian hoặc số dư đã đổi."
+              },
+              {
+                "requirementId": "R-5",
+                "quote": "`deposit(account, amount, key)` cộng amount vào total và trả balance view của tài khoản."
+              }
+            ],
+            "explanation": "Lần gọi đầu lưu kết quả total 100; deposit khác đưa số dư lên 150; retry phải trả bản sao kết quả cũ mà không làm đổi số dư hiện tại."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "t=0; A total 0, held 0, available 0; key k chưa dùng.",
+              "after": "A total 100, held 0, available 100; kết quả cho key k được ghi nhớ.",
+              "requirementIds": [
+                "R-11"
+              ],
+              "action": "Gọi deposit('A', 100, 'k').",
+              "expected": "Nhận { total: 100, held: 0, available: 100 }."
+            },
+            {
+              "id": "S-2",
+              "before": "t=0; A total 100, held 0, available 100; key k đã ghi nhớ kết quả total 100.",
+              "after": "A total 150, held 0, available 150; kết quả key k không đổi.",
+              "requirementIds": [
+                "R-5"
+              ],
+              "action": "Gọi deposit('A', 50, 'k2').",
+              "expected": "Nhận { total: 150, held: 0, available: 150 }."
+            },
+            {
+              "id": "S-3",
+              "before": "t=0; A total 150; key k ghi nhớ kết quả deposit đầu tiên.",
+              "after": "A vẫn total 150; kết quả trả về có giá trị như kết quả đầu, không phải tham chiếu có thể làm đổi dữ liệu ledger.",
+              "requirementIds": [
+                "R-11"
+              ],
+              "action": "Gọi lại deposit('A', 100, 'k').",
+              "expected": "Nhận deep copy { total: 100, held: 0, available: 100 }; balance('A') vẫn { total: 150, held: 0, available: 150 }."
+            }
+          ],
+          "invariants": [
+            "Retry thành công với cùng key, method và arguments không áp dụng hiệu ứng lần nữa.",
+            "Trạng thái số dư phản ánh đúng các lần gọi mới không bị retry idempotent áp dụng lại."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-11",
+            "R-5"
+          ]
+        },
+        {
+          "id": "C-16",
+          "group": "consistency",
+          "risk": "Key dùng chung có thể không phát hiện khác method/arguments hoặc lỗi có thể chiếm key.",
+          "priority": "high",
+          "preconditions": "Tạo ledger; mở A và B; số dư ban đầu bằng 0.",
+          "actions": "Dùng key k cho deposit thành công; thử cùng key với arguments khác; dùng key q cho deposit thất bại vì amount không hợp lệ, sau đó dùng q cho thao tác hợp lệ.",
+          "expected": "Khác arguments ném KEY_REUSED không đổi số dư; lời gọi thất bại không chiếm key và key q dùng được cho lời gọi sau.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-11",
+                "quote": "Dùng key với method hoặc arguments khác ném `KEY_REUSED` và không đổi trạng thái."
+              },
+              {
+                "requirementId": "R-12",
+                "quote": "Lời gọi thất bại không chiếm key; key đó có thể được dùng lại sau cho bất kỳ thao tác nào."
+              },
+              {
+                "requirementId": "R-5",
+                "quote": "`deposit(account, amount, key)` cộng amount vào total và trả balance view của tài khoản."
+              }
+            ],
+            "explanation": "R-11 quy định KEY_REUSED và không đổi trạng thái; R-12 quy định lời gọi thất bại không chiếm key, nên key q dùng được cho deposit hợp lệ."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "A total 0; key k chưa dùng.",
+              "after": "A total 10; key k ghi nhớ deposit('A',10).",
+              "requirementIds": [
+                "R-11"
+              ],
+              "action": "Gọi deposit('A', 10, 'k').",
+              "expected": "Nhận balance total 10."
+            },
+            {
+              "id": "S-2",
+              "before": "A total 10; key k đã ghi nhớ method deposit và arguments ('A',10).",
+              "after": "A vẫn total 10.",
+              "requirementIds": [
+                "R-11"
+              ],
+              "action": "Gọi deposit('A', 11, 'k').",
+              "expected": "Ném Error có code KEY_REUSED; balance A vẫn total 10."
+            },
+            {
+              "id": "S-3",
+              "before": "A total 10; key q chưa dùng.",
+              "after": "A vẫn total 10; key q chưa bị chiếm.",
+              "requirementIds": [
+                "R-12"
+              ],
+              "action": "Gọi deposit('A', 0, 'q').",
+              "expected": "Ném Error có code INVALID_AMOUNT."
+            },
+            {
+              "id": "S-4",
+              "before": "A total 10; key q vẫn tự do.",
+              "after": "A total 15; key q ghi nhớ lời gọi thành công.",
+              "requirementIds": [
+                "R-12",
+                "R-5"
+              ],
+              "action": "Gọi deposit('A', 5, 'q').",
+              "expected": "Nhận balance { total: 15, held: 0, available: 15 }."
+            }
+          ],
+          "invariants": [
+            "Key chỉ ghi nhớ lời gọi thành công.",
+            "Dùng lại key với method hoặc arguments khác không đổi trạng thái."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-11",
+            "R-12",
+            "R-5"
+          ]
+        },
+        {
+          "id": "C-17",
+          "group": "consistency",
+          "risk": "Key không được chia sẻ giữa các method hoặc kết quả lưu có thể bị trả sai khi số dư/hold thay đổi.",
+          "priority": "high",
+          "preconditions": "Tạo ledger với giờ t thay đổi được, holdTtl 60; mở A; nạp 500.",
+          "actions": "Tạo hold với key k; thử dùng k cho release; sau đó release bằng key khác.",
+          "expected": "Dùng key k cho method khác ném KEY_REUSED; trạng thái hold và số dư không đổi trước khi release hợp lệ.",
+          "oracle": {
+            "references": [
+              {
+                "requirementId": "R-11",
+                "quote": "Các thao tác có key dùng chung một không gian key trong ledger."
+              },
+              {
+                "requirementId": "R-8",
+                "quote": "`release(holdId, key)` đóng hold active mà không trừ tiền và trả balance view của tài khoản giữ hold."
+              }
+            ],
+            "explanation": "Key đã dùng cho hold nên không thể dùng cho release; release với key khác xác nhận hold vẫn active sau lần từ chối."
+          },
+          "steps": [
+            {
+              "id": "S-1",
+              "before": "t=0; A total 500, held 0, available 500; key k tự do.",
+              "after": "t=0; A total 500, held 100, available 400; h1 active; key k ghi nhớ hold.",
+              "requirementIds": [
+                "R-6",
+                "R-11"
+              ],
+              "action": "Gọi hold('A', 100, 'k').",
+              "expected": "Nhận h1."
+            },
+            {
+              "id": "S-2",
+              "before": "t=0; h1 active; key k đã ghi nhớ method hold.",
+              "after": "t=0; A và h1 không đổi.",
+              "requirementIds": [
+                "R-11"
+              ],
+              "action": "Gọi release('h1', 'k').",
+              "expected": "Ném Error có code KEY_REUSED; h1 vẫn active."
+            },
+            {
+              "id": "S-3",
+              "before": "t=0; h1 active; A total 500, held 100, available 400.",
+              "after": "t=0; h1 released; A total 500, held 0, available 500.",
+              "requirementIds": [
+                "R-8"
+              ],
+              "action": "Gọi release('h1', 'r1').",
+              "expected": "Nhận { total: 500, held: 0, available: 500 }."
+            }
+          ],
+          "invariants": [
+            "Key thành công được dùng chung giữa các method trong ledger.",
+            "Lời gọi bị từ chối do KEY_REUSED không đổi trạng thái hold hoặc số dư."
+          ],
+          "method": "automated",
+          "required": true,
+          "requirementIds": [
+            "R-11",
+            "R-8"
+          ]
+        }
+      ],
+      "notApplicable": [
+        {
+          "group": "authorization",
+          "reason": "Interface và các yêu cầu không định nghĩa actor, role, quyền hoặc cơ chế phân quyền."
+        },
+        {
+          "group": "concurrency",
+          "reason": "Các method được quy định là đồng bộ; hợp đồng không mô tả lịch xen kẽ hay xử lý lời gọi đồng thời."
+        },
+        {
+          "group": "dependency",
+          "reason": "Ledger là in-memory; không có dependency ngoài hoặc tích hợp được quy định."
+        }
+      ],
+      "questions": []
+    },
+    "assumptions": [
+      "Yêu cầu không quy định thứ tự ưu tiên lỗi khi một lời gọi đồng thời vi phạm nhiều quy tắc; acceptance tests chỉ dùng đầu vào không tạo ra tranh chấp lỗi như vậy.",
+      "Yêu cầu không nêu định dạng so sánh arguments cho idempotency ngoài việc phải giống nhau; chủ task cần xác nhận cách xác định hai bộ arguments có giống nhau hay không nếu cần kiểm thử các giá trị cấu trúc."
+    ],
+    "acceptanceExamples": [
+      "Mở `A`, nạp 1000 cents, giữ 700 cents: balance là `{ total: 1000, held: 700, available: 300 }`; giữ thêm 301 cents thất bại `INSUFFICIENT_FUNDS`.",
+      "Với holdTtl 60 và now ban đầu là 10, tạo hold thành công có expiresAt 70; tại now = 70, hold không còn được tính vào held và getHold báo `expired`.",
+      "Tạo hold 500 cents rồi capture 200 cents: total giảm 200, hold đóng, 300 cents còn lại được giải phóng.",
+      "Chuyển 400 cents từ A sang B khi A có total 1000 và held 700 thất bại `INSUFFICIENT_FUNDS`, và số dư hai tài khoản không đổi.",
+      "Nạp 100 cents với key `k`, sau đó đổi số dư bằng thao tác khác rồi gọi lại đúng deposit và key `k`: kết quả là deep copy kết quả lần đầu và lần gọi lại không nạp thêm tiền."
+    ],
+    "interfaces": [
+      "`createLedger({ now = () => 0, holdTtl = 60 } = {})` trả ledger có các phương thức `open(account)`, `deposit(account, amount, key)`, `hold(account, amount, key)`, `capture(holdId, amount, key)`, `release(holdId, key)`, `transfer(from, to, amount, key)`, `balance(account)` và `getHold(holdId)`.",
+      "Các phương thức đồng bộ; kết quả và đầu vào là giá trị JSON thông thường. Kết quả balance có dạng `{ total, held, available }`."
+    ],
+    "scope": [
+      "Chỉ triển khai ledger trong bộ nhớ theo API và hành vi đã nêu; không thêm persistence, network, timers hoặc cleanup.",
+      "Không mở rộng hành vi ngoài hợp đồng. Quy ước stack và phong cách repository chỉ là tham khảo, không thay đổi hợp đồng."
+    ]
+  }
+}

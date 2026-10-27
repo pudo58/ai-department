@@ -1,0 +1,1 @@
+{"action":"approve","note":"Plan is valid under v4 (no blocking problems); read against SPEC rules 1-10: cases cover validation, balances/holds, capture/release, transfer atomicity and idempotent keys; scenario numbers follow the cited rules. Two advisory notes about step clauses were left as written."}

@@ -1,0 +1,15 @@
+{
+ "id": "keys-per-method",
+ "description": "Keys are only unique within one method",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "const seen = remembered.get(key);",
+   "replace": "const seen = remembered.get(method + key);"
+  },
+  {
+   "find": "remembered.set(key, { signature, result: structuredClone(result) });",
+   "replace": "remembered.set(method + key, { signature, result: structuredClone(result) });"
+  }
+ ]
+}

@@ -1,0 +1,68 @@
+{
+  "assignmentId": "couponstack:single:2",
+  "taskId": "couponstack",
+  "repetition": 2,
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "startedAt": "2026-10-26T15:29:07.685Z",
+  "endedAt": "2026-10-26T15:31:41.065Z",
+  "arm": "single",
+  "mode": "single",
+  "runId": "run_e0b88a84",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "stoppedByOrchestrator": null,
+  "automaticMs": 137642,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "evidenceComplete": true,
+  "ready": true,
+  "grader": {
+    "passed": 33,
+    "total": 33,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 0.6724128,
+  "estimatedCost": true,
+  "attempts": 3,
+  "roles": [
+    "planner:prepare:completed",
+    "developer:implement:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "missing_evidence",
+      "count": 1
+    }
+  ],
+  "findings": [],
+  "findingsReproduced": 0,
+  "regressionsProposed": 0,
+  "regressionsCreated": 0,
+  "authorTestsWrong": {
+    "diagnosedAsTestError": 0,
+    "diagnoses": 0,
+    "proposals": 0,
+    "approved": 0
+  },
+  "interventions": [
+    {
+      "round": 1,
+      "kind": "contract",
+      "action": "approve",
+      "note": "Contract restates SPEC rules 1-9 without adding or dropping behavior; assumptions only record unspecified behavior (non-JSON inputs, invalid now()).",
+      "at": "2026-10-26T15:29:43.600Z"
+    }
+  ],
+  "repairRounds": 0,
+  "completionReasons": [],
+  "usageTokens": 688692
+}

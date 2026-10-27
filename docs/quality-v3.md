@@ -1,5 +1,7 @@
 # Chẩn đoán, căn cứ assertion và phản ví dụ — chính sách v3
 
+> Từ nay Verify mới dùng chính sách v4 ([evidence-v4.md](evidence-v4.md)), siết các fallback dưới đây và thêm vòng regression. Tài liệu này mô tả v3, vẫn áp dụng cho run đã tạo với `qualityPolicyVersion: 3`.
+
 Run Verify mới dùng `qualityPolicyVersion: 3`. Run cũ giữ phiên bản và hash hợp đồng đã lưu; đọc hoặc resume không tự nâng chính sách. Single/Clarify/Compare không tự có thêm lượt Author lập kế hoạch.
 
 ## Kế hoạch và assertion

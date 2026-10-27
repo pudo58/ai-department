@@ -1,0 +1,73 @@
+{
+  "assignmentId": "ticketflow:single:2",
+  "taskId": "ticketflow",
+  "repetition": 2,
+  "protocolHash": "acf1d974571b065fcfbcbd22e55808348071d106dfd8b84b42efdff56589dc4e",
+  "startedAt": "2026-10-26T15:25:59.719Z",
+  "endedAt": "2026-10-26T15:29:07.680Z",
+  "arm": "single",
+  "mode": "single",
+  "runId": "run_1d8e92d5",
+  "status": "awaiting_acceptance",
+  "blocker": null,
+  "limitReached": false,
+  "stoppedByOrchestrator": null,
+  "automaticMs": 172237,
+  "reachedDeveloper": true,
+  "readiness": "ready_with_warnings",
+  "degraded": {
+    "stages": [],
+    "items": 0
+  },
+  "evidenceComplete": true,
+  "ready": true,
+  "grader": {
+    "passed": 29,
+    "total": 29,
+    "failed": [],
+    "loadError": false
+  },
+  "graderPass": true,
+  "falseReady": false,
+  "costUsd": 1.2206928000000001,
+  "estimatedCost": true,
+  "attempts": 4,
+  "roles": [
+    "planner:prepare:completed",
+    "developer:implement:completed",
+    "developer:repair:completed",
+    "developer:repair:completed"
+  ],
+  "retries": [
+    {
+      "reason": "missing_evidence",
+      "count": 1
+    },
+    {
+      "reason": "check_failure",
+      "count": 1
+    }
+  ],
+  "findings": [],
+  "findingsReproduced": 0,
+  "regressionsProposed": 0,
+  "regressionsCreated": 0,
+  "authorTestsWrong": {
+    "diagnosedAsTestError": 0,
+    "diagnoses": 0,
+    "proposals": 0,
+    "approved": 0
+  },
+  "interventions": [
+    {
+      "round": 1,
+      "kind": "contract",
+      "action": "approve",
+      "note": "Contract restates SPEC rules 1-7 (R-1..R-17) without adding or dropping behavior; assumptions only record unspecified behavior (empty assignee filter, now() failure).",
+      "at": "2026-10-26T15:26:40.721Z"
+    }
+  ],
+  "repairRounds": 0,
+  "completionReasons": [],
+  "usageTokens": 1429108
+}

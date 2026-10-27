@@ -1,0 +1,169 @@
+{
+  "assignment": "v4check-ticketflow__single__2",
+  "arm": "single",
+  "task": "ticketflow",
+  "round": 1,
+  "kind": "contract",
+  "contractHash": "ce5db44f1320eb49f15b37b587b9e03af230f31331ed003af908b092cdb1afc0",
+  "version": 2,
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "createTickets chấp nhận cấu hình mặc định và cấu hình hợp lệ; từ chối now không phải hàm, reopenWindow hoặc escalateAfter không phải số nguyên an toàn dương, và maxReopens không phải số nguyên an toàn không âm bằng lỗi có code INVALID_INPUT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-2",
+      "text": "create yêu cầu id và subject là chuỗi không rỗng, priority thuộc low, normal, high, urgent; đầu vào không hợp lệ trả lỗi code INVALID_INPUT. ID đã từng được dùng, kể cả ID của ticket đã merge hoặc đóng, trả lỗi ID_TAKEN.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-3",
+      "text": "Ticket mới có status open, assignee null, reopenCount 0; view có id, subject, priority, effectivePriority, status, assignee, reopenCount.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-4",
+      "text": "assign từ open, assigned hoặc pending chuyển sang assigned và đặt hoặc thay assignee. Agent không phải chuỗi không rỗng trả INVALID_INPUT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-5",
+      "text": "wait chỉ chuyển assigned sang pending; customerReply chỉ chuyển pending sang assigned và giữ nguyên assignee.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-6",
+      "text": "resolve chỉ chuyển assigned sang resolved và ghi nhận thời điểm gọi; close chỉ chuyển resolved sang closed.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-7",
+      "text": "reopen chỉ chuyển resolved sang assigned, giữ assignee và tăng reopenCount một đơn vị; nếu reopenCount đã đạt maxReopens thì trả REOPEN_LIMIT và không đổi ticket.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-8",
+      "text": "Mọi chuyển trạng thái không được liệt kê trả lỗi code BAD_STATE; mọi phương thức nhận ID không tồn tại trả UNKNOWN_TICKET. Lời gọi thất bại không làm thay đổi dữ liệu ticket.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-9",
+      "text": "Ticket resolved tự chuyển thành closed khi now() >= resolvedAt + reopenWindow; trước thời điểm đó vẫn resolved và có thể reopen. Mỗi lần resolve sau khi reopen bắt đầu một cửa sổ mới.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-10",
+      "text": "now() được dùng làm nguồn thời gian cho thao tác và view; dịch vụ không đọc đồng hồ hệ thống. Thời gian do now trả về là số nguyên an toàn không âm và không giảm.",
+      "required": true,
+      "manual": true,
+      "kind": "expected"
+    },
+    {
+      "id": "R-11",
+      "text": "Ticket chưa từng được assign trước createdAt + escalateAfter trở thành escalated khi đạt hoặc vượt mốc đó; nếu đã assign trước mốc thì không bị escalated theo quy tắc này. Escalation đã xảy ra được giữ vĩnh viễn.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-12",
+      "text": "effectivePriority bằng priority nếu không escalated; nếu escalated thì tăng đúng một bậc theo low → normal → high → urgent, với urgent giữ nguyên.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-13",
+      "text": "merge với cùng sourceId và targetId trả SAME_TICKET. Merge chỉ thành công khi cả hai ticket ở open, assigned hoặc pending; nếu không, trả BAD_STATE và không thay đổi ticket.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-14",
+      "text": "Merge thành công chuyển source sang merged, thêm mergedInto bằng targetId; target giữ status và assignee, nhận priority cao hơn trong hai ticket và giữ trạng thái escalated nếu một trong hai ticket đã escalated tại thời điểm merge.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-15",
+      "text": "mergedInto chỉ xuất hiện trong view của ticket merged. Ticket merged không thể đổi status lần nữa.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-16",
+      "text": "Các phương thức thay đổi ticket trả view sau thay đổi; merge trả view của target. get trả view tại thời điểm now().",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-17",
+      "text": "list lọc đồng thời theo các filter được cung cấp; status ngoài sáu trạng thái trả INVALID_INPUT; assignee filter phải là chuỗi. Kết quả phản ánh trạng thái tại now() và sắp xếp effectivePriority urgent, high, normal, low; các ticket cùng mức giữ thứ tự tạo.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-18",
+      "text": "API không thực hiện persistence, network, timer hoặc cleanup.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    },
+    {
+      "id": "R-19",
+      "text": "Không thêm hành vi chuyển trạng thái hoặc quy tắc ngoài hợp đồng.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    }
+  ],
+  "acceptanceExamples": [
+    "Với now cố định ở 0, tạo ticket t1 priority high rồi assign t1 cho Linh: view của t1 có status assigned, assignee Linh, reopenCount 0.",
+    "Tạo ticket t1, assign, wait rồi customerReply: ticket trở lại assigned và giữ nguyên assignee.",
+    "Với reopenWindow 10, tạo, assign, resolve tại thời điểm 5: tại now=14 ticket còn resolved; tại now=15 get/list và view trả về từ thao tác phản ánh closed.",
+    "Với maxReopens=1, resolve rồi reopen một lần thành công; resolve lại và thử reopen lần nữa trả REOPEN_LIMIT, reopenCount không đổi.",
+    "Với escalateAfter=5, ticket chưa assign tại now=5 có effectivePriority tăng một bậc; ticket đã assign trước mốc 5 không tăng bậc.",
+    "Merge source priority urgent vào target priority low khi cả hai open: source thành merged với mergedInto là target ID; target giữ status và assignee, priority thành urgent."
+  ],
+  "interfaces": [
+    "Module src/tickets.js xuất createTickets({ now = () => 0, reopenWindow = 100, maxReopens = 2, escalateAfter = 50 } = {}).",
+    "Service cung cấp create, assign, wait, customerReply, resolve, reopen, close, merge, get và list; các phương thức đồng bộ, có thể await."
+  ],
+  "assumptions": [
+    "Giả định “agent là chuỗi” trong list cho phép chuỗi rỗng, vì hợp đồng chỉ yêu cầu assignee là string; xác nhận nếu cần áp dụng quy tắc không rỗng như assign.",
+    "Giả định status hoặc assignee bị bỏ qua khi lọc nghĩa là không áp dụng filter tương ứng.",
+    "Hợp đồng không chỉ rõ cách xử lý ngoại lệ nếu hàm now ném lỗi hoặc trả giá trị ngoài miền hợp lệ tại runtime; không đưa trường hợp đó thành tiêu chí nghiệm thu."
+  ],
+  "scope": [
+    "Chỉ triển khai workflow ticket in-memory tại src/tickets.js theo public API và hợp đồng đã nêu.",
+    "Không thay dependencies, cấu hình, SPEC hoặc scaffold test; không đọc sibling projects hay controller data."
+  ],
+  "problems": [],
+  "warnings": [
+    "Hợp đồng có giả định cần bạn xác nhận."
+  ]
+}

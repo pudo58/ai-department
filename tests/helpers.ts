@@ -52,6 +52,17 @@ export function setupLegacy(...args: Parameters<typeof setup>) {
   } };
 }
 
+/** Pin a verify run to the v3 policy (the production default before v4), keeping its legacy fallbacks covered. */
+export function pinV3(store: Store, run: Run): Run {
+  if (run.mode !== 'verify') return run;
+  run.qualityPolicyVersion = 3; delete run.evidencePolicy; store.runs.put(run);
+  return run;
+}
+export function setupV3(...args: Parameters<typeof setup>) {
+  const env = setup(...args);
+  return { ...env, create: (input: Partial<CreateRunInput> = {}) => pinV3(env.store, env.create(input)) };
+}
+
 /** Pin pre-v3 fixtures to their original protocol, preserving legacy recovery/hash regression coverage. */
 export function setupV2(...args:Parameters<typeof setup>){
   const env=setup(...args);

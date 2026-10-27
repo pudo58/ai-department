@@ -6,6 +6,8 @@ import { delivered } from '../core/delivery';
 import { LogConsole } from './Monitor';
 import { readVerdict } from '../core/report';
 import {FindingReplayResults} from './FindingReplays';
+import { FindingActions, FindingProofList } from './FindingEvidence';
+import { policyOf } from '../core/policy';
 import { Badge, DiffView, Empty, Field, Icon, Modal, dateTime, duration, money } from './ui';
 
 /** Where the task is: four numbered steps on one strip, done ones ticked, the current one ringed. */
@@ -126,7 +128,7 @@ export function ContractPanel({ detail, busy = false, onApprove }: { detail: Run
 }
 
 /** Requirement matrix, system-run checks and verifier findings: everything that decides "is it really done". */
-export function VerifyPanel({ detail, busy, onQuarantine, onFinding }: { detail: RunDetail; busy: boolean; onQuarantine: (id: string, reason: string) => Promise<void>; onFinding: (id: string, action: 'confirm' | 'resolve' | 'dispute', body?: unknown) => Promise<void> }) {
+export function VerifyPanel({ detail, busy, onQuarantine, onFinding }: { detail: RunDetail; busy: boolean; onQuarantine: (id: string, reason: string) => Promise<void>; onFinding: (id: string, action: 'confirm' | 'resolve' | 'dispute' | 'replay', body?: unknown) => Promise<void> }) {
   const [target, setTarget] = useState<CheckResult | null>(null);
   const [disputing, setDisputing] = useState<Finding | null>(null);
   const checks = [...detail.checks].reverse();
@@ -134,6 +136,7 @@ export function VerifyPanel({ detail, busy, onQuarantine, onFinding }: { detail:
   const tone = { blocker: 'bad', major: 'warn', minor: 'neutral' } as const;
   return <div className="stack">
     <FindingReplayResults replays={detail.findingReplays} checkpoint={detail.run.checkpoint}/>
+    <FindingProofList proofs={detail.findingProofs}/>
     <div className="panel">
       <div className="card-head"><h2>Điều kiện nghiệm thu</h2><Badge tone={detail.completion.ready ? 'good' : 'warn'}>{detail.completion.ready ? 'Đủ điều kiện' : 'Chưa đủ'}</Badge></div>
       {detail.completion.reasons.length > 0 && <ul className="plain-list warn-list">{detail.completion.reasons.map((r) => <li key={r}>{r}</li>)}</ul>}
@@ -157,7 +160,7 @@ export function VerifyPanel({ detail, busy, onQuarantine, onFinding }: { detail:
         {detail.findings.map((f) => <article className={`finding ${f.status}`} key={f.id}>
           <div className="card-head"><h3 style={{ margin: 0 }}>{f.title}</h3><div><Badge tone={tone[f.severity]}>{f.severity}</Badge><Badge tone="neutral" plain>{f.category}{f.code ? ` · ${f.code}` : ''}</Badge>{f.confirmed && <Badge tone="good">đã xác nhận</Badge>}<Badge tone={f.status === 'resolved' ? 'good' : f.status === 'disputed' ? 'warn' : 'neutral'} plain>{f.status}</Badge></div></div>
           <dl className="facts"><dt>Vị trí</dt><dd className="mono">{f.location || '—'}</dd>{(f.rule || f.precedent) && <><dt>Rule / tiền lệ</dt><dd>{f.rule ?? f.precedent}</dd></>}<dt>Bằng chứng</dt><dd>{f.evidence || '—'}</dd><dt>Sửa tối thiểu</dt><dd>{f.suggestion || '—'}</dd>{f.dispute && <><dt>Ghi chú</dt><dd>{f.dispute}</dd></>}</dl>
-          {f.status !== 'resolved' && <div className="row-actions" style={{ marginBottom: 0 }}>{!f.confirmed && <button className="button small" disabled={busy} onClick={() => void onFinding(f.id, 'confirm')}>Xác nhận</button>}<button className="button small" disabled={busy} onClick={() => setDisputing(f)}>Bác bỏ</button><button className="text-button" disabled={busy} onClick={() => void onFinding(f.id, 'resolve')}>Đánh dấu đã xử lý</button></div>}
+          {policyOf(detail.run).strict ? <FindingActions detail={detail} finding={f} busy={busy} onFinding={onFinding} onDispute={() => setDisputing(f)}/> : f.status !== 'resolved' && <div className="row-actions" style={{ marginBottom: 0 }}>{!f.confirmed && <button className="button small" disabled={busy} onClick={() => void onFinding(f.id, 'confirm')}>Xác nhận</button>}<button className="button small" disabled={busy} onClick={() => setDisputing(f)}>Bác bỏ</button><button className="text-button" disabled={busy} onClick={() => void onFinding(f.id, 'resolve')}>Đánh dấu đã xử lý</button></div>}
         </article>)}</>}
     </div>
     {target && <ReasonModal title={`Quarantine "${target.recipeId}"`} description="Cần lý do và điều kiện xem xét lại. Check flaky không bao giờ được tính là bằng chứng cho yêu cầu." busy={false} onClose={() => setTarget(null)} onSave={async (reason) => { await onQuarantine(target.id, reason); setTarget(null); }}/>}

@@ -1,0 +1,592 @@
+{
+  "assignment": "v4check-couponstack__department__2",
+  "arm": "department",
+  "task": "couponstack",
+  "round": 1,
+  "kind": "contract",
+  "contractHash": "8693626d8d4c9b60932701ef5ffe16f914983e3fd07c4de95e1ab57ecda8f2b3",
+  "version": 3,
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "Export createCoupons({ coupons = [], now = () => 0 } = {}). Reject a non-array coupons value or any invalid coupon definition with an Error whose code is INVALID_INPUT. Enforce the specified definition constraints, including unique nonempty codes, kind-specific values, and the stated integer, range, and nullability rules.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-2",
+      "text": "Expose synchronous quote, redeem, cancel, uses, and usesBy methods. Request validation failures specified as INVALID_INPUT must produce an Error with that code. Duplicate codes fail with DUPLICATE_CODE, undefined coupon codes with UNKNOWN_COUPON, and unknown codes passed to uses or usesBy with UNKNOWN_COUPON. A failed call changes no state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-3",
+      "text": "Compute subtotal as the sum of unitPrice * qty for all lines. Check coupon eligibility in this order: active window, minSubtotal, maxUses, perCustomer. Use the pre-discount subtotal for minSubtotal. When multiple codes are ineligible, report the error for the first ineligible code in request order.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-4",
+      "text": "Reject a request combining a non-stackable coupon with any other coupon using NOT_STACKABLE. Allow any number of stackable coupons to be combined.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-5",
+      "text": "Apply percentage coupons first in request order, each discounting floor(runningAmount * value / 100); then apply fixed coupons in request order. Limit each discount by its cap when set and by the remaining amount. Include a discount entry for every code, including zero discounts, in application order; total is the remaining amount.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-6",
+      "text": "quote returns { subtotal, discounts, total } and does not change usage counts or order state.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-7",
+      "text": "redeem returns { orderId, subtotal, discounts, total }, counts one use per listed coupon for the order's customer, and remembers the order only after successful eligibility and pricing. A failed redemption does not count uses or remember the order.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-8",
+      "text": "A repeated redeem with the same orderId and equal customer, lines, and codes in the same order counts no additional uses and returns a deep copy of the first result, including if coupon eligibility has changed since. Reusing an orderId with a different request fails with ORDER_CONFLICT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-9",
+      "text": "cancel on a redeemed order returns { orderId, status: 'cancelled' } and restores each counted use once. Repeated cancellation returns the same value without restoring uses again. Unknown orders fail with UNKNOWN_ORDER; redeeming a cancelled order fails with ORDER_CANCELLED.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-10",
+      "text": "uses(code) reports currently counted uses across customers; usesBy(code, customer) reports currently counted uses for that customer. Cancellation updates both counts.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-11",
+      "text": "Do not use wall-clock time, persistence, network access, timers, or cleanup behavior.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    },
+    {
+      "id": "R-12",
+      "text": "Do not add behavior outside the stated coupon-engine contract.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    }
+  ],
+  "acceptanceExamples": [
+    "With subtotal 1000, a 10% coupon followed by a fixed 200-cent coupon yields discounts of 100 and 200, and total 700.",
+    "With subtotal 1000 and two stackable percentage coupons of 10% in request order, discounts are 100 then 90, and total 810.",
+    "With subtotal 100 and fixed coupons of 80 and 80, discounts are 80 then 20, and total 0.",
+    "A quote for a coupon with maxUses 1 leaves uses(code) at 0; one successful redemption makes it 1.",
+    "After cancelling that redeemed order, uses(code) and usesBy(code, customer) both return to 0; cancelling it again leaves both at 0.",
+    "After a successful redemption, repeating the same request and orderId returns an equal result without increasing uses; changing the request with that orderId fails with ORDER_CONFLICT."
+  ],
+  "interfaces": [
+    "createCoupons({ coupons = [], now = () => 0 }) returns an engine exposing quote({ customer, lines, codes = [] }), redeem({ orderId, customer, lines, codes = [] }), cancel(orderId), uses(code), and usesBy(code, customer).",
+    "Errors are Error objects with a string code; methods are synchronous and may also be awaited."
+  ],
+  "assumptions": [
+    "The contract gives no special error precedence for requests that violate multiple unrelated validation rules; acceptance tests should avoid such inputs.",
+    "The contract does not specify behavior if individually valid prices and quantities produce a subtotal outside JavaScript's safe-integer range; confirm whether such inputs should be rejected.",
+    "The contract describes now as a current-time function but does not specify call count or snapshot behavior during one operation; confirm whether time should be read once per request."
+  ],
+  "scope": [
+    "Implement the in-memory coupon engine in src/coupons.js and assess it through the public API.",
+    "Do not change dependencies, configuration, SPEC.md, or the scaffold test."
+  ],
+  "problems": [],
+  "warnings": [
+    "Hợp đồng có giả định cần bạn xác nhận.",
+    "Kế hoạch ca: C-7.steps.0: thiếu điều khoản trong căn cứ đã duyệt.",
+    "Kế hoạch ca: C-10.steps.1: thiếu điều khoản trong căn cứ đã duyệt.",
+    "Kế hoạch ca: C-10.steps.2: thiếu điều khoản trong căn cứ đã duyệt."
+  ],
+  "planReview": {
+    "outcome": "valid",
+    "remaining": [],
+    "advisories": [
+      "C-7.steps.0: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó).",
+      "C-10.steps.1: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó).",
+      "C-10.steps.2: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó)."
+    ],
+    "normalizations": []
+  },
+  "testPlan": {
+    "schemaVersion": 2,
+    "questions": [],
+    "notApplicable": [
+      {
+        "group": "authorization",
+        "reason": "The public coupon-engine contract defines no identities, roles, permissions, or authorization decisions; adding authorization assertions would exceed the stated contract."
+      }
+    ],
+    "cases": [
+      {
+        "id": "C-1",
+        "group": "happy",
+        "required": true,
+        "method": "automated",
+        "expected": "The engine exposes quote, redeem, cancel, uses, and usesBy as synchronous methods. quote returns subtotal 100, discounts [], and total 100.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-1",
+              "quote": "Export createCoupons({ coupons = [], now = () => 0 } = {})."
+            },
+            {
+              "requirementId": "R-2",
+              "quote": "Expose synchronous quote, redeem, cancel, uses, and usesBy methods."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "quote returns { subtotal, discounts, total } and does not change usage counts or order state."
+            }
+          ],
+          "explanation": "The empty-coupon default and exposed methods are specified. With one line, the subtotal is 100; no coupon means no discounts and the full subtotal remains."
+        },
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Call createCoupons() and inspect the five public methods; call quote({ customer: 'cust-1', lines: [{ sku: 'sku-1', unitPrice: 100, qty: 1 }] }).",
+            "expected": "All five methods are functions and the quote result is { subtotal: 100, discounts: [], total: 100 }."
+          }
+        ]
+      },
+      {
+        "id": "C-2",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Every attempted invalid configuration throws an Error with code INVALID_INPUT; a valid boundary definition with validTo greater than validFrom is accepted.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-1",
+              "quote": "Reject a non-array coupons value or any invalid coupon definition with an Error whose code is INVALID_INPUT."
+            },
+            {
+              "requirementId": "R-1",
+              "quote": "Enforce the specified definition constraints, including unique nonempty codes, kind-specific values, and the stated integer, range, and nullability rules."
+            }
+          ],
+          "explanation": "The invalid configurations each violate a listed definition constraint and are tested independently to avoid relying on unspecified error precedence. The validTo boundary case uses a safe integer strictly greater than validFrom."
+        },
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Independently attempt createCoupons with coupons: {}, code: '', duplicate codes, percent value 0, fixed value 0, stackable: 1, minSubtotal: -1, maxUses: 0, perC…",
+            "expected": "Each attempt throws an Error whose code is INVALID_INPUT."
+          },
+          {
+            "id": "S-2",
+            "action": "Create an engine with a unique nonempty code, kind percent and value 100, stackable false, minSubtotal 0, null limits/cap, validFrom 0, and validTo 1.",
+            "expected": "Creation succeeds."
+          }
+        ]
+      },
+      {
+        "id": "C-3",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Specified request validation errors have code INVALID_INPUT; duplicate and unknown codes have their specified codes. Failed calls leave uses at zero and do not reserve the orderId, which remains redeemable with a valid request.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "Request validation failures specified as INVALID_INPUT must produce an Error with that code. Duplicate codes fail with DUPLICATE_CODE, undefined coupon codes with UNKNOWN_COUPON, and unknown codes pas…"
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "A failed redemption does not count uses or remember the order."
+            }
+          ],
+          "explanation": "The tested request defects and code errors are explicitly specified. The follow-up valid redemption checks the externally observable state effects and confirms failed redemption did not reserve the order identifier."
+        },
+        "invariants": [
+          "A failed call does not change counted uses or create/alter a redeemed order."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Independently call quote/redeem with empty customer, empty lines, empty sku, negative unitPrice, zero qty, non-array codes, non-string code, missing orderId, co…",
+            "expected": "Invalid request fields produce INVALID_INPUT; repeated SAVE produces DUPLICATE_CODE; MISSING produces UNKNOWN_COUPON. SAVE uses remain 0."
+          },
+          {
+            "id": "S-2",
+            "action": "Redeem order-1 with customer cust-1, one valid line, and codes ['SAVE'].",
+            "expected": "Redemption succeeds and SAVE uses becomes 1, demonstrating the failed calls did not count uses or remember order-1."
+          },
+          {
+            "id": "S-3",
+            "action": "Call uses('MISSING') and usesBy('MISSING', 'cust-1').",
+            "expected": "Both calls fail with UNKNOWN_COUPON; existing SAVE counts remain unchanged."
+          }
+        ]
+      },
+      {
+        "id": "C-4",
+        "group": "happy",
+        "required": true,
+        "method": "automated",
+        "expected": "Percent discounts apply first in their request order using floor on the running amount, followed by fixed coupons in their request order. Entries include zero amounts where applicable; discount amounts respect caps and remaining subtotal.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-3",
+              "quote": "Compute subtotal as the sum of unitPrice * qty for all lines."
+            },
+            {
+              "requirementId": "R-4",
+              "quote": "Allow any number of stackable coupons to be combined."
+            },
+            {
+              "requirementId": "R-5",
+              "quote": "Apply percentage coupons first in request order, each discounting floor(runningAmount * value / 100); then apply fixed coupons in request order."
+            },
+            {
+              "requirementId": "R-5",
+              "quote": "Include a discount entry for every code, including zero discounts, in application order; total is the remaining amount."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "quote returns { subtotal, discounts, total } and does not change usage counts or order state."
+            }
+          ],
+          "explanation": "The first quote distinguishes request order from application order and checks sequential percentage rounding. The second checks fixed discounts cannot exceed the running amount. The third checks the cap and remaining amount when the remaining amount is lower than the uncapped fixed value."
+        },
+        "invariants": [
+          "quote leaves all usage counts and order state unchanged."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Quote one line totaling 1000 with codes ['F80', 'P10', 'P10B'].",
+            "expected": "Result has subtotal 1000, discounts [{code:'P10',amount:100},{code:'P10B',amount:90},{code:'F80',amount:80}] in that order, and total 730."
+          },
+          {
+            "id": "S-2",
+            "action": "Quote one line totaling 100 with codes ['F80', 'F80B'].",
+            "expected": "Discounts are 80 then 20 and total is 0."
+          },
+          {
+            "id": "S-3",
+            "action": "Quote one line totaling 10 with codes ['CAP'].",
+            "expected": "The CAP discount entry is present with amount 10 and total is 0; uses remain 0."
+          }
+        ]
+      },
+      {
+        "id": "C-5",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Active means validFrom <= now and now < validTo. Eligibility is checked in active-window, minSubtotal, maxUses, perCustomer order, using the original subtotal; among ineligible listed codes the first in request order determines the error.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-3",
+              "quote": "Check coupon eligibility in this order: active window, minSubtotal, maxUses, perCustomer."
+            },
+            {
+              "requirementId": "R-3",
+              "quote": "Use the pre-discount subtotal for minSubtotal."
+            },
+            {
+              "requirementId": "R-3",
+              "quote": "When multiple codes are ineligible, report the error for the first ineligible code in request order."
+            }
+          ],
+          "explanation": "The injected clock makes both active-window endpoints deterministic. Separate setups isolate each specified eligibility error and the ordered checks; reversing two ineligible codes verifies request-order selection without imposing precedence between unrelated request validation failures."
+        },
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "At time 10 quote WINDOW, then set the injected clock to 11 and quote WINDOW again.",
+            "expected": "At time 10 it is active; at time 11 it fails with COUPON_NOT_ACTIVE."
+          },
+          {
+            "id": "S-2",
+            "action": "Quote a subtotal of 100 with MIN and PERCENT (10%) where the post-percent amount would be below 100.",
+            "expected": "MIN is eligible because minSubtotal uses the pre-discount subtotal."
+          },
+          {
+            "id": "S-3",
+            "action": "In an isolated engine, make LIMIT fail both maxUses and perCustomer for cust-1, then make a separate request where only perCustomer is reached but maxUses is no…",
+            "expected": "The combined limit failure is COUPON_EXHAUSTED; the isolated perCustomer failure is LIMIT_REACHED."
+          },
+          {
+            "id": "S-4",
+            "action": "Call quote with codes ['A','B'], then with codes ['B','A'] using identical customer and lines.",
+            "expected": "Each request reports the eligibility error of its first listed ineligible code."
+          }
+        ]
+      },
+      {
+        "id": "C-6",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "Quote changes no counts; successful redemption counts one use per listed coupon for its customer; failed redemption changes no counts; cancellation restores both counts once and repeated cancellation is idempotent.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-6",
+              "quote": "quote returns { subtotal, discounts, total } and does not change usage counts or order state."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "A failed redemption does not count uses or remember the order."
+            },
+            {
+              "requirementId": "R-9",
+              "quote": "Repeated cancellation returns the same value without restoring uses again."
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "Cancellation updates both counts."
+            }
+          ],
+          "explanation": "The ordered public API calls expose counts before and after quote, successful and failed redemption, and first and repeated cancellation. The invariants express the specified counted-use accounting and one-time restoration."
+        },
+        "invariants": [
+          "After each step, each coupon's total uses equal the sum of currently counted uses across customers.",
+          "A quote or failed redemption does not change usage counts; cancellation restores each order's counted uses at most once."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Quote a valid order for cust-1 using ['A','B']; inspect uses and usesBy for both.",
+            "expected": "Quote succeeds and all four usage queries return 0."
+          },
+          {
+            "id": "S-2",
+            "action": "Redeem order-1 for cust-1 with codes ['A','B']; inspect uses and usesBy.",
+            "expected": "Redemption succeeds; uses(A), uses(B), usesBy(A,'cust-1'), and usesBy(B,'cust-1') each return 1."
+          },
+          {
+            "id": "S-3",
+            "action": "Use a separate coupon C with maxUses 1, exhaust it, then attempt a redemption listing A and C; inspect A, C, and customer counts.",
+            "expected": "The redemption fails with COUPON_EXHAUSTED and neither A nor C counts change for that failed call."
+          },
+          {
+            "id": "S-4",
+            "action": "Cancel order-1 and query uses and usesBy for A and B.",
+            "expected": "Cancellation returns { orderId: 'order-1', status: 'cancelled' }; all four counts return 0."
+          },
+          {
+            "id": "S-5",
+            "action": "Cancel order-1 again and query counts.",
+            "expected": "The same cancellation value is returned and all counts remain 0."
+          }
+        ]
+      },
+      {
+        "id": "C-7",
+        "group": "consistency",
+        "required": true,
+        "method": "automated",
+        "expected": "Equal requests return a deep copy of the first result without additional uses even after eligibility changes. A different request under the same orderId fails with ORDER_CONFLICT. Cancel restores the use; redeeming the cancelled order fails with ORDER_CANCELLED.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-8",
+              "quote": "A repeated redeem with the same orderId and equal customer, lines, and codes in the same order counts no additional uses and returns a deep copy of the first result, including if coupon eligibility ha…"
+            },
+            {
+              "requirementId": "R-8",
+              "quote": "Reusing an orderId with a different request fails with ORDER_CONFLICT."
+            },
+            {
+              "requirementId": "R-9",
+              "quote": "Unknown orders fail with UNKNOWN_ORDER; redeeming a cancelled order fails with ORDER_CANCELLED."
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "Cancellation updates both counts."
+            }
+          ],
+          "explanation": "The sequence checks repeat behavior before and after expiration, caller mutation isolation, conflicts across request components, cancellation accounting, and the specified cancelled-order retry error. Each observation uses the public API."
+        },
+        "invariants": [
+          "A repeated equal redemption never increases counts and returns data independent from caller mutations.",
+          "For every completed step, a failed call leaves counts and order status unchanged."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Redeem order-1 for cust-1 with a line totaling 100 and codes ['A']; retain the result and mutate its discounts array in the caller.",
+            "expected": "Redemption succeeds and A has one use."
+          },
+          {
+            "id": "S-2",
+            "action": "Repeat the identical redeem request with orderId order-1 and compare the returned value and nested discounts with the original unmutated result.",
+            "expected": "The result equals the first result, its nested data is not affected by the caller mutation, and A remains at one use."
+          },
+          {
+            "id": "S-3",
+            "action": "Advance the injected clock to 1, where A is expired, then repeat the identical redeem request.",
+            "expected": "The first result is returned successfully despite changed eligibility; A remains at one use."
+          },
+          {
+            "id": "S-4",
+            "action": "Reuse order-1 with a changed customer, then with changed line content, then with codes in a different order (using two defined stackable codes for the reordered…",
+            "expected": "Each request that differs from the originally redeemed request fails with ORDER_CONFLICT; no count changes."
+          },
+          {
+            "id": "S-5",
+            "action": "Cancel order-1 and inspect A's total and customer use counts.",
+            "expected": "Cancellation returns the cancelled status and both counts become 0."
+          },
+          {
+            "id": "S-6",
+            "action": "Retry redeeming order-1 with its original request.",
+            "expected": "The call fails with ORDER_CANCELLED and counts remain 0."
+          }
+        ]
+      },
+      {
+        "id": "C-8",
+        "group": "concurrency",
+        "required": true,
+        "method": "automated",
+        "expected": "The first redemption succeeds and counts one use. The second observes the reached limit and fails with COUPON_EXHAUSTED; it does not count or remember its order.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "A failed call changes no state."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "A failed redemption does not count uses or remember the order."
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "uses(code) reports currently counted uses across customers;"
+            }
+          ],
+          "explanation": "Methods are synchronous, so sequential invocations expose the limit state to the second call. The maxUses eligibility rule makes the second error and unchanged usage observable; no claim about parallel execution or scheduling is made."
+        },
+        "invariants": [
+          "A failed call changes no state.",
+          "Counted uses never exceed the configured maxUses limit."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Call redeem for order-1 with A and inspect the synchronous return value and counts.",
+            "expected": "The call succeeds and uses(A) is 1."
+          },
+          {
+            "id": "S-2",
+            "action": "Immediately call redeem for order-2 with A and inspect the error and counts.",
+            "expected": "The call fails with COUPON_EXHAUSTED; uses(A) remains 1, and order-2 was not remembered, as shown by no state change from the failed call."
+          }
+        ]
+      },
+      {
+        "id": "C-9",
+        "group": "dependency",
+        "required": true,
+        "method": "automated",
+        "expected": "At injected time 4, FUTURE fails with COUPON_NOT_ACTIVE; at injected time 5, it is active and quote succeeds.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-3",
+              "quote": "Check coupon eligibility in this order: active window, minSubtotal, maxUses, perCustomer."
+            },
+            {
+              "requirementId": "R-11",
+              "quote": "Do not use wall-clock time, persistence, network access, timers, or cleanup behavior."
+            }
+          ],
+          "explanation": "The controlled clock crosses the validFrom boundary while all other request and coupon conditions remain constant. The differing outcome is observable through quote and demonstrates time-dependent eligibility without relying on wall time."
+        },
+        "invariants": [
+          "Eligibility follows the injected time value, and quote does not change usage counts."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Call quote with FUTURE while the injected clock returns 4.",
+            "expected": "The call fails with COUPON_NOT_ACTIVE."
+          },
+          {
+            "id": "S-2",
+            "action": "Set the injected clock to 5 and call the same quote again.",
+            "expected": "The quote succeeds; FUTURE remains unused."
+          }
+        ]
+      },
+      {
+        "id": "C-10",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "Unknown cancellation fails with UNKNOWN_ORDER; combining SOLO with any other coupon fails with NOT_STACKABLE; the successful SOLO redemption counts exactly one use.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "A failed call changes no state."
+            },
+            {
+              "requirementId": "R-4",
+              "quote": "Reject a request combining a non-stackable coupon with any other coupon using NOT_STACKABLE."
+            },
+            {
+              "requirementId": "R-9",
+              "quote": "Unknown orders fail with UNKNOWN_ORDER;"
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "uses(code) reports currently counted uses across customers;"
+            }
+          ],
+          "explanation": "The calls check the explicit unknown-order and non-stackable errors and then verify the valid single-coupon use through both total and per-customer queries."
+        },
+        "invariants": [
+          "Failed cancellation and failed quote leave all counts and order state unchanged."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Call cancel('missing-order') and inspect both coupon counts.",
+            "expected": "The call fails with UNKNOWN_ORDER and both counts remain 0."
+          },
+          {
+            "id": "S-2",
+            "action": "Quote a valid request listing ['SOLO','STACK'].",
+            "expected": "The call fails with NOT_STACKABLE and both counts remain 0."
+          },
+          {
+            "id": "S-3",
+            "action": "Redeem order-1 with SOLO alone and inspect uses and usesBy.",
+            "expected": "Redemption succeeds; uses(SOLO) and usesBy(SOLO,'cust-1') return 1, and STACK remains at 0."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+ "id": "capture-keeps-total",
+ "description": "Capture does not reduce the funds",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "accounts.get(hold.account).total -= amount;",
+   "replace": ""
+  }
+ ]
+}

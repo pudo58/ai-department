@@ -1,0 +1,11 @@
+{
+ "id": "transfer-ignores-held",
+ "description": "A transfer may spend held funds",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "if (view(from).available < amount) throw fail('INSUFFICIENT_FUNDS');",
+   "replace": "if (source.total < amount) throw fail('INSUFFICIENT_FUNDS');"
+  }
+ ]
+}

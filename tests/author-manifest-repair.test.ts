@@ -8,7 +8,7 @@ import {parseAuthorManifest,authorManifestScaffold,AUTHOR_MANIFEST_REPAIR_TITLE}
 import {authorRepairSourceProblems,assertionInventory,sameMembers} from '../src/core/authoring.js';
 import {validateManifest} from '../src/core/testplan.js';
 import {compileSourceBindings} from '../src/core/sourcebindings.js';
-import {reasoningPlan,reasoningEntries} from './reasoning-fixtures.js';import {profile} from './helpers.js';import {fence} from './quality-fixtures.js';
+import {reasoningPlan,reasoningEntries} from './reasoning-fixtures.js';import {profile,pinV3} from './helpers.js';import {fence} from './quality-fixtures.js';
 
 it('resolves only explicit current-contract references and preserves legacy manifests and takes the approved text over a copied expected value',()=>{
  const contract={...initialContract('Claim each ready job once.'),testPlan:reasoningPlan(initialContract('Claim each ready job once.'))};
@@ -85,7 +85,7 @@ it.each(['success','source','sourceRepair','invalid','weaken','interrupted'] as 
   }
  }
  const runtime=new Runtime({dataDir});store.projects.put(profile({repository:source,executionMode:'local',modules:['src','tests'],checks:[{id:'test',command:[process.execPath,path.resolve('node_modules/vitest/vitest.mjs'),'run','--configLoader','runner','--reporter=json','--outputFile=.aidept-report.json'],reportPath:'.aidept-report.json',required:true,timeoutMs:30000}]}));
- const orch=new Orchestrator(store,()=>runtime),run=orch.createRun({projectId:'prj_test',title:'Author manifest correction',originalRequirement:'Claim each ready job once.',provider:'codex',mode:'verify',budgetUsd:10,signals:[],taskKind:'feature'});
+ const orch=new Orchestrator(store,()=>runtime),run=orch.createRun({projectId:'prj_test',title:'Author manifest correction',originalRequirement:'Claim each ready job once.',provider:'codex',mode:'verify',budgetUsd:10,signals:[],taskKind:'feature'});pinV3(store,run);
  try{
   orch.startRun(run.id);await orch.idle();const hash=orch.detail(run.id).contractReview.contractHash;orch.approveContract(run.id,{contractHash:hash,acknowledgeWarnings:true});await orch.idle();const d=orch.detail(run.id);
   expect(writes).toBe(mode==='source'?1:2);expect(hashContract(d.run.contract)).toBe(hash);expect(readFileSync(path.join(source,'src/queue.mjs'),'utf8')).toContain('return null');

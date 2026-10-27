@@ -1,0 +1,11 @@
+{
+ "id": "key-arguments-ignored",
+ "description": "The same key with other arguments is replayed instead of refused",
+ "file": "src/ledger.js",
+ "edits": [
+  {
+   "find": "if (seen.signature !== signature) throw fail('KEY_REUSED');",
+   "replace": ""
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "assign-after-resolve",
+ "description": "A resolved ticket can be assigned again",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "if (!['open', 'assigned', 'pending'].includes(t.status)) throw fail('BAD_STATE');",
+   "replace": "if (!['open', 'assigned', 'pending', 'resolved'].includes(t.status)) throw fail('BAD_STATE');"
+  }
+ ]
+}

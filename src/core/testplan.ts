@@ -149,19 +149,23 @@ export interface Findings { blocking: string[]; advisories: string[] }
  * state, a group left unmentioned, an invariant not written down); they are shown at approval and must be acknowledged,
  * but they do not stop a plan whose business content is usable.
  */
-export function testPlanFindings(contract: TaskContract, required = false, reasoningRequired = false): Findings {
+export function testPlanFindings(contract: TaskContract, required = false, reasoningRequired = false, strict = false): Findings {
   const blocking: string[] = [], advisories: string[] = [];
+  // Under the v4 policy a form defect in the evidence chain is a blocker, not a note: the plan is what the tests are held to.
+  const soft = strict ? blocking : advisories;
   if (!contract.testPlan) return { blocking: required ? ['Verify cần kế hoạch ca kiểm thử trước khi duyệt.'] : [], advisories };
   const parsed = TestPlanSchema.safeParse(contract.testPlan);
   if (!parsed.success) return { blocking: parsed.error.issues.map((i) => `Kế hoạch ca ${i.path.join('.')}: ${i.message}`), advisories };
   const p = parsed.data, seen = new Set<string>();
-  if (reasoningRequired && p.reasoningVersion !== 1) blocking.push('Chính sách v3 cần reasoningVersion=1 và căn cứ từng bước.');
+  if (reasoningRequired && p.reasoningVersion !== 1) blocking.push('Chính sách v3+ cần reasoningVersion=1 và căn cứ từng bước.');
+  if (strict && p.schemaVersion !== 2) blocking.push('Chính sách v4 cần kế hoạch ca có căn cứ v2.');
   for (const c of p.cases) {
     if (seen.has(c.id)) blocking.push(`Mã ca ${c.id} bị trùng.`);
     seen.add(c.id);
+    if (strict && (isDraftText(c.oracle?.explanation) || (c.steps ?? []).some(s => isDraftText(s.before) || isDraftText(s.after) || isDraftText(s.id)))) blocking.push(`${c.id}: ca này là bản nháp tự sinh từ yêu cầu, chưa phải kế hoạch hợp lệ; sửa căn cứ, bước và kết quả quan sát rồi bỏ nhãn ${DRAFT_PLAN_MARKER}.`);
     if (p.reasoningVersion !== 1 && c.steps?.length === 1) advisories.push(`${c.id}: kế hoạch cũ có steps cần ít nhất hai bước.`);
     if (new Set(c.requirementIds).size !== c.requirementIds.length) advisories.push(`${c.id}: mã yêu cầu bị trùng.`);
-    if (p.schemaVersion === 2) for (const problem of validateOracle(contract, c.requirementIds, c.oracle)) (/không có trong điều khoản/.test(problem) ? advisories : blocking).push(`${c.id}: ${problem}`);
+    if (p.schemaVersion === 2) for (const problem of validateOracle(contract, c.requirementIds, c.oracle)) (/không có trong điều khoản/.test(problem) && !strict ? advisories : blocking).push(`${c.id}: ${problem}`);
     if (p.reasoningVersion === 1 && c.method === 'automated') {
       if (!c.steps?.length) blocking.push(`${c.id}: thiếu bước có trạng thái trước/sau.`);
       const stepIds = new Set<string>();
@@ -169,8 +173,12 @@ export function testPlanFindings(contract: TaskContract, required = false, reaso
         const field = `${c.id}.steps.${index}`;
         if (!step.id || !/^S-[A-Za-z0-9_-]+$/.test(step.id) || stepIds.has(step.id)) blocking.push(`${field}: mã bước S-x thiếu hoặc trùng.`);
         if (step.id) stepIds.add(step.id);
-        if (!step.before?.trim() || !step.after?.trim()) advisories.push(`${field}: thiếu trạng thái trước/sau.`);
-        if (!step.requirementIds?.length || step.requirementIds.some(id => !c.requirementIds.includes(id) || !c.oracle?.references.some(r => r.requirementId === id))) advisories.push(`${field}: thiếu điều khoản trong căn cứ đã duyệt.`);
+        if (!step.before?.trim() || !step.after?.trim()) soft.push(`${field}: thiếu trạng thái trước/sau.`);
+        // v4 blocks a step with no clause at all (or one that does not exist); a clause outside the case's own basis is a traceability note.
+        const noClause = !step.requirementIds?.length || step.requirementIds.some(id => !contract.requirements.some(r => r.id === id));
+        const outsideBasis = !!step.requirementIds?.some(id => !c.requirementIds.includes(id) || !c.oracle?.references.some(r => r.requirementId === id));
+        if (strict ? noClause : noClause || outsideBasis) soft.push(`${field}: thiếu điều khoản trong căn cứ đã duyệt.`);
+        else if (outsideBasis) advisories.push(`${field}: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó).`);
       }
     }
     for (const id of c.requirementIds) {
@@ -189,7 +197,7 @@ export function testPlanFindings(contract: TaskContract, required = false, reaso
   }
   for (const group of RISK_GROUPS) {
     const covered = p.cases.some((c) => c.group === group), na = p.notApplicable.filter((n) => n.group === group);
-    if (!covered && !na.length) advisories.push(`Chưa xét nhóm ${RISK_LABELS[group]} hoặc nêu lý do không áp dụng.`);
+    if (!covered && !na.length) soft.push(`Chưa xét nhóm ${RISK_LABELS[group]} hoặc nêu lý do không áp dụng.`);
     if (na.length > 1 || (covered && na.length)) advisories.push(`Nhóm ${RISK_LABELS[group]} khai báo mâu thuẫn hoặc trùng.`);
   }
   if (p.questions.length) blocking.push(UNRESOLVED_PLAN_QUESTIONS);
@@ -197,10 +205,15 @@ export function testPlanFindings(contract: TaskContract, required = false, reaso
 }
 
 /** Pure validation shared by contract approval and plan generation; never edits legacy contracts. Blocking findings only. */
-export const validateTestPlan = (contract: TaskContract, required = false, reasoningRequired = false): string[] => testPlanFindings(contract, required, reasoningRequired).blocking;
+export const validateTestPlan = (contract: TaskContract, required = false, reasoningRequired = false, strict = false): string[] => testPlanFindings(contract, required, reasoningRequired, strict).blocking;
 
-export function manifestFindings(contract: TaskContract, entries: ManifestEntry[], recipes: readonly { id: string; reportPath?: string }[], files: readonly string[], options: { derived?: boolean } = {}): Findings {
+/** The label a plan written by the server (not by the Author) carries until a person rewrites it. */
+export const DRAFT_PLAN_MARKER = '[NHÁP]';
+export const isDraftText = (value: string | undefined): boolean => !!value && value.includes(DRAFT_PLAN_MARKER);
+
+export function manifestFindings(contract: TaskContract, entries: ManifestEntry[], recipes: readonly { id: string; reportPath?: string }[], files: readonly string[], options: { derived?: boolean; strict?: boolean } = {}): Findings {
   const problems: string[] = [], advisories: string[] = [], seen = new Set<string>();
+  if (options.strict && options.derived) problems.push('Manifest suy ra từ tên test không phải bằng chứng đầy đủ cho chính sách v4: Author phải liên kết từng bước với assertion.');
   for (const e of entries) {
     const c = contract.testPlan?.cases.find((c) => c.id === e.caseId);
     if (!c || c.method !== 'automated') problems.push(`${e.caseId}: ca tự động không tồn tại.`);
@@ -228,7 +241,7 @@ export function manifestFindings(contract: TaskContract, entries: ManifestEntry[
   }
   for (const c of contract.testPlan?.cases ?? []) if (c.required && c.method === 'automated' && !entries.some((e) => e.caseId === c.id)) problems.push(`${c.id}: thiếu test dự kiến cho ca bắt buộc.`);
   if (options.derived) advisories.push('Manifest do hệ thống suy ra từ tên test (Author không khai báo được liên kết assertion với bước); bằng chứng dựa trên tên test chạy đạt, chưa đối chiếu từng assertion với từng bước.');
-  else if (contract.testPlan?.reasoningVersion === 1) for (const c of contract.testPlan.cases.filter(c=>c.required&&c.method==='automated')) for (const step of c.steps ?? []) if (!entries.some(e=>e.caseId===c.id&&e.assertions?.some(a=>a.stepId===step.id))) advisories.push(`${c.id}.${step.id}: bước bắt buộc chưa có assertion khai báo; kiểm tra bước này bằng tay hoặc bổ sung assertion.`);
+  else if (contract.testPlan?.reasoningVersion === 1) for (const c of contract.testPlan.cases.filter(c=>c.required&&c.method==='automated')) for (const step of c.steps ?? []) if (!entries.some(e=>e.caseId===c.id&&e.assertions?.some(a=>a.stepId===step.id))) (options.strict ? problems : advisories).push(`${c.id}.${step.id}: bước bắt buộc chưa có assertion khai báo; kiểm tra bước này bằng tay hoặc bổ sung assertion.`);
   return { blocking: problems, advisories };
 }
 

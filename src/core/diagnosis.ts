@@ -6,6 +6,7 @@ import { isSafeRelative,classifyPath } from './scope.js';
 import { isTestPath } from './testpath.js';
 import { testTitle } from './testids.js';
 import { snapQuote } from './quote.js';
+import { policyOf } from './policy.js';
 
 const text=z.string().trim().min(1).max(8000);
 export const DiagnosisSchema=z.object({decision:z.enum(['implementation','test_setup','test_assertion','ambiguous']),reason:text,evidence:text,caseIds:z.array(text).max(100).default([]),
@@ -23,7 +24,7 @@ export function resolveFailingTest(given: string, failedTestIds: readonly string
 
 /** Structural checks only: never infer a decision by looking for keywords in free text. */
 export function diagnosisProblems(run:Run,d:Diagnosis,caseIds:readonly string[],failedTestIds:readonly string[],testPaths:readonly string[],changedPaths:readonly string[]):string[]{
-  if(run.qualityPolicyVersion!==3)return [];
+  if(!policyOf(run).structuredDiagnosis)return [];
   const errors:string[]=[],a=d.assessment;
   if(!d.caseIds.length||d.caseIds.some(id=>!caseIds.includes(id)))errors.push('caseIds phải chỉ rõ các ca thực sự thất bại.');
   if(!a)return [...errors,'Thiếu assessment có expected/actual, điều khoản, test lỗi và đích sửa.'];
@@ -55,8 +56,17 @@ const clip = (t: string): string => (t.length > 8000 ? t.slice(0, 8000) : t);
  * is exactly the case the diagnosis exists for. Implementation and ambiguous diagnoses are left as they are. Every change is listed.
  */
 export function normalizeDiagnosis(run: Run, d: Diagnosis, ctx: { failingCaseIds: readonly string[]; testPaths: readonly string[]; changedPaths: readonly string[]; failedTestIds: readonly string[] }): { diagnosis: Diagnosis; notes: string[] } {
-  if (run.qualityPolicyVersion !== 3 || !d.assessment) return { diagnosis: d, notes: [] };
+  const policy = policyOf(run);
+  if (!policy.structuredDiagnosis || !d.assessment) return { diagnosis: d, notes: [] };
   const out: Diagnosis = structuredClone(d), a = out.assessment!, notes: string[] = [];
+  if (!policy.groundDiagnosis) {
+    // v4: the only thing restated is how a failing test is named (the runner's id for the title the Author wrote). The decision,
+    // the target, the conformity, the location, the cases and the quotations stay exactly as the Author gave them, so a wrong
+    // diagnosis fails validation instead of being edited until it passes.
+    const named = a.failingTestIds.map(id => resolveFailingTest(id, ctx.failedTestIds) ?? id);
+    if (named.some((id, i) => id !== a.failingTestIds[i])) { a.failingTestIds = named; notes.push('failingTestIds được đưa về định danh test trong report của runner.'); }
+    return { diagnosis: out, notes };
+  }
   // Only a "the test is wrong" decision has its redundant fields restated; every decision gets quotations tied to the contract.
   if (d.decision === 'test_setup' || d.decision === 'test_assertion') {
     const known = out.caseIds.filter(id => ctx.failingCaseIds.includes(id));

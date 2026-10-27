@@ -2,6 +2,7 @@ import type { Artifact, CheckResult, Run } from '../shared/types.js';
 import type { QualityDetail, TestManifest, MutationResult, MutationCapability } from '../shared/quality.js';
 import { canonicalJson, hashContract, sha256 } from './contract.js';
 import { normalizeTestId, manifestFindings, testPlanFindings, StoredManifestSchema } from './testplan.js';
+import { policyOf } from './policy.js';
 
 export const recipeHash = (run: Run): string => sha256(canonicalJson({ checks: run.configSnapshot.checks, mutationRoot: run.configSnapshot.mutationRoot, executionMode: run.configSnapshot.executionMode, runnerImage: run.configSnapshot.runnerImage }));
 export const deepQuality = (run: Run): boolean => run.mode === 'verify' && !!run.qualityPolicyVersion;
@@ -24,9 +25,11 @@ export function readManifest(run: Run, artifacts: readonly Artifact[]): { manife
     return { manifest, hash: a.hash };
   } catch { return null; }
 }
-export function lockedIds(run: Run, artifacts: readonly Artifact[], recipeId: string): string[] {
+/** `regression` are tests a repair or an earlier run left in the project: they must run and pass like any locked test. */
+export function lockedIds(run: Run, artifacts: readonly Artifact[], recipeId: string, regression: readonly { recipeId: string; testId: string }[] = []): string[] {
   const m = readManifest(run, artifacts)?.manifest;
-  return m ? [...m.entries.filter((e) => e.recipeId === recipeId && run.contract.testPlan?.cases.some(c => c.id === e.caseId && c.required)).map((e) => normalizeTestId(e.testId)), ...(m.observed?.filter((r) => r.recipeId === recipeId).flatMap((r) => r.testIds) ?? [])] : [];
+  const base = m ? [...m.entries.filter((e) => e.recipeId === recipeId && run.contract.testPlan?.cases.some(c => c.id === e.caseId && c.required)).map((e) => normalizeTestId(e.testId)), ...(m.observed?.filter((r) => r.recipeId === recipeId).flatMap((r) => r.testIds) ?? [])] : [];
+  return [...new Set([...base, ...regression.filter(r => r.recipeId === recipeId).map(r => normalizeTestId(r.testId))])];
 }
 export function readMutation(run: Run, artifacts: readonly Artifact[]): MutationResult | null {
   for (const a of [...artifacts].reverse()) {
@@ -39,11 +42,11 @@ export function readMutation(run: Run, artifacts: readonly Artifact[]): Mutation
   return null;
 }
 export function qualityDetail(run: Run, checks: readonly CheckResult[], artifacts: readonly Artifact[]): QualityDetail {
-  const enabled = deepQuality(run), found = readManifest(run, artifacts), live = latestChecks(run, checks);
+  const enabled = deepQuality(run), found = readManifest(run, artifacts), live = latestChecks(run, checks), policy = policyOf(run);
   const m = found?.manifest;
-  const plan = enabled ? testPlanFindings(run.contract, true, run.qualityPolicyVersion === 3) : { blocking: [], advisories: [] };
-  const mf = m && m.source === 'author' ? manifestFindings(run.contract, m.entries, run.configSnapshot.checks, m.entries.map((e) => e.path), { derived: m.derived }) : { blocking: [], advisories: [] };
-  const problems = enabled ? [...plan.blocking, ...((run.qualityPolicyVersion??0) >= 2 && run.contract.testPlan?.schemaVersion !== 2 ? ['Chính sách v2+ cần kế hoạch có căn cứ v2.'] : []), ...(!m || m.source !== 'author' ? ['Thiếu manifest test do Author khóa trước Developer.'] : mf.blocking)] : [];
+  const plan = enabled ? testPlanFindings(run.contract, true, policy.reasoning, policy.strict) : { blocking: [], advisories: [] };
+  const mf = m && m.source === 'author' ? manifestFindings(run.contract, m.entries, run.configSnapshot.checks, m.entries.map((e) => e.path), { derived: m.derived, strict: policy.strict }) : { blocking: [], advisories: [] };
+  const problems = enabled ? [...plan.blocking, ...(policy.structured && run.contract.testPlan?.schemaVersion !== 2 ? ['Chính sách v2+ cần kế hoạch ca có căn cứ v2.'] : []), ...(!m || m.source !== 'author' ? ['Thiếu manifest test do Author khóa trước Developer.'] : mf.blocking)] : [];
   const manifestAdvisories = [...new Set([...(m?.advisories ?? []), ...mf.advisories])];
   const mutation = readMutation(run, artifacts);
   let capability: MutationCapability = mutation?.capability ?? { status: 'unsupported', reason: 'Chưa nhận diện khả năng mutation trên checkpoint này.' };
@@ -69,7 +72,9 @@ export function qualityDetail(run: Run, checks: readonly CheckResult[], artifact
           }
         }
       }
+      const stepIds = (c.steps ?? []).map((s) => s.id).filter((id): id is string => !!id), bound = new Set(entries.flatMap((e) => (e.assertions ?? []).map((a) => a.stepId)));
       return { caseId: c.id, requirementIds: c.requirementIds, required: c.required, method: c.method, status, tests: entries.map((e) => `${e.recipeId}: ${e.testId}`), reasons,
+        ...(c.method === 'automated' && stepIds.length ? { stepsLinked: { linked: stepIds.filter((id) => bound.has(id)).length, total: stepIds.length } } : {}),
         checkpoint: run.checkpoint, slot: run.selectedSlot, contractVersion: run.contract.version, manifestHash: found?.hash ?? null };
     }) : [],
   };

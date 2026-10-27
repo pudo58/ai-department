@@ -1,0 +1,11 @@
+{
+ "id": "escalation-one-minute-late",
+ "description": "Escalation starts one minute after the threshold",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "time >= threshold &&",
+   "replace": "time > threshold &&"
+  }
+ ]
+}

@@ -1,0 +1,699 @@
+{
+  "assignment": "v4check-ledgerhold__department__1",
+  "arm": "department",
+  "task": "ledgerhold",
+  "round": 1,
+  "kind": "contract",
+  "contractHash": "abac04d88cc7c284914b6c9937bf1348b382f9de0c77f119cabd07a914876719",
+  "version": 3,
+  "requirements": [
+    {
+      "id": "R-1",
+      "text": "createLedger({ now = () => 0, holdTtl = 60 } = {}) tạo ledger đồng bộ; holdTtl phải là số nguyên an toàn dương, nếu không ném Error có code INVALID_INPUT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-2",
+      "text": "Tên tài khoản, holdId và key phải là chuỗi không rỗng; vi phạm ném Error có code INVALID_INPUT. Amount phải là số nguyên an toàn dương; vi phạm ném Error có code INVALID_AMOUNT.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-3",
+      "text": "Tài khoản chưa mở gây UNKNOWN_ACCOUNT; holdId chưa từng được cấp gây UNKNOWN_HOLD. Các lỗi là Error có thuộc tính code dạng chuỗi.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-4",
+      "text": "open(account) tạo tài khoản với số dư bằng 0 và trả balance view; mở trùng gây ACCOUNT_EXISTS và không đổi trạng thái.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-5",
+      "text": "Balance view có dạng {total, held, available}; held là tổng hold đang active tại thời điểm now(), available = total - held. Hold hết hạn tại now() >= createdAt + holdTtl.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-6",
+      "text": "deposit(account, amount, key) cộng amount vào total và trả balance view.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-7",
+      "text": "hold chỉ tạo khi amount không vượt available; thiếu funds gây INSUFFICIENT_FUNDS và không tạo hold. Hold thành công trả {holdId, amount, expiresAt}; ID lần lượt là h1, h2,... và chỉ tăng khi tạo thành công.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-8",
+      "text": "capture trên hold active trừ amount khỏi total, đóng hold và giải phóng phần chưa capture; amount vượt số tiền hold gây OVER_CAPTURE. Hold hết hạn gây HOLD_EXPIRED; hold đã capture/release gây HOLD_CLOSED.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-9",
+      "text": "release đóng hold active mà không trừ tiền và trả balance view; hold hết hạn gây HOLD_EXPIRED, hold đã đóng gây HOLD_CLOSED.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-10",
+      "text": "getHold trả {holdId, account, amount, status}; status phản ánh active, expired, captured hoặc released tại now(). Trạng thái captured/released không đổi thành expired.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-11",
+      "text": "transfer yêu cầu hai tài khoản khác nhau và đều tồn tại; from === to gây SAME_ACCOUNT. Chuyển từ available không đủ gây INSUFFICIENT_FUNDS. Thành công trừ from, cộng to và trả {from, to} với hai balance view.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-12",
+      "text": "Mọi lời gọi thành công có key được ghi nhớ theo key dùng chung trong ledger. Gọi lại cùng method và arguments không áp dụng hiệu ứng lần nữa và trả deep copy kết quả ban đầu, kể cả khi thời gian hoặc số dư đã đổi.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-13",
+      "text": "Dùng lại key với method hoặc arguments khác gây KEY_REUSED và không đổi trạng thái. Lời gọi thất bại không chiếm key; key đó có thể dùng cho lời gọi khác sau này.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-14",
+      "text": "Lời gọi thất bại không được làm thay đổi trạng thái tài khoản, hold hoặc bộ đếm hold; đặc biệt transfer thất bại không được thay đổi bất kỳ tài khoản nào.",
+      "required": true,
+      "manual": false,
+      "kind": "expected"
+    },
+    {
+      "id": "R-15",
+      "text": "Không đọc đồng hồ hệ thống, không dùng persistence, network, timers hoặc cleanup.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    },
+    {
+      "id": "R-16",
+      "text": "Không thêm hành vi ngoài hợp đồng.",
+      "required": true,
+      "manual": true,
+      "kind": "forbidden"
+    }
+  ],
+  "acceptanceExamples": [
+    "Với holdTtl=10, now=5 và tài khoản A có total=100, hold(A, 40, key) trả {holdId:\"h1\", amount:40, expiresAt:15}; balance(A) có held=40, available=60.",
+    "Ở now=15, hold h1 đã hết hạn: balance(A).held=0 và getHold(\"h1\").status=\"expired\".",
+    "Với total=100 và hold 40 còn active, capture(h1, 25, key) cho total=75, held=0, available=75.",
+    "Với A có available=60, transfer(A, B, 60, key) thành công; chuyển 61 thất bại INSUFFICIENT_FUNDS và không đổi số dư A hoặc B.",
+    "Gọi deposit(A, 10, \"k\") thành công, sau đó thay đổi số dư rồi gọi lại đúng deposit(A, 10, \"k\"): kết quả bằng bản ghi nhớ ban đầu, trạng thái không cộng thêm 10; sửa amount hoặc method với key \"k\" gây KEY_REUSED.",
+    "Một lần hold thất bại do thiếu funds không chiếm key; có thể dùng lại key đó cho một lời gọi hợp lệ."
+  ],
+  "interfaces": [
+    "Module src/ledger.js export createLedger({ now = () => 0, holdTtl = 60 } = {}).",
+    "Ledger cung cấp open(account), deposit(account, amount, key), hold(account, amount, key), capture(holdId, amount, key), release(holdId, key), transfer(from, to, amount, key), balance(account), getHold(holdId).",
+    "Các phương thức đồng bộ; kết quả và đầu vào là giá trị JSON thuần, callers cũng có thể await kết quả."
+  ],
+  "assumptions": [
+    "Yêu cầu không quy định kiểm tra kiểu hoặc miền giá trị mà hàm now trả về; nghiệm thu chỉ giả định now trả số nguyên an toàn không âm như mô tả.",
+    "Yêu cầu không quy định thứ tự ưu tiên lỗi khi một lời gọi đồng thời vi phạm nhiều quy tắc; ví dụ nghiệm thu chỉ dùng đầu vào vi phạm một quy tắc liên quan.",
+    "Deep copy được hiểu là kết quả lặp lại không chia sẻ tham chiếu có thể sửa đổi với kết quả đã ghi nhớ."
+  ],
+  "scope": [
+    "Triển khai ledger in-memory trong src/ledger.js và kiểm tra qua public API.",
+    "Không sửa dependencies, configuration, SPEC hoặc scaffold test; không đọc dữ liệu controller hay dự án sibling.",
+    "Không yêu cầu persistence, network, timers hoặc tác vụ cleanup."
+  ],
+  "problems": [],
+  "warnings": [
+    "Hợp đồng có giả định cần bạn xác nhận.",
+    "Kế hoạch ca: C-5.steps.0: thiếu điều khoản trong căn cứ đã duyệt.",
+    "Kế hoạch ca: C-6.steps.0: thiếu điều khoản trong căn cứ đã duyệt."
+  ],
+  "planReview": {
+    "outcome": "valid",
+    "remaining": [],
+    "advisories": [
+      "C-5.steps.0: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó).",
+      "C-6.steps.0: điều khoản của bước nằm ngoài căn cứ của ca (nên ghi rõ vì sao bước này cần điều khoản đó)."
+    ],
+    "normalizations": []
+  },
+  "testPlan": {
+    "schemaVersion": 2,
+    "questions": [],
+    "notApplicable": [
+      {
+        "group": "authorization",
+        "reason": "Hợp đồng không định nghĩa danh tính, vai trò, tenant hoặc quyền truy cập; không có oracle authorization để kiểm tra."
+      },
+      {
+        "group": "dependency",
+        "reason": "Hợp đồng chỉ yêu cầu ledger in-memory và không định nghĩa phụ thuộc ngoài nào có thể lỗi."
+      }
+    ],
+    "cases": [
+      {
+        "id": "C-1",
+        "group": "happy",
+        "required": true,
+        "method": "automated",
+        "expected": "Các ledger hợp lệ được tạo đồng bộ. Mỗi holdTtl không hợp lệ gây Error có code INVALID_INPUT.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-1",
+              "quote": "createLedger({ now = () => 0, holdTtl = 60 } = {}) tạo ledger đồng bộ; holdTtl phải là số nguyên an toàn dương, nếu không ném Error có code INVALID_INPUT."
+            }
+          ],
+          "explanation": "Các giá trị hợp lệ là số nguyên an toàn dương; các giá trị không đáp ứng điều kiện phải bị từ chối bằng lỗi đã quy định."
+        },
+        "invariants": [
+          "Tạo ledger với TTL không hợp lệ không tạo ra ledger trả về."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi createLedger() và createLedger({ holdTtl: 1 }).",
+            "expected": "Cả hai lời gọi trả ledger đồng bộ."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi createLedger({ holdTtl }) riêng cho từng giá trị 0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1 và chuỗi.",
+            "expected": "Mỗi lời gọi ném Error có code INVALID_INPUT."
+          }
+        ]
+      },
+      {
+        "id": "C-2",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Account, holdId, key không phải chuỗi không rỗng gây Error code INVALID_INPUT; amount không phải số nguyên an toàn dương gây INVALID_AMOUNT; account chưa mở gây UNKNOWN_ACCOUNT; hold chưa cấp gây UNKNOWN_HOLD. Mỗi Error có code dạng chuỗi.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-2",
+              "quote": "Tên tài khoản, holdId và key phải là chuỗi không rỗng; vi phạm ném Error có code INVALID_INPUT. Amount phải là số nguyên an toàn dương; vi phạm ném Error có code INVALID_AMOUNT."
+            },
+            {
+              "requirementId": "R-3",
+              "quote": "Tài khoản chưa mở gây UNKNOWN_ACCOUNT; holdId chưa từng được cấp gây UNKNOWN_HOLD. Các lỗi là Error có thuộc tính code dạng chuỗi."
+            },
+            {
+              "requirementId": "R-4",
+              "quote": "open(account) tạo tài khoản với số dư bằng 0 và trả balance view; mở trùng gây ACCOUNT_EXISTS và không đổi trạng thái."
+            }
+          ],
+          "explanation": "Expected kiểm tra các mã lỗi được quy định, balance view ban đầu và không phát sinh trạng thái từ thao tác thất bại."
+        },
+        "invariants": [
+          "Các lời gọi lỗi không tạo hold và không đổi số dư."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Mở A; gọi các API đọc/ghi trên account chưa mở và holdId chưa từng cấp.",
+            "expected": "open(A) trả {total:0, held:0, available:0}; account chưa mở gây UNKNOWN_ACCOUNT, hold chưa cấp gây UNKNOWN_HOLD."
+          },
+          {
+            "id": "S-2",
+            "action": "Lần lượt thử account, holdId và key bằng chuỗi rỗng hoặc kiểu khác chuỗi ở các API tương ứng; thử amount bằng 0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1 và chuỗi.",
+            "expected": "Đầu vào chuỗi không rỗng bị vi phạm gây Error code INVALID_INPUT; amount sai gây INVALID_AMOUNT; các lỗi đều có thuộc tính code dạng chuỗi."
+          }
+        ]
+      },
+      {
+        "id": "C-3",
+        "group": "happy",
+        "required": true,
+        "method": "automated",
+        "expected": "Mở lần đầu trả {total:0, held:0, available:0}; mở trùng gây ACCOUNT_EXISTS và balance vẫn như cũ.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-4",
+              "quote": "open(account) tạo tài khoản với số dư bằng 0 và trả balance view; mở trùng gây ACCOUNT_EXISTS và không đổi trạng thái."
+            },
+            {
+              "requirementId": "R-5",
+              "quote": "Balance view có dạng {total, held, available}; held là tổng hold đang active tại thời điểm now(), available = total - held. Hold hết hạn tại now() >= createdAt + holdTtl."
+            }
+          ],
+          "explanation": "Hai lần đọc balance công khai xác nhận rằng mở trùng không đổi trạng thái."
+        },
+        "invariants": [
+          "A chỉ có một tài khoản và số dư không đổi do mở trùng."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi open('A').",
+            "expected": "Trả balance view {total:0, held:0, available:0}."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi open('A'), rồi balance('A').",
+            "expected": "open lần hai gây ACCOUNT_EXISTS; balance trả {total:0, held:0, available:0}."
+          }
+        ]
+      },
+      {
+        "id": "C-4",
+        "group": "boundary",
+        "required": true,
+        "method": "automated",
+        "expected": "Hold h1 amount=100 expiresAt=15 thành công; hold vượt tiền gây INSUFFICIENT_FUNDS và không tiêu thụ ID; held=100 khi now=5, held=0 khi now=15; available=total-held.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-5",
+              "quote": "Balance view có dạng {total, held, available}; held là tổng hold đang active tại thời điểm now(), available = total - held. Hold hết hạn tại now() >= createdAt + holdTtl."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "deposit(account, amount, key) cộng amount vào total và trả balance view."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "hold chỉ tạo khi amount không vượt available; thiếu funds gây INSUFFICIENT_FUNDS và không tạo hold. Hold thành công trả {holdId, amount, expiresAt}; ID lần lượt là h1, h2,... và chỉ tăng khi tạo thành…"
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "getHold trả {holdId, account, amount, status}; status phản ánh active, expired, captured hoặc released tại now(). Trạng thái captured/released không đổi thành expired."
+            },
+            {
+              "requirementId": "R-14",
+              "quote": "Lời gọi thất bại không được làm thay đổi trạng thái tài khoản, hold hoặc bộ đếm hold; đặc biệt transfer thất bại không được thay đổi bất kỳ tài khoản nào."
+            }
+          ],
+          "explanation": "Các bước dùng đồng hồ giả lập để kiểm tra biên available, ID chỉ tăng khi hold thành công và hết hạn đúng tại now() bằng expiresAt."
+        },
+        "invariants": [
+          "available = total - held sau mỗi bước.",
+          "Hold thất bại không cấp ID và không đổi hold đang tồn tại."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi deposit('A', 100, 'dep') rồi balance('A').",
+            "expected": "deposit trả {total:100, held:0, available:100}."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi hold('A', 100, 'hkey').",
+            "expected": "Trả {holdId:'h1', amount:100, expiresAt:15}; balance trả {total:100, held:100, available:0}."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi hold('A', 1, 'failkey'), rồi deposit('A', 1, 'nextdep') và hold('A', 1, 'nextkey').",
+            "expected": "Hold thiếu tiền gây INSUFFICIENT_FUNDS; hold tiếp theo thành công với holdId='h2'."
+          },
+          {
+            "id": "S-4",
+            "action": "Đặt đồng hồ now=15; gọi balance('A') và getHold('h1').",
+            "expected": "balance có total=101, held=0, available=101; getHold trả status='expired'."
+          }
+        ]
+      },
+      {
+        "id": "C-5",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "Capture vượt gây OVER_CAPTURE và giữ nguyên trạng thái; capture 25 trừ total 25, đóng hold và giải phóng phần còn lại; release không trừ tiền; status captured/released giữ nguyên sau TTL.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-7",
+              "quote": "hold chỉ tạo khi amount không vượt available; thiếu funds gây INSUFFICIENT_FUNDS và không tạo hold. Hold thành công trả {holdId, amount, expiresAt}; ID lần lượt là h1, h2,... và chỉ tăng khi tạo thành…"
+            },
+            {
+              "requirementId": "R-8",
+              "quote": "capture trên hold active trừ amount khỏi total, đóng hold và giải phóng phần chưa capture; amount vượt số tiền hold gây OVER_CAPTURE. Hold hết hạn gây HOLD_EXPIRED; hold đã capture/release gây HOLD_CL…"
+            },
+            {
+              "requirementId": "R-9",
+              "quote": "release đóng hold active mà không trừ tiền và trả balance view; hold hết hạn gây HOLD_EXPIRED, hold đã đóng gây HOLD_CLOSED."
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "getHold trả {holdId, account, amount, status}; status phản ánh active, expired, captured hoặc released tại now(). Trạng thái captured/released không đổi thành expired."
+            },
+            {
+              "requirementId": "R-14",
+              "quote": "Lời gọi thất bại không được làm thay đổi trạng thái tài khoản, hold hoặc bộ đếm hold; đặc biệt transfer thất bại không được thay đổi bất kỳ tài khoản nào."
+            }
+          ],
+          "explanation": "Chuỗi kiểm tra lỗi over-capture, capture một phần, release và status đóng qua thời gian bằng các thao tác API công khai."
+        },
+        "invariants": [
+          "Hold đã captured/released không trở lại active hoặc expired.",
+          "Lỗi capture/release không làm thay đổi số dư hay status hold."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi hold('A', 40, 'hold1').",
+            "expected": "Trả {holdId:'h1', amount:40, expiresAt:5}; balance có held=40."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi capture('h1', 41, 'over'), rồi getHold('h1') và balance('A').",
+            "expected": "capture gây OVER_CAPTURE; getHold status='active'; balance không đổi."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi capture('h1', 25, 'capture1'), rồi getHold('h1').",
+            "expected": "capture trả {total:75, held:0, available:75}; getHold status='captured'."
+          },
+          {
+            "id": "S-4",
+            "action": "Đặt now=10; gọi getHold('h1') và capture('h1', 1, 'closed').",
+            "expected": "getHold vẫn status='captured'; capture gây HOLD_CLOSED."
+          },
+          {
+            "id": "S-5",
+            "action": "Đặt now=10; gọi hold('A', 20, 'hold2'), rồi release('h2', 'release2').",
+            "expected": "h2 được tạo; release trả {total:75, held:0, available:75}; total không bị trừ."
+          },
+          {
+            "id": "S-6",
+            "action": "Đặt now=20; gọi getHold('h2') và release('h2', 'closed2').",
+            "expected": "getHold vẫn status='released'; release gây HOLD_CLOSED."
+          }
+        ]
+      },
+      {
+        "id": "C-6",
+        "group": "happy",
+        "required": true,
+        "method": "automated",
+        "expected": "Transfer 60 thành công; các lỗi insufficient funds và SAME_ACCOUNT không đổi hai tài khoản.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-11",
+              "quote": "transfer yêu cầu hai tài khoản khác nhau và đều tồn tại; from === to gây SAME_ACCOUNT. Chuyển từ available không đủ gây INSUFFICIENT_FUNDS. Thành công trừ from, cộng to và trả {from, to} với hai balan…"
+            },
+            {
+              "requirementId": "R-14",
+              "quote": "Lời gọi thất bại không được làm thay đổi trạng thái tài khoản, hold hoặc bộ đếm hold; đặc biệt transfer thất bại không được thay đổi bất kỳ tài khoản nào."
+            },
+            {
+              "requirementId": "R-5",
+              "quote": "Balance view có dạng {total, held, available}; held là tổng hold đang active tại thời điểm now(), available = total - held. Hold hết hạn tại now() >= createdAt + holdTtl."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "hold chỉ tạo khi amount không vượt available; thiếu funds gây INSUFFICIENT_FUNDS và không tạo hold. Hold thành công trả {holdId, amount, expiresAt}; ID lần lượt là h1, h2,... và chỉ tăng khi tạo thành…"
+            }
+          ],
+          "explanation": "A có available đúng 60 khi chuyển đúng biên; balance view chứng minh held funds được giữ lại. Truy vấn sau lỗi xác nhận hai account không đổi."
+        },
+        "invariants": [
+          "Held funds của A không bị chuyển.",
+          "Mỗi transfer lỗi để nguyên balance của A và B."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi open('A'), open('B'), deposit('A', 100, 'depA').",
+            "expected": "A có {total:100, held:0, available:100}; B có {total:0, held:0, available:0}."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi hold('A', 40, 'holdA').",
+            "expected": "Hold h1 được tạo; balance A có held=40, available=60."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi transfer('A', 'B', 60, 'transfer1').",
+            "expected": "Trả {from:{total:40,held:40,available:0}, to:{total:60,held:0,available:60}}."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi transfer('A', 'B', 1, 'failtransfer'), transfer('A', 'A', 1, 'same'), rồi đọc balance cả hai.",
+            "expected": "Chuyển 1 gây INSUFFICIENT_FUNDS; chuyển A sang A gây SAME_ACCOUNT; hai balance không đổi."
+          }
+        ]
+      },
+      {
+        "id": "C-7",
+        "group": "consistency",
+        "required": true,
+        "method": "automated",
+        "expected": "Lời gọi lặp trả bản sao sâu kết quả ban đầu và không áp dụng hiệu ứng; cùng key với arguments/method khác gây KEY_REUSED, không đổi trạng thái.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-12",
+              "quote": "Mọi lời gọi thành công có key được ghi nhớ theo key dùng chung trong ledger. Gọi lại cùng method và arguments không áp dụng hiệu ứng lần nữa và trả deep copy kết quả ban đầu, kể cả khi thời gian hoặc …"
+            },
+            {
+              "requirementId": "R-13",
+              "quote": "Dùng lại key với method hoặc arguments khác gây KEY_REUSED và không đổi trạng thái. Lời gọi thất bại không chiếm key; key đó có thể dùng cho lời gọi khác sau này."
+            },
+            {
+              "requirementId": "R-14",
+              "quote": "Lời gọi thất bại không được làm thay đổi trạng thái tài khoản, hold hoặc bộ đếm hold; đặc biệt transfer thất bại không được thay đổi bất kỳ tài khoản nào."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "deposit(account, amount, key) cộng amount vào total và trả balance view."
+            }
+          ],
+          "explanation": "Chuỗi gọi lại sau khi balance đã đổi và sau khi caller sửa object kiểm tra deep copy cùng kết quả ban đầu. Cùng key với amount hoặc method khác phải bị từ chối."
+        },
+        "invariants": [
+          "Key k chỉ gắn với lời gọi thành công đầu tiên và kết quả ghi nhớ không bị caller sửa.",
+          "Lời gọi KEY_REUSED không đổi balance."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi deposit('A', 10, 'k').",
+            "expected": "Trả {total:10, held:0, available:10}."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi deposit('A', 5, 'other').",
+            "expected": "Trả balance A {total:15, held:0, available:15}."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi lại deposit('A', 10, 'k'), sửa thuộc tính total trong object trả về, rồi gọi lại lần nữa.",
+            "expected": "Mỗi lần gọi trả kết quả gốc; sửa object trả về trước không làm thay đổi kết quả lần sau hoặc trạng thái A."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi deposit('A', 11, 'k'), rồi transfer('A','B',1,'k'); đọc balance A và B.",
+            "expected": "Cả hai lời gọi gây KEY_REUSED; A vẫn total=15 và B vẫn total=0."
+          }
+        ]
+      },
+      {
+        "id": "C-8",
+        "group": "state",
+        "required": true,
+        "method": "automated",
+        "expected": "Mỗi lời gọi thất bại giữ nguyên trạng thái và key vẫn dùng được cho thao tác thành công sau đó; hold thất bại không tăng bộ đếm.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-5",
+              "quote": "Balance view có dạng {total, held, available}; held là tổng hold đang active tại thời điểm now(), available = total - held. Hold hết hạn tại now() >= createdAt + holdTtl."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "hold chỉ tạo khi amount không vượt available; thiếu funds gây INSUFFICIENT_FUNDS và không tạo hold. Hold thành công trả {holdId, amount, expiresAt}; ID lần lượt là h1, h2,... và chỉ tăng khi tạo thành…"
+            },
+            {
+              "requirementId": "R-8",
+              "quote": "capture trên hold active trừ amount khỏi total, đóng hold và giải phóng phần chưa capture; amount vượt số tiền hold gây OVER_CAPTURE. Hold hết hạn gây HOLD_EXPIRED; hold đã capture/release gây HOLD_CL…"
+            },
+            {
+              "requirementId": "R-11",
+              "quote": "transfer yêu cầu hai tài khoản khác nhau và đều tồn tại; from === to gây SAME_ACCOUNT. Chuyển từ available không đủ gây INSUFFICIENT_FUNDS. Thành công trừ from, cộng to và trả {from, to} với hai balan…"
+            },
+            {
+              "requirementId": "R-13",
+              "quote": "Dùng lại key với method hoặc arguments khác gây KEY_REUSED và không đổi trạng thái. Lời gọi thất bại không chiếm key; key đó có thể dùng cho lời gọi khác sau này."
+            },
+            {
+              "requirementId": "R-14",
+              "quote": "Lời gọi thất bại không được làm thay đổi trạng thái tài khoản, hold hoặc bộ đếm hold; đặc biệt transfer thất bại không được thay đổi bất kỳ tài khoản nào."
+            }
+          ],
+          "explanation": "Các bước nối thất bại với retry bằng cùng key, bao gồm hold thiếu tiền, capture hết hạn và transfer tới account chưa mở. Các truy vấn balance và ID hold kế tiếp cho oracle trạng thái."
+        },
+        "invariants": [
+          "Lời gọi lỗi không chiếm key.",
+          "Lời gọi lỗi không đổi số dư, holds hoặc bộ đếm hold."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi hold('A', 6, 'k'); đọc balance A.",
+            "expected": "Gây INSUFFICIENT_FUNDS; balance A vẫn {total:5,held:0,available:5}."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi hold('A', 5, 'k').",
+            "expected": "Thành công với holdId='h1'; key k được dùng cho lời gọi thành công."
+          },
+          {
+            "id": "S-3",
+            "action": "Đặt now=10; gọi capture('h1', 1, 'expiredcap'), rồi deposit('A', 1, 'expiredcap').",
+            "expected": "capture gây HOLD_EXPIRED; balance xác nhận tiền không bị trừ; deposit thành công và trả total=6."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi transfer('A', 'missing', 1, 'missing'), rồi balance('A') và balance('B').",
+            "expected": "Transfer gây UNKNOWN_ACCOUNT; A và B không đổi."
+          }
+        ]
+      },
+      {
+        "id": "C-9",
+        "group": "consistency",
+        "required": true,
+        "method": "automated",
+        "expected": "Retry trả deep copy kết quả ban đầu với expiresAt=10, không tạo hold mới; h1 hết hạn tại now=10 và ID hold tiếp theo vẫn là h2.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-5",
+              "quote": "Balance view có dạng {total, held, available}; held là tổng hold đang active tại thời điểm now(), available = total - held. Hold hết hạn tại now() >= createdAt + holdTtl."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "deposit(account, amount, key) cộng amount vào total và trả balance view."
+            },
+            {
+              "requirementId": "R-7",
+              "quote": "hold chỉ tạo khi amount không vượt available; thiếu funds gây INSUFFICIENT_FUNDS và không tạo hold. Hold thành công trả {holdId, amount, expiresAt}; ID lần lượt là h1, h2,... và chỉ tăng khi tạo thành…"
+            },
+            {
+              "requirementId": "R-10",
+              "quote": "getHold trả {holdId, account, amount, status}; status phản ánh active, expired, captured hoặc released tại now(). Trạng thái captured/released không đổi thành expired."
+            },
+            {
+              "requirementId": "R-12",
+              "quote": "Mọi lời gọi thành công có key được ghi nhớ theo key dùng chung trong ledger. Gọi lại cùng method và arguments không áp dụng hiệu ứng lần nữa và trả deep copy kết quả ban đầu, kể cả khi thời gian hoặc …"
+            }
+          ],
+          "explanation": "Retry cùng arguments sau khi balance và thời gian đổi phải trả kết quả ban đầu. Kiểm tra hold kế tiếp và trạng thái hết hạn xác nhận retry không cấp thêm ID."
+        },
+        "invariants": [
+          "Retry key k không tạo thêm hold hoặc thay đổi kết quả ghi nhớ.",
+          "available luôn bằng total trừ held."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi hold('A', 40, 'k').",
+            "expected": "Trả {holdId:'h1', amount:40, expiresAt:10}."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi deposit('A', 10, 'laterdep'); đặt now=3.",
+            "expected": "deposit trả {total:110, held:40, available:70}."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi lại hold('A', 40, 'k'), sửa kết quả trả về, rồi gọi lại lần nữa.",
+            "expected": "Cả hai lần trả kết quả ban đầu {holdId:'h1', amount:40, expiresAt:10}; balance vẫn total=110, held=40, available=70."
+          },
+          {
+            "id": "S-4",
+            "action": "Đặt now=10; gọi balance('A') và getHold('h1').",
+            "expected": "balance có held=0; getHold status='expired'."
+          },
+          {
+            "id": "S-5",
+            "action": "Gọi hold('A', 1, 'next').",
+            "expected": "Hold mới trả holdId='h2'."
+          }
+        ]
+      },
+      {
+        "id": "C-10",
+        "group": "concurrency",
+        "required": true,
+        "method": "automated",
+        "expected": "Key dùng chung toàn ledger nên method khác gây KEY_REUSED; retry đúng transfer trả kết quả ban đầu và không chuyển lần hai.",
+        "oracle": {
+          "references": [
+            {
+              "requirementId": "R-11",
+              "quote": "transfer yêu cầu hai tài khoản khác nhau và đều tồn tại; from === to gây SAME_ACCOUNT. Chuyển từ available không đủ gây INSUFFICIENT_FUNDS. Thành công trừ from, cộng to và trả {from, to} với hai balan…"
+            },
+            {
+              "requirementId": "R-12",
+              "quote": "Mọi lời gọi thành công có key được ghi nhớ theo key dùng chung trong ledger. Gọi lại cùng method và arguments không áp dụng hiệu ứng lần nữa và trả deep copy kết quả ban đầu, kể cả khi thời gian hoặc …"
+            },
+            {
+              "requirementId": "R-13",
+              "quote": "Dùng lại key với method hoặc arguments khác gây KEY_REUSED và không đổi trạng thái. Lời gọi thất bại không chiếm key; key đó có thể dùng cho lời gọi khác sau này."
+            },
+            {
+              "requirementId": "R-14",
+              "quote": "Lời gọi thất bại không được làm thay đổi trạng thái tài khoản, hold hoặc bộ đếm hold; đặc biệt transfer thất bại không được thay đổi bất kỳ tài khoản nào."
+            },
+            {
+              "requirementId": "R-6",
+              "quote": "deposit(account, amount, key) cộng amount vào total và trả balance view."
+            }
+          ],
+          "explanation": "API đồng bộ không cung cấp primitive giao dịch đồng thời; ca kiểm tra các thứ tự gọi lặp và dùng key giao nhau mà hợp đồng quy định cho concurrency."
+        },
+        "invariants": [
+          "Mỗi key trong ledger gắn với tối đa một method và một bộ arguments thành công.",
+          "Retry transfer không thay đổi số dư."
+        ],
+        "steps": [
+          {
+            "id": "S-1",
+            "action": "Gọi transfer('A','B',20,'shared').",
+            "expected": "Trả from balance total=30 và to balance total=20."
+          },
+          {
+            "id": "S-2",
+            "action": "Gọi deposit('A', 1, 'shared'); đọc balance A và B.",
+            "expected": "deposit gây KEY_REUSED; A total=30, B total=20."
+          },
+          {
+            "id": "S-3",
+            "action": "Gọi deposit('A', 1, 'other').",
+            "expected": "A có total=31."
+          },
+          {
+            "id": "S-4",
+            "action": "Gọi lại transfer('A','B',20,'shared').",
+            "expected": "Trả deep copy kết quả gốc của transfer; không áp dụng chuyển tiền lần nữa."
+          }
+        ]
+      }
+    ]
+  }
+}

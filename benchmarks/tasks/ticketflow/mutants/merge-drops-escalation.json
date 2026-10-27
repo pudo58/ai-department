@@ -1,0 +1,11 @@
+{
+ "id": "merge-drops-escalation",
+ "description": "Escalation of the source is lost when merging",
+ "file": "src/tickets.js",
+ "edits": [
+  {
+   "find": "target.escalated = target.escalated || source.escalated;",
+   "replace": "target.escalated = target.escalated;"
+  }
+ ]
+}

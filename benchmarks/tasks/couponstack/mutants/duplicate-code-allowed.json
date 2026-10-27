@@ -1,0 +1,11 @@
+{
+ "id": "duplicate-code-allowed",
+ "description": "A code can be listed twice",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "if (new Set(codes).size !== codes.length) throw fail('DUPLICATE_CODE');",
+   "replace": ""
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "id": "cap-ignored",
+ "description": "The cap of a coupon is not applied",
+ "file": "src/coupons.js",
+ "edits": [
+  {
+   "find": "Math.min(wanted, d.cap ?? Infinity, running)",
+   "replace": "Math.min(wanted, running)"
+  }
+ ]
+}
