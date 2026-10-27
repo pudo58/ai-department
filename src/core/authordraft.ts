@@ -10,6 +10,13 @@ export function pendingAuthorDraft(run:Run,artifacts:readonly Artifact[]):Pendin
   if(!a || sha256(a.content)!==a.hash)return;
   try{const d=JSON.parse(a.content) as AuthorDraft;
     if(d.schemaVersion!==1 || !d.checkpoint || a.attemptId!==d.attemptId || d.checkpoint!==(run.checkpoint??run.baseSha) || d.contractHash!==hashContract(run.contract) || d.contractVersion!==run.contract.version || d.configHash!==testRepairConfigHash(run) || d.slot!=='A' || run.selectedSlot!==d.slot)return;
-    return {...d,draftHash:a.hash,artifactId:a.id,...(policyOf(run).authorRepair?{repairAvailable:!artifacts.some(marker=>marker.title===AUTHOR_MANIFEST_REPAIR_TITLE&&marker.contractVersion===run.contract.version)}:{})};
+    // An Author that answered but wrote no test file leaves nothing to correct; offering a repair for it could only fail.
+    const empty=!d.patch||!d.paths?.length;
+    return {...d,draftHash:a.hash,artifactId:a.id,...(empty?{empty:true}:{}),...(policyOf(run).authorRepair&&!empty?{repairAvailable:!artifacts.some(marker=>marker.title===AUTHOR_MANIFEST_REPAIR_TITLE&&marker.contractVersion===run.contract.version)}:{})};
   }catch{return;}
+}
+/** Why a draft with no test file cannot be repaired: what the Author said, and the one thing that changes the outcome. */
+export function emptyDraftBlock(output:string):string{
+  const said=output.replace(/\s+/g,' ').trim().slice(-400);
+  return `Author không tạo file test nào nên không có draft để sửa${said?`. Author nói: “${said}”`:''}. Chạy tiếp sẽ không đổi kết quả; hãy bổ sung ví dụ hoặc tiêu chí vào hợp đồng hoặc kế hoạch ca (lên phiên bản mới) để Author làm lại.`;
 }

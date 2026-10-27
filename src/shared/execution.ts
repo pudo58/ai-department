@@ -18,7 +18,11 @@ export interface AuthorDraft {
   schemaVersion: 1; attemptId: string; checkpoint: string; contractHash: string; contractVersion: number;
   configHash: string; slot: 'A'; output: string; patch: string; paths: string[]; problems: string[];
 }
-export interface PendingAuthorDraft extends AuthorDraft { draftHash: string; artifactId: string; repairAvailable?: boolean }
+export interface PendingAuthorDraft extends AuthorDraft {
+  draftHash: string; artifactId: string; repairAvailable?: boolean;
+  /** The Author wrote no test file, so there is nothing to repair; only a change to the contract or the plan can help. */
+  empty?: boolean;
+}
 export interface VerifierScope {
   reviewed: string[]; checkIds: string[]; limitations: string[];
   additionalChecks: { command: string; status: 'passed' | 'failed' | 'incomplete'; detail: string }[];

@@ -18,7 +18,7 @@ import type { CheckRunner } from './checks.js';
 import { buildMatrix } from '../../core/completion.js';
 import { TestRecovery } from './recovery.js';
 import { latestChecks } from '../../core/qualityevidence.js';
-import { AUTHOR_DRAFT_TITLE, pendingAuthorDraft } from '../../core/authordraft.js';
+import { AUTHOR_DRAFT_TITLE, emptyDraftBlock, pendingAuthorDraft } from '../../core/authordraft.js';
 import { testRepairConfigHash } from '../../core/recovery.js';
 import type { AuthorDraft } from '../../shared/execution.js';
 import { routeCheckFailure } from '../../core/checkrouting.js';
@@ -176,6 +176,10 @@ export class CandidateBuilder {
   /** Verify mode: an Author writes tests from the contract alone; they are locked before the Developer starts. */
   async authorAcceptanceTests(runId: string, signal: AbortSignal): Promise<void> {
     const run = this.s.run(runId);
+    // Nothing for an Author to write a test for (every requirement is checked by a person): asking would end in a refusal that
+    // no correction can fix, so the step is settled here, without an agent, and the Developer goes on.
+    const cases = run.contract.testPlan?.cases;
+    if (deepQuality(run) && cases && !cases.some(c => c.method === 'automated')) return this.lockWithoutAuthor(runId);
     const runtime = this.s.runtimeFor(run);
     const independence: Independence = { independent: true, reason: 'Author chỉ nhận hợp đồng; chưa có kế hoạch triển khai của Developer.' };
     // A non-test file inside the allowed modules (a .md note, a helper) is a slip the Author can fix, so it gets one retry
@@ -249,6 +253,25 @@ export class CandidateBuilder {
     this.scope.lockAcceptance(runId, changes.files, checkpoint, 'Acceptance suite (Author)', true);
   }
 
+  /**
+   * The approved plan has no automated case. The manifest is empty and says so (the report shows the note), no Author is called, and a
+   * draft or attempt marker left by an earlier turn on this contract stops counting so the page does not offer to repair it.
+   */
+  private async lockWithoutAuthor(runId: string): Promise<void> {
+    const run = this.s.run(runId), runtime = this.s.runtimeFor(run);
+    for (const a of this.s.store.artifacts.list(runId).filter(a => (a.title === 'Author manifest attempt' || a.title === AUTHOR_DRAFT_TITLE) && a.valid && a.contractVersion === run.contract.version)) this.s.store.artifacts.put({ ...a, valid: false });
+    const checkpoint = await runtime.commit(run, 'A', `${run.title}: acceptance tests`);
+    const manifest: TestManifest = {
+      schemaVersion: policyOf(run).structured ? 2 : 1, source: 'author', contractHash: hashContract(run.contract), contractVersion: run.contract.version, slot: 'A', entries: [],
+      advisories: ['Kế hoạch ca không có ca tự động nào nên hệ thống không gọi Author và ghi manifest rỗng; các yêu cầu chỉ được xác minh bằng kiểm tra thủ công và test do Developer viết.'],
+    };
+    this.s.artifact(runId, { kind: 'acceptance', title: 'Test manifest', content: JSON.stringify(manifest), checkpoint });
+    this.s.mutate(runId, (r) => { r.checkpoint = checkpoint; });
+    this.s.artifact(runId, { kind: 'diff', title: 'Diff Author', content: '', checkpoint });
+    this.s.log(runId, 'author.skipped', 'Kế hoạch ca không có ca tự động nào; không gọi Author và tiếp tục với Developer.');
+    this.scope.lockAcceptance(runId, [], checkpoint, 'Acceptance suite (Author)', true);
+  }
+
   /** One correction of an unaccepted draft; never a route around the lock/identity gates. */
   private async repairAuthorManifest(runId:string,signal:AbortSignal):Promise<void>{
     const run=this.s.run(runId),artifacts=this.s.store.artifacts.list(runId),draft=pendingAuthorDraft(run,artifacts);
@@ -257,7 +280,9 @@ export class CandidateBuilder {
     if(artifacts.some(a=>a.title===AUTHOR_MANIFEST_REPAIR_TITLE&&a.contractVersion===run.contract.version)){if(await this.acceptDerivedManifest(runId,draft))return;throw new Blocked('Đã dùng lượt sửa manifest Author cho hợp đồng này; draft còn lỗi hoặc lượt sửa bị gián đoạn. Không tự gọi thêm AI.');}
     const runtime=this.s.runtimeFor(run),workspace=runtime.workspacePath?.(run,'A');
     const scope=evaluateChanges(draft.paths,this.scope.scopeFor(runId));
-    if(!runtime.applyPatch||!workspace||!draft.patch||!draft.paths.length||draft.paths.some(p=>!isTestPath(p))||!scope.accepted)throw new Blocked('Draft Author không chỉ sửa test trong phạm vi hoặc runtime chưa hỗ trợ sửa draft.');
+    if(!draft.patch||!draft.paths.length)throw new Blocked(emptyDraftBlock(draft.output));
+    if(!runtime.applyPatch||!workspace)throw new Blocked('Runtime chưa hỗ trợ áp dụng draft Author để sửa.');
+    if(draft.paths.some(p=>!isTestPath(p))||!scope.accepted)throw new Blocked(`Draft Author sửa file ngoài phạm vi test nên không áp dụng để sửa: ${draft.paths.filter(p=>!isTestPath(p)).join(', ')||'ngoài module cho phép'}.`);
     const before=new Map<string,string>();
     let result:Awaited<ReturnType<RunServices['attempt']>>|undefined;
     try{
@@ -363,7 +388,8 @@ Output draft trước (dữ liệu để đối chiếu): ${draft.output}
     if(!draft || draft.attemptId!==run.authorDraftRequest?.attemptId || draft.draftHash!==run.authorDraftRequest?.draftHash)throw new Blocked('Draft đã cũ; không thay workspace.');
     const runtime=this.s.runtimeFor(run);if(!runtime.applyPatch)throw new Blocked('Runtime chưa hỗ trợ áp dụng draft.');
     const scope=evaluateChanges(draft.paths,{...this.scope.scopeFor(runId),lockedPaths:[]});
-    if(!draft.patch || draft.paths.some(p=>!isTestPath(p)) || !scope.accepted)throw new Blocked('Draft không chỉ sửa file test trong phạm vi.');
+    if(!draft.patch||!draft.paths.length)throw new Blocked(emptyDraftBlock(draft.output));
+    if(draft.paths.some(p=>!isTestPath(p)) || !scope.accepted)throw new Blocked('Draft không chỉ sửa file test trong phạm vi.');
     const structured=policyOf(run).structured;
     let applied=false;
     let entries:TestManifest['entries'];

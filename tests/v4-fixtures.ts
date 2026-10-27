@@ -47,6 +47,12 @@ export const plan = (): TestPlan => ({
   notApplicable: RISK_GROUPS.filter(g => g !== 'state').map(group => ({ group, reason: 'The fixture exercises one scheduler transition only.' })), questions: [],
 });
 
+/** A plan for a contract whose only requirement a person checks by hand: nothing for an Author to write a test for. */
+export const manualOnlyPlan = (): TestPlan => ({
+  schemaVersion: 2, reasoningVersion: 1, statefulModelVersion: 1, cases: [],
+  notApplicable: RISK_GROUPS.map(group => ({ group, reason: 'The only requirement is checked by a person, not by a test.' })), questions: [],
+});
+
 const vitestUrl = (): string => pathToFileURL(path.resolve('node_modules/vitest/dist/index.js')).href;
 export const authorTest = (wrong = false): string => `import {it,expect} from ${JSON.stringify(vitestUrl())};\nimport {createScheduler} from '../src/scheduler.js';\nit('[R-1][C-1] blocked metadata',()=>{\n const s=createScheduler();\n s.submit({id:'A'});\n s.submit({id:'B'});\n s.submit({id:'C',dependsOn:['A','B']});\n expect(s.get('C').status).toBe('ready');\n s.cancel('B');\n expect(s.get('C').blockedBy).toBe('${wrong ? 'A' : 'B'}');\n});\n`;
 export const authorEntries = (p: TestPlan = plan(), wrong = false, file = 'tests/scheduler.test.js') => {
@@ -77,6 +83,10 @@ export interface V4Options {
   preinstall?: (source: string) => void;
   /** Which test files the project's Vitest picks up. */
   include?: string;
+  /** The only requirement is one a person checks by hand, so the approved plan has no automated case. */
+  manualOnly?: boolean;
+  /** What the Author answers when asked to write tests, instead of writing them; it writes no file. */
+  authorReply?: (x: AgentExecution, dir: string) => string;
 }
 
 const dirs: string[] = [];
@@ -107,9 +117,10 @@ export async function v4Fixture(options: V4Options = {}) {
       let output = '';
       const tag = x.prompt.includes('Author lập kế hoạch') ? 'author:plan' : x.prompt.includes('Author chẩn đoán') ? 'author:diagnose' : `${x.role}`;
       calls.push(tag);
-      if (x.role === 'planner') output = fence({ requirements: [{ id: 'R-1', text: REQUIREMENT, required: true, manual: false }], acceptanceExamples: ['cancel B then A: blockedBy is A'], interfaces: ['createScheduler()'], assumptions: [], scope: [] });
-      else if (tag === 'author:plan') output = options.planReply ? options.planReply(x.run.contract) : fence(plan());
+      if (x.role === 'planner') output = fence({ requirements: [{ id: 'R-1', text: REQUIREMENT, required: true, manual: !!options.manualOnly }], acceptanceExamples: ['cancel B then A: blockedBy is A'], interfaces: ['createScheduler()'], assumptions: [], scope: [] });
+      else if (tag === 'author:plan') output = options.planReply ? options.planReply(x.run.contract) : fence(options.manualOnly ? manualOnlyPlan() : plan());
       else if (tag === 'author:diagnose') output = options.diagnosis?.(x, dir, calls) ?? fence({ decision: 'implementation', reason: 'x', evidence: 'x', caseIds: ['C-1'] });
+      else if (tag === 'author' && options.authorReply) output = options.authorReply(x, dir);
       else if (x.role === 'author') {
         // A later run on the same project writes its own test file; the first run's test was delivered with its fix.
         const file = x.run.title === 'Scheduler blockedBy' ? 'tests/scheduler.test.js' : 'tests/scheduler-later.test.js';
