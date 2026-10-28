@@ -4,6 +4,7 @@ import { GUIDANCE_MAX_CHARS } from '../shared/guidance.js';
 import type { StackDetection, SuggestedCheck } from '../shared/types.js';
 import { nodeTestProblem, type NodeVersion } from './nodever.js';
 import { detectOtherStacks, nestedProjects } from './stackother.js';
+import { planNpmSetup } from './npmsetup.js';
 
 /**
  * Read-only stack detection for a repository. It only reads a handful of well-known manifest and config files
@@ -98,7 +99,7 @@ export function parseLooseJson(text: string): Record<string, unknown> | undefine
 const asRecord = (v: unknown): Record<string, unknown> => (v && typeof v === 'object' && !Array.isArray(v) ? v as Record<string, unknown> : {});
 const hasConfig = (files: Set<string>, stem: string): boolean => [...files].some((f) => f === stem || f.startsWith(`${stem}.`));
 
-const LOCKFILES: [string, NonNullable<StackDetection['packageManager']>][] = [['pnpm-lock.yaml', 'pnpm'], ['yarn.lock', 'yarn'], ['bun.lockb', 'bun'], ['bun.lock', 'bun'], ['package-lock.json', 'npm']];
+const LOCKFILES: [string, NonNullable<StackDetection['packageManager']>][] = [['pnpm-lock.yaml', 'pnpm'], ['yarn.lock', 'yarn'], ['bun.lockb', 'bun'], ['bun.lock', 'bun'], ['npm-shrinkwrap.json', 'npm'], ['package-lock.json', 'npm']];
 
 /** `nodeVersion` is the `node` on PATH, which runs "node --test" checks; leave it out when unknown. */
 export async function detectStack(repoDir: string, nodeVersion?: NodeVersion): Promise<StackDetection> {
@@ -195,9 +196,11 @@ export async function detectStack(repoDir: string, nodeVersion?: NodeVersion): P
   if (script('build') !== undefined) checks.push({ id: 'build', label: 'Build', command: ['npm', 'run', 'build'], required: true, timeoutMs: 900_000, recommended: false, reason: 'Script "build" có sẵn; thường chậm, mặc định không chọn.' });
 
   // pnpm/yarn are .cmd shims that cannot be spawned without a shell on Windows, so route them through npx.
+  const npmSetup = planNpmSetup(['npm', 'install'], files.has('package-lock.json') || files.has('npm-shrinkwrap.json'));
   const setupCommand = !pkg ? [] : packageManager === 'pnpm' ? ['npx', '--yes', 'pnpm', 'install', '--frozen-lockfile']
     : packageManager === 'yarn' ? ['npx', '--yes', 'yarn', 'install', '--frozen-lockfile']
-      : packageManager === 'bun' ? [] : files.has('package-lock.json') ? ['npm', 'ci'] : ['npm', 'install'];
+      : packageManager === 'bun' ? [] : npmSetup.command;
+  if (pkg && packageManager === 'npm' && npmSetup.note) notes.push(npmSetup.note);
   if (packageManager === 'bun') notes.push('Repo dùng Bun: hệ thống chưa chạy được bun trực tiếp, hãy nhập lệnh cài đặt và check thủ công.');
 
   // Other stacks' checks follow the Node ones; an id already taken (two `test` checks in one repo) gets the tool's name as a prefix.

@@ -3,6 +3,7 @@ import { probeEnvironment } from './preflight.js';
 import { runMutation, type MutationExecution } from './mutation.js';
 import { replayFinding, recoverReplays, type ReproductionExecution } from './reproduction.js';
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Role, Run, Slot } from '../shared/types.js';
@@ -11,6 +12,7 @@ import { isSafeRelative } from '../core/scope.js';
 import { ENV_PROBLEM_PREFIX, parseNodeVersion, planNodeTest } from '../core/nodever.js';
 import { hostNodeVersion } from './nodever.js';
 import { javaVersionOf, planEnvironment, type EnvNeeds } from '../core/envplan.js';
+import { planNpmSetup } from '../core/npmsetup.js';
 import { Toolchains, type ToolHomes, type ToolLog } from './toolchain.js';
 import { bootstrapPython } from './pythonenv.js';
 import { claudeSkillPlugin, codexWorkspaceSkills } from './skillmount.js';
@@ -120,8 +122,10 @@ export class LocalRuntime implements Runtime {
     if (needs.python) {
       await bootstrapPython(ws, (exe, args, timeoutMs) => executeFile(exe, args, { cwd: ws, timeoutMs, env: this.toolchains.env(ws, homes), scrubSecrets: 'provider', ...streamTo(onEvent, 'setup') }), log);
     }
-    const setup = run.configSnapshot.setupCommand;
+    const setupPlan = planNpmSetup(run.configSnapshot.setupCommand, ['package-lock.json', 'npm-shrinkwrap.json'].some(file => existsSync(path.join(ws, file))));
+    const setup = setupPlan.command;
     if (setup.length) {
+      if (setupPlan.note) onEvent?.({ type: 'log', message: setupPlan.note, data: { source: 'setup', configuredCommand: run.configSnapshot.setupCommand, effectiveCommand: setup } });
       const [cmd, ...args] = resolveHostCommand(setup);
       if (/[/\\](?:npm|npx)-cli\.js$/i.test(args[0] ?? '')) {
         const version = await executeFile(cmd!, [args[0]!, '--version'], { cwd: ws, timeoutMs: 10_000, scrubSecrets: 'provider' });
