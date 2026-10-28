@@ -325,7 +325,7 @@ export function renderReportMarkdown(r: AcceptanceReport): string {
     out.push('', '## Nguồn thiết kế', '', `- Snapshot \`${d.snapshotId}\` (hash \`${d.snapshotHash.slice(0, 12)}\`) từ file “${d.fileName.replace(/[|\n]/g, ' ')}”: **${d.label}**; ${d.identity === 'verified' ? 'đã đối chiếu file key' : 'nguồn do người dùng xác nhận'}.`,
       `- Target: ${d.targetIds.length ? d.targetIds.join(', ') : 'mọi node gốc của snapshot'}. ${d.counts.nodes} node, ${d.counts.components} component, ${d.counts.styles} style, ${d.counts.variables} variable, ${d.counts.assets} tài nguyên.`,
       `- Đã cấp cho: ${d.inputs.length ? d.inputs.map((i) => `${i.role} (${i.attempts} lượt)`).join(', ') : 'chưa lượt nào'}. Biên nhận chứng minh dữ liệu đã được cấp, không chứng minh model đã đọc hết.`,
-      ...d.acknowledged.map((i) => `- Giới hạn đã chấp nhận: ${i.message}`), '- Chưa có kiểm chứng hình ảnh (visual verification).');
+      ...d.acknowledged.map((i) => `- Giới hạn đã chấp nhận: ${i.message}`), r.visual ? `- Kiểm chứng hình ảnh (visual verification): **${r.visual.status}**, ${r.visual.screens.length} màn hình; xem kết quả đối chiếu ở trên.` : '- Chưa có kiểm chứng hình ảnh (visual verification).');
   }
   if (r.skills.length) out.push('', '## Skill đã dùng', '', ...r.skills.map((s) => `- ${s.role}: ${s.name}${s.hasScripts ? ' (có script)' : ''}`));
   out.push('', '## Công sức', '', `- Chi phí: ~$${r.effort.costUsd.toFixed(2)}${r.effort.estimated ? ' (ước tính)' : ''} · ${r.effort.tokens.toLocaleString('en-US')} token · ${r.effort.attempts} lượt agent · ${mins(r.effort.aiMs)} thời gian AI · ${r.effort.repairs} vòng sửa`, `- Công của bạn: ${mins(r.effort.humanMs)}`);

@@ -4,11 +4,13 @@ import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { JSDOM } from 'jsdom';
 import { LiveTab, LIVE_FILTER_KEY } from '../src/client/MonitorLive.js';
 import type { MonitorData, RequestRow } from '../src/core/monitor.js';
 
 vi.mock('../src/client/Monitor', () => ({ LogConsole: ({ runId }: { runId?: string }) => createElement('div', { 'data-log-run': runId }, `Log riêng ${runId}`) }));
 let root: Root | undefined;
+let storageDom: JSDOM;
 const now = Date.parse('2026-10-24T12:00:00Z');
 const requests: string[] = [];
 const request = (runId: string): RequestRow => ({ id: `att-${runId}`, runId, projectId: runId.startsWith('beta') ? 'b' : 'a', runTitle: runId, role: 'developer', slot: 'A', stage: 'implement', provider: 'codex', model: `long-model-name-for-${runId}`, status: 'completed', startedAt: new Date(now - 60_000).toISOString(), inputTokens: 100, cachedTokens: 0, outputTokens: 10, costUsd: 0.01 });
@@ -26,10 +28,13 @@ const data = (): MonitorData => ({
   ],
 });
 beforeEach(() => {
+  // Vitest 3 can inherit Node's unavailable Web Storage instead of jsdom's browser Storage.
+  storageDom = new JSDOM('', { url: 'http://localhost/' });
+  vi.stubGlobal('localStorage', storageDom.window.localStorage);
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true); localStorage.clear(); requests.length = 0;
   vi.stubGlobal('fetch', async (url: string) => { requests.push(url); const runId = new URL(url, 'http://localhost').searchParams.get('run') ?? ''; return { ok: true, status: 200, text: async () => JSON.stringify([request(runId)]) }; });
 });
-afterEach(async () => { if (root) await act(async () => root!.unmount()); root = undefined; document.body.innerHTML = ''; vi.unstubAllGlobals(); });
+afterEach(async () => { if (root) await act(async () => root!.unmount()); root = undefined; document.body.innerHTML = ''; vi.unstubAllGlobals(); storageDom.window.close(); });
 async function render(value = data(), onOpen = vi.fn()) {
   if (!root) { const host = document.createElement('div'); document.body.append(host); root = createRoot(host); }
   await act(async () => root!.render(createElement(LiveTab, { data: value, now, onOpen })));

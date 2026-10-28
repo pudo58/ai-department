@@ -55,7 +55,7 @@ export function DesignBindingView({ run, canChange, onChanged }: { run: Run; can
       <p>{snap ? <strong>{snap.source.fileName}</strong> : <code>{binding.snapshotId}</code>} {label && <Badge tone={label.limited ? 'warn' : 'good'}>{label.text}</Badge>} {snap && <Badge>{identityLabel(snap.source.identity)}</Badge>}</p>
       <p className="muted small">Hash khóa trong hợp đồng <code>{binding.snapshotHash.slice(0, 12)}</code> · {binding.targetIds.length ? `${binding.targetIds.length} target: ${binding.targetIds.join(', ')}` : 'mọi node gốc của snapshot'} · {binding.acknowledgedIssueIds.length} giới hạn đã chấp nhận.</p>
       {snap && snap.snapshotHash !== binding.snapshotHash && <div className="banner error" role="alert">Snapshot hiện tại khác bản mà hợp đồng đã khóa; task sẽ bị chặn trước khi gọi AI.</div>}
-      <p className="muted small">Chưa có kiểm chứng hình ảnh (visual verification): dữ liệu thiết kế chỉ là căn cứ, không chứng minh giao diện cuối giống thiết kế.</p>
+      <p className="muted small">Dữ liệu thiết kế là căn cứ tham chiếu. Xem kết quả đối chiếu hình ảnh trong phần kiểm chứng của task; ảnh nguồn không tự chứng minh giao diện cuối giống thiết kế.</p>
     </>}
     {editing && <DesignChangeDialog run={run} onClose={() => setEditing(false)} onChanged={() => { setEditing(false); onChanged?.(); }}/>}
   </section>;
