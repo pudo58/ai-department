@@ -123,6 +123,11 @@ export class LocalRuntime implements Runtime {
     const setup = run.configSnapshot.setupCommand;
     if (setup.length) {
       const [cmd, ...args] = resolveHostCommand(setup);
+      if (/[/\\](?:npm|npx)-cli\.js$/i.test(args[0] ?? '')) {
+        const version = await executeFile(cmd!, [args[0]!, '--version'], { cwd: ws, timeoutMs: 10_000, scrubSecrets: 'provider' });
+        assertSetupSucceeded(version);
+        log(`Môi trường setup: Node ${process.version} (${cmd}); npm ${version.stdout.trim()} (${args[0]}).`);
+      }
       const out = await executeFile(cmd!, args, { cwd: ws, timeoutMs: run.configSnapshot.limits?.setupMs ?? DEFAULT_SETUP_MS, env: this.toolchains.env(ws, homes), scrubSecrets: 'provider', ...streamTo(onEvent, 'setup') });
       assertSetupSucceeded(out);
       await this.ws.assertCleanAfterSetup(ws);

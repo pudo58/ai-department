@@ -3,7 +3,7 @@
 // It keeps the person's data outside the package, so updating or reinstalling never touches it:
 // ~/.ai-department by default, or the folder in AIDEPT_HOME (the portable zip sets it to its own folder).
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,44 +29,32 @@ if (args.includes('--help') || args.includes('-h')) {
 const home = path.resolve(process.env.AIDEPT_HOME ?? path.join(homedir(), '.ai-department'));
 mkdirSync(home, { recursive: true });
 
-// The app needs Node 24 (built-in SQLite). On an older Node, fetch a private Node 24 into <home>/runtime once, through
-// the person's own npm (the `node` package on npm ships the binary), and run this same script with it. The machine's
-// Node stays as it is, so other projects are not affected.
-const RUNTIME_MAJOR = 24;
-if (Number(process.versions.node.split('.')[0]) < RUNTIME_MAJOR) {
-  const runtimeDir = path.join(home, 'runtime');
-  const node = path.join(runtimeDir, 'node_modules', 'node', 'bin', process.platform === 'win32' ? 'node.exe' : 'node');
-  if (!existsSync(node)) {
-    console.log(`Máy đang dùng Node ${process.version}; AI Department cần Node ${RUNTIME_MAJOR}.`);
-    console.log(`Đang tải một bản Node ${RUNTIME_MAJOR} riêng cho AI Department (khoảng 30 MB, chỉ một lần) vào ${runtimeDir}\n`);
-    mkdirSync(runtimeDir, { recursive: true });
-    const ok = await npmInstall(runtimeDir, `node@${RUNTIME_MAJOR}`);
-    if (!ok || !existsSync(node)) {
-      console.error(`\nKhông tải được Node ${RUNTIME_MAJOR}. Kiểm tra kết nối mạng rồi chạy lại, hoặc cài Node.js ${RUNTIME_MAJOR} từ https://nodejs.org`);
-      process.exit(1);
-    }
-  }
+// Always use the same complete distribution. Bootstrap downloads it without invoking the system npm.
+let runtime;
+try {
+  const { ensureAppRuntime } = await import('./runtime-bootstrap.mjs');
+  runtime = await ensureAppRuntime(home);
+} catch (error) {
+  console.error(`Không chuẩn bị được bộ Node/npm riêng: ${error.message}. Kiểm tra kết nối tới nodejs.org rồi chạy lại. Dữ liệu task được giữ nguyên.`);
+  process.exit(1);
+}
+const runtimeEnv = { ...process.env, AIDEPT_NPM_CLI: runtime.npm, npm_execpath: runtime.npm, npm_node_execpath: runtime.node };
+const pathKey = Object.keys(runtimeEnv).find((key) => key.toUpperCase() === 'PATH') ?? 'PATH';
+runtimeEnv[pathKey] = [runtime.bin, runtimeEnv[pathKey]].filter(Boolean).join(path.delimiter);
+const sameExecutable = process.platform === 'win32'
+  ? path.resolve(process.execPath).toLowerCase() === path.resolve(runtime.node).toLowerCase()
+  : path.resolve(process.execPath) === path.resolve(runtime.node);
+if (!sameExecutable) {
   // Ctrl+C reaches both processes; the child shuts the server down, this one only waits for it.
   process.on('SIGINT', () => undefined);
-  // npm scripts and agent shells must use this Node too, rather than the older system Node.
-  const runtimeEnv = { ...process.env };
-  const pathKey = Object.keys(runtimeEnv).find((key) => key.toUpperCase() === 'PATH') ?? 'PATH';
-  runtimeEnv[pathKey] = [path.dirname(node), runtimeEnv[pathKey]].filter(Boolean).join(path.delimiter);
-  const child = spawn(node, [fileURLToPath(import.meta.url), ...args], { stdio: 'inherit', env: runtimeEnv });
+  const child = spawn(runtime.node, [fileURLToPath(import.meta.url), ...args], { stdio: 'inherit', env: runtimeEnv });
   child.on('exit', (code) => process.exit(code ?? 0));
-  child.on('error', (error) => { console.error(`Không chạy được ${node}: ${error.message}`); process.exit(1); });
+  child.on('error', (error) => { console.error(`Không chạy được ${runtime.node}: ${error.message}`); process.exit(1); });
   await new Promise(() => undefined);
 }
 
-/** `npm install --prefix <dir> <spec>` with the npm that came with this Node (npm-cli.js sits next to node), else npm on PATH. */
-function npmInstall(dir, spec) {
-  const args = ['install', '--prefix', dir, spec, '--no-audit', '--no-fund', '--loglevel', 'error'];
-  const bin = path.dirname(process.execPath);
-  const cli = [path.join(bin, 'node_modules', 'npm', 'bin', 'npm-cli.js'), path.join(bin, '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js')].find((p) => existsSync(p));
-  const child = cli ? spawn(process.execPath, [cli, ...args], { stdio: 'inherit' })
-    : spawn(['npm', ...args.map((a) => (/[\s"]/.test(a) ? `"${a}"` : a))].join(' '), { stdio: 'inherit', shell: true });
-  return new Promise((resolve) => { child.on('exit', (code) => resolve(code === 0)); child.on('error', () => resolve(false)); });
-}
+Object.assign(process.env, runtimeEnv);
+console.log(`Runtime: Node ${process.version}, npm ${runtime.npmVersion} (riêng cho AI Department).`);
 
 process.chdir(home);
 process.env.AIDEPT_STATIC_DIR ??= path.join(pkgDir, 'dist', 'client');

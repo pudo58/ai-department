@@ -16,14 +16,17 @@ import { executeFile, type ProcessResult } from './process.js';
 
 export const MAVEN_VERSION = '3.9.9';
 export const GRADLE_VERSION = '8.10.2';
+export const APP_NODE_VERSION = '24.22.1';
+export const APP_NPM_VERSION = '11.19.1';
 const MAX_DOWNLOAD_BYTES = 700 * 1024 * 1024;
 const MARKER = '.aidept-installed';
 
-export interface Endpoints { adoptium: string; maven: string; gradle: string }
+export interface Endpoints { adoptium: string; maven: string; gradle: string; node?: string }
 export const DEFAULT_ENDPOINTS: Endpoints = {
   adoptium: 'https://api.adoptium.net',
   maven: 'https://archive.apache.org/dist/maven/maven-3',
   gradle: 'https://services.gradle.org/distributions',
+  node: 'https://nodejs.org/dist',
 };
 
 export type ToolLog = (message: string, level?: 'info' | 'warn') => void;
@@ -127,6 +130,39 @@ export class Toolchains {
 
   // --- installers ---------------------------------------------------------------------------------------------------
 
+  /** The official distribution includes a matching npm; the npm `node` package only ships a binary. */
+  ensureNode(log?: ToolLog): Promise<string> {
+    return this.once('app-node', async () => {
+      if (!['win32', 'linux', 'darwin'].includes(this.platform) || !['x64', 'arm64'].includes(this.arch)) throw new Error(`Runtime chưa hỗ trợ ${this.platform}/${this.arch}.`);
+      const dir = path.join(this.root, `node-${APP_NODE_VERSION}`);
+      const bin = this.platform === 'win32' ? dir : path.join(dir, 'bin');
+      const node = path.join(bin, this.platform === 'win32' ? 'node.exe' : 'node');
+      const npm = path.join(dir, this.platform === 'win32' ? 'node_modules' : 'lib/node_modules', 'npm');
+      const complete = () => [path.join(dir, MARKER), node, path.join(npm, 'bin', 'npm-cli.js'), path.join(npm, 'bin', 'npx-cli.js'), path.join(npm, 'package.json')].every(existsSync);
+      const probe = async () => {
+        const n = await this.run(node, ['--version'], 10_000);
+        const p = await this.run(node, [path.join(npm, 'bin', 'npm-cli.js'), '--version'], 10_000);
+        return !n.timedOut && !p.timedOut && n.exitCode === 0 && p.exitCode === 0 && n.stdout.trim() === `v${APP_NODE_VERSION}` && p.stdout.trim() === APP_NPM_VERSION;
+      };
+      if (complete() && await probe().catch(() => false)) return dir;
+      const os = this.platform === 'win32' ? 'win' : this.platform;
+      const name = `node-v${APP_NODE_VERSION}-${os}-${this.arch}.${this.platform === 'win32' ? 'zip' : 'tar.gz'}`;
+      const base = `${this.endpoints.node ?? DEFAULT_ENDPOINTS.node}/v${APP_NODE_VERSION}`;
+      assertDownloadUrl(base);
+      const checksums = await this.fetchFn(`${base}/SHASUMS256.txt`, { signal: AbortSignal.timeout(30_000) });
+      if (!checksums.ok) throw new Error(`Không lấy được checksum Node (${checksums.status}).`);
+      const hex = (await checksums.text()).split(/\r?\n/).map(line => line.trim().split(/\s+/)).find(parts => parts[1] === name)?.[0];
+      if (!hex || !/^[a-f0-9]{64}$/i.test(hex)) throw new Error(`Không có checksum hợp lệ cho ${name}.`);
+      log?.(`Tải bộ Node ${APP_NODE_VERSION} + npm chính thức…`);
+      await this.install(`node-${APP_NODE_VERSION}`, dir, `${base}/${name}`, name, { algo: 'sha256', hex }, log);
+      if (!complete() || !await probe().catch(() => false)) {
+        await rm(path.join(dir, MARKER), { force: true });
+        throw new Error('Bộ Node/npm tải về không chạy đúng phiên bản; chưa khởi động app. Chạy lại để cài lại runtime.');
+      }
+      return dir;
+    });
+  }
+
   ensureJdk(major: number, log?: ToolLog): Promise<string> {
     return this.once(`jdk-${major}`, async () => {
       const dir = path.join(this.root, `jdk-${major}`);
@@ -188,6 +224,7 @@ export class Toolchains {
   }
 
   private async install(key: string, finalDir: string, url: string, fileName: string, expected: { algo: 'sha256' | 'sha512'; hex: string }, log?: ToolLog): Promise<void> {
+    if (path.dirname(path.resolve(finalDir)) !== path.resolve(this.root)) throw new Error('Tool install target escapes the managed tools directory');
     await mkdir(this.root, { recursive: true });
     const tmp = path.join(this.root, `.tmp-${key}-${process.pid}-${Date.now()}`);
     await mkdir(tmp, { recursive: true });
@@ -205,12 +242,15 @@ export class Toolchains {
       await rename(top, finalDir);
       await writeFile(path.join(finalDir, MARKER), new Date().toISOString());
       log?.(`Đã cài ${key} vào ${finalDir}`);
-    } finally { await rm(tmp, { recursive: true, force: true }).catch(() => undefined); }
+    } finally {
+      if (path.dirname(path.resolve(tmp)) !== path.resolve(this.root) || !path.basename(tmp).startsWith('.tmp-')) throw new Error('Unexpected temporary tool directory');
+      await rm(tmp, { recursive: true, force: true }).catch(() => undefined);
+    }
   }
 
   private async download(url: string, dest: string, expected: { algo: 'sha256' | 'sha512'; hex: string }, log?: ToolLog): Promise<void> {
     assertDownloadUrl(url);
-    const res = await this.fetchFn(url, { redirect: 'follow' });
+    const res = await this.fetchFn(url, { redirect: 'follow', signal: AbortSignal.timeout(10 * 60_000) });
     if (!res.ok || !res.body) throw new Error(`Tải thất bại (${res.status}) từ ${new URL(url).host}.`);
     const total = Number(res.headers.get('content-length')) || 0;
     if (total > MAX_DOWNLOAD_BYTES) throw new Error(`File quá lớn (${mb(total)}); không tải.`);

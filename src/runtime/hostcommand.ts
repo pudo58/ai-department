@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 
-export interface HostEnv { platform: NodeJS.Platform; nodeExec: string; exists: (p: string) => boolean; searchPath?: string; npmExecPath?: string }
-const defaultEnv = (): HostEnv => ({ platform: process.platform, nodeExec: process.execPath, exists: existsSync, searchPath: process.env.PATH, npmExecPath: process.env.npm_execpath });
+export interface HostEnv { platform: NodeJS.Platform; nodeExec: string; exists: (p: string) => boolean; searchPath?: string; npmExecPath?: string; managedNpmCli?: string }
+const defaultEnv = (): HostEnv => ({ platform: process.platform, nodeExec: process.execPath, exists: existsSync, searchPath: process.env.PATH, npmExecPath: process.env.npm_execpath, managedNpmCli: process.env.AIDEPT_NPM_CLI });
 
 /** A private Node installed from npm has no npm of its own. Locate the CLI without executing a .cmd shell. */
 function windowsNpmScript(base: 'npm' | 'npx', command: string, env: HostEnv): string | undefined {
@@ -35,8 +35,14 @@ const SAFE_CMD_ARG = /^[A-Za-z0-9_.,:=/\\@#+*\-]+$/;
 export function resolveHostCommand(argv: readonly string[], env: HostEnv = defaultEnv()): string[] {
   const [cmd, ...rest] = argv;
   if (!cmd) throw new Error('Lệnh rỗng.');
-  if (env.platform !== 'win32') return [...argv];
   const base = path.win32.basename(cmd).toLowerCase().replace(/\.(cmd|bat|exe)$/, '');
+  if ((base === 'npm' || base === 'npx') && env.managedNpmCli && cmd === base) {
+    const script = (env.platform === 'win32' ? path.win32 : path.posix).join((env.platform === 'win32' ? path.win32 : path.posix).dirname(env.managedNpmCli), `${base}-cli.js`);
+    if (!env.exists(script)) throw new Error('Runtime npm riêng bị thiếu file. Mở lại AI Department để cài lại runtime; không dùng npm cũ thay thế.');
+    return [env.nodeExec, script, ...rest];
+  }
+  if (cmd === 'node' && env.managedNpmCli) return [env.nodeExec, ...rest];
+  if (env.platform !== 'win32') return [...argv];
   if (base === 'npm' || base === 'npx') {
     const script = windowsNpmScript(base, cmd, env);
     if (!script) throw new Error(`Không tìm thấy ${base} CLI trong bản Node đang chạy hoặc PATH. Cài Node.js kèm npm, mở lại AI Department rồi bấm Chạy tiếp.`);

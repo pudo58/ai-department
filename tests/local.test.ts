@@ -69,6 +69,7 @@ describe('host command resolution', () => {
     const app = path.join(dir, 'app'); mkdirSync(app);
     writeFileSync(path.join(dir, 'package.json'), '{"version":"test","type":"module"}');
     writeFileSync(path.join(app, 'cli.mjs'), readFileSync(path.resolve('scripts/cli.mjs')));
+    writeFileSync(path.join(app, 'runtime-bootstrap.mjs'), `export async function ensureAppRuntime() { return ${JSON.stringify({ node: nodeExec, npm: path.join(path.dirname(nodeExec), 'npm-cli.js'), bin: path.dirname(nodeExec), npmVersion: '11.21.1' })}; }`);
     writeFileSync(path.join(app, 'server.mjs'), `import { execFileSync } from 'node:child_process';
       import assert from 'node:assert/strict';
       const child = execFileSync('node', ['-p', 'process.execPath'], { encoding: 'utf8', windowsHide: true }).trim();
@@ -82,6 +83,15 @@ describe('host command resolution', () => {
       if (path.dirname(dir) !== path.resolve(tmpdir()) || !path.basename(dir).startsWith('aidept-private-node-')) throw new Error('Unexpected private-node test directory');
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+  it('prefers the managed npm over an old system npm and never falls back when it is broken', () => {
+    const managedNpmCli = 'C:\\app-runtime\\node_modules\\npm\\bin\\npm-cli.js';
+    const env = { ...win, managedNpmCli };
+    expect(resolveHostCommand(['npm', 'ci'], env)).toEqual([win.nodeExec, managedNpmCli, 'ci']);
+    expect(resolveHostCommand(['npx', 'vitest'], env)[1]).toBe('C:\\app-runtime\\node_modules\\npm\\bin\\npx-cli.js');
+    expect(resolveHostCommand(['node', 'x.js'], env)[0]).toBe(win.nodeExec);
+    expect(() => resolveHostCommand(['npm', 'ci'], { ...env, exists: () => false })).toThrow(/không dùng npm cũ/);
+    expect(resolveHostCommand(['npm', 'ci'], { ...win, platform: 'linux', managedNpmCli: '/runtime/lib/node_modules/npm/bin/npm-cli.js' })).toEqual([win.nodeExec, '/runtime/lib/node_modules/npm/bin/npm-cli.js', 'ci']);
   });
   it('finds Codex via override, then .tools, and explains how to install it otherwise', () => {
     expect(resolveCodexCommand('C:\\p', { ...win, exists: (p) => p === 'X.js' }, 'X.js')).toEqual(['C:\\node\\node.exe', 'X.js']);

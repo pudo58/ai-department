@@ -52,6 +52,7 @@ await esbuild.build({
   legalComments: 'none', logLevel: 'warning',
 });
 cpSync(path.join(root, 'scripts', 'cli.mjs'), path.join(out, 'app', 'cli.mjs'));
+await esbuild.build({ entryPoints: [path.join(root, 'src/runtime/appbootstrap.ts')], outfile: path.join(out, 'app/runtime-bootstrap.mjs'), bundle: true, platform: 'node', target: 'node18', format: 'esm', legalComments: 'none', logLevel: 'warning' });
 cpSync(path.join(root, 'src', 'runtime', 'mutation-worker.cjs'), path.join(out, 'app', 'mutation-worker.cjs'));
 cpSync(path.join(root, 'src', 'runtime', 'reproduction-worker.cjs'), path.join(out, 'app', 'reproduction-worker.cjs'));
 
@@ -71,7 +72,7 @@ writeFileSync(path.join(out, 'start.cmd'), readFileSync(path.join(root, 'scripts
 writeFileSync(path.join(out, 'start.sh'), readFileSync(path.join(root, 'scripts', 'release', 'start.sh'), 'utf8').replace(/\r\n/g, '\n'), { mode: 0o755 });
 
 // The browser driver is shipped as a bundled dependency; browsers already installed on the target are reused.
-// It installs on Node 18+: the launcher fetches its own Node 24 when the machine's Node is older.
+// It installs on Node 18+: the launcher uses a pinned official Node + npm distribution on every machine.
 const manifest = {
   name: 'ai-department', version: source.version,
   description: 'Phòng làm việc của các AI viết code (Codex, Claude Code, Antigravity) chạy trên máy bạn: giao việc, kiểm chứng, nghiệm thu.',

@@ -10,4 +10,4 @@ coverage/
 !.env.example
 test-results/
 playwright-report/
-release/
+/release/
