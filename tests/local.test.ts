@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { resolveCodexCommand, resolveHostCommand, type HostEnv } from '../src/runtime/hostcommand.js';
@@ -24,6 +24,64 @@ describe('host command resolution', () => {
     expect(() => resolveHostCommand(['build.cmd'], win)).toThrow(/\.cmd/);
     expect(() => resolveHostCommand(['npm'], { ...win, exists: () => false })).toThrow(/Không tìm thấy/);
     expect(() => resolveHostCommand([], win)).toThrow();
+  });
+  it('uses system npm with a private Node that has no npm, preserving arguments without a shell', () => {
+    const nodeExec = 'C:\\Users\\tund\\.ai-department\\runtime\\node_modules\\node\\bin\\node.exe';
+    const cli = 'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js';
+    const env = { ...win, nodeExec, searchPath: 'C:\\private;"C:\\Program Files\\nodejs"', exists: (p: string) => p === cli };
+    expect(resolveHostCommand(['npm', 'ci', '--prefix', 'C:\\project with spaces\\a&b'], env)).toEqual([nodeExec, cli, 'ci', '--prefix', 'C:\\project with spaces\\a&b']);
+  });
+  it('finds npx beside a launcher-provided npm CLI and ignores stale launcher paths', () => {
+    const cli = 'C:\\npm-prefix\\node_modules\\npm\\bin\\npx-cli.js';
+    const env = { ...win, npmExecPath: 'C:\\npm-prefix\\node_modules\\npm\\bin\\npm-cli.js', exists: (p: string) => p === cli };
+    expect(resolveHostCommand(['npx.cmd', '--no-install', 'vitest'], env)).toEqual([win.nodeExec, cli, '--no-install', 'vitest']);
+    expect(resolveHostCommand(['npx', 'vitest'], { ...env, npmExecPath: 'C:\\gone\\npm-cli.js', searchPath: 'C:\\npm-prefix' })[1]).toBe(cli);
+  });
+  it('honors an explicit npm installation and does not fall back to another npm', () => {
+    const cli = 'D:\\selected npm\\node_modules\\npm\\bin\\npm-cli.js';
+    expect(resolveHostCommand(['D:\\selected npm\\npm.cmd', '--version'], { ...win, exists: p => p === cli })[1]).toBe(cli);
+    expect(() => resolveHostCommand(['D:\\missing\\npm.cmd'], { ...win, exists: p => p.startsWith('C:') })).toThrow(/Không tìm thấy/);
+  });
+  it('ignores relative PATH entries and non-npm launcher scripts', () => {
+    const env = { ...win, npmExecPath: 'C:\\tools\\pnpm.cjs', searchPath: '.;node_modules\\.bin', exists: (p: string) => !p.startsWith('C:\\node\\') };
+    expect(() => resolveHostCommand(['npm'], env)).toThrow(/Cài Node.js kèm npm/);
+  });
+  it.skipIf(process.platform !== 'win32')('runs real npm through an isolated Node layout without an adjacent npm', () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'aidept-private-node-'));
+    const nodeExec = path.join(dir, 'runtime', 'node_modules', 'node', 'bin', 'node.exe');
+    mkdirSync(path.dirname(nodeExec), { recursive: true });
+    // A hard link reproduces the private binary layout without copying the large executable.
+    linkSync(process.execPath, nodeExec);
+    try {
+      const [exe, ...args] = resolveHostCommand(['npm', '--version'], { platform: 'win32', nodeExec, exists: existsSync, searchPath: process.env.PATH });
+      expect(exe).toBe(nodeExec);
+      expect(execFileSync(exe!, args, { encoding: 'utf8', windowsHide: true }).trim()).toMatch(/^\d+\.\d+\.\d+$/);
+    } finally {
+      if (path.dirname(dir) !== path.resolve(tmpdir()) || !path.basename(dir).startsWith('aidept-private-node-')) throw new Error('Unexpected private-node test directory');
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+  it.skipIf(process.platform !== 'win32')('puts the bootstrapped Node ahead of the old system Node for child commands', () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'aidept-private-node-'));
+    const home = path.join(dir, 'home');
+    const nodeExec = path.join(home, 'runtime', 'node_modules', 'node', 'bin', 'node.exe');
+    mkdirSync(path.dirname(nodeExec), { recursive: true });
+    const app = path.join(dir, 'app'); mkdirSync(app);
+    writeFileSync(path.join(dir, 'package.json'), '{"version":"test","type":"module"}');
+    writeFileSync(path.join(app, 'cli.mjs'), readFileSync(path.resolve('scripts/cli.mjs')));
+    writeFileSync(path.join(app, 'server.mjs'), `import { execFileSync } from 'node:child_process';
+      import assert from 'node:assert/strict';
+      const child = execFileSync('node', ['-p', 'process.execPath'], { encoding: 'utf8', windowsHide: true }).trim();
+      assert.equal(child, process.execPath); console.log('PRIVATE_NODE_CHILD_OK');`);
+    writeFileSync(path.join(app, 'old-node.mjs'), `Object.defineProperty(process.versions, 'node', { value: '18.0.0' }); await import('./cli.mjs');`);
+    linkSync(process.execPath, nodeExec);
+    try {
+      const output = execFileSync(process.execPath, [path.join(app, 'old-node.mjs'), '--no-open'], { encoding: 'utf8', windowsHide: true, timeout: 15000, env: { ...process.env, AIDEPT_HOME: home } });
+      expect(output).toContain('PRIVATE_NODE_CHILD_OK');
+    } finally {
+      if (path.dirname(dir) !== path.resolve(tmpdir()) || !path.basename(dir).startsWith('aidept-private-node-')) throw new Error('Unexpected private-node test directory');
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
   it('finds Codex via override, then .tools, and explains how to install it otherwise', () => {
     expect(resolveCodexCommand('C:\\p', { ...win, exists: (p) => p === 'X.js' }, 'X.js')).toEqual(['C:\\node\\node.exe', 'X.js']);

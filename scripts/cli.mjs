@@ -48,7 +48,11 @@ if (Number(process.versions.node.split('.')[0]) < RUNTIME_MAJOR) {
   }
   // Ctrl+C reaches both processes; the child shuts the server down, this one only waits for it.
   process.on('SIGINT', () => undefined);
-  const child = spawn(node, [fileURLToPath(import.meta.url), ...args], { stdio: 'inherit' });
+  // npm scripts and agent shells must use this Node too, rather than the older system Node.
+  const runtimeEnv = { ...process.env };
+  const pathKey = Object.keys(runtimeEnv).find((key) => key.toUpperCase() === 'PATH') ?? 'PATH';
+  runtimeEnv[pathKey] = [path.dirname(node), runtimeEnv[pathKey]].filter(Boolean).join(path.delimiter);
+  const child = spawn(node, [fileURLToPath(import.meta.url), ...args], { stdio: 'inherit', env: runtimeEnv });
   child.on('exit', (code) => process.exit(code ?? 0));
   child.on('error', (error) => { console.error(`Không chạy được ${node}: ${error.message}`); process.exit(1); });
   await new Promise(() => undefined);

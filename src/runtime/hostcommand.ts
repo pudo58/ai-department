@@ -1,15 +1,35 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 
-export interface HostEnv { platform: NodeJS.Platform; nodeExec: string; exists: (p: string) => boolean }
-const defaultEnv = (): HostEnv => ({ platform: process.platform, nodeExec: process.execPath, exists: existsSync });
+export interface HostEnv { platform: NodeJS.Platform; nodeExec: string; exists: (p: string) => boolean; searchPath?: string; npmExecPath?: string }
+const defaultEnv = (): HostEnv => ({ platform: process.platform, nodeExec: process.execPath, exists: existsSync, searchPath: process.env.PATH, npmExecPath: process.env.npm_execpath });
+
+/** A private Node installed from npm has no npm of its own. Locate the CLI without executing a .cmd shell. */
+function windowsNpmScript(base: 'npm' | 'npx', command: string, env: HostEnv): string | undefined {
+  const fromBin = (dir: string) => path.win32.join(dir, 'node_modules', 'npm', 'bin', `${base}-cli.js`);
+  // An explicitly selected npm must never silently become a different installation from PATH.
+  if (path.win32.isAbsolute(command)) {
+    const script = fromBin(path.win32.dirname(command));
+    return env.exists(script) ? script : undefined;
+  }
+  const candidates = [fromBin(path.win32.dirname(env.nodeExec))];
+  if (env.npmExecPath && path.win32.isAbsolute(env.npmExecPath) && /^npm-cli\.js$/i.test(path.win32.basename(env.npmExecPath))) {
+    candidates.push(path.win32.join(path.win32.dirname(env.npmExecPath), `${base}-cli.js`));
+  }
+  for (const entry of (env.searchPath ?? '').split(';')) {
+    const dir = entry.trim().replace(/^"(.*)"$/, '$1');
+    // Ignore relative PATH entries: repository files must not supply the harness's package manager.
+    if (path.win32.isAbsolute(dir)) candidates.push(fromBin(dir));
+  }
+  return [...new Set(candidates)].find(env.exists);
+}
 
 const BUILD_TOOLS = new Set(['mvn', 'mvnw', 'gradle', 'gradlew']);
 const SAFE_CMD_ARG = /^[A-Za-z0-9_.,:=/\\@#+*\-]+$/;
 
 /**
  * Commands run without a shell, and on Windows `npm`/`npx` are .cmd shims that cannot be spawned that way.
- * They are mapped to node + the npm CLI scripts that ship beside node; other shims fail with a clear message
+ * They are mapped to this Node + npm CLI scripts from its installation, the launcher or PATH; other shims fail with a clear message
  * instead of an opaque EINVAL.
  */
 export function resolveHostCommand(argv: readonly string[], env: HostEnv = defaultEnv()): string[] {
@@ -18,8 +38,8 @@ export function resolveHostCommand(argv: readonly string[], env: HostEnv = defau
   if (env.platform !== 'win32') return [...argv];
   const base = path.win32.basename(cmd).toLowerCase().replace(/\.(cmd|bat|exe)$/, '');
   if (base === 'npm' || base === 'npx') {
-    const script = path.win32.join(path.win32.dirname(env.nodeExec), 'node_modules', 'npm', 'bin', `${base}-cli.js`);
-    if (!env.exists(script)) throw new Error(`Không tìm thấy ${script}; hãy dùng "node" với script cụ thể thay cho ${base}.`);
+    const script = windowsNpmScript(base, cmd, env);
+    if (!script) throw new Error(`Không tìm thấy ${base} CLI trong bản Node đang chạy hoặc PATH. Cài Node.js kèm npm, mở lại AI Department rồi bấm Chạy tiếp.`);
     return [env.nodeExec, script, ...rest];
   }
   if (BUILD_TOOLS.has(base)) {
