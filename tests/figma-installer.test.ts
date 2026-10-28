@@ -5,6 +5,7 @@ import path from 'node:path';
 import { FIGMA_CATALOG, FigmaInstaller, launchCommand, type Found, type InstallerDeps } from '../src/server/figma/installer.js';
 import { Store } from '../src/server/store.js';
 import { template, waitFor } from './figma/harness.js';
+import type { SignatureResult } from '../src/server/figma/authenticode.js';
 
 const dirs: string[] = [];
 beforeAll(async () => { process.env.AIDEPT_EXPORTER_TEMPLATE = await template(); });
@@ -14,7 +15,7 @@ const ORIGIN = 'http://127.0.0.1:4310';
 const exe = 'C:\\Users\\u\\AppData\\Local\\Figma\\Figma.exe';
 
 /** Every touch on the outside world is a fake that writes down what it was asked: no installer is ever downloaded or run here. */
-function fixture(over: { found?: Found; platform?: { os: NodeJS.Platform; arch: string }; sha?: string; signature?: { valid: boolean; subject?: string; reason?: string }; exit?: number | null; timedOut?: boolean; appearsAfterInstall?: Found; gate?: Promise<void>; downloadFails?: string; cached?: boolean; origin?: string; dir?: string } = {}) {
+function fixture(over: { found?: Found; platform?: { os: NodeJS.Platform; arch: string }; sha?: string; signature?: SignatureResult; exit?: number | null; timedOut?: boolean; appearsAfterInstall?: Found; gate?: Promise<void>; downloadFails?: string; cached?: boolean; origin?: string; dir?: string } = {}) {
   const dataDir = over.dir ?? mkdtempSync(path.join(tmpdir(), 'aidept-install-'));
   if (!over.dir) dirs.push(dataDir);
   const store = new Store(':memory:');
@@ -122,6 +123,30 @@ describe('installing Figma Desktop', () => {
     expect(t.calls.filter((c) => c.startsWith('run '))).toHaveLength(1);
   });
 
+  it('keeps a checksum-verified download on PowerShell failure, blocks installation and rechecks it on retry', async () => {
+    const t = fixture({ signature: { valid: false, unavailable: true, reason: 'CouldNotAutoloadMatchingModule' }, appearsAfterInstall: { executable: exe, signed: true } });
+    const failed = await settled(t.installer, t.installer.start().id);
+    expect(failed).toMatchObject({ status: 'failed', error: { code: 'signature_check_failed' } });
+    expect(failed.error!.message).toContain('CouldNotAutoloadMatchingModule');
+    expect(existsSync(path.join(t.dataDir, 'integrations', 'figma', 'downloads', `Figma-${FIGMA_CATALOG.version}.exe`))).toBe(true);
+    expect(t.calls.some((c) => c.startsWith('run '))).toBe(false);
+    t.deps.signature = async () => { t.calls.push('signature retry'); return { valid: true, subject: 'CN=Figma, Inc.' }; };
+    const retry = await settled(t.installer, t.installer.start().id);
+    expect(retry.status).toBe('completed');
+    expect(step(retry, 'download')).toBe('skipped');
+    expect(t.calls.filter((c) => c.startsWith('download'))).toHaveLength(1);
+    expect(t.calls).toContain('signature retry');
+  });
+
+  it('does not advise uninstalling a detected Figma when the verification tool failed', async () => {
+    const t = fixture({ found: { executable: exe, signed: false, verificationError: 'PowerShell module unavailable' } });
+    const job = await settled(t.installer, t.installer.start().id);
+    expect(job.error).toMatchObject({ code: 'signature_check_failed', message: expect.stringContaining('PowerShell module unavailable') });
+    expect(job.error!.hint).toContain('Chưa cần gỡ');
+    expect((await t.installer.desktopState()).note).toContain('PowerShell module unavailable');
+    expect(t.calls).toHaveLength(0);
+  });
+
   it('after a timeout looks at what is really installed: success if the app is there, a clear failure if not', async () => {
     const there = fixture({ timedOut: true, appearsAfterInstall: { executable: exe, version: '126.9.16', signed: true } });
     const ok = await settled(there.installer, there.installer.start().id);
@@ -193,7 +218,7 @@ describe('the plugin folder', () => {
     await t.installer.prepareBundle();
     expect(t.installer.bundleState()).toMatchObject({ state: 'prepared', origin: ORIGIN });
     const manifest = JSON.parse(readFileSync(path.join(t.installer.bundleDir, 'manifest.json'), 'utf8'));
-    expect(manifest).toMatchObject({ editorType: ['figma'], documentAccess: 'dynamic-page', networkAccess: { allowedDomains: ['none'], devAllowedDomains: [ORIGIN] } });
+    expect(manifest).toMatchObject({ editorType: ['figma'], documentAccess: 'dynamic-page', networkAccess: { allowedDomains: ['none'], devAllowedDomains: ['http://localhost:4310'] } });
     expect(manifest.id).toBeUndefined();
     const other = new FigmaInstaller({ dataDir: t.dataDir, store: t.store, origin: 'http://127.0.0.1:4999', deps: t.deps });
     expect(other.bundleState().state).toBe('stale');
@@ -209,17 +234,36 @@ describe('the plugin folder', () => {
 
   it('never lets the UI reach an origin other than this instance on loopback', async () => {
     const { prepareBundle } = await import('../plugins/figma-exporter/build.mjs');
-    for (const bad of ['https://evil.example', 'http://0.0.0.0:4310', 'http://127.0.0.1', 'http://127.0.0.1:4310/x', '*']) {
+    for (const bad of ['https://evil.example', 'http://0.0.0.0:4310', 'http://127.0.0.1', 'http://127.0.0.1:4310/x', '*', 'http://localhost:0', 'http://localhost:65536', 'http://localhost:04310', 'http://localhost:4310?x=1', 'http://localhost.evil.example:4310', 'http://localhost@evil.example:4310']) {
       expect(() => prepareBundle({ templateDir: process.env.AIDEPT_EXPORTER_TEMPLATE, outDir: path.join(tmpdir(), 'aidept-never'), origin: bad }), bad).toThrow(/Origin/);
     }
     const out = mkdtempSync(path.join(tmpdir(), 'aidept-bundle-')); dirs.push(out);
     const info = prepareBundle({ templateDir: process.env.AIDEPT_EXPORTER_TEMPLATE, outDir: out, origin: ORIGIN });
     const ui = readFileSync(path.join(out, 'ui.html'), 'utf8');
-    expect(ui).toContain(`"origin":"${ORIGIN}"`);
+    expect(ui).toContain('"origin":"http://localhost:4310"');
+    expect(ui).not.toContain(`"origin":"${ORIGIN}"`);
     expect(ui).toContain(info.bundleHash);
     expect(ui).not.toContain('__AIDEPT_CONFIG__');
     expect(readFileSync(path.join(out, 'code.js'), 'utf8')).not.toMatch(/\brequire\(|\bimport\s*\(/);
   });
+
+  it.each(['http://127.0.0.1:4310', 'http://localhost:4310', 'http://[::1]:4310'])(
+    'uses the same Figma-compatible localhost permission and connection URL for %s', async (origin) => {
+      const { prepareBundle, verifyBundle } = await import('../plugins/figma-exporter/build.mjs');
+      const out = mkdtempSync(path.join(tmpdir(), 'aidept-localhost-')); dirs.push(out);
+      const info = prepareBundle({ templateDir: process.env.AIDEPT_EXPORTER_TEMPLATE, outDir: out, origin });
+      const manifest = JSON.parse(readFileSync(path.join(out, 'manifest.json'), 'utf8'));
+      expect(manifest.networkAccess).toMatchObject({ allowedDomains: ['none'], devAllowedDomains: ['http://localhost:4310'] });
+      expect(readFileSync(path.join(out, 'ui.html'), 'utf8')).toContain('"origin":"http://localhost:4310"');
+      expect(readFileSync(path.join(out, 'README.md'), 'utf8')).toContain('http://localhost:4310');
+      expect(info.origin).toBe(origin);
+      expect(verifyBundle(out).ok).toBe(true);
+      const other = prepareBundle({ templateDir: process.env.AIDEPT_EXPORTER_TEMPLATE, outDir: out, origin: 'http://127.0.0.1:4999' });
+      expect(other.bundleHash).not.toBe(info.bundleHash);
+      expect(readFileSync(path.join(out, 'ui.html'), 'utf8')).toContain('"origin":"http://localhost:4999"');
+      expect(JSON.parse(readFileSync(path.join(out, 'manifest.json'), 'utf8')).networkAccess.devAllowedDomains).toEqual(['http://localhost:4999']);
+    },
+  );
 
   it('opens only the detected, verified executable and only this instance\'s plugin folder, with no arguments from anyone', async () => {
     const t = fixture({ found: { executable: exe, version: '1', signed: true } });

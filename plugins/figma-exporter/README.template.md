@@ -15,9 +15,17 @@ Plugin Figma đọc thiết kế trong file đang mở và gửi cho AI Departme
 
 Plugin này chỉ nói chuyện với `__ORIGIN__`. Nếu AI Department đổi cổng, bấm lại **Cài Figma Desktop & Exporter** để tạo bản mới rồi import lại manifest.
 
+Kết nối của plugin dùng `localhost` vì Figma không nhận địa chỉ IP trong `devAllowedDomains`. Đây vẫn là server trên máy này, dù trang AI Department mở bằng `127.0.0.1`. Không sửa riêng manifest: quyền mạng và URL trong UI phải khớp nhau; hãy tạo lại cả bộ Exporter.
+
 ## Cập nhật
 
 Import lại `manifest.json` từ thư mục mới; Figma dùng bản vừa import.
+
+Từ v1.1, Section có ảnh tổng quan và ảnh riêng cho các màn hình cấp đầu bên trong Section/Group. Frame con bên trong một màn hình không được tính thành màn hình khác. Ảnh màn hình giữ tối đa chiều ngang 2048px, cạnh dài 8192px và 16 triệu pixel; màn hình dài có vùng chi tiết được tạo trên server từ PNG đã xuất. Gallery ghi tên, node ID và kích thước; ảnh bị giới hạn hoặc không xuất được sẽ được báo. Tối đa 100 ảnh nguồn mỗi lượt, hãy chia phạm vi nếu vượt giới hạn.
+
+Snapshot cũ được giữ nguyên: cập nhật plugin, ghép đôi rồi export lại Section để có ảnh từng màn hình. Ảnh tham chiếu đi cùng dữ liệu node/style/asset, không thay thế kiểm chứng giao diện sau triển khai.
+
+Từ v1.1.1, vector có node hoặc layer cha được đọc là `visible=false` không gọi xuất SVG; chúng được ghi rõ là thiếu SVG do đang ẩn, vẫn cần xác nhận giới hạn. Lỗi SVG chưa xác định nguyên nhân được giữ riêng. Trong tab Giới hạn của snapshot, mục Chi tiết cảnh báo hỗ trợ tìm tên/node ID, xem component gốc/layer đang ẩn và mở bản ghi của node. Phần tra cứu cũng dùng được với snapshot cũ mà không thay đổi hash hay các xác nhận đã lưu.
 
 ## Giới hạn của v1
 

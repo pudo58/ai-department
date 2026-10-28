@@ -114,6 +114,17 @@ describe('checks', () => {
     expect(summarizeCheck(input, [attempt(0, { incomplete: true })]).status).toBe('incomplete');
   });
   it('a missing report is incomplete even when the exit code is zero', () => expect(summarizeCheck(input, [attempt(0, { report: undefined })]).status).toBe('incomplete'));
+  it('distinguishes an absent report from an invalid report or missing test identities', () => {
+    const missing = summarizeCheck(input, [attempt(1, { report: undefined, incomplete: true })]);
+    expect(missing.status).toBe('incomplete');
+    expect(missing.counts).toBeUndefined();
+    expect(missing.issues?.filter(i => i.kind === 'report_error')).toHaveLength(1);
+    expect(missing.issues?.[0]?.message).toContain('Không tạo được report');
+    expect(missing.issues?.some(i => i.message.includes('định danh'))).toBe(false);
+    const invalid = summarizeCheck(input, [attempt(0, { report: {} })]);
+    expect(invalid.issues?.[0]?.message).toContain('không đúng định dạng');
+    expect(invalid.status).toBe('incomplete');
+  });
   it('only a real failure earns the single retry', () => {
     expect(shouldRetry(attempt(1))).toBe(true);
     expect(shouldRetry(attempt(1, { incomplete: true }))).toBe(false);

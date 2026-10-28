@@ -28,6 +28,7 @@ export interface SkillCandidate {
 }
 export interface Recipe { id: string; command: string[]; required: boolean; timeoutMs: number; reportPath?: string }
 export interface ProjectProfile {
+  visualCheck?: import('./visual.js').VisualProfile | null;
   id: string; name: string; repository: string; version: number; approved: boolean;
   /** Default design snapshot for new runs of this project; a run may pick another or none. */
   designSource?: { snapshotId: string };
@@ -127,6 +128,7 @@ export interface RunSummary {
 }
 export interface Independence { independent: boolean; reason: string }
 export interface RunDetail {
+  visual?: import('./visual.js').VisualReport;
   /** Set when automatic fallbacks weakened this run's evidence; see degradedOf in core/report.ts. */
   degraded?: import('../core/report.js').DegradedRun;
   findingReplays?: import('./reproduction.js').FindingReplay[];

@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import type { DependencyRecord } from '../../shared/figma.js';
-import { DESIGN_POLICY_VERSION, type DesignBinding, type DesignInputReceipt, type DesignReportFacts, type DesignSnapshot } from '../../shared/design.js';
+import { DESIGN_POLICY_VERSION, type DesignBinding, type DesignInputReceipt, type DesignReportFacts, type DesignSnapshot, type SnapshotPreviews } from '../../shared/design.js';
 import type { Role, Run } from '../../shared/types.js';
 import { DESIGN_BLOCK_NOTE, FIGMA_DATA_NOTICE, designRefProblems, designSummary, idHash, sha256Hex, type SummaryInput } from '../../core/design.js';
 import { HttpError, Blocked } from '../run/support.js';
@@ -10,6 +10,7 @@ import type { SnapshotReader, SnapshotStore } from './snapshots.js';
 
 const MOUNT_DOCKER = '/aidept-design';
 const MAX_RECEIPT_FILES = 400;
+const INPUT_VERSION = 2;
 
 /** Hash of a folder: its relative paths and the hash of each file, so any added, removed or changed file changes it. */
 export function hashDir(dir: string): { hash: string; files: { path: string; sha256: string }[] } {
@@ -87,7 +88,9 @@ export class DesignInputs implements DesignProvider {
     const dir = this.dirFor(run, binding);
     const expectedFile = `${dir}.sha256`;
     const current = existsSync(dir) ? hashDir(dir).hash : '';
-    if (!current || !existsSync(expectedFile) || readFileSync(expectedFile, 'utf8').trim() !== current) this.build(dir, expectedFile, snapshot, reader, binding);
+    let version: number | undefined;
+    try { version = JSON.parse(readFileSync(path.join(dir, 'index.json'), 'utf8')).inputVersion; } catch { /* no cached input */ }
+    if (version !== INPUT_VERSION || !current || !existsSync(expectedFile) || readFileSync(expectedFile, 'utf8').trim() !== current) this.build(dir, expectedFile, snapshot, reader, binding);
     const { hash, files } = hashDir(dir);
     const docker = run.configSnapshot.executionMode !== 'local';
     const mountPath = docker ? MOUNT_DOCKER : dir;
@@ -119,6 +122,7 @@ export class DesignInputs implements DesignProvider {
       components: [...index.components.map((c) => ({ id: c.id, name: c.name, axes: c.axes })), ...deps.flatMap((d) => (d.k === 'component' && d.scope !== 'unavailable' && !index.components.some((c) => c.id === d.id) ? [{ id: d.id, name: d.name, axes: [] as string[] }] : []))],
       tokens: { styles: deps.filter((d) => d.k === 'style').length, variables: deps.filter((d) => d.k === 'variable').length, collections: deps.flatMap((d) => (d.k === 'collection' ? [d.name] : [])) },
       assets: deps.flatMap((d) => (d.k === 'asset' && d.status === 'stored' ? [{ id: d.id, kind: d.assetKind, mime: d.mime, bytes: d.bytes }] : [])),
+      previews: this.previewsFor(snapshot, reader, binding).images,
       mountPath,
     };
   }
@@ -126,6 +130,22 @@ export class DesignInputs implements DesignProvider {
   private targetsOf(reader: SnapshotReader, binding: DesignBinding) {
     const ids = binding.targetIds.length ? binding.targetIds : reader.roots.map((r) => r.id);
     return ids.flatMap((id) => { const row = reader.row(id); return row ? [row] : []; });
+  }
+
+  private previewsFor(snapshot: DesignSnapshot, reader: SnapshotReader, binding: DesignBinding): SnapshotPreviews {
+    const targets = this.targetsOf(reader, binding);
+    const wanted = new Set<string>();
+    const ancestors = new Set<string>();
+    for (const target of targets) {
+      for (const row of reader.subtree(target.id)) wanted.add(row.id);
+      // A target inside a screen still needs its containing screen for visual context.
+      for (let row = reader.row(target.id); row; row = row.parentId ? reader.row(row.parentId) : undefined) {
+        if (ancestors.has(row.id)) break;
+        ancestors.add(row.id); wanted.add(row.id);
+      }
+    }
+    const catalog = this.snapshots.previews(snapshot.id);
+    return { images: catalog.images.filter((p) => wanted.has(p.nodeId)), warnings: catalog.warnings };
   }
 
   /** The run's own copy of what its targets need. Rebuilt from the snapshot whenever it does not match what was written. */
@@ -158,9 +178,11 @@ export class DesignInputs implements DesignProvider {
       if (d.k === 'asset' && d.status === 'stored' && d.source.nodeId && inTarget.has(d.source.nodeId)) assets.add(d.id);
     }
     for (const file of snapshot.files.filter((f) => f.kind === 'asset')) { const id = path.basename(file.path).replace(/\.[^.]+$/, ''); if (assets.has(id)) copy(file.path); }
+    const previews = this.previewsFor(snapshot, reader, binding);
+    for (const preview of previews.images) { copy(preview.path); assets.add(path.basename(preview.path, '.png')); }
     copy('review.json');
-    writeFileSync(path.join(dir, 'index.json'), JSON.stringify({ schemaVersion: 1, snapshotId: snapshot.id, snapshotHash: snapshot.snapshotHash, limited: snapshot.limited, source: { fileName: snapshot.source.fileName, identity: snapshot.source.identity }, targets: index, components: [...wantedComponents], assets: [...assets], notice: FIGMA_DATA_NOTICE }, null, 1));
-    writeFileSync(path.join(dir, 'README.md'), `# Dữ liệu thiết kế cho task\n\n${FIGMA_DATA_NOTICE}\n\nThư mục này chỉ đọc. Bắt đầu từ \`index.json\`; mỗi target có \`nodes.ndjson\` (mọi trường đã đọc, kèm trạng thái từng trường) và \`tree.json\`.\n`);
+    writeFileSync(path.join(dir, 'index.json'), JSON.stringify({ schemaVersion: 1, inputVersion: INPUT_VERSION, snapshotId: snapshot.id, snapshotHash: snapshot.snapshotHash, limited: snapshot.limited, source: { fileName: snapshot.source.fileName, identity: snapshot.source.identity }, targets: index, components: [...wantedComponents], assets: [...assets], previews, notice: FIGMA_DATA_NOTICE }, null, 1));
+    writeFileSync(path.join(dir, 'README.md'), `# Dữ liệu thiết kế cho task\n\n${FIGMA_DATA_NOTICE}\n\nThư mục này chỉ đọc. Bắt đầu từ \`index.json\`; mỗi target có \`nodes.ndjson\` (mọi trường đã đọc, kèm trạng thái từng trường) và \`tree.json\`.\n\nMục \`previews.images\` nối node ID với ảnh tổng quan, ảnh màn hình và vùng chi tiết. Đọc ảnh của target cùng dữ liệu node/style/asset; ảnh tham chiếu không chứng minh implementation đã khớp hình thức.\n`);
     writeFileSync(expectedFile, hashDir(dir).hash);
   }
 

@@ -171,11 +171,12 @@ export class ExporterHub {
 
   connectionState(): ConnectionState {
     const now = this.now();
+    // A requested replacement code must remain visible even while the old session still exists.
+    if (this.pairing && now <= this.pairing.expiresAt) return { state: 'pairing', pairingCode: { code: this.pairing.code, expiresAt: new Date(this.pairing.expiresAt).toISOString() } };
     if (this.session) {
       const quiet = now - this.session.lastContactAt > LOST_CONTACT_MS + HEARTBEAT_MS;
       return { state: quiet ? 'interrupted' : 'connected', instanceName: this.session.instanceName, hello: this.session.hello, connectedAt: this.session.connectedAt, lastContactAt: new Date(this.session.lastContactAt).toISOString(), ...(this.activeJobId ? { activeJobId: this.activeJobId } : {}) };
     }
-    if (this.pairing && now <= this.pairing.expiresAt) return { state: 'pairing', pairingCode: { code: this.pairing.code, expiresAt: new Date(this.pairing.expiresAt).toISOString() } };
     if (this.lastSession) return { state: 'interrupted', instanceName: this.lastSession.instanceName, hello: this.lastSession.hello, connectedAt: this.lastSession.connectedAt, lastContactAt: new Date(this.lastSession.lastContactAt).toISOString() };
     return { state: 'unpaired' };
   }

@@ -6,6 +6,9 @@ import type { ChunkKind, HelloInfo, PageInfo, PluginCommand, PluginEvent, RootIn
  */
 export type StartExport = Extract<PluginCommand, { type: 'START_EXPORT' }>;
 
+/** Identifies one UI instance across Figma's message relay; independent of browser WindowProxy identity. */
+export type BridgeMessage<T> = T & { bridgeId: string };
+
 export type UiToMain =
   | { type: 'HELLO'; reqId: number }
   | { type: 'LIST_PAGES'; reqId: number }

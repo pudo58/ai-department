@@ -32,6 +32,7 @@ export function registerProjectRoutes({ app, store, orchestrator, idOf, assertPr
     await assertProjectDir(repository);
     const project: ProjectProfile = {
       id: `prj_${randomUUID().slice(0, 8)}`, name: body.name, repository, version: 1, approved: false,
+      ...(body.visualCheck ? { visualCheck: body.visualCheck } : {}),
       modules: body.modules, protectedPaths: DEFAULT_PROTECTED, checks: body.checks, roles: body.roles, runnerImage: body.runnerImage,
       setupCommand: body.setupCommand, agentNetwork: body.agentNetwork, executionMode: body.executionMode, guidance: body.guidance,
       mutationRoot: body.mutationRoot, regressionDir: body.regressionDir || undefined, regressionRecipe: body.regressionRecipe, contextEnabled: body.contextEnabled, contextBudget: body.contextBudget, previewCommand: body.previewCommand, allowScaffold: body.allowScaffold,
@@ -49,7 +50,7 @@ export function registerProjectRoutes({ app, store, orchestrator, idOf, assertPr
   app.patch('/api/projects/:id', async (request) => {
     const project = store.projects.get(idOf(request));
     if (!project) throw new HttpError(404, 'Project không tồn tại.');
-    const patch = ProjectBody.pick({ name: true, modules: true, checks: true, singleBudgetUsd: true, setupCommand: true, executionMode: true, guidance: true, contextEnabled: true, contextBudget: true, previewCommand: true, allowScaffold: true, mutationRoot: true, regressionDir: true, regressionRecipe: true, roles: true }).partial().parse(request.body);
+    const patch = ProjectBody.pick({ name: true, modules: true, checks: true, singleBudgetUsd: true, setupCommand: true, executionMode: true, guidance: true, contextEnabled: true, contextBudget: true, previewCommand: true, allowScaffold: true, mutationRoot: true, regressionDir: true, regressionRecipe: true, roles: true, visualCheck: true }).partial().parse(request.body);
     // The schema fills defaults for fields the client did not send; only fields actually present may change anything,
     // or editing `modules` would silently reset `setupCommand` and `executionMode`.
     const sent = new Set(Object.keys((request.body ?? {}) as object));

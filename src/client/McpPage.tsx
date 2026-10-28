@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { DesignSnapshot, FigmaExportJob, InstallJob, IntegrationSummary, SnapshotDiff } from '../shared/design';
 import type { ExportIssue, HelloInfo, RootInfo } from '../shared/figma';
 import { DEFAULT_LIMITS } from '../shared/figma';
-import { coverageLabel, identityLabel } from '../shared/designlabels';
+import { coverageLabel, identityLabel, issueLabel } from '../shared/designlabels';
 import { api } from './api';
+import { DesignPreviews } from './DesignPreviews';
+import { DesignDiagnostics } from './DesignDiagnostics';
 import { Badge, Empty, Field, Icon, Modal, PageHeader, ago, dateTime } from './ui';
 
 type Listed = DesignSnapshot & { references: { projects: string[]; runs: string[] } };
@@ -97,10 +99,10 @@ export function McpPage() {
       {installing && <button className="button" onClick={() => void act('cancel-install', () => api(`/api/integrations/figma/install/${install.id}/cancel`, 'POST'))}>Hủy</button>}
     </section>}
 
-    <section className="panel" aria-label="Export">
+    <section className="panel mcp-record-panel" aria-label="Export">
       <div className="panel-heading"><h2>Export gần đây</h2></div>
       {!jobs.length && <Empty title="Chưa có export nào">Kết nối Figma rồi bấm “Chọn nguồn và phạm vi”.</Empty>}
-      <ol className="project-list">{jobs.slice(0, 6).map((j) => <li className="project-entry" key={j.id}>
+      {!!jobs.length && <ol className="project-list mcp-record-list">{jobs.slice(0, 6).map((j) => <li className="project-entry" key={j.id}>
         <div className="project-main">
           <div className="project-name"><h3>{j.source.fileName}</h3><Badge tone={j.status === 'review_ready' ? 'good' : ACTIVE.includes(j.status) ? 'blue' : j.status === 'partial' ? 'warn' : 'bad'} live={ACTIVE.includes(j.status)}>{EXPORT_LABEL[j.status] ?? j.status}</Badge><Badge>{j.scope === 'file' ? 'Toàn bộ file' : j.scope === 'pages' ? 'Trang' : 'Frame đã chọn'}</Badge></div>
           <p className="project-summary"><span>{j.counts.nodes} node</span><span>{mb(j.counts.bytes)}</span><span>{ago(j.createdAt)}</span>{j.phase && <span>{j.phase}</span>}</p>
@@ -110,13 +112,13 @@ export function McpPage() {
           {ACTIVE.includes(j.status) && <button className="button small" onClick={() => void act('cancel', () => api(`/api/design-exports/${j.id}/cancel`, 'POST'))}>Hủy</button>}
           {j.snapshotId && <button className="button small primary" onClick={() => setOpen(j.snapshotId!)}>Xem snapshot</button>}
         </div>
-      </li>)}</ol>
+      </li>)}</ol>}
     </section>
 
-    <section className="panel" aria-label="Thư viện snapshot">
+    <section className="panel mcp-record-panel" aria-label="Thư viện snapshot">
       <div className="panel-heading"><h2>Thư viện snapshot</h2></div>
       {!snapshots.length && <Empty title="Chưa có snapshot">Snapshot được tạo sau mỗi export và chỉ dùng cho task khi bạn đã duyệt.</Empty>}
-      <ol className="project-list">{snapshots.map((s) => {
+      {!!snapshots.length && <ol className="project-list mcp-record-list">{snapshots.map((s) => {
         const label = coverageLabel(s.coverage, s.issues);
         return <li className="project-entry" key={s.id}>
           <div className="project-main">
@@ -132,7 +134,7 @@ export function McpPage() {
             <button className="button small" disabled={s.references.projects.length + s.references.runs.length > 0} title={s.references.projects.length + s.references.runs.length ? 'Còn được dự án hoặc task tham chiếu' : 'Xóa snapshot'} onClick={() => void act('delete', () => api(`/api/design-snapshots/${s.id}`, 'DELETE'), 'Đã xóa snapshot.')}>Xóa</button>
           </div>
         </li>;
-      })}</ol>
+      })}</ol>}
     </section>
 
     {exporting && <ExportDialog snapshots={snapshots} onClose={() => setExporting(false)} onStarted={async () => { setExporting(false); await load(); }}/>}
@@ -222,6 +224,7 @@ export function SnapshotDialog({ id, others, onClose, onChanged }: { id: string;
   const [tab, setTab] = useState<'inventory' | 'issues' | 'nodes' | 'diff'>('inventory');
   const [acked, setAcked] = useState<{ hash: string; ids: string[] }>({ hash: '', ids: [] });
   const [busy, setBusy] = useState(false);
+  const [diagnosticNodeId, setDiagnosticNodeId] = useState<string>();
   const load = useCallback(() => api<NonNullable<typeof snap>>(`/api/design-snapshots/${id}`).then(setSnap).catch((e) => setError((e as Error).message)), [id]);
   useEffect(() => { void load(); }, [load]);
   if (!snap) return <Modal title="Snapshot" onClose={onClose}><div className="modal-body">{error ? <div className="banner error" role="alert">{error}</div> : <p className="muted">Đang tải…</p>}</div></Modal>;
@@ -254,19 +257,21 @@ export function SnapshotDialog({ id, others, onClose, onChanged }: { id: string;
           <tr><th>Nhất quán</th><td>{c.consistency === 'unchanged_across_passes' ? 'Không thấy thay đổi qua các lượt đối chiếu (Figma không khóa tài liệu)' : c.consistency === 'source_changed' ? 'Nguồn đã thay đổi lúc đọc' : 'Chưa đối chiếu'}</td></tr>
         </tbody></table>
         <p className="muted">{snap.counts.nodes} node · {snap.counts.pages} trang · {snap.counts.components} component · {snap.counts.styles} style · {snap.counts.variables} variable · {snap.counts.assets} tài nguyên · hash <span className="mono">{snap.snapshotHash.slice(0, 12)}</span></p>
-        <Previews snap={snap}/>
+        <DesignPreviews snap={snap}/>
       </>}
 
       {tab === 'issues' && <>
         {blockers.length > 0 && <><h3>Lỗi chặn (không thể duyệt)</h3><ul>{blockers.map((i) => <li key={i.id}><Badge tone="bad">Chặn</Badge> {i.message}</li>)}</ul></>}
-        {limits.length > 0 && <><h3>Giới hạn cần bạn xác nhận từng mục</h3><ul className="checklist">{limits.map((i) => <li key={i.id}><label><input type="checkbox" disabled={snap.status === 'published'} checked={snap.status === 'published' ? !!snap.publish?.acknowledgedIssueIds.includes(i.id) : chosen.includes(i.id)}
-          onChange={(e) => setAcked({ hash: snap.snapshotHash, ids: e.target.checked ? [...chosen, i.id] : chosen.filter((x) => x !== i.id) })}/> {i.message}</label></li>)}</ul>
+        {limits.length > 0 && <><h3>Giới hạn cần bạn xác nhận từng mục</h3><ul className="checklist">{limits.map((i) => <li key={i.id} className="snapshot-limit"><div><label><input type="checkbox" disabled={snap.status === 'published'} checked={snap.status === 'published' ? !!snap.publish?.acknowledgedIssueIds.includes(i.id) : chosen.includes(i.id)}
+          onChange={(e) => setAcked({ hash: snap.snapshotHash, ids: e.target.checked ? [...chosen, i.id] : chosen.filter((x) => x !== i.id) })}/> {issueLabel(i)}</label>
+          {issueLabel(i) !== i.message && <details className="limit-original"><summary>Thông báo gốc</summary><p>{i.message}</p></details>}</div></li>)}</ul>
           <p className="muted">Task cần dữ liệu thiếu này vẫn bị chặn trước khi gọi AI; xác nhận ở đây không vượt được yêu cầu bắt buộc của hợp đồng.</p></>}
+        <DesignDiagnostics snapshotId={snap.id} onNode={(nodeId) => { setDiagnosticNodeId(nodeId); setTab('nodes'); }}/>
         {infos.length > 0 && <><h3>Ghi chú</h3><ul>{infos.map((i) => <li key={i.id}>{i.message}</li>)}</ul></>}
         {!snap.issues.length && <p>Không có issue nào.</p>}
       </>}
 
-      {tab === 'nodes' && <NodeBrowser snapshotId={snap.id} roots={snap.roots}/>}
+      {tab === 'nodes' && <NodeBrowser snapshotId={snap.id} roots={snap.roots} initialNodeId={diagnosticNodeId}/>}
       {snap.status === 'published' && <ProjectDefault snapshotId={snap.id}/>}
       {tab === 'diff' && <DiffTab headId={snap.id} others={others}/>}
     </div>
@@ -298,20 +303,20 @@ function ProjectDefault({ snapshotId }: { snapshotId: string }) {
   </div>;
 }
 
-function Previews({ snap }: { snap: DesignSnapshot }) {
-  const previews = snap.files.filter((f) => f.kind === 'asset' && f.mime === 'image/png').slice(0, 6);
-  if (!previews.length) return null;
-  return <div className="preview-strip" aria-label="Ảnh xem trước">{previews.map((f) => <img key={f.id} alt="Ảnh xem trước (không phải dữ liệu gốc)" src={`/api/design-snapshots/${snap.id}/files/${f.id}`} width={96} height={96}/>)}</div>;
-}
-
-function NodeBrowser({ snapshotId, roots }: { snapshotId: string; roots: RootInfo[] }) {
+function NodeBrowser({ snapshotId, roots, initialNodeId }: { snapshotId: string; roots: RootInfo[]; initialNodeId?: string }) {
   const [rows, setRows] = useState<NodeRow[]>([]);
   const [trail, setTrail] = useState<NodeRow[]>([]);
   const [record, setRecord] = useState<NodeRecord | null>(null);
   const [error, setError] = useState('');
-  const first = useRef(true);
   const children = useCallback((parent?: string) => api<NodeRow[]>(`/api/design-snapshots/${snapshotId}/tree${parent ? `?parent=${encodeURIComponent(parent)}` : ''}`).then(setRows).catch((e) => setError((e as Error).message)), [snapshotId]);
-  useEffect(() => { if (first.current) { first.current = false; void children(); } }, [children]);
+  useEffect(() => {
+    if (!initialNodeId) { void children(); return; }
+    let active = true;
+    Promise.all([api<NodeRecord>(`/api/design-snapshots/${snapshotId}/nodes/${encodeURIComponent(initialNodeId)}`), api<NodeRow[]>(`/api/design-snapshots/${snapshotId}/tree?parent=${encodeURIComponent(initialNodeId)}`)])
+      .then(([node, list]) => { if (active) { setRecord(node); setRows(list); setTrail([{ id: node.id, name: node.name, type: node.type, hasChildren: list.length > 0 }]); } })
+      .catch((e) => { if (active) setError((e as Error).message); });
+    return () => { active = false; };
+  }, [snapshotId, initialNodeId, children]);
   const enter = (n: NodeRow) => { setTrail([...trail, n]); void children(n.id); void api<NodeRecord>(`/api/design-snapshots/${snapshotId}/nodes/${encodeURIComponent(n.id)}`).then(setRecord).catch((e) => setError((e as Error).message)); };
   return <div>
     {error && <div className="banner error" role="alert">{error}</div>}

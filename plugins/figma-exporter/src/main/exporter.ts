@@ -1,6 +1,6 @@
 import {
-  MAX_UNACKED_CHUNKS, NODES_PER_SLICE, PLUGIN_VERSION, PREVIEW_MAX_EDGE, PROTOCOL_VERSION, READER_VERSION, SLICE_MS,
-  canonicalJson, type ChunkKind, type DependencyRecord, type ExportLimits, type FieldValue, type HelloInfo, type InventoryRecord, type Json, type NodeRecord, type PageInfo, type PluginEvent, type RootInfo,
+  MAX_UNACKED_CHUNKS, NODES_PER_SLICE, PLUGIN_VERSION, PREVIEW_MAX_EDGE, PREVIEW_MAX_PIXELS, SCREEN_PREVIEW_MAX_EDGE, PROTOCOL_VERSION, READER_VERSION, SLICE_MS,
+  canonicalJson, hiddenNode, type NodeVisibility, type ChunkKind, type DependencyRecord, type ExportLimits, type FieldValue, type HelloInfo, type InventoryRecord, type Json, type NodeRecord, type PageInfo, type PluginEvent, type RootInfo,
 } from '../../../../src/shared/figma.js';
 import { sha256Bytes, sha256Text, utf8 } from '../../../../src/shared/sha256.js';
 import type { FinishedSummary, MainToUi, StartExport } from '../messages.js';
@@ -23,7 +23,7 @@ export interface Host {
 
 type Any = Record<string, any>;
 const FLUSH_BYTES = 192 * 1024;
-const PREVIEW_ROOT_TYPES = new Set(['FRAME', 'COMPONENT', 'COMPONENT_SET', 'SECTION']);
+const SCREEN_TYPES = new Set(['FRAME', 'COMPONENT', 'COMPONENT_SET', 'INSTANCE']);
 const VECTOR_EXPORT_TYPES = new Set(['VECTOR', 'BOOLEAN_OPERATION']);
 const MAX_VECTOR_EXPORTS = 2000, MAX_PREVIEWS = 100;
 const STYLE_FIELDS: Record<string, string[]> = {
@@ -181,6 +181,7 @@ export class Exporter {
       phase('reading');
       const refs = new References();
       const inScope = new Set(list.map((n) => String(n.id)));
+      const visibility = new Map<string, NodeVisibility>();
       let sliceStart = this.host.now(), sliceCount = 0;
       for (const node of list) {
         const id = String(node.id);
@@ -188,6 +189,8 @@ export class Exporter {
         try { ({ fields, groups } = await readNodeFields(node, { mixed: figma.mixed, refs })); }
         catch (error) { fields = { 'common.name': fieldError(error, 'readNodeFields') }; groups = { common: 'partial' }; errors.push({ code: 'internal', message: `Node ${id}: ${String((error as Error)?.message ?? error).slice(0, 200)}` }); }
         const inv = this.inventoryOf(node, pageOf, depthOf);
+        const visible = fields['common.visible'];
+        visibility.set(id, { parentId: inv.parentId, visible: visible?.s === 'read' && typeof visible.v === 'boolean' ? visible.v : undefined });
         const core = { id, type: inv.type, name: String(node.name ?? ''), pageId: inv.pageId, parentId: inv.parentId, index: inv.index, depth: depthOf.get(id) ?? 0, childIds: inv.childIds, groups, fields, k: 'node' as const };
         const record: NodeRecord = { ...core, hash: sha256Text(canonicalJson(core)) };
         quick.set(id, this.quickHash(node, figma.mixed));
@@ -206,7 +209,7 @@ export class Exporter {
       phase('assets');
       const assetRecord = async (rec: Extract<DependencyRecord, { k: 'asset' }>) => { assetCount++; await dependency(rec); };
       await this.readImages(cmd.limits, refs, assetRecord, async (rec, bytes) => { if (!sentAssets.has(rec.id)) { sentAssets.add(rec.id); await sendAsset(rec.id, bytes); } }, dependency, yieldNow, sentAssets);
-      await this.readVectors(cmd.limits, list, assetRecord, async (rec, bytes) => { sentAssets.add(rec.id); await sendAsset(rec.id, bytes); }, yieldNow);
+      await this.readVectors(cmd.limits, list, visibility, assetRecord, async (rec, bytes) => { sentAssets.add(rec.id); await sendAsset(rec.id, bytes); }, yieldNow);
       await this.readPreviews(cmd, roots, assetRecord, async (rec, bytes) => { if (!sentAssets.has(rec.id)) { sentAssets.add(rec.id); await sendAsset(rec.id, bytes); } }, yieldNow);
       await flush('dependencies', true);
 
@@ -402,13 +405,21 @@ export class Exporter {
     }
   }
 
-  private async readVectors(limits: ExportLimits, list: Any[], asset: (r: Extract<DependencyRecord, { k: 'asset' }>) => Promise<void>, send: (r: Extract<DependencyRecord, { k: 'asset' }>, bytes: Uint8Array) => Promise<void>, yieldNow: () => Promise<void>): Promise<void> {
-    let n = 0;
+  private async readVectors(limits: ExportLimits, list: Any[], visibility: ReadonlyMap<string, NodeVisibility>, asset: (r: Extract<DependencyRecord, { k: 'asset' }>) => Promise<void>, send: (r: Extract<DependencyRecord, { k: 'asset' }>, bytes: Uint8Array) => Promise<void>, yieldNow: () => Promise<void>): Promise<void> {
+    let n = 0, visited = 0;
     const done = new Set<string>();
     for (const node of list) {
       if (!VECTOR_EXPORT_TYPES.has(String(node.type))) continue;
       const nodeId = String(node.id);
+      if (++visited % 100 === 0) await yieldNow();
+      const hidden = hiddenNode(nodeId, visibility);
+      if (hidden) {
+        await asset({ k: 'asset', id: `vector:${nodeId}`, assetKind: 'vector_export', mime: 'image/svg+xml', bytes: 0, sha256: '', source: { nodeId }, status: 'missing',
+          reason: `Không xuất SVG vì ${hidden === nodeId ? 'node này' : `layer cha ${hidden}`} đang ẩn. Cấu trúc và thuộc tính vẫn được lưu; SVG cần xuất lại nếu bật hiển thị.` });
+        continue;
+      }
       if (n >= MAX_VECTOR_EXPORTS) { await asset({ k: 'asset', id: `vector:${nodeId}`, assetKind: 'vector_export', mime: 'image/svg+xml', bytes: 0, sha256: '', source: { nodeId }, status: 'missing', reason: `Quá ${MAX_VECTOR_EXPORTS} vector; chỉ lấy SVG cho ${MAX_VECTOR_EXPORTS} vector đầu` }); continue; }
+      n++;
       try {
         const svg: string = await node.exportAsync({ format: 'SVG_STRING' });
         const bytes = utf8(svg);
@@ -419,22 +430,38 @@ export class Exporter {
       } catch (error) {
         await asset({ k: 'asset', id: `vector:${nodeId}`, assetKind: 'vector_export', mime: 'image/svg+xml', bytes: 0, sha256: '', source: { nodeId }, status: 'error', reason: String((error as Error)?.message ?? error).slice(0, 200) });
       }
-      if (++n % 10 === 0) await yieldNow();
+      if (n % 10 === 0) await yieldNow();
     }
   }
 
-  /** Raster previews of the selected roots (or the top frames of the selected pages): a look at the design, never the data. */
+  /** Stop at the first screen boundary: nested layout frames and component internals are not separate screens. */
   private async readPreviews(cmd: StartExport, roots: Any[], asset: (r: Extract<DependencyRecord, { k: 'asset' }>) => Promise<void>, send: (r: Extract<DependencyRecord, { k: 'asset' }>, bytes: Uint8Array) => Promise<void>, yieldNow: () => Promise<void>): Promise<void> {
-    const targets: Any[] = cmd.scope === 'selection' ? roots : roots.flatMap((page) => (Array.isArray(page.children) ? page.children : []).filter((c: Any) => PREVIEW_ROOT_TYPES.has(String(c.type)))).slice(0, MAX_PREVIEWS);
+    const targets: { node: Any; role: 'overview' | 'screen' }[] = [];
+    const seen = new Set<string>();
+    const stack = roots.slice().reverse();
+    while (stack.length) {
+      const node = stack.pop()!;
+      if (seen.has(String(node.id))) continue;
+      seen.add(String(node.id));
+      if (SCREEN_TYPES.has(String(node.type))) { targets.push({ node, role: 'screen' }); continue; }
+      if (node.type === 'SECTION') targets.push({ node, role: 'overview' });
+      if (['PAGE', 'SECTION', 'GROUP'].includes(String(node.type))) {
+        if (Array.isArray(node.children)) stack.push(...node.children.slice().reverse());
+      } else if (roots.includes(node)) targets.push({ node, role: 'screen' });
+    }
     let n = 0;
-    for (const node of targets) {
+    for (const { node, role } of targets) {
       const nodeId = String(node.id);
       try {
-        const width = Number(node.width ?? 0), height = Number(node.height ?? 0), edge = Math.max(width, height);
-        const scale = edge > PREVIEW_MAX_EDGE ? PREVIEW_MAX_EDGE / edge : 1;
-        const bytes: Uint8Array = await node.exportAsync({ format: 'PNG', constraint: { type: 'SCALE', value: scale } });
+        if (n >= MAX_PREVIEWS) throw new Error(`Giới hạn ${MAX_PREVIEWS} ảnh xem trước; hãy chọn phạm vi nhỏ hơn để có ảnh của node này.`);
+        const width = Math.max(1, Number(node.width ?? 1)), height = Math.max(1, Number(node.height ?? 1)), edge = Math.max(width, height);
+        // Preserve screen width on long pages, with explicit raster memory and edge bounds.
+        const scale = role === 'overview' ? Math.min(1, PREVIEW_MAX_EDGE / edge)
+          : Math.min(1, PREVIEW_MAX_EDGE / width, SCREEN_PREVIEW_MAX_EDGE / edge, Math.sqrt(PREVIEW_MAX_PIXELS / (width * height)));
+        const bytes: Uint8Array = await node.exportAsync({ format: 'PNG', contentsOnly: true, useAbsoluteBounds: true, constraint: { type: 'SCALE', value: scale } });
         const id = sha256Bytes(bytes);
-        const rec: Extract<DependencyRecord, { k: 'asset' }> = { k: 'asset', id, assetKind: 'preview', mime: 'image/png', bytes: bytes.length, sha256: id, source: { nodeId }, status: bytes.length > cmd.limits.maxAssetBytes ? 'oversize' : 'stored' };
+        const rec: Extract<DependencyRecord, { k: 'asset' }> = { k: 'asset', id, assetKind: 'preview', mime: 'image/png', bytes: bytes.length, sha256: id, source: { nodeId }, status: bytes.length > cmd.limits.maxAssetBytes ? 'oversize' : 'stored',
+          width: Math.ceil(width * scale), height: Math.ceil(height * scale), preview: { role, name: String(node.name ?? nodeId), nodeType: String(node.type), scale } };
         await asset(rec);
         if (rec.status === 'stored') await send(rec, bytes);
       } catch (error) {

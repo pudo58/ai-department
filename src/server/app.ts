@@ -12,6 +12,7 @@ import { registerPreviewRoutes } from './routes/previews.js';
 import { registerProjectRoutes } from './routes/projects.js';
 import { registerProviderRoutes } from './routes/providers.js';
 import { registerRunRoutes } from './routes/runs.js';
+import { registerVisualRoutes } from './routes/visual.js';
 import { registerSystemRoutes } from './routes/system.js';
 import { registerSkillRoutes } from './routes/skills.js';
 import { registerFigmaRoutes } from './routes/figma.js';
@@ -73,7 +74,7 @@ export async function buildApp({ store, orchestrator, dataDir, port, staticDir, 
   registerPreviewRoutes(context);
   registerMonitorRoutes(context);
   registerSkillRoutes(context);
-  if (figma) { registerFigmaRoutes(context, figma); app.addHook('onClose', async () => figma.stop()); }
+  if (figma) { registerFigmaRoutes(context, figma); registerVisualRoutes(context, figma); app.addHook('onClose', async () => figma.stop()); }
   if (autoClean) {
     const stop = startAutoClean({ store, dataDir, stopPreview: (id) => context.previews.stop(id) });
     app.addHook('onClose', async () => stop());

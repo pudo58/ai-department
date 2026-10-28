@@ -45,9 +45,10 @@ const banner = [
   'const __dirname = __aideptDir(__filename);',
 ].join('\n');
 await esbuild.build({
-  entryPoints: { server: path.join(root, 'src/server/main.ts'), attest: path.join(root, 'src/server/attest.ts') },
+  entryPoints: { server: path.join(root, 'src/server/main.ts'), attest: path.join(root, 'src/server/attest.ts'), 'visual-worker': path.join(root, 'src/server/visual-worker.ts') },
   outdir: path.join(out, 'app'), outExtension: { '.js': '.mjs' },
   bundle: true, platform: 'node', target: 'node24', format: 'esm', banner: { js: banner },
+  external: ['playwright-core'],
   legalComments: 'none', logLevel: 'warning',
 });
 cpSync(path.join(root, 'scripts', 'cli.mjs'), path.join(out, 'app', 'cli.mjs'));
@@ -60,6 +61,8 @@ await buildExporter({ outDir: path.join(out, 'figma-exporter') });
 
 step('Chép công cụ, mẫu Docker, script khởi động và hướng dẫn');
 cpSync(path.join(root, 'tools'), path.join(out, 'tools'), { recursive: true });
+// Playwright loads browser protocol assets at runtime; keep its package intact beside the bundled server.
+cpSync(path.dirname(createRequire(import.meta.url).resolve('playwright-core/package.json')), path.join(out, 'node_modules', 'playwright-core'), { recursive: true });
 cpSync(path.join(root, 'docker'), path.join(out, 'docker'), { recursive: true });
 cpSync(path.join(root, 'scripts', 'release', 'README.md'), path.join(out, 'README.md'));
 cpSync(path.join(root, 'LICENSE'), path.join(out, 'LICENSE'));
@@ -67,12 +70,13 @@ cpSync(path.join(root, 'LICENSE'), path.join(out, 'LICENSE'));
 writeFileSync(path.join(out, 'start.cmd'), readFileSync(path.join(root, 'scripts', 'release', 'start.cmd'), 'utf8').replace(/\r?\n/g, '\r\n'));
 writeFileSync(path.join(out, 'start.sh'), readFileSync(path.join(root, 'scripts', 'release', 'start.sh'), 'utf8').replace(/\r\n/g, '\n'), { mode: 0o755 });
 
-// The published manifest: no dependencies (everything is bundled), one command, and only the files listed here.
+// The browser driver is shipped as a bundled dependency; browsers already installed on the target are reused.
 // It installs on Node 18+: the launcher fetches its own Node 24 when the machine's Node is older.
 const manifest = {
   name: 'ai-department', version: source.version,
   description: 'Phòng làm việc của các AI viết code (Codex, Claude Code, Antigravity) chạy trên máy bạn: giao việc, kiểm chứng, nghiệm thu.',
   type: 'module', bin: { 'ai-department': 'app/cli.mjs' }, engines: { node: '>=18' },
+  dependencies: { 'playwright-core': source.dependencies['playwright-core'] }, bundledDependencies: ['playwright-core'],
   files: ['app/', 'dist/', 'figma-exporter/', 'tools/', 'docker/', 'start.cmd', 'start.sh', 'README.md', 'LICENSE'],
   keywords: ['ai', 'codex', 'claude', 'agents', 'code-review'], license: source.license ?? 'UNLICENSED',
 };

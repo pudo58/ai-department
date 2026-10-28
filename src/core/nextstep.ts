@@ -6,11 +6,12 @@ import { DIAGNOSIS_ATTEMPT_TITLE } from './recovery.js';
 import { readVerdict } from './report.js';
 import { readFindingReplays } from './reproduction.js';
 import { humanizeTestIds } from './testids.js';
+import { readVisualReport } from './visualevidence.js';
 
 /** Why a stopped run is stopped, in the few kinds that tell a person what to do. `generic` keeps the old sentence. */
 export type StepCode =
-  | 'finding_open' | 'diagnosis_stopped' | 'verifier_inconclusive' | 'verifier_pending' | 'evidence_missing' | 'author_stuck' | 'checks_failing' | 'checks_flaky' | 'project_check_no_report'
-  | 'setup_failed' | 'capacity' | 'quota' | 'interrupted' | 'user_stop' | 'generic';
+  | 'finding_open' | 'diagnosis_stopped' | 'verifier_inconclusive' | 'verifier_pending' | 'evidence_missing' | 'author_stuck' | 'checks_failing' | 'checks_incomplete' | 'checks_flaky' | 'project_check_no_report'
+  | 'setup_failed' | 'capacity' | 'quota' | 'interrupted' | 'user_stop' | 'visual_incomplete' | 'generic';
 
 /** What the page does for each: it knows how to open a form or call an endpoint for these ids, and nothing else. */
 export type StepActionId = 'close_finding' | 'review_findings' | 'repair_findings' | 'switch_single' | 'revise_contract' | 'edit_project' | 'resume' | 'recheck';
@@ -109,6 +110,12 @@ export function nextStep(d: Input): NextStep | undefined {
 
   // A required check is failing: the code or the test is wrong, and an agent can work on it.
   const failing = latestChecks(run, d.checks).filter((c) => c.required && (c.status === 'failed' || c.status === 'incomplete'));
+  const incomplete = failing.filter(c => c.status === 'incomplete');
+  if (incomplete.length) return {
+    code: 'checks_incomplete', title: 'Kiểm tra chưa có kết quả hợp lệ',
+    why: `Kiểm tra ${ids(incomplete.map(c => `“${c.recipeId}”`))} chưa hoàn tất hoặc chưa xuất được report. Xem log và sửa lệnh check, đường dẫn report hoặc môi trường trong cấu hình dự án, rồi chạy lại kiểm tra. Chạy tiếp không tự sửa môi trường hay chạy lại check này.`,
+    primary: act('edit_project', 'Sửa cấu hình kiểm tra'), others: [act('recheck', 'Chạy lại kiểm tra')], resumeChanges: false, after: [],
+  };
   // v4 spends one Author diagnosis per locked test suite. Once it is spent and did not conclude "the code is wrong", "Chạy tiếp" stops at
   // the same place without calling the Developer: only a new contract version (a new suite) or another mode moves the run.
   const manifestHash = readManifest(run, d.artifacts)?.hash;
@@ -134,6 +141,15 @@ export function nextStep(d: Input): NextStep | undefined {
   };
 
   // Everything passes but a required requirement has no test behind it.
+  if (run.contract.design && run.configSnapshot.visualCheck?.maxDiffRatio !== undefined && run.checkpoint) {
+    const visual = readVisualReport(run, d.artifacts);
+    if (!visual || visual.status === 'incomplete') return {
+      code: 'visual_incomplete', title: 'Đối chiếu hình thức chưa hoàn tất',
+      why: 'Xem report ở tab Kiểm chứng → Đối chiếu hình thức với Figma. Sửa profile hoặc môi trường nếu cần, rồi chạy lại checks và so ảnh; Chạy tiếp không tự sửa profile hay kết quả ảnh không ổn định.',
+      primary: act('recheck', 'Chạy lại kiểm tra'), others: [act('edit_project', 'Sửa cấu hình dự án')], resumeChanges: false, after: [],
+    };
+  }
+
   const unverified = d.matrix.filter((r) => r.required && !r.manual && r.status !== 'verified').map((r) => r.requirementId);
   if (unverified.length) return {
     code: 'evidence_missing', title: 'Có yêu cầu chưa có test chứng minh',

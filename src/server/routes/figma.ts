@@ -108,6 +108,8 @@ export function registerFigmaRoutes({ app, store, orchestrator }: RouteContext, 
   // ---------------------------------------------------------------- the page: snapshots
 
   app.get('/api/design-snapshots', async () => snapshots.list().map((s) => ({ ...s, references: figma.referencesOf(s.id) })).reverse());
+  app.get('/api/design-snapshots/:id/previews', async (request) => snapshots.previews(IdParam.parse(request.params).id));
+  app.get('/api/design-snapshots/:id/diagnostics', async (request) => snapshots.diagnostics(IdParam.parse(request.params).id));
   app.get('/api/design-snapshots/:id', async (request) => {
     const snapshot = snapshots.get(IdParam.parse(request.params).id);
     if (!snapshot) throw new HttpError(404, 'Snapshot không tồn tại.');

@@ -67,6 +67,7 @@ Kết thúc bằng một khối \`\`\`json có dạng {"requirements":[{"id":"R-
 Phân loại rõ tiêu chí: expected là hành vi mong muốn, forbidden là hành vi không được xảy ra. Chỉ nêu tiêu chí phù hợp với yêu cầu, không tự thêm để đủ loại. Nêu ví dụ cụ thể và ghi rõ giả định cần chủ task xác nhận.
 Mọi phần tử của acceptanceExamples, interfaces, assumptions, scope phải là CHUỖI văn bản, không phải object.
 Mỗi tiêu chí phải kiểm chứng được bằng test hoặc đánh dấu manual. Ràng buộc về phạm vi file, quy trình hay phong cách code không test được: đặt vào "scope"/"assumptions" hoặc đánh dấu "manual": true, đừng để thành tiêu chí bắt buộc không có test. Nêu giả định thay vì tự quyết các điểm mơ hồ.
+Với UI/Figma: tách nội dung chữ, kích thước có số đo, điều hướng, trạng thái, tương tác thành tiêu chí manual=false; Playwright có thể tự kiểm tra chúng. Tách phần hình thức chưa có phép đo/ngưỡng đồng ý thành tiêu chí riêng manual=true, nêu rõ điều chưa thể chứng minh và node tham chiếu. Không gộp hai loại rồi đánh dấu tất cả thủ công. Test chụp ảnh mà không so ảnh không chứng minh giao diện khớp thiết kế.
 ${VERBATIM_SPEC}`;
   },
   interpreter(run: Run): string {
@@ -84,6 +85,7 @@ Yêu cầu gốc:
 ${run.originalRequirement}${projectContext(run, 'planner')}
 
 Kết thúc bằng khối \`\`\`json cùng định dạng hợp đồng (requirements, acceptanceExamples, interfaces, assumptions, scope); mỗi requirement có kind expected (hành vi mong muốn) hoặc forbidden (hành vi không được xảy ra). Chỉ phân loại tiêu chí có căn cứ từ yêu cầu, không thêm tiêu chí để đủ loại; ghi điểm bất đồng chưa giải quyết vào "assumptions".
+Với UI/Figma, tách phần DOM/kích thước/trạng thái/tương tác kiểm bằng Playwright thành yêu cầu manual=false; phần hình thức chưa có ngưỡng kiểm chứng được duyệt thành yêu cầu riêng manual=true. Không gộp tất cả thành thủ công.
 ${VERBATIM_SPEC}`;
   },
   developer(run: Run, extra = ''): string {

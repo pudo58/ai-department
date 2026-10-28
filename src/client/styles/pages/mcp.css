@@ -11,6 +11,38 @@
 .checklist { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 6px; }
 .checklist label { display: flex; gap: 8px; align-items: flex-start; }
 .indent { display: flex; gap: 8px; align-items: center; margin-left: 22px; }
-.preview-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.preview-strip img { object-fit: contain; background: var(--bg-muted); border: 1px solid var(--border); border-radius: 6px; }
+.design-previews { min-width: 0; }
+.design-previews > input { width: 100%; margin: 12px 0; }
+.design-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr)); gap: 12px; }
+.design-preview-card { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 10px; text-align: left; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; }
+.design-preview-card:hover { border-color: var(--accent); background: var(--bg-hover); }
+.design-preview-card img { width: 100%; height: 160px; object-fit: contain; object-position: top; background: var(--bg-muted); border-radius: 4px; }
+.design-preview-card strong, .design-preview-card small { overflow-wrap: anywhere; }
+.design-preview-card small { color: var(--text-2); }
+.design-preview-viewer { margin-top: 16px; border-top: 1px solid var(--border); }
+.design-preview-canvas { overflow: auto; max-height: 65vh; margin-top: 12px; background: var(--bg-muted); border: 1px solid var(--border); }
+.design-preview-canvas img { display: block; width: 100%; height: auto; }
+.design-preview-canvas.actual-size img { width: auto; max-width: none; }
+.design-diagnostics { min-width: 0; }
+.diagnostic-group { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.diagnostic-group > summary { cursor: pointer; font-weight: 600; }
+.diagnostic-group input { width: 100%; }
+.diagnostic-items { list-style: none; margin: 8px 0; padding: 0; }
+.diagnostic-items > li { display: grid; gap: 6px; padding: 12px 0; border-top: 1px solid var(--border); overflow-wrap: anywhere; }
+.diagnostic-items .button { justify-self: start; max-width: 100%; white-space: normal; text-align: left; }
+.diagnostic-items small { color: var(--text-2); }
+.snapshot-limit > div { flex: 1; min-width: 0; }
+.limit-original { margin: 4px 0 8px 24px; color: var(--text-2); font-size: .85rem; overflow-wrap: anywhere; }
+.limit-original summary { cursor: pointer; }
 .modal-body { display: grid; gap: 12px; }
+
+/* These rows reuse the project list without its leading icon column. */
+.mcp-record-panel { margin-top: 20px; }
+.mcp-record-list .project-entry { grid-template-columns: minmax(0, 1fr) auto; gap: 12px 16px; }
+.mcp-record-list .project-name h3 { margin: 0; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.mcp-record-list .project-actions { grid-column: auto; }
+
+@media (max-width: 720px) {
+  .mcp-record-list .project-entry { grid-template-columns: minmax(0, 1fr); }
+  .mcp-record-list .project-actions { grid-column: 1; justify-content: flex-start; }
+}

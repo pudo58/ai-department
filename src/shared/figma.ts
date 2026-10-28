@@ -5,7 +5,7 @@
 export const PROTOCOL_VERSION = 1;
 export const READER_VERSION = 1;
 export const SCHEMA_VERSION = 1;
-export const PLUGIN_VERSION = '1.0.0';
+export const PLUGIN_VERSION = '1.1.1';
 /** Everything the plugin may do on the server lives under this prefix; nothing else is reachable with a plugin session. */
 export const PLUGIN_API_PREFIX = '/api/figma-exporter';
 
@@ -25,6 +25,9 @@ export const REQUEST_TIMEOUT_MS = 30_000;
 export const HEARTBEAT_MS = 10_000;
 export const LOST_CONTACT_MS = 30_000;
 export const PREVIEW_MAX_EDGE = 2048;
+export const SCREEN_PREVIEW_MAX_EDGE = 8192;
+export const PREVIEW_MAX_PIXELS = 16 * 1024 * 1024;
+export interface PreviewInfo { role: 'overview' | 'screen'; name: string; nodeType: string; scale: number }
 
 export type ExportScopeKind = 'selection' | 'pages' | 'file';
 
@@ -82,7 +85,7 @@ export type DependencyRecord =
   | { k: 'component'; id: string; key?: string; name: string; remote: boolean; description?: string; componentSetId?: string | null;
       scope: 'in_scope' | 'dependency_only' | 'unavailable'; reason?: string; usedBy?: string[] }
   | { k: 'imageRef'; hash: string; refs: { nodeId: string; field: string }[]; status: 'bytes' | 'missing' | 'oversize' | 'error'; reason?: string; assetId?: string }
-  | { k: 'asset'; id: string; assetKind: AssetKind; mime: string; bytes: number; sha256: string; source: { nodeId?: string; imageHash?: string }; status: 'stored' | 'missing' | 'oversize' | 'error'; reason?: string; width?: number; height?: number };
+  | { k: 'asset'; id: string; assetKind: AssetKind; mime: string; bytes: number; sha256: string; source: { nodeId?: string; imageHash?: string }; status: 'stored' | 'missing' | 'oversize' | 'error'; reason?: string; width?: number; height?: number; preview?: PreviewInfo };
 export type AssetKind = 'original_image' | 'vector_export' | 'preview';
 
 export type ChunkKind = 'inventory' | 'nodes' | 'dependencies' | 'verification' | 'asset';
@@ -154,7 +157,21 @@ export const PLUGIN_ERROR_CODES = ['bad_command', 'source_mismatch', 'page_load_
 
 /** Issue kinds the validator and the plugin can raise. `blocker` stops publishing; `limit` is a known gap a person can acknowledge. */
 export type IssueSeverity = 'blocker' | 'limit' | 'info';
-export interface ExportIssue { id: string; code: string; severity: IssueSeverity; message: string; nodeId?: string; field?: string }
+export interface ExportIssue { id: string; code: string; severity: IssueSeverity; message: string; nodeId?: string; field?: string; occurrences?: number; examples?: { nodeId: string; name?: string }[] }
+
+export interface NodeVisibility { parentId: string | null; visible?: boolean }
+/** Only an explicitly read false proves a hidden node; missing ancestors and unknown visibility do not. */
+export function hiddenNode(id: string, nodes: ReadonlyMap<string, NodeVisibility>): string | undefined {
+  const seen = new Set<string>();
+  for (let at: string | null = id; at !== null && !seen.has(at);) {
+    seen.add(at);
+    const node = nodes.get(at);
+    if (!node) return undefined;
+    if (node.visible === false) return at;
+    at = node.parentId;
+  }
+  return undefined;
+}
 
 export const issueId = (code: string, nodeId?: string, field?: string): string => `${code}|${nodeId ?? ''}|${field ?? ''}`;
 

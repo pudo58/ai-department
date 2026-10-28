@@ -3,7 +3,7 @@ import {
   type ChunkEnvelope, type FinishBody, type HelloInfo, type PluginCommand, type PluginEvent,
 } from '../../../../src/shared/figma.js';
 import { Sha256, sha256Bytes, utf8 } from '../../../../src/shared/sha256.js';
-import type { FinishedSummary, MainToUi, StartExport, UiToMain } from '../messages.js';
+import type { BridgeMessage, FinishedSummary, MainToUi, StartExport, UiToMain } from '../messages.js';
 
 interface Config { origin: string; bundleHash?: string; pluginVersion?: string }
 declare global { interface Window { __AIDEPT__?: Config } }
@@ -21,6 +21,7 @@ let hello: HelloInfo | undefined;
 let polling = false;
 let reqId = 0;
 const pending = new Map<number, { resolve: (m: MainToUi) => void; reject: (e: Error) => void }>();
+const bridgeId = Array.from(crypto.getRandomValues(new Uint8Array(16)), (byte) => byte.toString(16).padStart(2, '0')).join('');
 
 interface Upload { jobId: string; scopeHash: string; sourceSession: string; seq: number; failed: boolean; streams: Record<string, { hash: Sha256; bytes: number; records: number }>; assets: Map<string, { bytes: number; sha256: string }> }
 let upload: Upload | undefined;
@@ -28,7 +29,7 @@ let finishing = false;
 /** Chunks go to the server one after another, in the order main produced them: sequence numbers and stream order depend on it. */
 let queue: Promise<void> = Promise.resolve();
 
-const toMain = (message: UiToMain) => parent.postMessage({ pluginMessage: message }, '*');
+const toMain = (message: UiToMain) => parent.postMessage({ pluginMessage: { ...message, bridgeId } satisfies BridgeMessage<UiToMain> }, '*');
 const ask = (build: (id: number) => UiToMain): Promise<MainToUi> => new Promise((resolve, reject) => {
   const id = ++reqId;
   pending.set(id, { resolve, reject });
@@ -196,10 +197,10 @@ function failUpload(code: string, message: string): void {
 }
 
 window.addEventListener('message', (event: MessageEvent) => {
-  // Only the parent (the plugin's main code) speaks to this UI.
-  if (event.source !== parent) return;
-  const m = (event.data as { pluginMessage?: MainToUi } | undefined)?.pluginMessage;
-  if (!m || typeof m !== 'object' || typeof (m as { type?: unknown }).type !== 'string') return;
+  // Figma relays plugin messages; event.source need not be the UI's parent WindowProxy.
+  // Match our per-UI nonce instead, so unrelated frames and stale UI instances cannot feed this session.
+  const m = (event.data as { pluginMessage?: BridgeMessage<MainToUi> } | undefined)?.pluginMessage;
+  if (!m || typeof m !== 'object' || m.bridgeId !== bridgeId || typeof (m as { type?: unknown }).type !== 'string') return;
   switch (m.type) {
     case 'HELLO_RESULT': case 'PAGES_RESULT': case 'ROOTS_RESULT': case 'REQUEST_ERROR': {
       const p = pending.get(m.reqId);

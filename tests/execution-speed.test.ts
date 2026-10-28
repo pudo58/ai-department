@@ -67,6 +67,28 @@ describe('environment probes',()=>{
     const {run}=fixture();run.configSnapshot.checks[0]!.command=['custom-runner','--test'];
     const execute=vi.fn();expect((await probeEnvironment(run,temp(),'local',execute)).status).toBe('unsupported');expect(execute).not.toHaveBeenCalled();
   });
+  it.each(['npm', 'npm.cmd', 'pnpm', 'yarn'])('blocks %s test without package.json instead of silently skipping preflight', async manager => {
+    const { run } = fixture();
+    run.configSnapshot.checks[0]!.command = [manager, 'test'];
+    const execute = vi.fn();
+    const probe = await probeEnvironment(run, temp(), 'local', execute);
+    expect(probe.status).toBe('blocked');
+    expect(probe.checks[0]?.message).toContain('Không tìm thấy package.json');
+    expect(execute).not.toHaveBeenCalled();
+  });
+  it('does not inspect the wrong package for commands with a different working directory', async () => {
+    const { run } = fixture();
+    run.configSnapshot.checks[0]!.command = ['npm', '--prefix', 'app', 'test'];
+    expect((await probeEnvironment(run, temp(), 'local', vi.fn())).status).toBe('unsupported');
+  });
+  it('reports a missing custom package script while preserving unsupported scripts and npm test fallback', async () => {
+    const { run } = fixture(), cwd = temp();
+    writeFileSync(path.join(cwd, 'package.json'), '{}');
+    run.configSnapshot.checks[0]!.command = ['npm', 'run', 'check'];
+    expect((await probeEnvironment(run, cwd, 'local', vi.fn())).checks[0]?.message).toContain('không có script "check"');
+    run.configSnapshot.checks[0]!.command = ['npm', 'test'];
+    expect((await probeEnvironment(run, cwd, 'local', vi.fn())).status).toBe('unsupported');
+  });
   it('finds an actual empty dependency directory before Planner, and re-probes with zero agent calls',async()=>{
     const {run,orchestrator,runtime,store}=fixture();let blocked=true;
     Object.assign(runtime,{preflight:async()=>({schemaVersion:1,status:blocked?'blocked':'passed',runtime:'fixture',workspace:'/fixture',configHash:environmentHash(store.runs.get(run.id)!),checkpoint:null,startedAt:new Date().toISOString(),endedAt:new Date().toISOString(),checks:[{recipeId:'test',status:blocked?'blocked':'passed',message:'dependency unavailable'}],limitation:'fixture'})});
@@ -110,12 +132,12 @@ describe('environment probes',()=>{
     run.configSnapshot.checks[0]!.command=['npm','test'];
     expect((await probeEnvironment(run,cwd,'local',execute)).status).toBe('unsupported');expect(calls).toHaveLength(0);
   });
-  it('re-probes a successful environment after a later environment check failure, before any resumed agent',async()=>{
+  it.each(['environment', 'report_error'] as const)('re-probes a successful environment after a later %s check failure, before any resumed agent',async kind=>{
     const e=setup({reply:qualityReply,files,check:()=>qualityGreen});let probes=0;
     Object.assign(e.runtime,{preflight:async(run:Parameters<typeof environmentHash>[0])=>{probes++;return {schemaVersion:1,status:'passed',runtime:'fake',workspace:'fixture',configHash:environmentHash(run),checkpoint:run.checkpoint,startedAt:new Date().toISOString(),endedAt:new Date().toISOString(),checks:[],limitation:'fixture'};}});
     const run=await e.drive(e.create({mode:'verify'})),detail=e.orchestrator.detail(run.id),agents=detail.attempts.length;
     expect(probes).toBe(1);
-    const check=detail.checks.at(-1)!;e.store.checks.put({...check,status:'incomplete',issues:[{kind:'environment',message:'Dependency removed after prior preflight'}],createdAt:new Date().toISOString()});
+    const check=detail.checks.at(-1)!;e.store.checks.put({...check,status:'incomplete',issues:[{kind,message:'Dependency removed after prior preflight'}],createdAt:new Date().toISOString()});
     e.store.runs.put({...e.store.runs.get(run.id)!,status:'failed'});e.orchestrator.resumeRun(run.id);await e.orchestrator.idle();
     expect(probes).toBe(2);expect(e.orchestrator.detail(run.id).attempts).toHaveLength(agents);
     const project=e.store.projects.get('prj_test')!;e.store.projects.put({...project,version:project.version+1,guidance:'Updated approved environment'});

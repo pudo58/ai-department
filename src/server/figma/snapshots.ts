@@ -2,7 +2,9 @@ import { closeSync, createReadStream, existsSync, mkdirSync, openSync, readFileS
 import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { canonicalJson, type DependencyRecord, type ExportIssue, type NodeRecord, type RootInfo } from '../../shared/figma.js';
-import type { DesignBinding, DesignSnapshot, DiffEntry, FigmaExportJob, SnapshotDiff, SnapshotFile } from '../../shared/design.js';
+import type { DesignBinding, DesignSnapshot, DiffEntry, FigmaExportJob, SnapshotDiff, SnapshotFile, SnapshotPreviews, SnapshotDiagnostics } from '../../shared/design.js';
+import { snapshotDiagnostics } from './diagnostics.js';
+import { buildPreviewCatalog, previewCatalog } from './previews.js';
 import { FIGMA_DATA_NOTICE, coverageLabel, idHash, mdCode, mdText, sha256Hex, type NodeLookup } from '../../core/design.js';
 import type { ValidationResult } from '../../core/figmavalidate.js';
 import { HttpError } from '../run/support.js';
@@ -87,6 +89,15 @@ export class SnapshotStore {
   }
   get(id: string): DesignSnapshot | undefined { return this.store.designSnapshots.get(id); }
   list(): DesignSnapshot[] { return this.store.designSnapshots.list(); }
+  diagnostics(id: string): SnapshotDiagnostics { return snapshotDiagnostics(this.reader(id)); }
+
+  previews(id: string): SnapshotPreviews {
+    const snapshot = this.get(id);
+    if (!snapshot) throw new HttpError(404, 'Snapshot không tồn tại.');
+    if (snapshot.files.some((f) => f.path === 'previews.json')) return JSON.parse(readFileSync(path.join(this.dir(id), 'previews.json'), 'utf8'));
+    const reader = this.reader(id);
+    return previewCatalog(snapshot.files, [...reader.dependencies()], (nodeId) => reader.row(nodeId));
+  }
 
   reader(id: string): SnapshotReader {
     const cached = this.cache.get(id);
@@ -117,7 +128,7 @@ export class SnapshotStore {
       mkdirSync(path.dirname(full), { recursive: true });
       if (content !== undefined) writeFileSync(full, content);
       const bytes = readFileSync(full);
-      files.push({ id: idHash(rel), path: rel.replace(/\\/g, '/'), kind, bytes: bytes.length, sha256: sha256Hex(bytes), mime: mimeOf(rel) });
+      if (!files.some((f) => f.path === rel)) files.push({ id: idHash(rel), path: rel.replace(/\\/g, '/'), kind, bytes: bytes.length, sha256: sha256Hex(bytes), mime: mimeOf(rel) });
     };
 
     // Node records, grouped by page, with a table of where each one is.
@@ -151,6 +162,10 @@ export class SnapshotStore {
       if (!existsSync(from)) continue;
       add(`assets/${d.id}.${EXT[d.mime] ?? 'bin'}`, 'asset', readFileSync(from));
     }
+
+    const rowMap = new Map(rows.map((r) => [r.id, r]));
+    const previews = await buildPreviewCatalog(files, deps, (id) => rowMap.get(id), (rel) => readFileSync(path.join(tmp, rel)), (rel, bytes) => add(rel, 'asset', bytes));
+    add('previews.json', 'index', JSON.stringify(previews));
 
     // Pages, components and tokens: facts laid out by template, no interpretation.
     const byRoot = new Map<string, NodeRow[]>();
@@ -194,7 +209,7 @@ export class SnapshotStore {
     add('review.json', 'review', JSON.stringify(review, null, 1));
     const index = { schemaVersion: 1, roots: rowsOfRoots(rows, job), pages: pageList, components: componentList, tokens: { styles: styles.length, variables: variables.length, collections: collections.map((c) => ({ id: c.k === 'collection' ? c.id : '', name: c.k === 'collection' ? c.name : '' })) },
       assets: deps.filter((d) => d.k === 'asset').map((d) => (d.k === 'asset' ? { id: d.id, kind: d.assetKind, mime: d.mime, bytes: d.bytes, status: d.status, source: d.source } : null)),
-      imageRefs: deps.filter((d) => d.k === 'imageRef').length, nodeTable: 'source/node-table.ndjson', notice: FIGMA_DATA_NOTICE };
+      previews, imageRefs: deps.filter((d) => d.k === 'imageRef').length, nodeTable: 'source/node-table.ndjson', notice: FIGMA_DATA_NOTICE };
     add('index.json', 'index', JSON.stringify(index, null, 1));
 
     const dataFiles = files.filter((f) => ['source', 'page', 'component', 'tokens', 'asset'].includes(f.kind)).filter((f) => f.path !== 'source/node-table.ndjson').map((f) => [f.path, f.sha256]).sort(([a], [b]) => (a! < b! ? -1 : 1));

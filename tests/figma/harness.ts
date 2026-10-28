@@ -34,7 +34,7 @@ export async function waitFor<T>(fn: () => T | undefined | false | Promise<T | u
   }
 }
 
-export interface RigOptions { /** What the simulated agents do; lets a test see the turns and change the design folder during one. */ fake?: FakeOptions; doc?: Golden; installerDeps?: InstallerDeps; now?: () => number; chunkEvents?: boolean }
+export interface RigOptions { /** What the simulated agents do; lets a test see the turns and change the design folder during one. */ fake?: FakeOptions; doc?: Golden; installerDeps?: InstallerDeps; now?: () => number; chunkEvents?: boolean; uiMessageSource?: 'parent' | 'null' | 'self' }
 
 /**
  * A whole path under test: a fake Figma document, the plugin's real built code running against it, its real UI in a DOM, and the real
@@ -84,7 +84,7 @@ export async function rig(options: RigOptions = {}) {
   figma.outbound = (message) => setTimeout(() => {
     trace.push(`main→ui ${kind(message)}`);
     const event = new dom.window.MessageEvent('message', { data: { pluginMessage: message } });
-    Object.defineProperty(event, 'source', { value: stubParent });
+    Object.defineProperty(event, 'source', { value: options.uiMessageSource === 'null' ? null : options.uiMessageSource === 'self' ? dom.window : stubParent });
     dom.window.dispatchEvent(event);
   }, 0);
 

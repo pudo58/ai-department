@@ -57,11 +57,32 @@ async function identifyRunner(command: readonly string[], cwd: string): Promise<
   return installedRunner(cwd, runner as RunnerCommand['runner'], [...args, ...forwarded]);
 }
 
+/** A package-script check cannot start without its manifest, even when its runner has no discovery adapter. */
+async function packageScriptProblem(command: readonly string[], cwd: string): Promise<string | undefined> {
+  const executable = executableName(command[0] ?? '');
+  if (!['npm', 'pnpm', 'yarn'].includes(executable)) return;
+  const action = command[1];
+  const script = action === 'run' || action === 'run-script' ? command[2] : action === 'test' || action === 't' ? 'test' : undefined;
+  // Commands that change cwd need their own adapter; do not inspect the wrong package.
+  if (!script || command.some(arg => /^(?:--prefix|--cwd|--dir|-C|--workspace|-w)(?:=|$)/.test(arg))) return;
+  let pkg: { scripts?: Record<string, string> };
+  try { pkg = JSON.parse(await readFile(path.join(cwd, 'package.json'), 'utf8')); }
+  catch (error) {
+    return (error as NodeJS.ErrnoException).code === 'ENOENT'
+      ? `Không tìm thấy package.json trong workspace; lệnh ${executable} ${action} không thể chạy. Sửa lệnh check cho đúng test runner của dự án rồi chạy lại kiểm tra.`
+      : `Không đọc được package.json để chạy check: ${String((error as Error).message)}`;
+  }
+  // npm has a built-in fallback to node test.js; preserve that documented behavior.
+  if (!pkg.scripts?.[script] && !(executable === 'npm' && script === 'test')) return `package.json không có script "${script}"; sửa lệnh check rồi chạy lại kiểm tra.`;
+}
+
 /** Only simple, recognized runner commands are transformed; never execute a script guessed from text. */
 export async function probeEnvironment(run: Run, cwd: string, runtime: string, execute: Execute, signal?: AbortSignal): Promise<EnvironmentProbe> {
   const started=Date.now(), checks:EnvironmentProbe['checks']=[];
   for(const recipe of run.configSnapshot.checks){
     if(signal?.aborted)throw new Error('Kiểm tra môi trường bị hủy.');
+    const problem = await packageScriptProblem(recipe.command, cwd);
+    if (problem) { checks.push({ recipeId: recipe.id, status: 'blocked', message: redactSecrets(problem) }); continue; }
     const identified = await identifyRunner(recipe.command, cwd);
     if(!identified){checks.push({recipeId:recipe.id,status:'unsupported',message:'Chưa có adapter kiểm tra sớm cho lệnh này; checks thông thường vẫn chạy.'});continue;}
     const {runner,prefix,args}=identified;

@@ -1,4 +1,5 @@
 import { QualityResults } from './Quality';
+import { VisualReview } from './VisualReview';
 import {FindingReplayResults} from './FindingReplays';
 import { FindingProofList } from './FindingEvidence';
 import { useCallback, useEffect, useState } from 'react';
@@ -107,14 +108,17 @@ export function ReviewPanel({ detail, busy, onAccept, onReject }: { detail: RunD
 
     <section className="panel">
       <h2>Yêu cầu và bằng chứng</h2>
-      <p className="muted small" style={{ marginTop: 2 }}>Mỗi yêu cầu chỉ được tính là đã xác minh khi có test đạt mang thẻ mã của nó.</p>
-      <table className="compact" style={{ marginTop: 10 }}><thead><tr><th>Mã</th><th>Yêu cầu</th><th>Trạng thái</th><th>Test chứng minh</th></tr></thead><tbody>
+      <p className="muted small" style={{ marginTop: 2 }}>Test đạt chứng minh các assertion đã chạy. Phần hình thức được đối chiếu riêng với Figma; các phần chưa có bằng chứng vẫn cần xem lại.</p>
+      <div className="table-scroll"><table className="compact" style={{ marginTop: 10 }}><thead><tr><th>Mã</th><th>Yêu cầu</th><th>Kết luận yêu cầu</th><th>Kiểm tra tự động</th>{run.contract.design && <th>Hình thức</th>}</tr></thead><tbody>
         {report.requirements.map((q) => <tr key={q.id}><td><code>{q.id}</code></td><td>{q.text}{q.kind === 'forbidden' && <Badge tone="warn" plain>Không được xảy ra</Badge>}</td>
-          <td><Badge tone={ROW_TONE[q.status]}>{ROW_LABEL[q.status]}</Badge>{q.manual && <Badge tone="neutral" plain>thủ công</Badge>}</td>
-          <td>{q.tests.length ? <details><summary>{q.tests.length} test</summary><ul className="plain-list">{q.tests.map((t) => <li key={t} className="small">{t}</li>)}</ul></details> : <span className="faint">—</span>}</td></tr>)}
-      </tbody></table>
+          <td><Badge tone={q.manual && q.tests.length ? 'info' : ROW_TONE[q.status]}>{q.manual && q.tests.length ? 'Đã kiểm tra một phần' : ROW_LABEL[q.status]}</Badge>{q.manual && <p className="small muted">{q.tests.length ? 'Cần đối chiếu phần còn lại theo hợp đồng.' : 'Chưa có bằng chứng tự động cho yêu cầu này.'}</p>}</td>
+          <td>{q.tests.length ? <><Badge tone="good">{q.tests.length} test đạt</Badge><details><summary>Xem test đã chạy</summary><ul className="plain-list">{q.tests.map((t) => <li key={t} className="small">{t}</li>)}</ul></details></> : <span className="faint">Chưa có test đạt</span>}</td>
+          {run.contract.design && <td><Badge tone={q.visual?.status === 'passed' ? 'good' : q.visual?.status === 'different' ? 'bad' : 'warn'}>{{ passed: 'Trong ngưỡng so ảnh', different: 'Có vùng khác', needs_review: 'Đã đo · cần đối chiếu', incomplete: 'Chưa hoàn tất', unverified: 'Chưa có bằng chứng' }[q.visual?.status ?? 'unverified']}</Badge>{!!q.visual?.checked && <p className="small muted">{q.visual.checked} màn hình được đối chiếu</p>}</td>}</tr>)}
+      </tbody></table></div>
       {report.assumptions.length > 0 && <><h3>Giả định đã nêu trong hợp đồng</h3><ul className="plain-list">{report.assumptions.map((a) => <li key={a}>{a}</li>)}</ul></>}
     </section>
+
+    <VisualReview detail={detail} onChanged={() => void load()}/>
 
     <section className="panel">
       <div className="card-head"><h2>Thay đổi so với bản gốc</h2>{report.changes.available && <span className="muted small">{report.changes.files.length} file · <span className="out">+{report.changes.added}</span> <span className="in">−{report.changes.removed}</span></span>}</div>

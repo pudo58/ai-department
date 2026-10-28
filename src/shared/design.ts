@@ -63,6 +63,21 @@ export interface FigmaExportJob {
 }
 
 export interface SnapshotFile { id: string; path: string; kind: 'manifest' | 'index' | 'source' | 'page' | 'component' | 'tokens' | 'asset' | 'review' | 'summary'; bytes: number; sha256: string; mime: string }
+/** A reference image and the design node it depicts. Detail regions use the node's original coordinate units. */
+export interface SnapshotPreview {
+  nodeId: string; name: string; nodeType: string; role: 'overview' | 'screen' | 'detail';
+  fileId: string; path: string; width?: number; height?: number; scale?: number;
+  region?: { x: number; y: number; width: number; height: number };
+}
+export interface SnapshotPreviews { images: SnapshotPreview[]; warnings: string[] }
+export interface SnapshotDiagnosticItem {
+  nodeId: string; name: string; nodeType: string; path: string; reason: string;
+  hiddenBy?: { nodeId: string; name: string };
+  component?: { nodeId: string; name: string };
+}
+export interface SnapshotDiagnostics {
+  groups: { kind: 'component_properties' | 'hidden_vector' | 'vector_failure'; title: string; explanation: string; items: SnapshotDiagnosticItem[] }[];
+}
 export interface DesignSnapshot {
   id: string; schemaVersion: 1; jobId: string;
   status: 'draft' | 'published';

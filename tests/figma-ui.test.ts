@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import type { DesignSnapshot, IntegrationSummary } from '../src/shared/design.js';
+import type { DesignSnapshot, IntegrationSummary, SnapshotPreview } from '../src/shared/design.js';
 import type { ExportIssue, HelloInfo } from '../src/shared/figma.js';
 
 // The API is a script: each path answers what the test says, and every call is written down.
@@ -31,7 +31,7 @@ HTMLDialogElement.prototype.showModal ??= function showModal(this: HTMLDialogEle
 HTMLDialogElement.prototype.close ??= function close(this: HTMLDialogElement) { this.removeAttribute('open'); };
 
 let root: Root | undefined;
-beforeEach(() => { calls.length = 0; answers.clear(); });
+beforeEach(() => { calls.length = 0; answers.clear(); answers.set('/api/design-snapshots/dsn_aaaaaaaaaaaa/previews', { images: [], warnings: [] }); answers.set('/api/design-snapshots/dsn_aaaaaaaaaaaa/diagnostics', { groups: [] }); });
 afterEach(async () => { if (root) await act(async () => root!.unmount()); root = undefined; document.body.innerHTML = ''; vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 async function mount(node: ReturnType<typeof createElement>) {
@@ -96,6 +96,22 @@ it('asks for a pairing code, shows it, and runs the check without suggesting any
   expect(list.textContent).toContain('Giao thức 1');
   expect(list.textContent).toContain('Lưu ý');
 }, 20000);
+
+it('displays a replacement pairing code when reconnecting an interrupted plugin', async () => {
+  answers.set('/api/integrations', [summary({ connection: { state: 'interrupted', hello } })]);
+  answers.set('/api/design-exports', []); answers.set('/api/design-snapshots', []); answers.set('/api/integrations/figma/install', []);
+  const pairingCode = { code: '01234567', expiresAt: '2026-10-28T04:00:00Z' };
+  answers.set('POST /api/integrations/figma/pairing', () => {
+    answers.set('/api/integrations', [summary({ connection: { state: 'pairing', pairingCode } })]);
+    return pairingCode;
+  });
+  const host = await mount(createElement(McpPage));
+  expect(host.querySelector('[data-testid="connection-state"]')?.textContent).toContain('Gián đoạn');
+  await click(button(host, 'Ghép đôi'));
+  expect(host.querySelector('[data-testid="pairing-code"]')?.textContent).toBe('01234567');
+  expect(host.querySelector('[data-testid="connection-state"]')?.textContent).toContain('Chờ nhập mã');
+  expect(button(host, 'Chọn nguồn và phạm vi')!.disabled).toBe(true);
+});
 
 it('lists the install steps with the one thing to do when a step failed', async () => {
   answers.set('/api/integrations', [summary({ desktop: { state: 'not_installed', catalogVersion: '126.9.16' }, bundle: { state: 'missing', note: 'Chưa chuẩn bị plugin Exporter.' } })]);
@@ -193,6 +209,50 @@ it('asks for every limit one by one, and a blocker means no approval at all', as
   const post = calls.find((c) => c.path.endsWith('/publish'))!;
   expect(post.body).toEqual({ snapshotHash: 'a'.repeat(64), acknowledgedIssueIds: ['field_error|x|text.characters', 'source_user_attested||'] });
   expect(onChanged).toHaveBeenCalled();
+});
+
+it('shows named screens beyond the old six-image limit, filters by node, and opens a 1:1 image with detail regions', async () => {
+  const images: SnapshotPreview[] = Array.from({ length: 13 }, (_, i) => ({ nodeId: `1:${i}`, name: `Screen ${i}`, nodeType: 'FRAME', role: 'screen', fileId: `file${i}`, path: `assets/${i}.png`, width: 375, height: 812 }));
+  images.push({ ...images[0], role: 'overview', nodeType: 'SECTION', name: 'Section overview' }, { ...images[0], role: 'detail', region: { x: 0, y: 2048, width: 375, height: 812 } });
+  answers.set('/api/design-snapshots/dsn_aaaaaaaaaaaa/previews', { images, warnings: [] });
+  const { host } = await reviewing(snapshot());
+  const gallery = host.querySelector('[aria-label="Ảnh thiết kế"]')!;
+  expect(text(gallery)).toContain('Màn hình (13)');
+  expect(gallery.querySelectorAll('.design-preview-card')).toHaveLength(12);
+  await click(button(gallery, 'Sau'));
+  expect(gallery.querySelectorAll('.design-preview-card')).toHaveLength(1);
+  expect(text(gallery)).toContain('Screen 12');
+  const search = gallery.querySelector('input') as HTMLInputElement;
+  await act(async () => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(search, '1:9'); search.dispatchEvent(new Event('input', { bubbles: true })); });
+  expect(text(gallery)).toContain('Screen 9');
+  await click(gallery.querySelector('.design-preview-card')!);
+  expect(gallery.querySelector('[aria-label="Ảnh lớn Screen 9"] img')?.getAttribute('src')).toContain('/files/file9');
+  await click(button(gallery, 'Xem 1:1'));
+  expect(gallery.querySelector('.design-preview-canvas')?.classList.contains('actual-size')).toBe(true);
+  await click(button(gallery, 'Đóng ảnh'));
+  expect(gallery.querySelector('.design-preview-viewer')).toBeNull();
+  await act(async () => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(search, ''); search.dispatchEvent(new Event('input', { bubbles: true })); });
+  await click(button(gallery, 'Vùng chi tiết'));
+  expect(text(gallery)).toContain('y=2048');
+});
+
+it('lists warning groups with component context and opens the selected node without approving anything', async () => {
+  const snap = snapshot({ limited: true, issues: [{ ...issue('asset_missing||asset', 'limit', 'Tài nguyên không lấy được'), field: 'asset' }] });
+  answers.set(`/api/design-snapshots/${snap.id}/diagnostics`, { groups: [{ kind: 'component_properties', title: 'Component property không đọc được', explanation: 'Kiểm tra component gốc.', items: [{ nodeId: '1:4', name: 'Nút gửi', nodeType: 'INSTANCE', path: 'Login / Toolbar / Nút gửi', reason: 'Component set has existing errors', component: { nodeId: '2:1', name: 'Button, size=sm' } }] }] });
+  answers.set(`/api/design-snapshots/${snap.id}/nodes/1%3A4`, { id: '1:4', name: 'Nút gửi', type: 'INSTANCE', fields: { 'instance.componentProperties': { s: 'error', r: 'Component set has existing errors' } }, groups: { instance: 'partial' } });
+  answers.set(`/api/design-snapshots/${snap.id}/tree`, []);
+  const { host } = await reviewing(snap);
+  await click(tab(host, 'Giới hạn'));
+  const details = host.querySelector('[aria-label="Chi tiết cảnh báo"]')!;
+  expect(text(details)).toContain('Component property không đọc được (1)');
+  expect(text(details)).toContain('Component gốc: Button, size=sm · 2:1');
+  expect((host.querySelector('input[type="checkbox"]') as HTMLInputElement).checked).toBe(false);
+  expect(button(host, 'Duyệt snapshot')!.disabled).toBe(true);
+  expect(text(host)).toContain('Thông báo gốc');
+  await click(button(details, 'Nút gửi'));
+  expect(host.querySelector('[role="tab"][aria-selected="true"]')?.textContent).toBe('Node');
+  expect(text(host)).toContain('Bản ghi 1:4 (INSTANCE)');
+  expect(text(host)).toContain('Component set has existing errors');
 });
 
 it('shows a blocker, and offers no way to approve it', async () => {

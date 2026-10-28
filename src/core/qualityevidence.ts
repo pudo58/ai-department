@@ -3,6 +3,7 @@ import type { QualityDetail, TestManifest, MutationResult, MutationCapability } 
 import { canonicalJson, hashContract, sha256 } from './contract.js';
 import { normalizeTestId, manifestFindings, testPlanFindings, StoredManifestSchema } from './testplan.js';
 import { policyOf } from './policy.js';
+import { extractRequirementIds } from './checks.js';
 
 export const recipeHash = (run: Run): string => sha256(canonicalJson({ checks: run.configSnapshot.checks, mutationRoot: run.configSnapshot.mutationRoot, executionMode: run.configSnapshot.executionMode, runnerImage: run.configSnapshot.runnerImage }));
 export const deepQuality = (run: Run): boolean => run.mode === 'verify' && !!run.qualityPolicyVersion;
@@ -84,6 +85,7 @@ export function qualityDetail(run: Run, checks: readonly CheckResult[], artifact
       }
       const stepIds = (c.steps ?? []).map((s) => s.id).filter((id): id is string => !!id), bound = new Set(entries.flatMap((e) => (e.assertions ?? []).map((a) => a.stepId)));
       return { caseId: c.id, requirementIds: c.requirementIds, required: c.required, method: c.method, status, tests: entries.map((e) => `${e.recipeId}: ${e.testId}`), reasons,
+        ...(c.method === 'manual' ? { supportingTests: live.filter(check => check.status === 'passed' && !check.quarantined).flatMap(check => check.testIds.filter(id => extractRequirementIds(id).some(r => c.requirementIds.includes(r))).map(id => `${check.recipeId}: ${id}`)) } : {}),
         ...(c.method === 'automated' && stepIds.length ? { stepsLinked: { linked: stepIds.filter((id) => bound.has(id)).length, total: stepIds.length } } : {}),
         checkpoint: run.checkpoint, slot: run.selectedSlot, contractVersion: run.contract.version, manifestHash: found?.hash ?? null };
     }) : [],

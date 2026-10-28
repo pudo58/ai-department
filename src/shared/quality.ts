@@ -43,6 +43,8 @@ export interface TestManifest {
   derived?: boolean;
 }
 export interface CaseEvidence {
+  /** Passing R-x-tagged tests related to a manual case; these are not bindings proving every approved step. */
+  supportingTests?: string[];
   caseId: string; requirementIds: string[]; required: boolean; method: TestCase['method'];
   status: 'passed' | 'failed' | 'missing' | 'manual_pending'; tests: string[]; reasons: string[];
   checkpoint: string | null; slot: Slot; contractVersion: number; manifestHash: string | null;

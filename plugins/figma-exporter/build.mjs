@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const TEMPLATE_DIR = path.join(here, 'dist');
-const PLUGIN_VERSION = '1.0.0', PROTOCOL_VERSION = 1, READER_VERSION = 1;
+const PLUGIN_VERSION = '1.1.1', PROTOCOL_VERSION = 1, READER_VERSION = 1;
 
 const sha = (data) => createHash('sha256').update(data).digest('hex');
 const canonical = (value) => {
@@ -46,18 +46,21 @@ export async function buildExporter({ outDir = TEMPLATE_DIR } = {}) {
 }
 
 /**
- * Writes the importable folder for `origin` (for example http://127.0.0.1:4310). Only that origin is allowed network access. Returns
- * what was written; the bundle hash covers the code, the UI template, the origin and the versions, so a changed bundle is a new hash.
+ * Writes the importable folder for an instance's loopback origin. Figma's manifest validator rejects IP literals, so the manifest
+ * and the UI both use localhost at the same port. `origin` in the bundle metadata still identifies the owning server instance.
+ * The bundle hash includes the plugin's connection origin so existing pairings cannot silently reuse a different network target.
  */
 export function prepareBundle({ templateDir = TEMPLATE_DIR, outDir, origin }) {
-  if (!/^http:\/\/(127\.0\.0\.1|localhost|\[::1\]):\d{2,5}$/.test(origin)) throw new Error(`Origin không hợp lệ: ${origin}. Chỉ nhận http://127.0.0.1:<cổng>.`);
+  const match = /^http:\/\/(?:127\.0\.0\.1|localhost|\[::1\]):([1-9]\d{0,4})$/.exec(origin);
+  if (!match || Number(match[1]) > 65535) throw new Error(`Origin không hợp lệ: ${origin}. Chỉ nhận HTTP loopback với cổng từ 1 đến 65535.`);
+  const pluginOrigin = `http://localhost:${match[1]}`;
   const code = readFileSync(path.join(templateDir, 'code.js'), 'utf8');
   const ui = readFileSync(path.join(templateDir, 'ui.template.html'), 'utf8');
-  const bundleHash = sha(canonical({ code: sha(code), ui: sha(ui), origin, pluginVersion: PLUGIN_VERSION, protocolVersion: PROTOCOL_VERSION, readerVersion: READER_VERSION }));
-  const config = { origin, bundleHash, pluginVersion: PLUGIN_VERSION };
+  const bundleHash = sha(canonical({ code: sha(code), ui: sha(ui), origin, pluginOrigin, pluginVersion: PLUGIN_VERSION, protocolVersion: PROTOCOL_VERSION, readerVersion: READER_VERSION }));
+  const config = { origin: pluginOrigin, bundleHash, pluginVersion: PLUGIN_VERSION };
   const manifest = {
     name: 'AI Department Exporter', api: '1.0.0', main: 'code.js', ui: 'ui.html', editorType: ['figma'], documentAccess: 'dynamic-page',
-    networkAccess: { allowedDomains: ['none'], devAllowedDomains: [origin], reasoning: 'Gửi dữ liệu thiết kế đã đọc tới AI Department chạy trên máy này.' },
+    networkAccess: { allowedDomains: ['none'], devAllowedDomains: [pluginOrigin], reasoning: 'Gửi dữ liệu thiết kế đã đọc tới AI Department chạy trên máy này.' },
   };
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
@@ -65,7 +68,7 @@ export function prepareBundle({ templateDir = TEMPLATE_DIR, outDir, origin }) {
     'code.js': code,
     'ui.html': ui.replace('null;</script>', () => `${JSON.stringify(config).replace(/</g, '\\u003c')};</script>`).replace('/*__AIDEPT_CONFIG__*/', ''),
     'manifest.json': `${JSON.stringify(manifest, null, 2)}\n`,
-    'README.md': readFileSync(path.join(templateDir, 'README.template.md'), 'utf8').replaceAll('__ORIGIN__', origin),
+    'README.md': readFileSync(path.join(templateDir, 'README.template.md'), 'utf8').replaceAll('__ORIGIN__', pluginOrigin),
   };
   for (const [name, content] of Object.entries(files)) writeFileSync(path.join(outDir, name), content);
   const info = { pluginVersion: PLUGIN_VERSION, protocolVersion: PROTOCOL_VERSION, readerVersion: READER_VERSION, origin, bundleHash, files: Object.fromEntries(Object.entries(files).map(([name, content]) => [name, sha(content)])) };

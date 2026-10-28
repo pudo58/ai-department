@@ -257,7 +257,8 @@ describe('the report says what design the task used', () => {
     expect(report.design).toMatchObject({ snapshotId: snap.id, usable: true, limited: true, identity: 'verified' });
     expect(report.design!.inputs.map((i) => i.role)).toContain('planner');
     expect(report.warnings.some((w) => w.level === 'warn' && w.text.includes('giới hạn đã chấp nhận'))).toBe(true);
-    expect(report.warnings.some((w) => w.text.includes('visual verification'))).toBe(true);
+    expect(report.warnings.some((w) => w.text.includes('Chưa có report đối chiếu hình ảnh'))).toBe(true);
+    expect(report.visual).toBeUndefined();
     const md = renderReportMarkdown(report);
     expect(md).toContain('## Nguồn thiết kế');
     expect(md).toContain(snap.id);

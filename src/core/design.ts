@@ -92,6 +92,7 @@ export interface SummaryInput {
   components: { id: string; name: string; axes?: string[] }[];
   tokens: { styles: number; variables: number; collections: string[] };
   assets: { id: string; kind: string; mime: string; bytes: number }[];
+  previews?: { nodeId: string; name: string; role: string; path: string }[];
   mountPath: string;
 }
 export const SUMMARY_MAX_CHARS = 8000;
@@ -99,18 +100,23 @@ export const SUMMARY_MAX_CHARS = 8000;
 export function designSummary(role: Role, s: SummaryInput, maxChars = SUMMARY_MAX_CHARS): string {
   const lines: string[] = [
     `Nguồn thiết kế (snapshot ${s.snapshotId}, hash ${s.snapshotHash.slice(0, 12)}): ${s.coverageText}. ${identityLabel(s.identity)}.`,
-    `Dữ liệu đầy đủ ở thư mục ${s.mountPath} (chỉ đọc): đọc index.json trước, rồi file của target. Không có kiểm chứng hình ảnh (visual verification) trong bản này.`,
+    `Dữ liệu đầy đủ ở thư mục ${s.mountPath} (chỉ đọc): đọc index.json trước, rồi file của target. Kiểm chứng hình ảnh chỉ có khi harness cung cấp report đúng checkpoint; ảnh nguồn không phải bằng chứng implementation đã khớp.`,
   ];
   if (s.limited && s.issues.length) lines.push('Giới hạn đã được chấp nhận:', ...s.issues.slice(0, 8).map((i) => `- ${i.message}`));
   const targets = s.targets.map((t) => `- ${mdCode(t.id)} ${mdText(t.name)} (${t.type}${t.page ? `, trang ${mdText(t.page)}` : ''})`);
   lines.push(`Target của task (${s.targets.length}):`, ...targets.slice(0, 20));
   if (targets.length > 20) lines.push(`… còn ${targets.length - 20} target, xem index.json.`);
+  if (s.previews?.length) {
+    lines.push(`Ảnh tham chiếu theo node (${s.previews.length}; xem previews trong index.json):`, ...s.previews.slice(0, 8).map((p) => `- ${mdCode(p.nodeId)} ${mdText(p.name)} [${p.role}]: ${mdCode(p.path)}`));
+    lines.push('Đọc ảnh screen/detail tương ứng target cùng dữ liệu node, style và asset. Ảnh overview chỉ để hiểu tổng thể; có ảnh tham chiếu chưa phải đã visual verification.');
+  }
   if (role === 'developer' || role === 'author') {
     const components = s.components.map((c) => `- ${mdCode(c.id)} ${mdText(c.name)}${c.axes?.length ? ` · biến thể: ${c.axes.map(mdText).join(', ')}` : ''}`);
     lines.push(`Component (${s.components.length}):`, ...components.slice(0, 25));
     if (components.length > 25) lines.push(`… còn ${components.length - 25} component, xem components/.`);
     lines.push(`Token: ${s.tokens.styles} style, ${s.tokens.variables} variable${s.tokens.collections.length ? ` (collection: ${s.tokens.collections.slice(0, 8).map(mdText).join(', ')})` : ''}; xem tokens/.`);
   }
+  if (role === 'planner') lines.push('Tách yêu cầu thành phần tự động và phần hình thức còn cần đối chiếu. Nội dung chữ, kích thước, điều hướng, trạng thái và tương tác kiểm được bằng DOM/Playwright phải manual=false. Không gộp các phần này với màu/font/bóng rồi đánh dấu cả yêu cầu manual=true. Tiêu chí hình thức nêu rõ node màn hình và ngưỡng đã được người dùng thống nhất; chưa có ngưỡng thì ghi giới hạn, không tự đặt.');
   if (role === 'developer') {
     const assets = s.assets.map((a) => `- ${a.id.slice(0, 12)} ${a.kind} ${a.mime} ${a.bytes}B`);
     lines.push(`Tài nguyên (${s.assets.length}):`, ...assets.slice(0, 15));

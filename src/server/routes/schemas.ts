@@ -4,6 +4,7 @@ import { isSafeRelative } from '../../core/scope.js';
 import { MEMORY_KINDS, MEMORY_MAX_TEXT } from '../../core/memory.js';
 import type { MemoryKind } from '../../shared/types.js';
 import { GUIDANCE_MAX_CHARS, normalizeGuidance } from '../../shared/guidance.js';
+import { VisualProfileSchema } from '../../core/visualprofile.js';
 
 /** Request body schemas shared by the route modules. */
 const ROLES = ['planner', 'author', 'developer', 'verifier', 'investigator'] as const;
@@ -16,6 +17,7 @@ export const MemoryBody = z.object({
   paths: z.array(MemoryPath).max(10).default([]), pinned: z.boolean().default(false),
 });
 export const ProjectBody = z.object({
+  visualCheck: VisualProfileSchema.nullable().optional(),
   name: z.string().trim().min(1).max(120), repository: z.string().trim().min(1).max(500),
   modules: z.array(z.string().trim().min(1).max(300)).min(1).max(50),
   checks: z.array(Recipe).min(1).max(20).refine((list) => new Set(list.map((c) => c.id)).size === list.length, 'Mỗi check cần một id riêng.'),

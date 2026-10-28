@@ -9,6 +9,8 @@ import type { EnvironmentProbe, ExecutionMetrics, VerifierScope } from '../share
 import type {FindingReplay} from '../shared/reproduction.js';
 import type { FindingProof, PendingRegression, RegressionRef } from '../shared/regression.js';
 import { policyOf } from './policy.js';
+import { visualForRequirement } from '../shared/visual.js';
+import type { VisualReport } from '../shared/visual.js';
 
 export interface ChangedFile { path: string; added: number; removed: number; status: 'added' | 'modified' | 'deleted' | 'renamed' }
 export interface ReportWarning { level: 'warn' | 'info'; text: string }
@@ -27,6 +29,7 @@ export function degradedOf(artifacts: readonly Artifact[]): DegradedRun {
 }
 
 export interface AcceptanceReport {
+  visual?: VisualReport;
   /** Present only when the run was completed with automatic fallbacks that weaken its evidence. */
   degraded?: DegradedRun;
   findingReplays?: FindingReplay[];
@@ -41,7 +44,7 @@ export interface AcceptanceReport {
   /** ready: every automatic condition holds and nothing needs a second look; with_warnings: acceptable only after the person reads the warnings. */
   readiness: 'ready' | 'ready_with_warnings' | 'not_ready'; notReadyReasons: string[];
   checkpoint: string | null; baseSha: string | null;
-  requirements: { id: string; text: string; required: boolean; manual: boolean; kind: 'expected' | 'forbidden'; status: MatrixRow['status']; tests: string[] }[];
+  requirements: { id: string; text: string; required: boolean; manual: boolean; kind: 'expected' | 'forbidden'; status: MatrixRow['status']; tests: string[]; visual?: { status: 'unverified' | 'incomplete' | 'different' | 'passed' | 'needs_review'; checked: number; nodeIds: string[] } }[];
   assumptions: string[];
   changes: { available: boolean; files: ChangedFile[]; added: number; removed: number; testFiles: string[]; patch: string };
   checks: { id: string; command: string; status: CheckResult['status']; passed: number | null; failed: number | null; skipped: number | null; skippedNames: string[]; durationMs: number; runs: number; quarantined: boolean; issues?: CheckResult['issues'] }[];
@@ -55,6 +58,7 @@ export interface AcceptanceReport {
 }
 
 export interface ReportInput {
+  visual?: VisualReport;
   findingReplays?: FindingReplay[];
   findingProofs?: FindingProof[]; regressionFiles?: RegressionRef[]; regressionProposals?: PendingRegression[];
   assertionAudit?: AssertionAudit[];
@@ -99,6 +103,7 @@ export function buildReport(input: ReportInput): AcceptanceReport {
   const quality: QualityDetail = input.quality ?? { enabled: false, manifestHash: null, manifestProblems: [], cases: [], capability: { status: 'unsupported', reason: 'Chưa áp dụng kiểm thử sâu.' }, mutation: null, testMs: 0 };
   const verdictExpected = run.mode === 'verify' || run.mode === 'compare';
   const verdict = readVerdict(artifacts, run);
+  const visual = input.visual;
 
   // Which passing tests back each requirement, read from the test titles themselves.
   const testsByReq = new Map<string, string[]>();
@@ -137,7 +142,7 @@ export function buildReport(input: ReportInput): AcceptanceReport {
   else {
     for (const x of quality.manifestAdvisories ?? []) warn(`Manifest: ${x}`);
     for (const x of quality.planAdvisories ?? []) info(`Kế hoạch ca (đã xác nhận lúc duyệt): ${x}`);
-    for (const c of quality.cases.filter(c => c.method === 'manual')) warn(`${c.caseId}: cần kiểm tra thủ công.`);
+    for (const c of quality.cases.filter(c => c.method === 'manual')) warn(c.supportingTests?.length ? `${c.caseId}: ${c.supportingTests.length} test liên quan đã đạt; còn phần thủ công chưa có binding chứng minh đủ bước.` : `${c.caseId}: chưa có bằng chứng tự động, cần kiểm tra phần thủ công.`);
     for (const c of quality.cases.filter(c => !c.required && c.method === 'automated' && c.status !== 'passed')) warn(`${c.caseId}: ca bổ sung chưa được kiểm tra đạt.`);
     if (quality.capability.status !== 'available') warn(`Mutation: ${quality.capability.reason}${quality.capability.install ? ` ${quality.capability.install}` : ''}`);
     else if (!quality.mutation || quality.mutation.status !== 'completed') warn(`Mutation chưa hoàn tất: ${quality.mutation?.message ?? 'Chưa chạy trên checkpoint này.'}`);
@@ -209,7 +214,9 @@ export function buildReport(input: ReportInput): AcceptanceReport {
     if (d.limited) warn(`Nguồn thiết kế có giới hạn đã chấp nhận (${d.acknowledged.length}): ${d.acknowledged.slice(0, 3).map((i) => short(i.message, 120)).join(' | ')}`);
     if (d.identity === 'user_attested') info('Nguồn thiết kế do người dùng xác nhận (plugin không trả được file key), chưa được đối chiếu tự động.');
     if (d.changedByAgent) warn(`${d.changedByAgent} lượt agent đã làm thư mục dữ liệu thiết kế thay đổi so với bản được cấp; bản đó không được dùng làm nguồn.`);
-    info('Chưa có kiểm chứng hình ảnh (visual verification): dữ liệu thiết kế chỉ là căn cứ, không chứng minh giao diện cuối giống thiết kế.');
+    if (!visual) warn('Chưa có report đối chiếu hình ảnh đúng checkpoint. Test DOM đạt chưa chứng minh hình thức giống Figma.');
+    else if (visual.status !== 'passed') warn(`Đối chiếu hình ảnh còn cần xem: ${visual.screens.filter(s => s.status !== 'passed').length}/${visual.screens.length} màn hình. ${visual.limitations.join(' ')}`);
+    else info(`Đã so ảnh ${visual.screens.length} màn hình ổn định với Figma, trong ngưỡng của profile; đây là bằng chứng hình thức, không thay test hành vi.`);
   }
   const skills = [...skillsUsed.values()];
   const scripted = [...new Set(skills.filter((s) => s.hasScripts).map((s) => s.name))];
@@ -222,6 +229,7 @@ export function buildReport(input: ReportInput): AcceptanceReport {
   if (run.status === 'completed' && !delivered(run)) warn('Lịch sử đã nghiệm thu nhưng chưa xác nhận giao kết quả cho bản code này. Workspace được giữ để thử giao lại.');
   const readiness = !completion.ready ? 'not_ready' : warnings.some((w) => w.level === 'warn') ? 'ready_with_warnings' : 'ready';
   return {
+    ...(visual ? { visual } : {}),
     planReview: input.planReview,
     ...(degradedOf(artifacts).items ? { degraded: degradedOf(artifacts) } : {}),
     findingReplays,
@@ -231,7 +239,12 @@ export function buildReport(input: ReportInput): AcceptanceReport {
     ...(input.design ? { design: input.design } : {}),
     quality, qualityPolicyVersion: run.qualityPolicyVersion, generatedAt: (input.now ?? new Date()).toISOString(), runId: run.id, title: run.title, requirement: run.originalRequirement, mode: run.mode, provider: run.provider,
     readiness, notReadyReasons: completion.reasons, checkpoint: run.checkpoint, baseSha: run.baseSha,
-    requirements: matrix.map((r) => ({ id: r.requirementId, text: r.text, required: r.required, manual: r.manual, kind: r.kind ?? 'expected', status: r.status, tests: testsByReq.get(r.requirementId) ?? [] })),
+    requirements: matrix.map((r) => {
+      const req = run.contract.requirements.find(q => q.id === r.requirementId);
+      const match = visualForRequirement(r.text, req?.designRefs, visual);
+      return { id: r.requirementId, text: r.text, required: r.required, manual: r.manual, kind: r.kind ?? 'expected', status: r.status, tests: testsByReq.get(r.requirementId) ?? [],
+        ...(run.contract.design ? { visual: { status: match.status, checked: match.screens.length, nodeIds: match.nodeIds } } : {}) };
+    }),
     assumptions: run.contract.assumptions,
     changes: { available: changes.available, files: changes.files, added: changes.files.reduce((n, f) => n + f.added, 0), removed: changes.files.reduce((n, f) => n + f.removed, 0), testFiles: changes.files.map((f) => f.path).filter((p) => isTestPath(p)), patch: changes.patch.length > MAX_PATCH_CHARS ? `${changes.patch.slice(0, MAX_PATCH_CHARS)}\n… (cắt bớt)` : changes.patch },
     checks: checkRows,
@@ -285,6 +298,11 @@ export function renderReportMarkdown(r: AcceptanceReport): string {
   if (!r.changes.available) out.push('_Không lấy được thống kê._');
   else { out.push(`${r.changes.files.length} file, +${r.changes.added} −${r.changes.removed}`, '', ...r.changes.files.map((f) => `- \`${f.path}\` (${f.status}) +${f.added} −${f.removed}`)); }
   out.push('', '## Kết quả chạy test', '');
+  if (r.visual) {
+    out.push('', '### Đối chiếu hình thức với Figma', '', `Checkpoint ${r.visual.checkpoint}; snapshot ${r.visual.snapshotId}; trạng thái ${r.visual.status}.`);
+    for (const s of r.visual.screens) out.push(`- ${s.nodeId} · ${s.status}${s.changedRatio === undefined ? '' : ` · ${(s.changedRatio * 100).toFixed(2)}% pixel khác`}: ${s.message}`);
+    for (const limit of r.visual.limitations) out.push(`- Giới hạn: ${limit}`);
+  }
   for (const c of r.checks) for (const issue of c.issues ?? []) out.push(`- ${c.id} · ${issue.kind}: ${issue.message}`);
   if (!r.checks.length) out.push('_Chưa có check nào trên checkpoint này._');
   for (const c of r.checks) out.push(`- \`${c.command}\` → **${c.status}**${c.passed !== null ? ` · ${c.passed} pass, ${c.failed ?? 0} fail, ${c.skipped ?? 0} bỏ qua` : ''} · ${mins(c.durationMs)}${c.runs > 1 ? ` · ${c.runs} lần chạy` : ''}`);

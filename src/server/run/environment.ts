@@ -11,7 +11,7 @@ export class EnvironmentChecks {
     const run=this.s.run(runId),runtime=this.s.runtimeFor(run);
     const artifact=this.s.store.artifacts.list(runId).filter(a=>a.title==='Environment preflight' && a.valid).at(-1);
     let previous:EnvironmentProbe|undefined;try{previous=artifact && sha256(artifact.content)===artifact.hash ? JSON.parse(artifact.content):undefined;}catch{}
-    const recentEnvironmentFailure=latestChecks(run,this.s.store.checks.list(runId)).some(c=>c.issues?.some(i=>i.kind==='environment') && (!previous || Date.parse(c.createdAt)>=Date.parse(previous.endedAt)));
+    const recentEnvironmentFailure=latestChecks(run,this.s.store.checks.list(runId)).some(c=>c.issues?.some(i=>i.kind==='environment' || i.kind==='report_error') && (!previous || Date.parse(c.createdAt)>=Date.parse(previous.endedAt)));
     if(!force && !recentEnvironmentFailure && previous && previous.configHash===environmentHash(run) && previous.status!=='blocked')return previous;
     if(force || previous?.status==='blocked')this.s.retry(runId,'environment','Kiểm tra lại môi trường, không gọi AI.');
     const startedAt=this.s.stamp(),bounded=AbortSignal.any([signal,AbortSignal.timeout(60000)]);

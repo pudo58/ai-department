@@ -58,6 +58,14 @@ describe('what a person is told to do, from the state a run is really in', () =>
     expect(step.others).toEqual([{ id: 'recheck', label: 'Chạy lại kiểm tra', cost: 'free' }]);
     expect(step.why).toContain('“e2e”');
   });
+  it('does not recommend another agent turn when a required check has no usable report', () => {
+    const run = blockedRun();
+    const check = { ...failingCheck(run, 'test'), status: 'incomplete' as const };
+    const step = wellFormed(nextStep(input(run, { checks: [check] })));
+    expect(step).toMatchObject({ code: 'checks_incomplete', resumeChanges: false, primary: { id: 'edit_project', cost: 'free' } });
+    expect(step.others).toEqual([{ id: 'recheck', label: 'Chạy lại kiểm tra', cost: 'free' }]);
+    expect(step.why).toContain('“test”');
+  });
 
   it('a check that failed and then passed on its retry: check again for free, not "edit the contract"', () => {
     const run = blockedRun();

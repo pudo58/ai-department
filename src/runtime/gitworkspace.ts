@@ -214,7 +214,7 @@ export class GitWorkspaces {
     try {
       assertProcessSucceeded(await executeFile('git', [...SAFE_GIT, 'clone', '--no-hardlinks', '--no-checkout', '-c', 'core.autocrlf=false', source, target], { timeoutMs: 120_000, signal }), 'git clone (thử regression)');
       assertProcessSucceeded(await this.git(target, ['checkout', '--detach', run.checkpoint], signal), 'git checkout (thử regression)');
-      assertProcessSucceeded(await executeFile('git', [...SAFE_GIT, '-C', target, 'apply', '--whitespace=nowarn', '-'], { input: patch, timeoutMs: 30_000, signal }), 'git apply (thử regression)');
+      if (patch.trim()) assertProcessSucceeded(await executeFile('git', [...SAFE_GIT, '-C', target, 'apply', '--whitespace=nowarn', '-'], { input: patch, timeoutMs: 30_000, signal }), 'git apply (thử regression)');
       return await fn(target);
     } finally {
       await rm(target, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });

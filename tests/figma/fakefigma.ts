@@ -3,6 +3,7 @@
  * children can be read, getters can throw, `figma.mixed` is a symbol, node types differ in which properties exist, and image bytes arrive
  * asynchronously. It is a fixture for tests, never a claim about how a real Figma file behaves.
  */
+import { PNG } from 'pngjs';
 type Props = Record<string, unknown>;
 
 export class FakeNode {
@@ -12,6 +13,7 @@ export class FakeNode {
   parent: FakeNode | null = null;
   readonly props = new Map<string, unknown>();
   readonly failing = new Map<string, Error>();
+  readonly exports: { format: string; constraint?: { type: string; value: number } }[] = [];
   kids: FakeNode[] | undefined;
   loaded = true;
   /** Called with the property name on every read, so a test can edit the document while an export is reading it. */
@@ -53,12 +55,18 @@ export class FakeNode {
     return segments.map((s) => ({ characters: s.characters, start: s.start, end: s.end, ...Object.fromEntries(fields.filter((f) => f in s).map((f) => [f, s[f]])) }));
   }
 
-  async exportAsync(settings: { format: string }): Promise<Uint8Array | string> {
+  async exportAsync(settings: { format: string; constraint?: { type: string; value: number } }): Promise<Uint8Array | string> {
+    this.exports.push(settings);
     const fail = this.props.get('exportError');
     if (fail) throw new Error(String(fail));
     if (settings.format === 'SVG_STRING') return `<svg xmlns="http://www.w3.org/2000/svg" data-node="${this.id}"><path d="M0 0L10 10"/></svg>`;
-    // A PNG signature and a few bytes derived from the id: distinct per node, so previews do not collapse into one asset.
-    return Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, ...[...this.id].map((c) => c.charCodeAt(0))]);
+    const scale = settings.constraint?.type === 'SCALE' ? settings.constraint.value : 1;
+    const width = Math.max(1, Math.ceil(Number(this.props.get('width') ?? 16) * scale));
+    const height = Math.max(1, Math.ceil(Number(this.props.get('height') ?? 16) * scale));
+    const png = new PNG({ width, height });
+    const color = [...this.id].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0);
+    for (let i = 0; i < png.data.length; i += 4) { png.data[i] = color & 255; png.data[i + 1] = (color >>> 8) & 255; png.data[i + 2] = (color >>> 16) & 255; png.data[i + 3] = 255; }
+    return PNG.sync.write(png);
   }
 }
 

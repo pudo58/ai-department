@@ -11,6 +11,7 @@ import { ContractForm } from './forms';
 import { ACTIVE, MODE_LABEL, STATUS } from './labels';
 import { PreviewButton } from './Preview';
 import { LiveTests, ReviewPanel } from './ReviewPanel';
+import { VisualReview } from './VisualReview';
 import { PROVIDER_LABEL } from '../shared/providers';
 import { Badge, ConfirmDialog, Icon, Ledger, count, dateTime, duration, money } from './ui';
 import { Stepper, ScopeApproval, ReasonModal, EscalateModal, ProgressPanel, ContractPanel, VerifyPanel, CodePanel, CostPanel } from './RunPanels';
@@ -144,7 +145,7 @@ export function RunPage({ id, onBack, onDeleted }: { id: string; onBack: () => v
         {tab === 'review' && reviewable && <ReviewPanel detail={detail} busy={locked} onAccept={(ack) => act(`/api/runs/${id}/accept`, { acknowledgeWarnings: ack })} onReject={() => setModal('reject')}/>}
         {tab === 'progress' && <ProgressPanel detail={detail}/>}
         {tab === 'contract' && <ContractPanel detail={detail} busy={locked} onApprove={(body) => act(`/api/runs/${id}/approve-contract`, body)}/>}
-        {tab === 'verify' && <VerifyPanel detail={detail} busy={locked} onQuarantine={(checkId, reason) => act(`/api/runs/${id}/checks/${checkId}/quarantine`, { reason })} onFinding={(fid, action, body) => act(`/api/runs/${id}/findings/${fid}/${action}`, body ?? {})}/>}
+        {tab === 'verify' && <div className="stack"><VisualReview detail={detail} onChanged={() => void refresh()}/><VerifyPanel detail={detail} busy={locked} onQuarantine={(checkId, reason) => act(`/api/runs/${id}/checks/${checkId}/quarantine`, { reason })} onFinding={(fid, action, body) => act(`/api/runs/${id}/findings/${fid}/${action}`, body ?? {})}/></div>}
         {tab === 'code' && <CodePanel detail={detail}/>}
         {tab === 'cost' && <CostPanel detail={detail} onAct={act}/>}
         {run.mode === 'single' && tab !== 'cost' && <p className="faint small dossier-note">Single: lập kế hoạch, viết test và tự soát đều do một agent làm. Đó là tự review, không phải kiểm chứng độc lập.</p>}

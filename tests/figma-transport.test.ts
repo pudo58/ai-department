@@ -6,7 +6,7 @@ import path from 'node:path';
 import { ExporterHub, type PluginSession } from '../src/server/figma/exporter.js';
 import { SnapshotStore } from '../src/server/figma/snapshots.js';
 import { Store } from '../src/server/store.js';
-import { CHUNK_MAX_BYTES, type ChunkEnvelope, type FinishBody, type HelloInfo } from '../src/shared/figma.js';
+import { CHUNK_MAX_BYTES, HEARTBEAT_MS, LOST_CONTACT_MS, PAIRING_TTL_MS, type ChunkEnvelope, type FinishBody, type HelloInfo } from '../src/shared/figma.js';
 
 const dirs: string[] = [];
 afterEach(() => { for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }); });
@@ -43,6 +43,45 @@ const refused = async (promise: Promise<unknown>, status: number, text?: RegExp)
   expect(error!.status).toBe(status);
   if (text) expect(error!.message).toMatch(text);
 };
+
+describe('pairing again after a lost connection', () => {
+  it('shows the new pairing code while an interrupted session still exists, then replaces it on successful pairing', () => {
+    let now = 10_000;
+    const t = hub({ now: () => now });
+    stop(t, t.job.id);
+    now += LOST_CONTACT_MS + HEARTBEAT_MS + 1;
+    expect(t.hub.connectionState().state).toBe('interrupted');
+
+    const pairingCode = t.hub.createPairingCode();
+    expect(t.hub.connectionState()).toMatchObject({ state: 'pairing', pairingCode });
+    const paired = t.hub.pair({ code: pairingCode.code, hello: hello({ fileName: 'New file' }) });
+    expect(t.hub.connectionState()).toMatchObject({ state: 'connected', hello: { fileName: 'New file' } });
+    expect(t.hub.connectionState().pairingCode).toBeUndefined();
+    expect(t.hub.authenticate(`Bearer ${paired.token}`).id).not.toBe(t.session.id);
+  });
+
+  it('lets a pending code expire and returns to interrupted without displaying the expired code', () => {
+    let now = 10_000;
+    const t = hub({ now: () => now });
+    stop(t, t.job.id);
+    now += LOST_CONTACT_MS + HEARTBEAT_MS + 1;
+    const pairingCode = t.hub.createPairingCode();
+    expect(t.hub.connectionState()).toMatchObject({ state: 'pairing', pairingCode });
+    now += PAIRING_TTL_MS + 1;
+    expect(t.hub.connectionState().state).toBe('interrupted');
+    expect(t.hub.connectionState().pairingCode).toBeUndefined();
+    expect(() => t.hub.pair({ code: pairingCode.code, hello: hello() })).toThrow(/hết hạn/);
+  });
+
+  it('also displays an explicitly requested replacement code while the original session is still connected', async () => {
+    const t = hub();
+    stop(t, t.job.id);
+    const pairingCode = t.hub.createPairingCode();
+    expect(t.hub.connectionState()).toMatchObject({ state: 'pairing', pairingCode });
+    // Requesting a code alone does not revoke the original session or interrupt its poll.
+    await expect(t.hub.poll(t.session, 0)).resolves.toBeInstanceOf(Array);
+  });
+});
 
 describe('a chunk is stored before it is acknowledged, and only the right chunk is stored', () => {
   it('acknowledges in order, treats the same chunk again as a no-op, and refuses the same sequence with other bytes', async () => {

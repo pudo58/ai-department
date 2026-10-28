@@ -14,6 +14,7 @@ import { pendingAuthorDraft } from '../../core/authordraft.js';
 import { executionMetrics } from '../../core/execution.js';
 import { readEnvironment } from '../../core/environment.js';
 import {readFindingReplays} from '../../core/reproduction.js';
+import { readVisualReport, visualBlockers } from '../../core/visualevidence.js';
 import type { RunServices } from './services.js';
 import type { ScopePolicy } from './scope.js';
 
@@ -30,6 +31,8 @@ export class RunOutcome {
     const artifacts = this.s.store.artifacts.list(runId);
     const quality = qualityDetail(run, checks, artifacts);
     const completion = evaluateCompletion(run, checks, findings, budget);
+    completion.reasons.push(...visualBlockers(run, artifacts));
+    completion.ready = completion.reasons.length === 0;
     if (quality.enabled) {
       completion.reasons.push(...quality.manifestProblems);
       for (const c of quality.cases.filter(c => c.required && c.method === 'automated' && c.status !== 'passed')) completion.reasons.push(`${c.caseId}: ca bắt buộc ${c.status === 'failed' ? 'thất bại' : 'chưa có bằng chứng đạt'}.`);
@@ -44,6 +47,7 @@ export class RunOutcome {
     if (deepQuality(run) && !run.contract.testPlan) contractReview.problems.push(...validateTestPlan(run.contract, true));
     const events = this.s.store.events(runId);
     const full: RunDetail = {
+      visual: readVisualReport(run, artifacts),
       planReview: readTestPlanReview(run.contract, artifacts, contractReview.contractHash),
       ...(degradedOf(artifacts).items ? { degraded: degradedOf(artifacts) } : {}),
       execution:executionMetrics(run,attempts,this.s.now().getTime()), authorDraft:pendingAuthorDraft(run,artifacts),

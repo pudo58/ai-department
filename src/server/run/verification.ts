@@ -20,6 +20,7 @@ import {ReproductionSchema,reproductionProblems,reproductionGuide,readFindingRep
 import {FindingReplays} from './reproduction.js';
 import {Regressions} from './regression.js';
 import {policyOf} from '../../core/policy.js';
+import { readVisualReport, VISUAL_REPORT_TITLE } from '../../core/visualevidence.js';
 
 /** Final verification: the independent Verifier, its stored verdict, and the repair round for confirmed findings. */
 export class Verification {
@@ -29,6 +30,10 @@ export class Verification {
   async verifyPhase(runId: string, signal: AbortSignal, checksOnly = false): Promise<void> {
     const run = this.s.run(runId);
     this.s.mutate(runId, (r) => { r.stage = 'verify'; });
+    if (run.contract.design && run.configSnapshot.visualCheck && this.s.visualCheck && !readVisualReport(run, this.s.store.artifacts.list(runId))) {
+      const report = await this.s.withHeartbeat(runId, 'visual', 'Đối chiếu ảnh ứng dụng với Figma', () => this.s.visualCheck!(run, signal));
+      if (report) this.s.artifact(runId, { kind: 'report', title: VISUAL_REPORT_TITLE, content: JSON.stringify(report), checkpoint: run.checkpoint });
+    }
     await new MutationChecks(this.s).run(runId, signal, checksOnly);
     const verifies = run.mode === 'verify' || run.mode === 'compare';
     if (!checksOnly && verifies && !readVerdict(this.s.store.artifacts.list(runId), run)) await this.independentVerifier(runId, signal);
@@ -72,7 +77,8 @@ export class Verification {
     const diff = reviewDiff(await this.changesSinceBase(runId));
     const independence: Independence = { independent: true, reason: 'Phiên mới; lập checklist từ hợp đồng trước khi đọc diff, không nhận giải thích của Developer.' };
     const checkEvidence=latestChecks(run,this.s.store.checks.list(runId)).map(c=>({id:c.id,recipeId:c.recipeId,checkpoint:c.checkpoint,contractVersion:c.contractVersion,status:c.status,counts:c.counts,issues:c.issues}));
-    const { output, attempt } = await this.s.attempt(runId, { role: 'verifier', stage: 'verify', slot: run.selectedSlot, prompt: `${PROMPTS.verifier(run, diff)}\nBằng chứng runner hiện hành: ${JSON.stringify(checkEvidence)}\n${reproductionGuide}\n${policyOf(run).strict?'Với finding hành vi (behavior), trả kịch bản tái hiện chạy được trong trường reproduction. Không cần tạo finding cho đủ số lượng; nếu chưa viết được kịch bản, ghi reproductionLimitation cụ thể (vì sao không tái hiện được qua public API Node ESM) và không bịa kết quả. Finding blocker/major không có phản ví dụ vẫn chặn nghiệm thu cho tới khi người dùng xử lý có lý do.\n':''}Bổ sung scope={reviewed:["file/điều khoản đã thực sự review"],checkIds:["ID check hiện hành đã dùng"],limitations:["phần chưa xác nhận"],additionalChecks:[{command:"lệnh chính xác",status:"passed|failed|incomplete",detail:"kết quả"}] vào JSON cuối. Không coi pass là đã tự chạy test. Lệnh lỗi môi trường phải ghi incomplete/failed và giới hạn.`, independence, signal });
+    const visual = readVisualReport(run, this.s.store.artifacts.list(runId));
+    const { output, attempt } = await this.s.attempt(runId, { role: 'verifier', stage: 'verify', slot: run.selectedSlot, prompt: `${PROMPTS.verifier(run, diff)}\nBằng chứng runner hiện hành: ${JSON.stringify(checkEvidence)}\nĐối chiếu hình thức từ harness: ${visual ? JSON.stringify(visual) : 'Chưa có report hình ảnh; không suy ra hình thức đạt từ test DOM.'}\n${reproductionGuide}\n${policyOf(run).strict?'Với finding hành vi (behavior), trả kịch bản tái hiện chạy được trong trường reproduction. Không cần tạo finding cho đủ số lượng; nếu chưa viết được kịch bản, ghi reproductionLimitation cụ thể (vì sao không tái hiện được qua public API Node ESM) và không bịa kết quả. Finding blocker/major không có phản ví dụ vẫn chặn nghiệm thu cho tới khi người dùng xử lý có lý do.\n':''}Bổ sung scope={reviewed:["file/điều khoản đã thực sự review"],checkIds:["ID check hiện hành đã dùng"],limitations:["phần chưa xác nhận"],additionalChecks:[{command:"lệnh chính xác",status:"passed|failed|incomplete",detail:"kết quả"}] vào JSON cuối. Không coi pass là đã tự chạy test. Lệnh lỗi môi trường phải ghi incomplete/failed và giới hạn.`, independence, signal });
     await this.s.discardStrayEdits(runId, run.selectedSlot, 'Verifier');
     const created:Finding[]=[];
     const afterAutoRound = !policyOf(run).strict && this.s.store.artifacts.list(runId).some((a) => a.title === 'Unconfirmed finding repair' && a.valid && a.contractVersion === run.contract.version);

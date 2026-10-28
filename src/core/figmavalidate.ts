@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import {
-  APPLICABLE_GROUPS, FIELD_GROUPS, FIELD_STATUSES, canonicalJson, isKnownNodeType, issueId, nodeRecordCore,
+  APPLICABLE_GROUPS, FIELD_GROUPS, FIELD_STATUSES, canonicalJson, hiddenNode, isKnownNodeType, issueId, nodeRecordCore,
   type DependencyRecord, type ExportIssue, type FieldGroup, type FieldStatus, type FieldValue, type FinishBody, type GroupStatus, type InventoryRecord, type NodeRecord, type StreamSummary,
 } from '../shared/figma.js';
 import type { ExportCoverage, ExportCounts, GroupCoverage, SourceIdentity } from '../shared/design.js';
@@ -41,6 +41,7 @@ export class ExportValidator {
   private readonly second = new Map<string, Slim>();
   private readonly nodeSeen = new Set<string>();
   private readonly nodeHash = new Map<string, string>();
+  private readonly nodeFacts = new Map<string, { name: string; parentId: string | null; visible?: boolean }>();
   private readonly group = new Map<FieldGroup, GroupCoverage>();
   private readonly all = emptyGroup();
   private readonly styleRefs = new Map<string, Set<string>>();
@@ -91,6 +92,8 @@ export class ExportValidator {
     }
     if (this.nodeSeen.has(r.id)) { this.raise('duplicate_id', 'blocker', `Mã node ${r.id} có hai bản ghi dữ liệu.`, r.id); return; }
     this.nodeSeen.add(r.id);
+    const visible = r.fields['common.visible'];
+    this.nodeFacts.set(r.id, { name: r.name, parentId: r.parentId, visible: visible?.s === 'read' && typeof visible.v === 'boolean' ? visible.v : undefined });
     const core = nodeRecordCore(r);
     if (sha256(canonicalJson(core)) !== r.hash) this.raise('node_hash_mismatch', 'blocker', `Hash của bản ghi node ${r.id} không khớp nội dung.`, r.id);
     this.nodeHash.set(r.id, r.hash);
@@ -184,6 +187,8 @@ export class ExportValidator {
 
     const issues = [...this.issues.values()].map(({ count, samples, ...issue }) => ({
       ...issue,
+      occurrences: count ?? 1,
+      ...(samples?.length ? { examples: samples.map((nodeId) => ({ nodeId, name: this.nodeFacts.get(nodeId)?.name })) } : {}),
       message: count && count > 1 ? `${issue.message} (${count} chỗ${samples?.length ? `; ví dụ node ${samples.join(', ')}` : ''})` : samples?.length ? `${issue.message} (node ${samples.join(', ')})` : issue.message,
     }));
     const sourceChanged = this.issues.has(issueId('source_changed')) || input.finish.verification.sourceChanged;
@@ -327,7 +332,13 @@ export class ExportValidator {
     for (const [id, a] of said) if (!storedAssets.has(id) && this.assets.get(id)?.status === 'stored') this.raise('asset_bytes_missing', 'blocker', `Plugin báo đã gửi tài nguyên ${id} (${a.bytes} byte) nhưng server không có.`, id);
     for (const rec of this.assets.values()) {
       if (rec.status === 'oversize') this.aggregate('asset_oversize', 'limit', 'asset', 'Tài nguyên vượt giới hạn dung lượng nên không được lưu.', rec.id);
-      else if (rec.status === 'missing' || rec.status === 'error') this.aggregate('asset_missing', 'limit', 'asset', `Tài nguyên không lấy được${rec.reason ? ` (${rec.reason})` : ''}.`, rec.id);
+      else if (rec.status === 'missing' || rec.status === 'error') {
+        const nodeId = rec.source.nodeId;
+        if (rec.assetKind === 'vector_export') {
+          if (nodeId && hiddenNode(nodeId, this.nodeFacts)) this.aggregate('vector_hidden', 'limit', 'asset', 'SVG chưa xuất vì node hoặc layer cha đang ẩn. Dữ liệu node vẫn được lưu; cần export lại SVG nếu bật hiển thị.', nodeId);
+          else this.aggregate('vector_export_failed', 'limit', 'asset', 'SVG chưa xuất được; chưa xác nhận nguyên nhân. Xem Chi tiết cảnh báo để kiểm tra từng node và lỗi API gốc.', nodeId ?? rec.id);
+        } else this.aggregate('asset_missing', 'limit', 'asset', `Tài nguyên không lấy được${rec.reason ? ` (${rec.reason})` : ''}.`, nodeId ?? rec.id);
+      }
     }
   }
 

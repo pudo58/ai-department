@@ -9,6 +9,7 @@ import type { BundleState, DesktopState, InstallJob, InstallStep, InstallStepId 
 import { HttpError } from '../run/support.js';
 import { executeFile } from '../../runtime/process.js';
 import type { Store } from '../store.js';
+import { inspectAuthenticode, type SignatureResult } from './authenticode.js';
 
 /**
  * The installer Department offers, fixed in the release and reviewed when it changes. The checksum is not read from the response that
@@ -35,7 +36,7 @@ export function launchCommand(file: string, os: NodeJS.Platform): { cmd: string;
   return { cmd: file, args: [] };
 }
 
-export interface Found { executable: string; version?: string; signed?: boolean }
+export interface Found { executable: string; version?: string; signed?: boolean; verificationError?: string }
 /** What the installer touches in the outside world. The defaults are real; tests give fakes, so no installer is ever run by a test. */
 export interface InstallerDeps {
   platform: { os: NodeJS.Platform; arch: string };
@@ -47,14 +48,11 @@ export interface InstallerDeps {
   download(url: string, dest: string, signal: AbortSignal): Promise<void>;
   sha256(file: string): Promise<string>;
   /** Authenticode status of a file: valid or not, and who signed it. */
-  signature(file: string): Promise<{ valid: boolean; subject?: string; reason?: string }>;
+  signature(file: string): Promise<SignatureResult>;
   run(file: string, args: string[], timeoutMs: number): Promise<{ exitCode: number | null; timedOut: boolean; output: string }>;
   launch(file: string): void;
   openFolder(dir: string): void;
 }
-
-const ps = (script: string): Promise<{ exitCode: number | null; stdout: string; stderr: string; timedOut: boolean }> =>
-  executeFile('powershell.exe', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', script], { timeoutMs: 30_000 });
 
 export const realDeps = (): InstallerDeps => ({
   platform: { os: process.platform, arch: process.arch },
@@ -69,9 +67,9 @@ export const realDeps = (): InstallerDeps => ({
       // The launcher in the root is a stub; the version of the app lives in the newest app-<version> folder next to it.
       const apps = existsSync(root) ? readdirSync(root).filter((n) => /^app-\d/.test(n)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true })) : [];
       const probe = apps.length ? path.join(root, apps.at(-1)!, 'Figma.exe') : exe;
-      const info = await ps(`$f='${(existsSync(probe) ? probe : exe).replace(/'/g, "''")}'; $v=(Get-Item -LiteralPath $f).VersionInfo.ProductVersion; $s=(Get-AuthenticodeSignature -LiteralPath $f).Status; "$v|$s"`).catch(() => undefined);
-      const [version, status] = (info?.stdout ?? '').trim().split('|');
-      return { executable: exe, ...(version ? { version } : {}), signed: status === 'Valid' };
+      const info = await inspectAuthenticode(existsSync(probe) ? probe : exe);
+      return { executable: exe, ...(info.version ? { version: info.version } : {}), signed: info.valid,
+        ...(info.unavailable ? { verificationError: info.reason } : {}) };
     }
     return undefined;
   },
@@ -89,9 +87,7 @@ export const realDeps = (): InstallerDeps => ({
   sha256: (file) => new Promise((resolve, reject) => { const h = createHash('sha256'); createReadStream(file).on('data', (d) => h.update(d)).on('end', () => resolve(h.digest('hex'))).on('error', reject); }),
   async signature(file) {
     if (process.platform !== 'win32') return { valid: false, reason: 'Chỉ kiểm tra được Authenticode trên Windows.' };
-    const out = await ps(`$s=Get-AuthenticodeSignature -LiteralPath '${file.replace(/'/g, "''")}'; "$($s.Status)|$($s.SignerCertificate.Subject)"`);
-    const [status, subject] = out.stdout.trim().split('|');
-    return { valid: status === 'Valid', subject, ...(status === 'Valid' ? {} : { reason: `Trạng thái chữ ký: ${status || 'không rõ'}` }) };
+    return inspectAuthenticode(file);
   },
   async run(file, args, timeoutMs) {
     const r = await executeFile(file, args, { timeoutMs });
@@ -133,7 +129,7 @@ export class FigmaInstaller {
     const found = await this.deps.find().catch(() => undefined);
     if (!found) return { state: 'not_installed', catalogVersion: FIGMA_CATALOG.version };
     const running = await this.deps.isRunning().catch(() => false);
-    if (found.signed === false) return { state: 'unverified', executable: found.executable, ...(found.version ? { version: found.version } : {}), signed: false, running, catalogVersion: FIGMA_CATALOG.version, note: 'Không xác minh được chữ ký của file chạy; hệ thống không mở nó.' };
+    if (found.signed === false) return { state: 'unverified', executable: found.executable, ...(found.version ? { version: found.version } : {}), signed: false, running, catalogVersion: FIGMA_CATALOG.version, note: found.verificationError ? `Chưa chạy được kiểm tra chữ ký: ${found.verificationError}` : 'Không xác minh được chữ ký của file chạy; hệ thống không mở nó.' };
     return { state: 'installed', executable: found.executable, ...(found.version ? { version: found.version } : {}), signed: found.signed, running, catalogVersion: FIGMA_CATALOG.version, note: 'Figma tự cập nhật nên phiên bản có thể mới hơn bản installer của Department.' };
   }
 
@@ -189,7 +185,7 @@ export class FigmaInstaller {
     try {
       this.step(id, 'detect', { status: 'running' });
       let found = await this.deps.find();
-      if (found && found.signed === false) { this.fail(id, 'detect', 'unverified_executable', `Tìm thấy ${found.executable} nhưng không xác minh được chữ ký.`, 'Gỡ hoặc cài lại Figma từ trang chính thức, rồi thử lại. Department không mở file không xác minh được.'); return; }
+      if (found && found.signed === false) { this.fail(id, 'detect', found.verificationError ? 'signature_check_failed' : 'unverified_executable', found.verificationError ? `Chưa chạy được kiểm tra chữ ký Figma: ${found.verificationError}` : `Tìm thấy ${found.executable} nhưng không xác minh được chữ ký.`, found.verificationError ? 'Thử lại sau khi khắc phục lỗi PowerShell. Chưa cần gỡ Figma; hệ thống vẫn chặn mở ứng dụng khi chưa xác minh được.' : 'Gỡ hoặc cài lại Figma từ trang chính thức, rồi thử lại. Department không mở file không xác minh được.'); return; }
       this.step(id, 'detect', { status: 'done', detail: found ? `Đã có Figma Desktop${found.version ? ` ${found.version}` : ''}; giữ nguyên, không hạ phiên bản.` : 'Chưa có Figma Desktop.' });
 
       if (found) for (const s of ['download', 'verify', 'install'] as const) this.step(id, s, { status: 'skipped', detail: 'Đã có Figma Desktop dùng được.' });
@@ -204,7 +200,7 @@ export class FigmaInstaller {
       this.step(id, 'confirm', { status: 'running' });
       found = await this.deps.find();
       if (!found) { if (state.cancelled) { this.step(id, 'confirm', { status: 'failed', detail: 'Đã hủy; sau khi cài chưa thấy Figma Desktop.' }); this.o.store.installJobs.put({ ...this.getJob(id), status: 'failed', error: { code: 'cancelled', message: 'Đã hủy; chưa có Figma Desktop.' }, endedAt: new Date(this.deps.now()).toISOString() }); return; } this.fail(id, 'confirm', 'not_found_after_install', 'Installer kết thúc nhưng không tìm thấy Figma Desktop.', 'Chính sách máy có thể đã chặn installer. Cài Figma thủ công từ trang chính thức rồi bấm cài lại.'); return; }
-      if (found.signed === false) { this.fail(id, 'confirm', 'unverified_executable', 'Figma sau khi cài không xác minh được chữ ký.', 'Gỡ và cài lại từ trang chính thức.'); return; }
+      if (found.signed === false) { this.fail(id, 'confirm', found.verificationError ? 'signature_check_failed' : 'unverified_executable', found.verificationError ? `Chưa kiểm tra được chữ ký sau khi cài: ${found.verificationError}` : 'Figma sau khi cài không xác minh được chữ ký.', found.verificationError ? 'Thử lại sau khi khắc phục lỗi PowerShell; chưa cần gỡ Figma.' : 'Gỡ và cài lại từ trang chính thức.'); return; }
       this.step(id, 'confirm', { status: 'done', detail: `Figma Desktop ${found.version ?? '(không rõ phiên bản)'} tại ${found.executable}.` });
 
       this.step(id, 'bundle', { status: 'running' });
@@ -242,6 +238,7 @@ export class FigmaInstaller {
     const sha = await this.deps.sha256(file);
     if (sha !== FIGMA_CATALOG.sha256) { rmSync(file, { force: true }); this.fail(id, 'verify', 'checksum_mismatch', `SHA-256 của installer (${sha.slice(0, 12)}…) khác với catalog đã khóa; file đã bị xóa.`, 'Không cài. Thử tải lại; nếu vẫn lệch hãy báo để cập nhật catalog.'); return false; }
     const sig = await this.deps.signature(file);
+    if (sig.unavailable) { this.fail(id, 'verify', 'signature_check_failed', `Chưa thể kiểm tra chữ ký Authenticode (${sig.reason ?? 'không có kết quả'}). Chưa chạy installer; giữ lại file đã khớp SHA-256 để thử lại.`, 'Khắc phục lỗi PowerShell rồi bấm cài lại. Không bỏ qua kiểm tra chữ ký.'); return false; }
     if (!sig.valid || !(sig.subject ?? '').includes(FIGMA_CATALOG.signerContains)) { rmSync(file, { force: true }); this.fail(id, 'verify', 'signature_invalid', `Chữ ký Authenticode không hợp lệ${sig.reason ? ` (${sig.reason})` : sig.subject ? ` (người ký: ${sig.subject})` : ''}; file đã bị xóa.`, 'Không cài file này.'); return false; }
     this.step(id, 'verify', { status: 'done', detail: `SHA-256 khớp catalog; chữ ký hợp lệ (${sig.subject}).` });
     return true;

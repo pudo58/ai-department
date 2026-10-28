@@ -1,5 +1,5 @@
 import { MAX_UNACKED_CHUNKS } from '../../../../src/shared/figma.js';
-import { UI_TO_MAIN, type MainToUi, type UiToMain } from '../messages.js';
+import { UI_TO_MAIN, type BridgeMessage, type MainToUi, type UiToMain } from '../messages.js';
 import { Exporter, type Host } from './exporter.js';
 
 declare const __html__: string;
@@ -9,6 +9,7 @@ declare const __html__: string;
  * to AI Department, and answers only the fixed messages in `messages.ts`.
  */
 const aborted = new Error('aborted');
+let bridgeId: string | undefined;
 
 function createHost(): Host & { ack(id: number): void; yieldAck(): void; abort(): void; reset(): void } {
   let nextId = 1, peak = 0, closed = false;
@@ -17,7 +18,7 @@ function createHost(): Host & { ack(id: number): void; yieldAck(): void; abort()
   const drained: (() => void)[] = [];
   let yielding: (() => void) | undefined;
   const wake = () => { while (slots.length && waiting.size < MAX_UNACKED_CHUNKS) slots.shift()!(); if (!waiting.size) for (const d of drained.splice(0)) d(); };
-  const send = (message: MainToUi) => figma.ui.postMessage(message);
+  const send = (message: MainToUi) => { if (bridgeId) figma.ui.postMessage({ ...message, bridgeId } satisfies BridgeMessage<MainToUi>); };
   return {
     send,
     now: () => Date.now(),
@@ -43,10 +44,15 @@ const host = createHost();
 const exporter = new Exporter(figma, host);
 figma.showUI(__html__, { width: 380, height: 560, title: 'AI Department Exporter', themeColors: true });
 
-const isMessage = (m: unknown): m is UiToMain => !!m && typeof m === 'object' && typeof (m as { type?: unknown }).type === 'string' && (UI_TO_MAIN as readonly string[]).includes((m as { type: string }).type);
+const isMessage = (m: unknown): m is BridgeMessage<UiToMain> => !!m && typeof m === 'object'
+  && typeof (m as { bridgeId?: unknown }).bridgeId === 'string' && /^[a-f0-9]{32}$/.test((m as { bridgeId: string }).bridgeId)
+  && typeof (m as { type?: unknown }).type === 'string' && (UI_TO_MAIN as readonly string[]).includes((m as { type: string }).type);
 
 figma.ui.onmessage = (message: unknown) => {
   if (!isMessage(message)) return;
+  // Bind only at the first handshake, then ignore messages from another UI instance.
+  if (!bridgeId) { if (message.type !== 'HELLO') return; bridgeId = message.bridgeId; }
+  if (message.bridgeId !== bridgeId) return;
   const fail = (reqId: number, error: unknown) => host.send({ type: 'REQUEST_ERROR', reqId, code: String((error as { code?: unknown })?.code ?? 'internal'), message: String((error as Error)?.message ?? error).slice(0, 300) });
   switch (message.type) {
     case 'HELLO': exporter.hello().then((hello) => host.send({ type: 'HELLO_RESULT', reqId: message.reqId, hello }), (e) => fail(message.reqId, e)); break;

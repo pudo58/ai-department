@@ -28,6 +28,7 @@ export class Acceptance {
       catch (error) { this.s.log(runId, 'report.diff_failed', `Không lấy được thống kê thay đổi: ${redactSecrets((error as Error).message)}`); }
     }
     return buildReport({
+      visual: detail.visual,
       planReview: detail.planReview,
       // Every turn that was given the design counts, whichever contract version it ran under: the Planner's turn precedes the version it proposes.
       design: this.s.designs?.describe?.(run, detail.artifacts.filter((a) => a.title === 'Design input receipt' && !!a.attemptId).map((a) => ({ role: (JSON.parse(a.content) as { role: string }).role, attemptId: a.attemptId! })), detail.artifacts.filter((a) => a.title === 'Design input check' && (JSON.parse(a.content) as { unchanged: boolean }).unchanged === false).length),

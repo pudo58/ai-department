@@ -167,9 +167,12 @@ export function summarizeCheck(
     else if (matches.length > 1) issues.push({ kind: 'identity_ambiguous', message: `Một test khớp nhiều ID đã khóa: ${matches.join(', ')}` });
   }
   if (new Set(tests.map(t => t.id)).size !== tests.length) issues.push({ kind: 'identity_ambiguous', message: 'Report chứa định danh test trùng.' });
-  if (parsed && (!parsed.valid || (input.structuredIds && tests.some(t => !t.identity)))) issues.push({ kind: 'report_error', message: 'Report thiếu dữ liệu định danh test hợp lệ.' });
+  const missingReport = !!input.recipe.reportPath && last.report === undefined;
+  if (missingReport) issues.push({ kind: 'report_error', message: `Không tạo được report "${input.recipe.reportPath}" (mã thoát ${last.exitCode ?? 'không xác định'}). Xem log lệnh check, sửa môi trường hoặc cấu hình rồi chạy lại kiểm tra.` });
+  else if (parsed && !parsed.valid) issues.push({ kind: 'report_error', message: 'Report không đúng định dạng JSON Vitest/Jest hoặc JUnit XML hợp lệ.' });
+  else if (parsed && input.structuredIds && tests.some(t => !t.identity)) issues.push({ kind: 'report_error', message: 'Report thiếu dữ liệu định danh test hợp lệ.' });
   if (parsed?.collectionErrors) issues.push({ kind: 'collection_error', message: 'Test lỗi import/collection trước khi chạy assertion.' });
-  if (attempts.some(a => a.incomplete)) issues.push({ kind: 'environment', message: 'Check chưa hoàn tất: môi trường hoặc timeout/thiếu report.' });
+  if (attempts.some(a => a.incomplete) && !missingReport) issues.push({ kind: 'environment', message: 'Check chưa hoàn tất: môi trường hoặc timeout/thiếu report.' });
   if (attempts.some(a => a.checkpoint !== input.checkpoint)) issues.push({ kind: 'checkpoint_mismatch', message: 'Report không thuộc checkpoint đang kiểm tra.' });
   // A runner that found no tests at all (wrong glob, wrong runner) proves nothing, even with exit code 0.
   const noTests = parsed !== null && parsed.valid && parsed.tests.length === 0 && parsed.collectionErrors === 0;

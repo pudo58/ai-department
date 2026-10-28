@@ -31,6 +31,7 @@ import { pendingTestRepair } from '../core/recovery.js';
 import { AUTHOR_DRAFT_TITLE, pendingAuthorDraft } from '../core/authordraft.js';
 import { EnvironmentChecks } from './run/environment.js';
 import {REPLAY_TITLE} from '../core/reproduction.js';
+import { VISUAL_REPORT_TITLE } from '../core/visualevidence.js';
 
 export { HttpError };
 
@@ -48,6 +49,7 @@ export interface OrchestratorOptions { /** The design snapshot integration, when
  * work lives in its own class under ./run, wired together here around one shared RunServices.
  */
 export class Orchestrator {
+  useVisualChecks(check: NonNullable<RunServices['visualCheck']>): void { this.s.visualCheck = check; }
   private readonly queue: SerialQueue;
   private readonly aborts = new Map<string, AbortController>();
   private readonly now: () => Date;
@@ -429,6 +431,7 @@ export class Orchestrator {
     if (run.mode === 'compare') throw new HttpError(409, 'Chế độ Compare chưa hỗ trợ chạy lại check riêng; dùng Chạy tiếp.');
     if (!run.checkpoint) throw new HttpError(409, 'Chưa có checkpoint nào để chạy lại check; hãy dùng Chạy tiếp.');
     this.s.retry(runId,'user_request','Người dùng yêu cầu chạy lại checks trên checkpoint hiện tại.');
+    for (const artifact of this.store.artifacts.list(runId)) if (artifact.title === VISUAL_REPORT_TITLE && artifact.valid) this.store.artifacts.put({ ...artifact, valid: false });
     if (refreshConfig) {
       const project = this.store.projects.get(run.projectId);
       if (!project) throw new HttpError(404, 'Project không tồn tại.');

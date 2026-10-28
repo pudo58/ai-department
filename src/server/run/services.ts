@@ -44,6 +44,7 @@ export class RunServices {
   readonly regressions = new Map<string, RegressionRef[]>();
   /** The design snapshot integration; absent in tests and servers that do not have one. A run with no design source never touches it. */
   designs?: DesignProvider;
+  visualCheck?: (run: Run, signal: AbortSignal) => Promise<import('../../shared/visual.js').VisualReport | undefined>;
 
   isDelivering(id: string): boolean { return this.deliveryLocks.has(id) || this.run(id).delivery?.status === 'in_progress'; }
   /**
