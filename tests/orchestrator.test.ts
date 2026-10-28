@@ -442,6 +442,40 @@ describe('Author writing outside the allowed modules', () => {
   });
 });
 
+describe('Switching the AI of a run that already has a checkpoint', () => {
+  const blockedWithCheckpoint = async () => {
+    const env = setup({ check: () => red });
+    const run = await env.drive(env.create({ mode: 'verify', budgetUsd: 10 }));
+    expect(env.store.runs.get(run.id)!.checkpoint).not.toBeNull();
+    expect(['paused', 'blocked', 'failed']).toContain(env.store.runs.get(run.id)!.status);
+    return { ...env, run };
+  };
+  const switchTo = (store: ReturnType<typeof setup>['store'], approved: boolean) => {
+    const project = store.projects.get('prj_test')!;
+    for (const role of Object.values(project.roles)) role.provider = 'claude';
+    project.version += 1; project.approved = approved;
+    store.projects.put(project);
+  };
+
+  it('resumes with the provider the project has now, keeping the checks it was run with', async () => {
+    const { orchestrator, store, run } = await blockedWithCheckpoint();
+    const checks = store.runs.get(run.id)!.configSnapshot.checks;
+    switchTo(store, true);
+    orchestrator.resumeRun(run.id); await orchestrator.idle();
+    const after = orchestrator.detail(run.id);
+    expect(after.run.configSnapshot.roles.developer.provider).toBe('claude');
+    expect(after.run.configSnapshot.checks).toEqual(checks);
+    expect(after.events.some((e) => e.type === 'config.roles_refreshed')).toBe(true);
+  });
+
+  it('refuses to resume on the old AI without saying so when the project was changed but not approved again', async () => {
+    const { orchestrator, store, run } = await blockedWithCheckpoint();
+    switchTo(store, false);
+    expect(() => orchestrator.resumeRun(run.id)).toThrow(/duyệt/);
+    expect(store.runs.get(run.id)!.configSnapshot.roles.developer.provider).toBe('codex');
+  });
+});
+
 describe('Author writing a non-test file', () => {
   it('is reverted and asked once more with the file named; a second slip blocks with a clear message', async () => {
     let authorCalls = 0;

@@ -200,6 +200,15 @@ export class Orchestrator {
         this.s.log(runId, 'author.reopened', 'Check của project đã đổi nên Author được làm lại một lượt (không có lượt sửa thêm).');
       }
     }
+    // Who runs the roles (provider, model, effort, skills) is not evidence: switching from a provider that ran out of quota to another must take
+    // effect on a run that already has a checkpoint, while checks and policy stay as the run's evidence was made.
+    const current = this.s.run(runId);
+    if (project && current.provider !== 'fake' && ['paused', 'blocked', 'failed'].includes(current.status) && JSON.stringify(project.roles) !== JSON.stringify(current.configSnapshot.roles)) {
+      if (!project.approved) throw new HttpError(409, 'Project đã đổi AI/model nhưng chưa được duyệt lại policy. Duyệt project rồi chạy tiếp; nếu không run vẫn dùng AI cũ.');
+      this.s.mutate(runId, (r) => { r.configSnapshot = { ...r.configSnapshot, roles: structuredClone(project.roles) }; });
+      for (const key of [...this.s.sessions.keys()]) if (key.startsWith(`${runId}:`)) this.s.sessions.delete(key);
+      this.s.log(runId, 'config.roles_refreshed', `Dùng AI/model mới của project cho các lượt tiếp theo: ${Object.entries(project.roles).map(([role, c]) => `${role}=${c.provider}${c.model ? `/${c.model}` : ''}`).join(', ')}.`);
+    }
     if (!run.checkpoint && run.context && ['paused', 'blocked', 'failed'].includes(run.status)) this.s.mutate(runId, (r) => { delete r.context; });
     return this.startRun(runId);
   }
