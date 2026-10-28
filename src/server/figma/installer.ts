@@ -145,7 +145,7 @@ export class FigmaInstaller {
     const base = { dir, pluginVersion: v.info.pluginVersion, protocolVersion: v.info.protocolVersion, origin: v.info.origin, bundleHash: v.info.bundleHash };
     if (v.info.protocolVersion !== PROTOCOL_VERSION || v.info.pluginVersion !== PLUGIN_VERSION) return { state: 'incompatible', ...base, note: 'Plugin cũ không khớp giao thức hiện tại. Tạo bản mới và import lại manifest.' };
     if (v.info.origin !== this.o.origin) return { state: 'stale', ...base, note: `Plugin này nối tới ${v.info.origin} nhưng AI Department đang chạy ở ${this.o.origin}. Tạo bản mới và import lại manifest.` };
-    return { state: 'prepared', ...base, note: 'Import manifest.json trong Figma (Plugins → Development → Import plugin from manifest).' };
+    return { state: 'prepared', ...base, note: 'Import manifest.json trong Figma: nhấn Ctrl + /, gõ “import plugin from manifest” (hoặc menu Plugins → Import plugin from manifest).' };
   }
 
   activeJob(): InstallJob | undefined { return this.running ? this.o.store.installJobs.get(this.running.id) : undefined; }

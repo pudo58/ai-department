@@ -80,7 +80,7 @@ export function McpPage() {
       <div className="actions">
         <button className="button primary" disabled={!!busy || installing} onClick={() => void act('install', () => api('/api/integrations/figma/install', 'POST'))}>Cài Figma Desktop &amp; Exporter</button>
         <button className="button" disabled={!!busy || desktop?.state !== 'installed'} onClick={() => void act('open', () => api('/api/integrations/figma/open-desktop', 'POST'), 'Đã mở Figma. Hãy đăng nhập trên giao diện chính thức của Figma. Nếu trình duyệt đăng nhập xong mà app không nhận, tắt hẳn Figma rồi mở lại từ Start menu.')}>Mở Figma để đăng nhập</button>
-        <button className="button" disabled={!!busy || !bundle || bundle.state === 'missing'} onClick={() => void act('folder', () => api('/api/integrations/figma/open-plugin-folder', 'POST'), 'Đã mở thư mục Exporter. Import manifest.json trong Figma.')}>Mở thư mục Exporter</button>
+        <button className="button" disabled={!!busy || !bundle || bundle.state === 'missing'} onClick={() => void act('folder', () => api('/api/integrations/figma/open-plugin-folder', 'POST'), 'Đã mở thư mục Exporter. Trong Figma (mở một file thiết kế) nhấn Ctrl + /, gõ “import plugin from manifest”, chọn manifest.json; rồi chạy AI Department Exporter bằng cùng ô tìm kiếm đó.')}>Mở thư mục Exporter</button>
         {conn?.state === 'connected'
           ? <button className="button" disabled={!!busy || !!active} onClick={() => void act('disconnect', () => api('/api/integrations/figma/disconnect', 'POST'), 'Đã ngắt kết nối.')}>Ngắt kết nối</button>
           : <button className="button" disabled={!!busy} onClick={() => void act('pair', () => api('/api/integrations/figma/pairing', 'POST'))}>Ghép đôi</button>}

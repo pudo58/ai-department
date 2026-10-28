@@ -27,7 +27,7 @@ Không dùng MCP server, bridge cộng đồng hay Figma REST API. Không gọi 
 - **Cài Figma Desktop & Exporter**: phát hiện Figma có sẵn (giữ nguyên, không hạ phiên bản); nếu thiếu, tải installer theo catalog đã khóa (`src/server/figma/installer.ts`, Figma 126.9.16 x64), kiểm SHA-256 và Authenticode, chạy `--silent` bằng quyền người dùng (không `RunAs`, không MSI, không shell), rồi chuẩn bị thư mục plugin. Mỗi bước lưu trong job; chạy lại chỉ làm phần còn thiếu.
 - Department **không nhận mật khẩu, cookie hay token** của Figma. Đăng nhập diễn ra trên Figma/trình duyệt chính thức.
 - **Mở Figma để đăng nhập** giao cho shell của Windows (`explorer.exe <Figma.exe>`), như mở từ Start menu, thay vì chạy Figma như tiến trình con của server. Lần đầu dùng cách con, trình duyệt đăng nhập xong rồi tự đóng tab mà app kẹt ở “Go to the browser to complete login”; tắt hẳn Figma và mở lại từ Start menu thì đăng nhập được. Nguyên nhân chưa được chứng minh chắc, nên nếu vẫn gặp: tắt hẳn Figma và mở lại từ Start menu.
-- **Mở thư mục Exporter**: mở đúng thư mục có `manifest.json` của instance này. Import một lần: Plugins → Development → Import plugin from manifest. Đổi cổng Department thì tạo bundle mới (nút cài) và import lại.
+- **Mở thư mục Exporter**: mở đúng thư mục có `manifest.json` của instance này. Import một lần: trong Figma nhấn `Ctrl + /` và gõ `import plugin from manifest` (menu nằm ở Plugins → Import plugin from manifest, bản cũ có thêm nhánh Development; bản có panel Tools thì Create → Plugin). Vị trí menu theo bản Figma chưa kiểm chứng trên máy này. Đổi cổng Department thì tạo bundle mới (nút cài) và import lại.
 - Tự cài chỉ hỗ trợ Windows x64. Máy khác: cài Figma thủ công, phần plugin vẫn dùng được.
 
 ## Phạm vi và nguồn
