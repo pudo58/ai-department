@@ -1,3 +1,10 @@
+/**
+ * What a design-bound task is measured with when its project has set nothing: one route per Figma screen, the page says when it is ready,
+ * and a screen that differs by more than 5% of its pixels is different. 5% is a starting value (a faithful build measured 1.9–3.0% on
+ * Windows Chrome), not a calibrated one; a project that sets its own profile, or `null` to turn the check off, overrides it.
+ */
+export const DEFAULT_VISUAL_PROFILE: VisualProfile = { pathTemplate: '/?screen={nodeId}', readySelector: '[data-design-ready="true"]', pixelThreshold: 0.1, maxDiffRatio: 0.05 };
+
 /** A project approves the route mapping once. Missing tolerance means measure only, never automatic acceptance. */
 export interface VisualProfile {
   pathTemplate: string;
@@ -7,7 +14,16 @@ export interface VisualProfile {
   /** Optional explicit scope and widget capture mappings; omitted means every screen in the design target. */
   screens?: { nodeId: string; selector?: string; viewport?: { width: number; height: number } }[];
 }
+export type TextMismatchKind = 'missing_text' | 'font_unavailable' | 'font_family' | 'font_size' | 'font_weight' | 'line_height' | 'letter_spacing' | 'position';
+export interface TextMismatch { kind: TextMismatchKind; nodeId: string; text: string; expected: string; actual: string }
+/** The text of a screen in Figma against the text the page renders: what a pixel ratio cannot say. */
+export interface TextCheck {
+  figmaTexts: number; matched: number; mismatches: TextMismatch[]; omitted: number;
+  /** Texts whose place in the two images is identical: hidden under another layer, or the same to the eye. Not compared. */
+  unchanged?: number;
+}
 export interface VisualScreenResult {
+  text?: TextCheck;
   nodeId: string; name: string; route: string; width: number; height: number;
   status: 'passed' | 'different' | 'needs_review' | 'unstable' | 'incomplete';
   changedRatio?: number; changedPixels?: number; totalPixels?: number;

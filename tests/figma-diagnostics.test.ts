@@ -54,3 +54,34 @@ it('separates hidden SVGs from unexplained failures, shows main component refere
   const incomplete = await r.admin.post(`/api/design-snapshots/${snap.id}/publish`, { snapshotHash: snap.snapshotHash, acknowledgedIssueIds: snap.issues.filter((i) => i.severity === 'limit' && i.id !== hidden.id).map((i) => i.id) });
   expect(incomplete.statusCode).toBe(409);
 }, 60000);
+
+describe('an SVG that Figma cannot export because there is nothing to draw', () => {
+  const NOTHING = 'Failed to export node. This node may not have any visible layers.';
+  it('is not a limit to acknowledge when the node itself shows no paint, and still is one when it does, or when it is a mask', async () => {
+    current = await rig();
+    const r = current;
+    const make = (id: string, name: string, props: Record<string, unknown>) => {
+      const node = new FakeNode('VECTOR', id, name, { visible: true, width: 16, height: 16, ...props });
+      node.props.set('exportError', NOTHING);
+      r.doc.frame.kids!.push(node); node.parent = r.doc.frame; r.figma.register(node);
+      return node;
+    };
+    const empty = make('8:1', 'Path', { fills: [], strokes: [] });
+    const clear = make('8:2', 'Path', { fills: [{ type: 'SOLID', visible: true, opacity: 1 }], strokes: [], opacity: 0 });
+    const painted = make('8:3', 'Path', { fills: [{ type: 'SOLID', visible: true, opacity: 1 }], strokes: [] });
+    const mask = make('8:4', 'Mask', { fills: [], strokes: [], isMask: true });
+    await r.pairNow();
+    const job = await r.finished((await r.exportAs({ scope: 'selection', rootIds: [r.doc.frame.id] })).id);
+    expect(job.status, JSON.stringify(job.error)).toBe('review_ready');
+    const none = job.issues.find((i) => i.code === 'vector_no_paint')!;
+    expect(none).toMatchObject({ severity: 'info', occurrences: 2 });
+    expect(none.examples).toEqual(expect.arrayContaining([{ nodeId: empty.id, name: 'Path' }, { nodeId: clear.id, name: 'Path' }]));
+    const failed = job.issues.find((i) => i.code === 'vector_export_failed')!;
+    expect(failed).toMatchObject({ severity: 'limit' });
+    expect(failed.examples!.map((e) => e.nodeId).sort()).toEqual([mask.id, painted.id].sort());
+    const snap = r.service.snapshots.get(job.snapshotId!)!;
+    const report = (await r.admin.get(`/api/design-snapshots/${snap.id}/diagnostics`)).json() as SnapshotDiagnostics;
+    expect(report.groups.find((g) => g.kind === 'vector_no_paint')!.items.map((i) => i.nodeId).sort()).toEqual([clear.id, empty.id].sort());
+    expect(report.groups.find((g) => g.kind === 'vector_failure')!.items.map((i) => i.nodeId)).toEqual(expect.arrayContaining([painted.id, mask.id]));
+  }, 60000);
+});

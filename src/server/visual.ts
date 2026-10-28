@@ -3,9 +3,11 @@ import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { readPng } from '../core/visual.js';
+import { changedInBox, readPng } from '../core/visual.js';
 import { VisualComparator } from './visualcompare.js';
-import { visualProfileHash } from '../core/visualevidence.js';
+import { visualProfileHash, visualProfileOf } from '../core/visualevidence.js';
+import { DOM_TEXT_SCRIPT, compareText, figmaTextRuns, type DomTextRun } from '../core/designtext.js';
+import type { NodeRecord } from '../shared/figma.js';
 import { sha256 } from '../core/contract.js';
 import type { Run } from '../shared/types.js';
 import type { VisualReport, VisualScreenResult } from '../shared/visual.js';
@@ -26,12 +28,19 @@ async function launchBrowser(): Promise<Browser> {
   return chromium.launch({ headless: true, executablePath: executable, timeout: 30000 });
 }
 
+/**
+ * A text box in which fewer of the pixels differ than this looks the same in both images, whatever the DOM says: Figma lists text that another
+ * layer covers and the page need not draw it. On one real design (a 98%-by-pixels build) the covered or identical text sat at 2–12% changed
+ * pixels and every real difference at 19% or more; 15% sits between them. One design is not a calibration.
+ */
+const MIN_CHANGED_IN_TEXT_BOX = 0.15;
+
 /** Capture the exact committed source in a disposable clone, then compare against immutable Figma screen images. */
 export class VisualChecks {
   constructor(private readonly dataDir: string, private readonly snapshots: SnapshotStore) {}
 
   async run(run: Run, signal: AbortSignal): Promise<VisualReport | undefined> {
-    const profile = run.configSnapshot.visualCheck, binding = run.contract.design;
+    const profile = visualProfileOf(run), binding = run.contract.design;
     if (!profile || !binding || !run.checkpoint || run.provider === 'fake') return;
     const bounded = AbortSignal.any([signal, AbortSignal.timeout(5 * 60000)]);
     const id = `vis_${randomUUID().replaceAll('-', '')}`;
@@ -83,8 +92,17 @@ export class VisualChecks {
     return report;
   }
 
+  /** The text nodes of this screen in the snapshot against the text the page rendered. Nothing is checked when the snapshot has none. */
+  private textCheck(run: Run, nodeId: string, dom: readonly DomTextRun[], widget: boolean, diff: ReturnType<typeof readPng>, scale: number) {
+    const reader = this.snapshots.reader(run.contract.design!.snapshotId), screen = reader.node(nodeId);
+    if (!screen) return undefined;
+    const nodes = reader.subtree(nodeId).map(r => reader.node(r.id)).filter((n): n is NodeRecord => !!n);
+    const figma = figmaTextRuns(nodes, screen);
+    return figma.length ? compareText(figma, dom, { position: !widget, differs: f => !f.box || changedInBox(diff, f.box, scale) >= MIN_CHANGED_IN_TEXT_BOX }) : undefined;
+  }
+
   private async screen(run: Run, screen: SnapshotPreview, browser: Browser, origin: string, dir: string, signal: AbortSignal, comparator: VisualComparator): Promise<VisualScreenResult> {
-    const profile = run.configSnapshot.visualCheck!;
+    const profile = visualProfileOf(run)!;
     const route = profile.pathTemplate.replaceAll('{nodeId}', encodeURIComponent(screen.nodeId));
     const result: VisualScreenResult = { nodeId: screen.nodeId, name: screen.name, route, width: 0, height: 0, status: 'incomplete', message: '' };
     try {
@@ -99,6 +117,7 @@ export class VisualChecks {
       const asset = (suffix: string) => `${filename}-${suffix}.png`;
       await writeFile(path.join(dir, asset('reference')), reference); result.reference = asset('reference');
       const captures: Buffer[] = [];
+      let domText: DomTextRun[] = [];
       for (let i = 0; i < 3; i++) {
         signal.throwIfAborted();
         const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: scale, reducedMotion: 'reduce', colorScheme: 'light', serviceWorkers: 'block' });
@@ -115,6 +134,7 @@ export class VisualChecks {
           await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
           const options = { animations: 'disabled' as const, caret: 'hide' as const, timeout: 30000 };
           captures.push(await (mapping?.selector ? page.locator(mapping.selector).screenshot(options) : page.screenshot(options)));
+          if (i === 0) domText = await page.evaluate(DOM_TEXT_SCRIPT) as DomTextRun[];
           if (errors.length) throw new Error(`Ứng dụng có lỗi khi chụp: ${errors.slice(0, 3).join('; ')}`);
         } finally { await context.close(); }
       }
@@ -136,11 +156,14 @@ export class VisualChecks {
       const measured = await comparator.compare(reference, actual, profile.pixelThreshold);
       await writeFile(path.join(dir, asset('diff')), measured.diff); result.diff = asset('diff');
       Object.assign(result, { changedRatio: measured.changedRatio, changedPixels: measured.changedPixels, totalPixels: measured.totalPixels });
+      result.text = this.textCheck(run, screen.nodeId, domText, !!mapping?.selector, readPng(measured.diff), scale);
+      const textNote = result.text?.mismatches.length ? ` Chữ và kiểu chữ lệch ${result.text.mismatches.length + result.text.omitted}/${result.text.figmaTexts} đoạn so với Figma.` : '';
       if (profile.maxDiffRatio === undefined) {
-        result.status = 'needs_review'; result.message = 'Ảnh ổn định qua ba lần; chưa có ngưỡng chấp nhận để tự kết luận.';
+        result.status = 'needs_review'; result.message = `Ảnh ổn định qua ba lần; chưa có ngưỡng chấp nhận để tự kết luận.${textNote}`;
       } else {
-        result.status = measured.changedRatio <= profile.maxDiffRatio ? 'passed' : 'different';
-        result.message = result.status === 'passed' ? 'Ba ảnh ổn định và sai lệch nằm trong ngưỡng profile.' : 'Sai lệch vượt ngưỡng profile; xem vùng màu hồng trong ảnh diff.';
+        // A page a few pixels away from the image can still say another number or use another font: the text check decides that too.
+        result.status = measured.changedRatio <= profile.maxDiffRatio && !result.text?.mismatches.length ? 'passed' : 'different';
+        result.message = result.status === 'passed' ? 'Ba ảnh ổn định, sai lệch nằm trong ngưỡng profile và chữ khớp Figma.' : `${measured.changedRatio > profile.maxDiffRatio ? 'Sai lệch vượt ngưỡng profile; xem vùng màu hồng trong ảnh diff.' : 'Pixel trong ngưỡng nhưng chữ hoặc kiểu chữ khác Figma.'}${textNote}`;
       }
     } catch (error) { result.status = 'incomplete'; result.message = (error as Error).message; }
     return result;

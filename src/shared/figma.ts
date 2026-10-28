@@ -161,6 +161,25 @@ export interface ExportIssue { id: string; code: string; severity: IssueSeverity
 
 export interface NodeVisibility { parentId: string | null; visible?: boolean }
 /** Only an explicitly read false proves a hidden node; missing ancestors and unknown visibility do not. */
+/** The message Figma's exportAsync gives for a node that draws nothing. */
+export const FIGMA_NO_VISIBLE_LAYERS = /may not have any visible layers/i;
+const DRAWN_SHAPES = new Set<string>(SHAPES);
+const paintsOf = (f: FieldValue | undefined): Json[] | undefined => (f && f.s === 'read' && Array.isArray(f.v) ? f.v : undefined);
+const drawn = (p: Json): boolean => { const o = p as { visible?: unknown; opacity?: unknown } | null; return !(o && (o.visible === false || o.opacity === 0)); };
+/**
+ * A shape whose own record proves it draws nothing: no visible fill, stroke or effect (or opacity 0), and not a mask. Both paint lists must have
+ * been read; a list that could not be read proves nothing. Used only together with Figma's own "no visible layers" answer to an SVG export.
+ */
+export function hasNoVisiblePaint(r: NodeRecord): boolean {
+  if (!DRAWN_SHAPES.has(r.type)) return false;
+  const f = r.fields, mask = f['common.isMask'], opacity = f['common.opacity'];
+  if (mask?.s === 'read' && mask.v === true) return false;
+  if (opacity?.s === 'read' && opacity.v === 0) return true;
+  const fills = paintsOf(f['paint.fills']), strokes = paintsOf(f['paint.strokes']);
+  if (!fills || !strokes) return false;
+  return !fills.some(drawn) && !strokes.some(drawn) && !(paintsOf(f['paint.effects']) ?? []).some(drawn);
+}
+
 export function hiddenNode(id: string, nodes: ReadonlyMap<string, NodeVisibility>): string | undefined {
   const seen = new Set<string>();
   for (let at: string | null = id; at !== null && !seen.has(at);) {

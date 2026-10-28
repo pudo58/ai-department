@@ -3,14 +3,16 @@ import path from 'node:path';
 import type { DependencyRecord } from '../../shared/figma.js';
 import { DESIGN_POLICY_VERSION, type DesignBinding, type DesignInputReceipt, type DesignReportFacts, type DesignSnapshot, type SnapshotPreviews } from '../../shared/design.js';
 import type { Role, Run } from '../../shared/types.js';
-import { DESIGN_BLOCK_NOTE, FIGMA_DATA_NOTICE, designRefProblems, designSummary, idHash, sha256Hex, type SummaryInput } from '../../core/design.js';
+import { visualProfileOf } from '../../core/visualevidence.js';
+import { DESIGN_BLOCK_NOTE, FIGMA_DATA_NOTICE, designBuildRules, designRefProblems, designSummary, idHash, sha256Hex, type SummaryInput } from '../../core/design.js';
 import { HttpError, Blocked } from '../run/support.js';
 import type { AttemptDesign, DesignProvider } from '../run/design.js';
 import type { SnapshotReader, SnapshotStore } from './snapshots.js';
+import type { FontStore } from './fonts.js';
 
 const MOUNT_DOCKER = '/aidept-design';
 const MAX_RECEIPT_FILES = 400;
-const INPUT_VERSION = 2;
+const INPUT_VERSION = 3;
 
 /** Hash of a folder: its relative paths and the hash of each file, so any added, removed or changed file changes it. */
 export function hashDir(dir: string): { hash: string; files: { path: string; sha256: string }[] } {
@@ -32,7 +34,7 @@ export function hashDir(dir: string): { hash: string; files: { path: string; sha
  * The canonical snapshot is never handed to an agent; the copy is checked before and after every turn.
  */
 export class DesignInputs implements DesignProvider {
-  constructor(private readonly dataDir: string, private readonly snapshots: SnapshotStore) {}
+  constructor(private readonly dataDir: string, private readonly snapshots: SnapshotStore, private readonly fonts?: FontStore) {}
 
   /**
    * The binding a contract stores for a snapshot and some targets: only a published snapshot whose files still match, only targets it
@@ -88,9 +90,10 @@ export class DesignInputs implements DesignProvider {
     const dir = this.dirFor(run, binding);
     const expectedFile = `${dir}.sha256`;
     const current = existsSync(dir) ? hashDir(dir).hash : '';
-    let version: number | undefined;
-    try { version = JSON.parse(readFileSync(path.join(dir, 'index.json'), 'utf8')).inputVersion; } catch { /* no cached input */ }
-    if (version !== INPUT_VERSION || !current || !existsSync(expectedFile) || readFileSync(expectedFile, 'utf8').trim() !== current) this.build(dir, expectedFile, snapshot, reader, binding);
+    let version: number | undefined, fontsHash: string | undefined;
+    try { const cached = JSON.parse(readFileSync(path.join(dir, 'index.json'), 'utf8')); version = cached.inputVersion; fontsHash = cached.fontsHash ?? ''; } catch { /* no cached input */ }
+    // The fonts fetched for the snapshot after this copy was made belong in it too.
+    if (version !== INPUT_VERSION || fontsHash !== (this.fonts?.hashFor(snapshot.id, snapshot.snapshotHash) ?? '') || !current || !existsSync(expectedFile) || readFileSync(expectedFile, 'utf8').trim() !== current) this.build(dir, expectedFile, snapshot, reader, binding);
     const { hash, files } = hashDir(dir);
     const docker = run.configSnapshot.executionMode !== 'local';
     const mountPath = docker ? MOUNT_DOCKER : dir;
@@ -100,7 +103,7 @@ export class DesignInputs implements DesignProvider {
       files: files.slice(0, MAX_RECEIPT_FILES), mount: mountPath, mountKind: docker ? 'docker_ro' : 'local_copy', hashBefore: hash, at: new Date().toISOString(),
     };
     return {
-      block: `\n\n<design_source>\n${summary}\n${DESIGN_BLOCK_NOTE}\n</design_source>\n`, receipt, exec: { hostDir: dir, mountPath },
+      block: `\n\n<design_source>\n${summary}\n${DESIGN_BLOCK_NOTE}${role === 'developer' ? `\n${designBuildRules(visualProfileOf(run))}` : ''}\n</design_source>\n`, receipt, exec: { hostDir: dir, mountPath },
       verifyAfter: () => {
         const after = hashDir(dir).hash;
         receipt.hashAfter = after;
@@ -111,6 +114,8 @@ export class DesignInputs implements DesignProvider {
 
   private summaryInput(snapshot: DesignSnapshot, reader: SnapshotReader, binding: DesignBinding, mountPath: string): SummaryInput {
     const targets = this.targetsOf(reader, binding);
+    const fontSet = this.fonts?.read(snapshot.id, snapshot.snapshotHash);
+    const fontSummary = fontSet ? fontSet.families.map((f) => ({ family: f.family, status: f.status, weights: [...new Set(f.files.map((x) => x.weight))].sort((a, b) => a - b), files: f.files.length, ...(f.license ? { license: f.license } : {}) })) : undefined;
     const deps = [...reader.dependencies()];
     const index = reader.readJson<{ components: { id: string; name: string; axes: string[] }[] }>('index.json');
     const accepted = new Set(binding.acknowledgedIssueIds);
@@ -124,6 +129,7 @@ export class DesignInputs implements DesignProvider {
       assets: deps.flatMap((d) => (d.k === 'asset' && d.status === 'stored' ? [{ id: d.id, kind: d.assetKind, mime: d.mime, bytes: d.bytes }] : [])),
       previews: this.previewsFor(snapshot, reader, binding).images,
       mountPath,
+      ...(fontSummary ? { fonts: fontSummary } : {}),
     };
   }
 
@@ -181,7 +187,14 @@ export class DesignInputs implements DesignProvider {
     const previews = this.previewsFor(snapshot, reader, binding);
     for (const preview of previews.images) { copy(preview.path); assets.add(path.basename(preview.path, '.png')); }
     copy('review.json');
-    writeFileSync(path.join(dir, 'index.json'), JSON.stringify({ schemaVersion: 1, inputVersion: INPUT_VERSION, snapshotId: snapshot.id, snapshotHash: snapshot.snapshotHash, limited: snapshot.limited, source: { fileName: snapshot.source.fileName, identity: snapshot.source.identity }, targets: index, components: [...wantedComponents], assets: [...assets], previews, notice: FIGMA_DATA_NOTICE }, null, 1));
+    const fontSet = this.fonts?.read(snapshot.id, snapshot.snapshotHash);
+    if (fontSet && this.fonts) {
+      mkdirSync(path.join(dir, 'fonts'), { recursive: true });
+      for (const family of fontSet.families) for (const file of family.files) { const from = this.fonts.file(file.file); if (existsSync(from)) copyFileSync(from, path.join(dir, 'fonts', file.name)); }
+      writeFileSync(path.join(dir, 'fonts', 'fonts.css'), this.fonts.css(fontSet));
+      writeFileSync(path.join(dir, 'fonts', 'fonts.json'), JSON.stringify(fontSet.families, null, 1));
+    }
+    writeFileSync(path.join(dir, 'index.json'), JSON.stringify({ schemaVersion: 1, inputVersion: INPUT_VERSION, snapshotId: snapshot.id, snapshotHash: snapshot.snapshotHash, limited: snapshot.limited, source: { fileName: snapshot.source.fileName, identity: snapshot.source.identity }, targets: index, components: [...wantedComponents], assets: [...assets], previews, fontsHash: this.fonts?.hashFor(snapshot.id, snapshot.snapshotHash) ?? '', notice: FIGMA_DATA_NOTICE }, null, 1));
     writeFileSync(path.join(dir, 'README.md'), `# Dữ liệu thiết kế cho task\n\n${FIGMA_DATA_NOTICE}\n\nThư mục này chỉ đọc. Bắt đầu từ \`index.json\`; mỗi target có \`nodes.ndjson\` (mọi trường đã đọc, kèm trạng thái từng trường) và \`tree.json\`.\n\nMục \`previews.images\` nối node ID với ảnh tổng quan, ảnh màn hình và vùng chi tiết. Đọc ảnh của target cùng dữ liệu node/style/asset; ảnh tham chiếu không chứng minh implementation đã khớp hình thức.\n`);
     writeFileSync(expectedFile, hashDir(dir).hash);
   }

@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import {
-  APPLICABLE_GROUPS, FIELD_GROUPS, FIELD_STATUSES, canonicalJson, hiddenNode, isKnownNodeType, issueId, nodeRecordCore,
+  APPLICABLE_GROUPS, FIELD_GROUPS, FIELD_STATUSES, FIGMA_NO_VISIBLE_LAYERS, canonicalJson, hasNoVisiblePaint, hiddenNode, isKnownNodeType, issueId, nodeRecordCore,
   type DependencyRecord, type ExportIssue, type FieldGroup, type FieldStatus, type FieldValue, type FinishBody, type GroupStatus, type InventoryRecord, type NodeRecord, type StreamSummary,
 } from '../shared/figma.js';
 import type { ExportCoverage, ExportCounts, GroupCoverage, SourceIdentity } from '../shared/design.js';
@@ -41,7 +41,7 @@ export class ExportValidator {
   private readonly second = new Map<string, Slim>();
   private readonly nodeSeen = new Set<string>();
   private readonly nodeHash = new Map<string, string>();
-  private readonly nodeFacts = new Map<string, { name: string; parentId: string | null; visible?: boolean }>();
+  private readonly nodeFacts = new Map<string, { name: string; parentId: string | null; visible?: boolean; paintless?: boolean }>();
   private readonly group = new Map<FieldGroup, GroupCoverage>();
   private readonly all = emptyGroup();
   private readonly styleRefs = new Map<string, Set<string>>();
@@ -93,7 +93,7 @@ export class ExportValidator {
     if (this.nodeSeen.has(r.id)) { this.raise('duplicate_id', 'blocker', `Mã node ${r.id} có hai bản ghi dữ liệu.`, r.id); return; }
     this.nodeSeen.add(r.id);
     const visible = r.fields['common.visible'];
-    this.nodeFacts.set(r.id, { name: r.name, parentId: r.parentId, visible: visible?.s === 'read' && typeof visible.v === 'boolean' ? visible.v : undefined });
+    this.nodeFacts.set(r.id, { name: r.name, parentId: r.parentId, visible: visible?.s === 'read' && typeof visible.v === 'boolean' ? visible.v : undefined, ...(hasNoVisiblePaint(r) ? { paintless: true } : {}) });
     const core = nodeRecordCore(r);
     if (sha256(canonicalJson(core)) !== r.hash) this.raise('node_hash_mismatch', 'blocker', `Hash của bản ghi node ${r.id} không khớp nội dung.`, r.id);
     this.nodeHash.set(r.id, r.hash);
@@ -336,6 +336,7 @@ export class ExportValidator {
         const nodeId = rec.source.nodeId;
         if (rec.assetKind === 'vector_export') {
           if (nodeId && hiddenNode(nodeId, this.nodeFacts)) this.aggregate('vector_hidden', 'limit', 'asset', 'SVG chưa xuất vì node hoặc layer cha đang ẩn. Dữ liệu node vẫn được lưu; cần export lại SVG nếu bật hiển thị.', nodeId);
+          else if (rec.status === 'error' && nodeId && FIGMA_NO_VISIBLE_LAYERS.test(rec.reason ?? '') && this.nodeFacts.get(nodeId)?.paintless) this.aggregate('vector_no_paint', 'info', 'asset', 'SVG không xuất được vì node không có gì để vẽ: Figma báo không có layer nhìn thấy, và bản ghi node không có fill, stroke hay hiệu ứng hiển thị (hoặc độ mờ 0). Không có hình nào bị thiếu.', nodeId);
           else this.aggregate('vector_export_failed', 'limit', 'asset', 'SVG chưa xuất được; chưa xác nhận nguyên nhân. Xem Chi tiết cảnh báo để kiểm tra từng node và lỗi API gốc.', nodeId ?? rec.id);
         } else this.aggregate('asset_missing', 'limit', 'asset', `Tài nguyên không lấy được${rec.reason ? ` (${rec.reason})` : ''}.`, nodeId ?? rec.id);
       }

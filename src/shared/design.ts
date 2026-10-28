@@ -76,7 +76,7 @@ export interface SnapshotDiagnosticItem {
   component?: { nodeId: string; name: string };
 }
 export interface SnapshotDiagnostics {
-  groups: { kind: 'component_properties' | 'hidden_vector' | 'vector_failure'; title: string; explanation: string; items: SnapshotDiagnosticItem[] }[];
+  groups: { kind: 'component_properties' | 'hidden_vector' | 'vector_no_paint' | 'vector_failure'; title: string; explanation: string; items: SnapshotDiagnosticItem[] }[];
 }
 export interface DesignSnapshot {
   id: string; schemaVersion: 1; jobId: string;

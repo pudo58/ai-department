@@ -6,7 +6,7 @@ import { DIAGNOSIS_ATTEMPT_TITLE } from './recovery.js';
 import { readVerdict } from './report.js';
 import { readFindingReplays } from './reproduction.js';
 import { humanizeTestIds } from './testids.js';
-import { readVisualReport } from './visualevidence.js';
+import { readVisualReport, visualProfileOf } from './visualevidence.js';
 
 /** Why a stopped run is stopped, in the few kinds that tell a person what to do. `generic` keeps the old sentence. */
 export type StepCode =
@@ -141,7 +141,7 @@ export function nextStep(d: Input): NextStep | undefined {
   };
 
   // Everything passes but a required requirement has no test behind it.
-  if (run.contract.design && run.configSnapshot.visualCheck?.maxDiffRatio !== undefined && run.checkpoint) {
+  if (run.contract.design && visualProfileOf(run)?.maxDiffRatio !== undefined && run.checkpoint) {
     const visual = readVisualReport(run, d.artifacts);
     if (!visual || visual.status === 'incomplete') return {
       code: 'visual_incomplete', title: 'Đối chiếu hình thức chưa hoàn tất',

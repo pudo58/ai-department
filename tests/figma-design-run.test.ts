@@ -149,6 +149,9 @@ describe('what each agent turn is given, and what it proves', () => {
     expect(dev.prompt).toContain('Component (1)');
     expect(dev.prompt).toContain('Màn hình &lt;Đăng nhập&gt;');
     expect(seen.find((s) => s.role === 'planner')!.prompt).not.toContain('Component (');
+    // How to make an interface match its design is the Developer's to know, not the Planner's.
+    expect(dev.prompt).toContain('Quy tắc dựng giao diện khớp thiết kế');
+    expect(seen.find((s) => s.role === 'planner')!.prompt).not.toContain('Quy tắc dựng giao diện khớp thiết kế');
     // Docker is the default: the host folder is mounted read-only at a fixed place.
     expect(dev.design!.mountPath).toBe('/aidept-design');
     expect(existsSync(dev.design!.hostDir)).toBe(true);

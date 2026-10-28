@@ -20,7 +20,12 @@ import {ReproductionSchema,reproductionProblems,reproductionGuide,readFindingRep
 import {FindingReplays} from './reproduction.js';
 import {Regressions} from './regression.js';
 import {policyOf} from '../../core/policy.js';
-import { readVisualReport, VISUAL_REPORT_TITLE } from '../../core/visualevidence.js';
+import { readVisualReport, visualProfileOf, VISUAL_REPORT_TITLE } from '../../core/visualevidence.js';
+import { fidelityProblems } from '../../core/designtext.js';
+import type { VisualReport } from '../../shared/visual.js';
+
+/** Developer rounds a run gets, per contract version, to bring a measured difference from the design down before it is left for a person. */
+const MAX_FIDELITY_ROUNDS = 2;
 
 /** Final verification: the independent Verifier, its stored verdict, and the repair round for confirmed findings. */
 export class Verification {
@@ -30,9 +35,10 @@ export class Verification {
   async verifyPhase(runId: string, signal: AbortSignal, checksOnly = false): Promise<void> {
     const run = this.s.run(runId);
     this.s.mutate(runId, (r) => { r.stage = 'verify'; });
-    if (run.contract.design && run.configSnapshot.visualCheck && this.s.visualCheck && !readVisualReport(run, this.s.store.artifacts.list(runId))) {
+    if (run.contract.design && visualProfileOf(run) && this.s.visualCheck && !readVisualReport(run, this.s.store.artifacts.list(runId))) {
       const report = await this.s.withHeartbeat(runId, 'visual', 'Đối chiếu ảnh ứng dụng với Figma', () => this.s.visualCheck!(run, signal));
       if (report) this.s.artifact(runId, { kind: 'report', title: VISUAL_REPORT_TITLE, content: JSON.stringify(report), checkpoint: run.checkpoint });
+      if (report && !checksOnly && await this.fidelityRound(runId, report, signal)) return;
     }
     await new MutationChecks(this.s).run(runId, signal, checksOnly);
     const verifies = run.mode === 'verify' || run.mode === 'compare';
@@ -41,6 +47,55 @@ export class Verification {
     // v4 keeps an unproven doubt as a blocker for a person to settle; only older policies give it one automatic repair round.
     if (!checksOnly && verifies && !policyOf(run).strict && await this.autoRepairUnconfirmed(runId, signal)) return;
     this.outcome.finish(runId);
+  }
+
+  /**
+   * A measured difference from the design is the Developer's to fix, not something to hand to a person as "needs review": the screens that
+   * differ, the text and fonts that do not match, and the routes that could not be opened go back as problems. Two rounds per contract
+   * version at most; what is still different after that stays in the report for the person who accepts. Returns true when the round ran
+   * and finished the run (or parked it).
+   */
+  private async fidelityRound(runId: string, report: VisualReport, signal: AbortSignal): Promise<boolean> {
+    const problems = fidelityProblems(report);
+    if (!problems.length) return false;
+    const run = this.s.run(runId), marker = 'Design fidelity repair';
+    const rounds = this.s.store.artifacts.list(runId).filter((a) => a.title === marker && a.valid && a.contractVersion === run.contract.version).length;
+    const budget = remainingFor(budgetState(run, this.s.store.attempts.list(runId)), 'verify');
+    if (rounds >= MAX_FIDELITY_ROUNDS || budget <= 0) {
+      this.s.fallback(runId, 'Đối chiếu hình thức', `${problems.length} màn còn khác thiết kế ${rounds >= MAX_FIDELITY_ROUNDS ? `sau ${rounds} vòng sửa tự động` : 'và hết ngân sách để sửa'}; giữ trong report cho người nghiệm thu: ${problems.map((p) => p.split(':')[0]).join('; ').slice(0, 300)}`);
+      return false;
+    }
+    this.s.artifact(runId, { kind: 'report', title: marker, content: JSON.stringify({ round: rounds + 1, reportId: report.id, problems }), checkpoint: run.checkpoint });
+    this.s.log(runId, 'verify.fidelity_repair', `${problems.length} màn khác thiết kế: Developer sửa vòng ${rounds + 1}/${MAX_FIDELITY_ROUNDS} rồi hệ thống đo lại.`);
+    if (!(await this.developerRound(runId, signal, problems.map((p) => `[Hình thức] ${p}`), 'sửa cho khớp thiết kế'))) return true;
+    await this.verifyPhase(runId, signal);
+    return true;
+  }
+
+  /**
+   * One Developer turn on a list of problems, then the commit, the diff and fresh checks on it. Returns the new checkpoint, or undefined when
+   * the checks failed and the run was parked.
+   */
+  private async developerRound(runId: string, signal: AbortSignal, problems: string[], commitNote: string): Promise<string | undefined> {
+    let run = this.s.run(runId);
+    const runtime = this.s.runtimeFor(run), slot = run.selectedSlot;
+    const resume = this.s.sessions.get(`${runId}:${slot}`);
+    await this.s.attempt(runId, { role: 'developer', stage: 'verify', slot, prompt: resume ? PROMPTS.repairFollowUp(problems) : PROMPTS.repair(run, problems), signal, resumeSession: resume });
+    run = this.s.run(runId);
+    const changes = await runtime.changes(run, slot);
+    const scope = evaluateChanges(changes.files, this.scope.scopeFor(runId));
+    if (!scope.accepted) {
+      await runtime.revert(run, slot);
+      this.s.artifact(runId, { kind: 'diff', title: `Patch sửa finding bị từ chối (${slot})`, content: changes.patch, checkpoint: null, valid: false });
+      throw new Blocked(`Patch sửa finding vượt phạm vi: ${[...scope.protected, ...scope.needsApproval].join(', ')}`);
+    }
+    const checkpoint = await runtime.commit(run, slot, `${run.title}: ${commitNote}`);
+    this.s.mutate(runId, (r) => { r.checkpoint = checkpoint; r.repairCount += 1; });
+    this.s.artifact(runId, { kind: 'diff', title: `Diff sửa finding @ ${checkpoint.slice(0, 8)}`, content: changes.patch, checkpoint });
+    const outcome = await this.checks.runChecks(runId, slot, checkpoint, [], signal);
+    this.recordRepair(runId, slot, checkpoint, changes.files, outcome.problems);
+    if (outcome.problems.length) { this.outcome.park(runId, 'blocked', outcome.problems.join(' ')); return undefined; }
+    return checkpoint;
   }
 
   /**
@@ -85,7 +140,7 @@ export class Verification {
     try {
       const parsed = parseOutput(FindingsSchema, output);
       const raw=this.s.store.artifacts.list(runId).find(a=>a.kind==='raw' && a.attemptId===attempt.id)?.content??'';
-      const scope=normalizeVerifierScope(run,this.s.store.checks.list(runId),parsed.scope,raw);
+      const scope=normalizeVerifierScope(run,this.s.store.checks.list(runId),parsed.scope,raw,visual?.id);
       for (const raw of parsed.findings) {
         const gated = gateFinding(raw);
         const scenario=raw.reproduction===undefined?undefined:ReproductionSchema.safeParse(raw.reproduction);
@@ -160,7 +215,7 @@ export class Verification {
     if (!text) return;
     try {
       const parsed = parseOutput(FindingsSchema, text);
-      this.recordVerdict(runId, { decision: parsed.decision, summary: verifierNarrative(text), findingCount: parsed.findings.length,scope:normalizeVerifierScope(run,this.s.store.checks.list(runId),parsed.scope,raw) });
+      this.recordVerdict(runId, { decision: parsed.decision, summary: verifierNarrative(text), findingCount: parsed.findings.length,scope:normalizeVerifierScope(run,this.s.store.checks.list(runId),parsed.scope,raw,readVisualReport(run,this.s.store.artifacts.list(runId))?.id) });
     } catch { this.recordVerdict(runId, { decision: 'unparsed', summary: verifierNarrative(text), findingCount: 0 }); }
   }
 
@@ -200,8 +255,6 @@ export class Verification {
   /** One repair round on confirmed findings, then fresh checks on the new checkpoint. */
   async repairPhase(runId: string, signal: AbortSignal, extraTargets: Finding[] = []): Promise<void> {
     let run = this.s.run(runId);
-    const runtime = this.s.runtimeFor(run);
-    const slot = run.selectedSlot;
     this.s.mutate(runId, (r) => { r.stage = 'verify'; });
     const policy = policyOf(run);
     const confirmed = this.s.store.findings.list(runId).filter((f) => f.confirmed && f.status === 'open' && f.contractVersion === run.contract.version);
@@ -215,22 +268,9 @@ export class Verification {
     if (policy.strict) { await this.regressions.applyConfirmed(runId, targets); run = this.s.run(runId); }
     const noted = this.s.store.artifacts.list(runId);
     const problems = targets.map((f) => `${f.title} (${f.location}): ${f.evidence}. Gợi ý: ${f.suggestion}.${this.regressions.note(run, f, noted)}`);
-    const resume = this.s.sessions.get(`${runId}:${slot}`);
-    await this.s.attempt(runId, { role: 'developer', stage: 'verify', slot, prompt: resume ? PROMPTS.repairFollowUp(problems) : PROMPTS.repair(run, problems), signal, resumeSession: resume });
+    const checkpoint = await this.developerRound(runId, signal, problems, 'sửa finding đã xác nhận');
+    if (!checkpoint) return;
     run = this.s.run(runId);
-    const changes = await runtime.changes(run, slot);
-    const scope = evaluateChanges(changes.files, this.scope.scopeFor(runId));
-    if (!scope.accepted) {
-      await runtime.revert(run, slot);
-      this.s.artifact(runId, { kind: 'diff', title: `Patch sửa finding bị từ chối (${slot})`, content: changes.patch, checkpoint: null, valid: false });
-      throw new Blocked(`Patch sửa finding vượt phạm vi: ${[...scope.protected, ...scope.needsApproval].join(', ')}`);
-    }
-    const checkpoint = await runtime.commit(run, slot, `${run.title}: sửa finding đã xác nhận`);
-    this.s.mutate(runId, (r) => { r.checkpoint = checkpoint; r.repairCount += 1; });
-    this.s.artifact(runId, { kind: 'diff', title: `Diff sửa finding @ ${checkpoint.slice(0, 8)}`, content: changes.patch, checkpoint });
-    const outcome = await this.checks.runChecks(runId, slot, checkpoint, [], signal);
-    this.recordRepair(runId, slot, checkpoint, changes.files, outcome.problems);
-    if (outcome.problems.length) { this.outcome.park(runId, 'blocked', outcome.problems.join(' ')); return; }
     const priorReplays=readFindingReplays(run,this.s.store.artifacts.list(runId));
     const afterReplays=await new FindingReplays(this.s).runBatch(runId,targets,signal);
     if (policy.strict) this.regressions.settle(runId, targets, priorReplays, afterReplays, checkpoint);

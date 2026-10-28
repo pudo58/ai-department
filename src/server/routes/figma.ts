@@ -109,6 +109,12 @@ export function registerFigmaRoutes({ app, store, orchestrator }: RouteContext, 
 
   app.get('/api/design-snapshots', async () => snapshots.list().map((s) => ({ ...s, references: figma.referencesOf(s.id) })).reverse());
   app.get('/api/design-snapshots/:id/previews', async (request) => snapshots.previews(IdParam.parse(request.params).id));
+  app.get('/api/design-snapshots/:id/fonts', async (request) => figma.fontsOf(IdParam.parse(request.params).id));
+  // Fetching from the internet is an action a person confirms in the request itself.
+  app.post('/api/design-snapshots/:id/fonts', async (request) => {
+    z.object({ confirm: z.literal(true) }).parse(request.body);
+    return figma.fetchFonts(IdParam.parse(request.params).id, AbortSignal.timeout(5 * 60_000));
+  });
   app.get('/api/design-snapshots/:id/diagnostics', async (request) => snapshots.diagnostics(IdParam.parse(request.params).id));
   app.get('/api/design-snapshots/:id', async (request) => {
     const snapshot = snapshots.get(IdParam.parse(request.params).id);

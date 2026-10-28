@@ -41,7 +41,7 @@ export function VisualReview({ detail, onChanged }: { detail: RunDetail; onChang
   return <section className="panel visual-review" aria-label="Đối chiếu hình thức với Figma">
     <div className="card-head"><h2>Đối chiếu hình thức với Figma</h2>{visual && <Badge tone={visual.status === 'passed' ? 'good' : visual.status === 'incomplete' ? 'warn' : 'info'}>{visual.profile.maxDiffRatio === undefined ? `${visual.screens.filter(s => s.changedRatio !== undefined).length}/${visual.screens.length} đã đo` : `${visual.screens.filter(s => s.status === 'passed').length}/${visual.screens.length} trong ngưỡng`}</Badge>}</div>
     <p className="muted small">Chạy ứng dụng từ checkpoint sạch, chụp mỗi màn hình ba lần và so với ảnh Figma. Test hành vi và kết quả so ảnh được ghi riêng.</p>
-    {!visual && <p className="notice-line">{run.configSnapshot.visualCheck ? 'Chưa có report hình ảnh cho checkpoint này.' : 'Cấu hình đường dẫn một lần cho project để hệ thống tự kiểm tra các task tiếp theo.'}</p>}
+    {!visual && <p className="notice-line">{run.configSnapshot.visualCheck ? 'Chưa có report hình ảnh cho checkpoint này.' : 'Project chưa cấu hình: task gắn thiết kế tự được đo theo /?screen={nodeId} (ngưỡng mặc định 5%). Cấu hình ở đây để đổi.'}</p>}
     {editing && <VisualProfileFields profile={profile} onChange={setProfile}/>}
     <div className="row-actions"><button type="button" className="button secondary" disabled={!canRun || busy} onClick={() => void start()}>{busy ? 'Đang yêu cầu…' : editing ? 'Duyệt profile và kiểm tra' : 'Chạy lại kiểm tra hình thức'}</button>
       <button type="button" className="text-button" onClick={() => setEditing(v => !v)}>{editing ? 'Ẩn cấu hình' : 'Sửa profile hình thức'}</button></div>

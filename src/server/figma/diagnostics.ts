@@ -1,5 +1,5 @@
 import type { SnapshotDiagnosticItem, SnapshotDiagnostics } from '../../shared/design.js';
-import { hiddenNode } from '../../shared/figma.js';
+import { FIGMA_NO_VISIBLE_LAYERS, hasNoVisiblePaint, hiddenNode } from '../../shared/figma.js';
 import type { SnapshotReader } from './snapshots.js';
 
 /** Read-only analysis also works for old snapshots; it never changes their hashes or accepted issue IDs. */
@@ -9,7 +9,8 @@ export function snapshotDiagnostics(reader: SnapshotReader): SnapshotDiagnostics
   const components = new Map<string, string>();
   const dependencies = [...reader.dependencies()];
   for (const d of dependencies) if (d.k === 'component') components.set(d.id, d.name);
-  const componentItems: SnapshotDiagnosticItem[] = [], hiddenItems: SnapshotDiagnosticItem[] = [], failedItems: SnapshotDiagnosticItem[] = [];
+  const componentItems: SnapshotDiagnosticItem[] = [], hiddenItems: SnapshotDiagnosticItem[] = [], failedItems: SnapshotDiagnosticItem[] = [], emptyItems: SnapshotDiagnosticItem[] = [];
+  const paintless = new Set<string>();
   const item = (nodeId: string, reason: string): SnapshotDiagnosticItem => {
     const row = rows.get(nodeId), parts: string[] = [], seen = new Set<string>();
     for (let at = row; at && !seen.has(at.id); at = at.parentId ? rows.get(at.parentId) : undefined) { seen.add(at.id); parts.unshift(at.name || at.id); }
@@ -20,6 +21,7 @@ export function snapshotDiagnostics(reader: SnapshotReader): SnapshotDiagnostics
     if (!node) continue;
     const visible = node.fields['common.visible'];
     facts.set(row.id, { parentId: row.parentId, visible: visible?.s === 'read' && typeof visible.v === 'boolean' ? visible.v : undefined });
+    if (hasNoVisiblePaint(node)) paintless.add(row.id);
     const prop = node.fields['instance.componentProperties'];
     if (prop && ['error', 'unavailable', 'unsupported'].includes(prop.s)) {
       const entry = item(row.id, prop.r ?? prop.s);
@@ -34,11 +36,13 @@ export function snapshotDiagnostics(reader: SnapshotReader): SnapshotDiagnostics
     const entry = item(nodeId ?? d.id, d.reason ?? d.status);
     const hidden = nodeId ? hiddenNode(nodeId, facts) : undefined;
     if (hidden) { entry.hiddenBy = { nodeId: hidden, name: rows.get(hidden)?.name ?? hidden }; hiddenItems.push(entry); }
+    else if (nodeId && d.status === 'error' && FIGMA_NO_VISIBLE_LAYERS.test(d.reason ?? '') && paintless.has(nodeId)) emptyItems.push(entry);
     else failedItems.push(entry);
   }
   const groups: SnapshotDiagnostics['groups'] = [
     { kind: 'component_properties', title: 'Component property không đọc được', explanation: 'Figma không trả được cấu hình property/variant của các instance này. Kiểm tra component gốc được nêu bên dưới; ảnh và những trường đọc được vẫn được giữ.', items: componentItems },
     { kind: 'hidden_vector', title: 'SVG chưa xuất: node hoặc layer cha đang ẩn', explanation: 'Có bằng chứng visible=false trong snapshot. Cấu trúc và thuộc tính vẫn được lưu, nhưng SVG chưa có; cần export lại nếu bật hiển thị hoặc task cần tài nguyên này.', items: hiddenItems },
+    { kind: 'vector_no_paint', title: 'SVG không xuất: node không có gì để vẽ', explanation: 'Figma báo node không có layer nhìn thấy và bản ghi node không có fill, stroke hay hiệu ứng hiển thị. Không có hình nào bị thiếu nên không cần xác nhận; liệt kê để bạn kiểm tra nếu muốn.', items: emptyItems },
     { kind: 'vector_failure', title: 'SVG chưa xuất: cần kiểm tra nguyên nhân', explanation: 'Chưa có bằng chứng node đang ẩn trong phạm vi đã đọc. Giữ nguyên lỗi API gốc; không coi các SVG này là đã có hoặc tự kết luận không cần thiết.', items: failedItems },
   ];
   return { groups: groups.filter((group) => group.items.length) };

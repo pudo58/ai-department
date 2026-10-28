@@ -10,6 +10,15 @@ export function readPng(buffer: Buffer): PNG {
 }
 
 /** Compare fixed-size, sRGB captures. Alpha is composited on white; magenta marks pixels above the configured channel tolerance. */
+/** The share of pixels the diff image marks as changed inside a box given in CSS pixels, for an image captured at `scale`. */
+export function changedInBox(diff: PNG, box: { x: number; y: number; width: number; height: number }, scale: number): number {
+  const x0 = Math.max(0, Math.floor(box.x * scale)), y0 = Math.max(0, Math.floor(box.y * scale));
+  const x1 = Math.min(diff.width, Math.ceil((box.x + box.width) * scale)), y1 = Math.min(diff.height, Math.ceil((box.y + box.height) * scale));
+  let changed = 0, total = 0;
+  for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const i = (y * diff.width + x) * 4; total++; if (diff.data[i] === 230 && diff.data[i + 1] === 0 && diff.data[i + 2] === 150) changed++; }
+  return total ? changed / total : 0;
+}
+
 export function comparePng(reference: Buffer, actual: Buffer, threshold: number) {
   if (!Number.isFinite(threshold) || threshold < 0 || threshold > 1) throw new Error('Ngưỡng pixel phải từ 0 đến 1.');
   const a = readPng(reference), b = readPng(actual);

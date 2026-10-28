@@ -6,6 +6,7 @@ import { coverageLabel, identityLabel, issueLabel } from '../shared/designlabels
 import { api } from './api';
 import { DesignPreviews } from './DesignPreviews';
 import { DesignDiagnostics } from './DesignDiagnostics';
+import { DesignFonts } from './DesignFonts';
 import { Badge, Empty, Field, Icon, Modal, PageHeader, ago, dateTime } from './ui';
 
 type Listed = DesignSnapshot & { references: { projects: string[]; runs: string[] } };
@@ -266,6 +267,7 @@ export function SnapshotDialog({ id, others, onClose, onChanged }: { id: string;
           onChange={(e) => setAcked({ hash: snap.snapshotHash, ids: e.target.checked ? [...chosen, i.id] : chosen.filter((x) => x !== i.id) })}/> {issueLabel(i)}</label>
           {issueLabel(i) !== i.message && <details className="limit-original"><summary>Thông báo gốc</summary><p>{i.message}</p></details>}</div></li>)}</ul>
           <p className="muted">Task cần dữ liệu thiếu này vẫn bị chặn trước khi gọi AI; xác nhận ở đây không vượt được yêu cầu bắt buộc của hợp đồng.</p></>}
+        <DesignFonts snapshotId={snap.id}/>
         <DesignDiagnostics snapshotId={snap.id} onNode={(nodeId) => { setDiagnosticNodeId(nodeId); setTab('nodes'); }}/>
         {infos.length > 0 && <><h3>Ghi chú</h3><ul>{infos.map((i) => <li key={i.id}>{i.message}</li>)}</ul></>}
         {!snap.issues.length && <p>Không có issue nào.</p>}

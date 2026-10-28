@@ -245,4 +245,10 @@ describe('resume diagnosis and Verifier boundaries',()=>{
     expect(normalizeVerifierScope(run,[],{...scope,checkIds:[]},raw)?.additionalChecks).toContainEqual({command:'node vitest run',status:'failed',detail:'Access is denied'});
     expect(normalizeVerifierScope(run,[],{...scope,checkIds:[],additionalChecks:[{command:'invented test',status:'passed',detail:'claim'}]},'')?.additionalChecks[0]?.status).toBe('incomplete');
   });
+  it('accepts the current visual report id the Verifier was given, and still rejects any other one',()=>{
+    const e=setup(),run=e.create();const id='vis_'+'a'.repeat(32);const scope={reviewed:['src/order.ts'],checkIds:[id],limitations:[],additionalChecks:[]};
+    expect(normalizeVerifierScope(run,[],scope,'',id)?.checkIds).toEqual([id]);
+    expect(()=>normalizeVerifierScope(run,[],scope,'','vis_'+'b'.repeat(32))).toThrow('không còn hiệu lực');
+    expect(()=>normalizeVerifierScope(run,[],scope,'')).toThrow('không còn hiệu lực');
+  });
 });

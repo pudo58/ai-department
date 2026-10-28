@@ -23,7 +23,9 @@
 .design-preview-canvas { overflow: auto; max-height: 65vh; margin-top: 12px; background: var(--bg-muted); border: 1px solid var(--border); }
 .design-preview-canvas img { display: block; width: 100%; height: auto; }
 .design-preview-canvas.actual-size img { width: auto; max-width: none; }
-.design-diagnostics { min-width: 0; }
+.design-diagnostics, .design-fonts { min-width: 0; }
+.font-list { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 6px; }
+.font-list > li { overflow-wrap: anywhere; }
 .diagnostic-group { padding: 12px 0; border-bottom: 1px solid var(--border); }
 .diagnostic-group > summary { cursor: pointer; font-weight: 600; }
 .diagnostic-group input { width: 100%; }

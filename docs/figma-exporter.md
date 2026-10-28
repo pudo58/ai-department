@@ -70,6 +70,8 @@ Giới hạn mặc định: 10 phút, 20.000 node, 200 MiB, 25 MiB/tài nguyên;
 
 `ExportValidator` (`src/core/figmavalidate.ts`) kiểm độc lập: hash từng bản ghi, đồ thị (trùng id, cha/con, thứ tự, vòng), kiểm kê đầu/cuối, mọi nhóm trường có trạng thái nhất quán, phụ thuộc/alias, tài nguyên, tổng hợp luồng. Kết quả tách **sáu thước đo** (cấu trúc, trường, phụ thuộc, tài nguyên, nguồn, nhất quán), không có “100%”. Sai cấu trúc/hash/thiếu node/chạm giới hạn/nguồn đổi là **blocker**; trường không đọc được, thư viện ngoài, thiếu ảnh gốc, nguồn do người xác nhận là **giới hạn** (phải xác nhận từng mục khi duyệt, gắn với `snapshotHash`).
 
+SVG không xuất được (`vector_export_failed`) có ba loại: node hoặc cha đang ẩn (`vector_hidden`, giới hạn); Figma trả “may not have any visible layers” **và** chính bản ghi node chứng minh nó không vẽ gì (shape không fill, stroke, hiệu ứng hiển thị hoặc độ mờ 0, không phải mask) thì là `vector_no_paint`, chỉ để biết, không phải xác nhận; còn lại giữ là giới hạn kèm lỗi API gốc. Một snapshot thật: 27/29 lỗi thuộc loại thứ hai; một snapshot khác có 591 lỗi cùng thông báo nhưng node có fill nhìn thấy nên vẫn là giới hạn (nguyên nhân chưa rõ).
+
 Nhãn duy nhất hai loại: “Đã đọc đủ cấu trúc trong phạm vi” và “Có giới hạn”. Không có nhãn nào nói thiết kế đã được hiểu hay chứng minh đúng.
 
 Snapshot (`design-snapshots/<id>/`) bất biến, dựng ở thư mục tạm rồi đổi tên; có `manifest.json` (hash từng file), `index.json`, `review.json`, `source/` (bản ghi thuộc tính đã đọc, chia theo trang), `pages/`, `components/`, `tokens/`, `assets/` (theo hash nội dung). `contentHash` (so nội dung) tách khỏi `snapshotHash` (duyệt, hợp đồng). Biên nhận publish nằm riêng, không nằm trong manifest. Markdown sinh bằng template; tên layer/text bị escape, SVG chỉ tải xuống (CSP `sandbox`).
@@ -83,6 +85,28 @@ Tham chiếu thiết kế `{nodeId, fieldPath}` khai báo cạnh yêu cầu ho�
 Mỗi vai nhận tóm tắt (≤ 8000 ký tự, nói rõ khi cắt) cộng đường dẫn tới bản sao riêng của run (`design-inputs/<run>/…`, Docker mount chỉ đọc `/aidept-design`). Bản sao được băm trước và sau mỗi lượt; lượt làm đổi thư mục bị chặn và lượt sau được cấp bản sạch từ snapshot. Design context không phụ thuộc `contextEnabled` hay ngân sách Verifier. Người diễn giải độc lập (Clarify) không nhận thiết kế. Biên nhận (`Design input receipt/check`) chứng minh cái đã cấp, không chứng minh model đã đọc. Báo cáo nghiệm thu có mục **Nguồn thiết kế**, giới hạn đã chấp nhận và dòng “chưa có kiểm chứng hình ảnh”.
 
 Snapshot còn được project hay task (kể cả đã hoàn thành) tham chiếu thì không xóa được.
+
+## Đối chiếu hình thức khi dựng giao diện
+
+Task gắn thiết kế, chạy local, mà project chưa đặt profile hình ảnh thì được đo theo profile mặc định: route `/?screen={nodeId}`, đợi `[data-design-ready="true"]`, ngưỡng sai lệch 5% pixel mỗi màn. Ngưỡng 5% là giá trị khởi đầu (một bản dựng đúng đo được 1,9–3,0% trên Chrome Windows), chưa hiệu chỉnh. Project đặt profile riêng thì dùng profile đó; đặt `visualCheck: null` là tắt. Docker và run mô phỏng không có.
+
+- **Developer được dặn trước** (khối `<design_source>` của vai Developer, `designBuildRules`): nhúng font theo thiết kế (đo chạy không có mạng), dùng nguyên SVG đã xuất, lấy số đo từ `nodes.ndjson`, giữ đúng chữ và trạng thái của ảnh screen, mở được mỗi màn bằng route trên, tự chụp so ảnh trước khi bàn giao.
+- **Đo sau lượt Developer**: ngoài so pixel, mỗi màn còn so chữ và kiểu chữ: trang thật (cỡ chữ, font, độ đậm, line-height, letter-spacing, vị trí; font không tải được được nhận ra riêng) với các node TEXT của màn trong snapshot. Chữ khác, thiếu, hoặc sai kiểu làm màn đó thành `different` dù pixel nằm trong ngưỡng. Chữ trông giống nhau ở hai ảnh (chỗ ảnh diff đổi dưới 15% pixel trong khung chữ, ví dụ text Figma bị lớp khác che) không bị tính. Input, select và ảnh chụp widget không so vị trí.
+- **Tự sửa**: màn `different`, không mở được, hoặc không ổn định quay lại Developer làm vấn đề `[Hình thức]` (kèm từng đoạn chữ lệch), tối đa 2 vòng mỗi phiên bản hợp đồng, mỗi vòng đo lại trên checkpoint mới. Hết vòng mà còn lệch thì giữ trong report và ghi một dòng fallback cho người nghiệm thu.
+
+Chưa xác nhận: ngưỡng 5%, ngưỡng 15% của khung chữ (hiệu chỉnh trên một thiết kế: chữ bị che hoặc giống nhau 2–12%, chữ thật sự khác từ 19%) và dung sai chữ (0,5px cỡ chữ, 1px line-height, 4px vị trí) trên nhiều thiết kế; Developer có làm đúng theo quy tắc hay không (chỉ kiểm bằng fake provider); ảnh diff có đọc được từ sandbox của agent hay không.
+
+## Font của thiết kế
+
+Trình duyệt chỉ vẽ đúng font khi dự án có file font (đo chạy không có mạng). Trang chi tiết snapshot (MCP → Thư viện snapshot) liệt kê họ font, độ đậm và số đoạn chữ dùng chúng, đọc từ `text.fontName` và `text.segments`. Nút **Tải font mở** (`POST /api/design-snapshots/:id/fonts` với `{"confirm":true}`, không có `confirm` thì 400) tải từ kho fontsource:
+
+- Chỉ hai host: `api.fontsource.org` (siêu dữ liệu) và `cdn.jsdelivr.net` (file, ghim phiên bản của gói `@fontsource/<id>`). Chỉ https, không theo chuyển hướng, mỗi file tối đa 1 MB, kiểm chữ ký WOFF2, ghi SHA-256; tối đa 12 họ font và 80 file một lần.
+- Mỗi độ đậm lấy ba subset: latin, latin-ext, vietnamese. Độ đậm hoặc kiểu nghiêng không có thì dùng độ đậm gần nhất và ghi chú.
+- Font không có trong kho (thường là font thương mại) được báo `not_open`: cần người dùng cung cấp file, hệ thống không thay bằng font khác.
+- File lưu ở `.data/design-fonts/files/<id>@<phiên bản>/` (dùng lại, không tải lại), bản ghi theo snapshot ở `.data/design-fonts/sets/<snapshot>.json`. Không ghi vào snapshot, vốn bất biến.
+- Design input của task nhận thư mục `fonts/` (file WOFF2, `fonts.css` với @font-face và unicode-range, `fonts.json` với giấy phép), và vai Developer được dặn sao chép vào dự án. Tải font sau khi task đã có bản sao thì bản sao được dựng lại lần kế (`fontsHash` trong `index.json`).
+
+Trên snapshot thật (13.771 node): Roboto 400/500/700, Inter 400/500 và Roboto Mono 400 tải được (18 file, khoảng 290 KB); FS Magistral và FS PF BeauSans Pro được báo không có trong kho. Chưa xác nhận: font cài sẵn trên máy không được dò (file luôn được cấp cho font mở, vì bản dựng cần nhúng); Developer có dùng đúng `fonts.css` hay không chỉ kiểm bằng provider giả.
 
 ## Bảo mật
 

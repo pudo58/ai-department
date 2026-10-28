@@ -6,6 +6,7 @@ import { buildExporter, prepareBundle } from '../../plugins/figma-exporter/build
 import { FakeRuntime, type FakeOptions } from '../../src/runtime/fake.js';
 import { buildApp } from '../../src/server/app.js';
 import { FigmaService } from '../../src/server/figma/service.js';
+import type { FontFetch } from '../../src/server/figma/fonts.js';
 import type { InstallerDeps } from '../../src/server/figma/installer.js';
 import { Orchestrator } from '../../src/server/orchestrator.js';
 import { Store } from '../../src/server/store.js';
@@ -34,7 +35,7 @@ export async function waitFor<T>(fn: () => T | undefined | false | Promise<T | u
   }
 }
 
-export interface RigOptions { /** What the simulated agents do; lets a test see the turns and change the design folder during one. */ fake?: FakeOptions; doc?: Golden; installerDeps?: InstallerDeps; now?: () => number; chunkEvents?: boolean; uiMessageSource?: 'parent' | 'null' | 'self' }
+export interface RigOptions { /** What the simulated agents do; lets a test see the turns and change the design folder during one. */ fake?: FakeOptions; doc?: Golden; installerDeps?: InstallerDeps; now?: () => number; chunkEvents?: boolean; uiMessageSource?: 'parent' | 'null' | 'self'; /** What the font fetcher gets instead of the network. */ fontFetch?: FontFetch }
 
 /**
  * A whole path under test: a fake Figma document, the plugin's real built code running against it, its real UI in a DOM, and the real
@@ -43,7 +44,7 @@ export interface RigOptions { /** What the simulated agents do; lets a test see 
 export async function rig(options: RigOptions = {}) {
   const dataDir = mkdtempSync(path.join(tmpdir(), 'aidept-figma-'));
   const store = new Store(':memory:');
-  const service = new FigmaService({ dataDir, store, port: PORT, pollMs: 150, ...(options.installerDeps ? { installerDeps: options.installerDeps } : {}), ...(options.now ? { now: options.now } : {}) });
+  const service = new FigmaService({ dataDir, store, port: PORT, pollMs: 150, ...(options.installerDeps ? { installerDeps: options.installerDeps } : {}), ...(options.now ? { now: options.now } : {}), ...(options.fontFetch ? { fontFetch: options.fontFetch } : {}) });
   const runtime = new FakeRuntime(options.fake ?? {});
   const orchestrator = new Orchestrator(store, () => runtime, { designs: service.inputs });
   const app = await buildApp({ store, orchestrator, dataDir, port: PORT, figma: service });
