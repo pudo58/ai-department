@@ -23,6 +23,18 @@ export const FIGMA_CATALOG = Object.freeze({
 });
 export const INSTALL_TIMEOUT_MS = 10 * 60_000;
 
+/**
+ * How Figma Desktop is started. It must not be a child of this server: an app started as one inherits the server's environment and
+ * process group, and Figma's sign-in finishes by the browser handing a figma:// link back to the running app, which did not reach an app
+ * started that way (sign-in in the browser closed its tab and the app stayed on "Go to the browser to complete login"). Windows' shell
+ * starts it for the user, as if it had been opened from the Start menu; no arguments come from anyone.
+ */
+export function launchCommand(file: string, os: NodeJS.Platform): { cmd: string; args: string[] } {
+  if (os === 'win32') return { cmd: 'explorer.exe', args: [file] };
+  if (os === 'darwin') return { cmd: 'open', args: [file] };
+  return { cmd: file, args: [] };
+}
+
 export interface Found { executable: string; version?: string; signed?: boolean }
 /** What the installer touches in the outside world. The defaults are real; tests give fakes, so no installer is ever run by a test. */
 export interface InstallerDeps {
@@ -85,7 +97,7 @@ export const realDeps = (): InstallerDeps => ({
     const r = await executeFile(file, args, { timeoutMs });
     return { exitCode: r.exitCode, timedOut: r.timedOut, output: `${r.stdout}\n${r.stderr}`.slice(-4000) };
   },
-  launch(file) { void import('node:child_process').then(({ spawn }) => spawn(file, [], { detached: true, stdio: 'ignore' }).unref()); },
+  launch(file) { const { cmd, args } = launchCommand(file, process.platform); void import('node:child_process').then(({ spawn }) => spawn(cmd, args, { detached: true, stdio: 'ignore' }).unref()); },
   openFolder(dir) {
     void import('node:child_process').then(({ spawn }) => {
       const [cmd, args] = process.platform === 'win32' ? ['explorer.exe', [dir]] : process.platform === 'darwin' ? ['open', [dir]] : ['xdg-open', [dir]];

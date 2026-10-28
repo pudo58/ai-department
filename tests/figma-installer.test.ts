@@ -2,7 +2,7 @@ import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { FIGMA_CATALOG, FigmaInstaller, type Found, type InstallerDeps } from '../src/server/figma/installer.js';
+import { FIGMA_CATALOG, FigmaInstaller, launchCommand, type Found, type InstallerDeps } from '../src/server/figma/installer.js';
 import { Store } from '../src/server/store.js';
 import { template, waitFor } from './figma/harness.js';
 
@@ -44,6 +44,14 @@ describe('the installer Department offers is pinned, and runs as the current use
     expect(FIGMA_CATALOG.sha256).toMatch(/^[a-f0-9]{64}$/);
     expect(FIGMA_CATALOG.silentArgs).toEqual(['--silent']);
     expect(FIGMA_CATALOG).toMatchObject({ platform: 'win32', arch: 'x64', version: '126.9.16' });
+  });
+});
+
+describe('how Figma Desktop is started', () => {
+  it('is handed to the shell like a Start-menu launch, never run as a child of the server, with only the executable as argument', () => {
+    expect(launchCommand(exe, 'win32')).toEqual({ cmd: 'explorer.exe', args: [exe] });
+    expect(launchCommand('/Applications/Figma.app', 'darwin')).toEqual({ cmd: 'open', args: ['/Applications/Figma.app'] });
+    expect(launchCommand('/opt/figma', 'linux')).toEqual({ cmd: '/opt/figma', args: [] });
   });
 });
 
