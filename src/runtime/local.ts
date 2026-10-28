@@ -1,5 +1,6 @@
 import { detectMutation } from './mutationdetect.js';
 import { probeEnvironment } from './preflight.js';
+import { planAngularCheck } from './angularcheck.js';
 import { runMutation, type MutationExecution } from './mutation.js';
 import { replayFinding, recoverReplays, type ReproductionExecution } from './reproduction.js';
 import { createHash } from 'node:crypto';
@@ -353,8 +354,10 @@ export class LocalRuntime implements Runtime {
       if (!isSafeRelative(recipe.reportPath)) throw new Error('reportPath không hợp lệ.');
       await clearReport(cwd, recipe.reportPath);
     }
-    const plan = planNodeTest(recipe.command, await hostNodeVersion(), parseNodeVersion(process.version), process.execPath);
+    const angular = await planAngularCheck(recipe.command, cwd);
+    const plan = angular.problem ? { command: angular.command, problem: angular.problem } : planNodeTest(angular.command, await hostNodeVersion(), parseNodeVersion(process.version), process.execPath);
     const source = `check:${recipe.id}`;
+    if (angular.note) exec.onEvent?.({ type: 'log', message: angular.note, data: { source, configuredCommand: recipe.command, effectiveCommand: angular.command } });
     if (plan.problem) {
       // Never start a command that cannot work here: the person gets the reason instead of a bare "chưa hoàn tất".
       exec.onEvent?.({ type: 'log', message: plan.problem, data: { source, level: 'error' } });

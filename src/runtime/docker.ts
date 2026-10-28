@@ -1,6 +1,8 @@
 import { rm } from 'node:fs/promises';
 import { detectMutation } from './mutationdetect.js';
 import { probeEnvironment } from './preflight.js';
+import { planAngularCheck } from './angularcheck.js';
+import { ENV_PROBLEM_PREFIX } from '../core/nodever.js';
 import { mutationDependencies, runMutation, type MutationExecution } from './mutation.js';
 import path from 'node:path';
 import type { Role, Run, Slot } from '../shared/types.js';
@@ -132,7 +134,10 @@ export class DockerRuntime implements Runtime {
         if (!isSafeRelative(recipe.reportPath)) throw new Error('reportPath không hợp lệ.');
         await clearReport(wsDir, recipe.reportPath);
       }
-      const result = await this.inContainer(run, `check-${run.id}-${slot}-${recipe.id}`, 'none', wsDir, recipe.command, undefined, recipe.timeoutMs, undefined, exec.signal, streamTo(exec.onEvent, `check:${recipe.id}`));
+      const angular = await planAngularCheck(recipe.command, wsDir);
+      if (angular.problem) return { exitCode: null, durationMs: 0, checkpoint, incomplete: true, log: `${ENV_PROBLEM_PREFIX}${angular.problem}` };
+      if (angular.note) exec.onEvent?.({ type: 'log', message: angular.note, data: { source: `check:${recipe.id}`, configuredCommand: recipe.command, effectiveCommand: angular.command } });
+      const result = await this.inContainer(run, `check-${run.id}-${slot}-${recipe.id}`, 'none', wsDir, angular.command, undefined, recipe.timeoutMs, undefined, exec.signal, streamTo(exec.onEvent, `check:${recipe.id}`));
       let report: unknown;
       if (recipe.reportPath) {
         report = await readReport(wsDir, recipe.reportPath);
@@ -157,7 +162,10 @@ export class DockerRuntime implements Runtime {
         if (exec.signal?.aborted) break;
         if (recipe.reportPath && !isSafeRelative(recipe.reportPath)) throw new Error('reportPath không hợp lệ.');
         const name = `trial-${run.id}-${slot}-${recipe.id}`, stream = streamTo(exec.onEvent, `check:${recipe.id}`);
-        const args = [...this.hardening(name, 'none'), '-v', `${dir}:/workspace`, ...deps, '-e', 'HOME=/tmp', run.configSnapshot.runnerImage, ...recipe.command];
+        const angular = await planAngularCheck(recipe.command, dir);
+        if (angular.problem) { results.push({ exitCode: null, durationMs: 0, checkpoint: run.checkpoint!, incomplete: true, log: `${ENV_PROBLEM_PREFIX}${angular.problem}` }); continue; }
+        if (angular.note) exec.onEvent?.({ type: 'log', message: angular.note, data: { source: `check:${recipe.id}`, configuredCommand: recipe.command, effectiveCommand: angular.command } });
+        const args = [...this.hardening(name, 'none'), '-v', `${dir}:/workspace`, ...deps, '-e', 'HOME=/tmp', run.configSnapshot.runnerImage, ...angular.command];
         const result = await this.supervised(name, () => executeFile('docker', args, { timeoutMs: recipe.timeoutMs, signal: exec.signal, ...stream, maxOutputBytes: 64 * 1024 * 1024 }));
         const report = recipe.reportPath ? await readReport(dir, recipe.reportPath) : undefined;
         results.push({ exitCode: result.exitCode, durationMs: result.durationMs, checkpoint: run.checkpoint!, report, reportRoot: '/workspace',

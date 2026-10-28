@@ -100,10 +100,10 @@ export const SUMMARY_MAX_CHARS = 8000;
 export function designSummary(role: Role, s: SummaryInput, maxChars = SUMMARY_MAX_CHARS): string {
   const lines: string[] = [
     `Nguồn thiết kế (snapshot ${s.snapshotId}, hash ${s.snapshotHash.slice(0, 12)}): ${s.coverageText}. ${identityLabel(s.identity)}.`,
-    `Dữ liệu đầy đủ ở thư mục ${s.mountPath} (chỉ đọc): đọc index.json trước, rồi file của target. Kiểm chứng hình ảnh (visual verification) chỉ có khi harness cung cấp report đúng checkpoint; ảnh nguồn không phải bằng chứng implementation đã khớp.`,
+    `Dữ liệu đầy đủ ở thư mục ${s.mountPath} (chỉ đọc): đọc index.json trước. Mỗi targets[].dir có tree.json (cây) và nodes.ndjson (dữ liệu từng node, mỗi dòng một JSON). Token ở tokens/styles.json và tokens/variables.json. Dùng đúng đường dẫn đã kê, không đoán node.json, layout.json hay thư mục nodes/. Kiểm chứng hình ảnh (visual verification) chỉ có khi harness cung cấp report đúng checkpoint; ảnh nguồn không phải bằng chứng implementation đã khớp.`,
   ];
   if (s.limited && s.issues.length) lines.push('Giới hạn đã được chấp nhận:', ...s.issues.slice(0, 8).map((i) => `- ${i.message}`));
-  const targets = s.targets.map((t) => `- ${mdCode(t.id)} ${mdText(t.name)} (${t.type}${t.page ? `, trang ${mdText(t.page)}` : ''})`);
+  const targets = s.targets.map((t) => `- ${mdCode(t.id)} ${mdText(t.name)} (${t.type}${t.page ? `, trang ${mdText(t.page)}` : ''}); cây: ${mdCode(`targets/${idHash(t.id)}/tree.json`)}; node: ${mdCode(`targets/${idHash(t.id)}/nodes.ndjson`)}`);
   lines.push(`Target của task (${s.targets.length}):`, ...targets.slice(0, 20));
   if (targets.length > 20) lines.push(`… còn ${targets.length - 20} target, xem index.json.`);
   if (s.previews?.length) {

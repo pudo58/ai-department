@@ -101,6 +101,19 @@ const hasConfig = (files: Set<string>, stem: string): boolean => [...files].some
 
 const LOCKFILES: [string, NonNullable<StackDetection['packageManager']>][] = [['pnpm-lock.yaml', 'pnpm'], ['yarn.lock', 'yarn'], ['bun.lockb', 'bun'], ['bun.lock', 'bun'], ['npm-shrinkwrap.json', 'npm'], ['package-lock.json', 'npm']];
 
+/** The script's Angular builder decides its CLI, not a transitive Vitest dependency. */
+export async function angularTestInfo(root: string, script: string): Promise<{ supported: boolean; reason: string } | undefined> {
+  if (!/^ng\s+(?:test|t)(?:\s|$)/.test(script.trim())) return;
+  if (!/^ng\s+(?:test|t)(?:\s+[A-Za-z0-9_./:=@-]+)*\s*$/.test(script)) return { supported: false, reason: 'Script Angular có shell hoặc tham số phức tạp; cần cấu hình check riêng.' };
+  const workspace = parseLooseJson(await readInside(root, 'angular.json') ?? '');
+  const projects = asRecord(workspace?.projects), tokens = script.trim().split(/\s+/);
+  const selected = tokens[2] && !tokens[2].startsWith('-') ? tokens[2] : undefined;
+  const entries = selected ? [[selected, projects[selected]]] : Object.entries(projects);
+  const targets = entries.map(([, value]) => { const project = asRecord(value); return asRecord(asRecord(project.architect ?? project.targets).test); });
+  if (!targets.length || targets.some(target => target.builder !== '@angular/build:unit-test' || asRecord(target.options).runner === 'karma')) return { supported: false, reason: 'Chưa có adapter report cho Angular builder này. Không truyền cờ Vitest trực tiếp cho ng test; cấu hình reporter theo builder của project.' };
+  return { supported: true, reason: 'Angular unit-test builder chạy Vitest qua ng test; dùng cờ Angular và report JSON.' };
+}
+
 /** `nodeVersion` is the `node` on PATH, which runs "node --test" checks; leave it out when unknown. */
 export async function detectStack(repoDir: string, nodeVersion?: NodeVersion): Promise<StackDetection> {
   let root: string;
@@ -165,7 +178,10 @@ export async function detectStack(repoDir: string, nodeVersion?: NodeVersion): P
   const testFiles = await listTestFiles(root);
   const testScript = script('test');
   if (testScript !== undefined && !NO_TEST_SCRIPT.test(testScript)) {
-    if (testRunner === 'Vitest') checks.push({ id: 'test', label: 'Vitest', command: ['npm', 'test', '--', '--run', '--reporter=json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" chạy Vitest (${testScript}).` });
+    const angular = await angularTestInfo(root, testScript);
+    if (angular?.supported) checks.push({ id: 'test', label: 'Angular (Vitest)', command: ['npm', 'test', '--', '--watch=false', '--reporters=json', '--output-file=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: angular.reason });
+    else if (angular) { notes.push(angular.reason); checks.push({ id: 'test', label: 'Angular', command: ['npm', 'test', '--', '--watch=false'], required: true, timeoutMs: 600_000, recommended: true, reason: angular.reason }); }
+    else if (testRunner === 'Vitest') checks.push({ id: 'test', label: 'Vitest', command: ['npm', 'test', '--', '--run', '--reporter=json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" chạy Vitest (${testScript}).` });
     else if (testRunner === 'Jest') checks.push({ id: 'test', label: 'Jest', command: ['npx', 'jest', '--json', '--outputFile=.aidept-report.json'], reportPath: '.aidept-report.json', required: true, timeoutMs: 600_000, recommended: true, reason: `Script "test" chạy Jest (${testScript}).` });
     else {
       // The script runs Node's own test runner: the same command, flags and files, with the report Verify reads to tie each test to a requirement.

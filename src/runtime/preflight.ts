@@ -6,6 +6,7 @@ import type { EnvironmentProbe } from '../shared/execution.js';
 import { environmentHash } from '../core/environment.js';
 import type { ProcessResult } from './process.js';
 import { redactSecrets } from './process.js';
+import { planAngularCheck } from './angularcheck.js';
 
 export { environmentHash } from '../core/environment.js';
 type Execute = (command: string[], timeoutMs: number) => Promise<ProcessResult>;
@@ -83,6 +84,18 @@ export async function probeEnvironment(run: Run, cwd: string, runtime: string, e
     if(signal?.aborted)throw new Error('Kiểm tra môi trường bị hủy.');
     const problem = await packageScriptProblem(recipe.command, cwd);
     if (problem) { checks.push({ recipeId: recipe.id, status: 'blocked', message: redactSecrets(problem) }); continue; }
+    const angular = await planAngularCheck(recipe.command, cwd);
+    if (angular.problem) { checks.push({ recipeId: recipe.id, runner: 'Angular', status: 'blocked', message: angular.problem }); continue; }
+    if (angular.angular) {
+      try {
+        const command = [...angular.command, ...(angular.command.includes('--') ? [] : ['--']), '--list-tests', '--watch=false'];
+        const discovery = await execute(command, Math.max(1, 60000 - (Date.now() - started)));
+        const detail = redactSecrets(`${discovery.stdout}\n${discovery.stderr}`).slice(-4000);
+        const empty = !discovery.timedOut && /no test (?:files |suites )?found|no tests found/i.test(detail);
+        checks.push({ recipeId: recipe.id, runner: 'Angular (Vitest)', status: empty ? 'unsupported' : discovery.exitCode === 0 && !discovery.timedOut ? 'passed' : 'blocked', message: empty ? 'Angular chưa tìm thấy test ở baseline; Author có thể bổ sung test. Official check vẫn phải chạy test thật và tạo report.' : discovery.exitCode === 0 && !discovery.timedOut ? `${angular.note ?? ''} Angular discovery thành công; chưa chạy assertion.`.trim() : `Angular CLI chưa chạy được discovery: ${detail || 'timeout'}` });
+      } catch (error) { checks.push({ recipeId: recipe.id, runner: 'Angular (Vitest)', status: 'blocked', message: redactSecrets(String((error as Error).message)).slice(0, 4000) }); }
+      continue;
+    }
     const identified = await identifyRunner(recipe.command, cwd);
     if(!identified){checks.push({recipeId:recipe.id,status:'unsupported',message:'Chưa có adapter kiểm tra sớm cho lệnh này; checks thông thường vẫn chạy.'});continue;}
     const {runner,prefix,args}=identified;
